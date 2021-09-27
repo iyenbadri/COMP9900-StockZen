@@ -1,0 +1,15 @@
+{
+    "python.analysis.extraPaths": [
+        "./stockzen-backend/app",
+        "./stockzen-backend/predict"
+    ],
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    },
+    "python.formatting.provider": "black",
+    "python.formatting.blackArgs": [
+        "--line-length=90"
+    ],
+    "prettier.singleQuote": true,
+    "prettier.jsxSingleQuote": true,
+}
