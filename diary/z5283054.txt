@@ -1,0 +1,26 @@
+Week 1
+
+I registered my Atlassian account, linked my GitHub account. I posted in the Team forum
+that I’m seeking for a team.
+
+We formed a team in week 1 lab session. We decided to work on the stock portfolio
+project and we book a next meeting to be 19 Sunday on what to do in the proposal.
+We appoint Khai as our team Scruum master as he has some experience on the method.
+
+============================================
+Week 2
+
+I worked with Khai to finalise the objectives and user stories. We also decided to use
+Slack as a communication tool and Team as a meeting platform.
+
+In the lab session, we ask some questions about the objective. After that we talk about
+how to implement the project.
+
+For the proposla, I and Khai were working on the objectives/user stories part. Jee was
+working on the Use case and Artitechture diagram. Ban was working on the design and
+wireframe. Gun was working on the backgroud.
+
+
+============================================
+Week 3
+
