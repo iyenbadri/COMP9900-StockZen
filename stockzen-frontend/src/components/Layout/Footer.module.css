@@ -1,12 +1,12 @@
 @import 'variables.css';
 
-header {
-  min-height: var(--header-height);
+footer {
+  min-height: var(--footer-height);
   color: #c2fff6;
   background-color: var(--stockzen-dark);
 }
 
-header.userAuthenticated {
+footer.userAuthenticated {
   background-color: var(--stockzen-light);
   color: #3a506b;
 }

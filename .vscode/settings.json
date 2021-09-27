@@ -3,6 +3,7 @@
         "./stockzen-backend/app",
         "./stockzen-backend/predict"
     ],
+    "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
         "source.organizeImports": true
     },
