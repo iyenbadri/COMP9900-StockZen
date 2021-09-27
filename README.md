@@ -20,14 +20,17 @@ _The following instructions assume UNIX-based OS. If you are on Windows, you nee
 
 ### Frontend
 
-1. Ensure you `node` (`v14.17.6`) installed/updated.
+1. Ensure your `node` (`v14.17.6` - latest LTS) is installed. Do not update `npm`.
 
-   - Optional: you can manage your `node` version with `nvm` (Node Version Manager)
-   - a `.nvmrc` file is committed to the repo to assist with this
+   Optional:
 
-2. Run:
+   - you can manage your `node` version with `nvm` (Node Version Manager)
+   - a `.nvmrc` file is committed to the repo to assist with this. Install `vscode-nvm` extension to always automatically use the correct `node` version
+
+2. Navigate into `stockzen-frontend` and install with `yarn`:
 
    ```sh
+   $ cd stockzen-frontend
    $ yarn
    ```
 
@@ -85,7 +88,6 @@ _The following instructions assume UNIX-based OS. If you are on Windows, you nee
    ```
 
    The build will recompile and deploy automatically on saving changes, but a manual refresh of the Swagger page may be necessary to fetch the latest changes.
-   "
 
 #### _Note: remember to switch `FLASK_ENV` to "production" when deploying final build_
 
@@ -125,7 +127,7 @@ _The following instructions assume UNIX-based OS. If you are on Windows, you nee
 5. Switch back to your original branch and unstash to resume work:
 
    ```sh
-   $ git checkout <orignal-branch>
+   $ git checkout <orignal-branch-name>
    $ git stash pop
    ```
 
