@@ -1,10 +1,22 @@
 # stockzen
 
-Setup instructions for project devs.
+_A stock portfolio management webapp_
+
+This README contains setup instructions / suggestions for project devs.
+Technical READMEs are located within the respective frontend / backend folders.
 
 ---
 
-## Folders
+## Contents:
+
+:whale: [Project Structure](#project-structure)
+:bee: [Installation Guide](#installation-guide)
+:frog: [Diary](#pushing-your-diary)
+:baby_chick: [IDE Tooling: Formatters & Extensions](#IDE-tooling)
+
+---
+
+## Project Structure
 
 - Frontend code: `./stockzen-frontend`
 - Backend code: `./stockzen-backend`
@@ -14,7 +26,7 @@ Setup instructions for project devs.
 
 ---
 
-## Installation
+## Installation Guide
 
 _The following instructions assume UNIX-based OS. If you are on Windows, you need to install WSL Ubuntu or develop on VLab._
 
@@ -81,6 +93,10 @@ _The following instructions assume UNIX-based OS. If you are on Windows, you nee
 
 5. Request for the `.flaskenv` file from another dev. It should sit in `./stockzen-backend/` and holds the environment variables and flask session secret key.
 
+   - this is a good time to visit [Alpha Vantage](https://www.alphavantage.co/support/#api-key) to get your own API Key for use in development
+   - add this key to the bottom of `stockzen-backend/.flaskenv` as a new line: `AV_API_KEY=<your-api-key>`
+   - `AV_API_KEY` can then be used anywhere with the Python `alpha_vantage` package when querying the API
+
 6. To start the backend development server, from `stockzen-backend` do:
 
    ```sh
@@ -89,7 +105,7 @@ _The following instructions assume UNIX-based OS. If you are on Windows, you nee
 
    The build will recompile and deploy automatically on saving changes, but a manual refresh of the Swagger page may be necessary to fetch the latest changes.
 
-#### _Note: remember to switch `FLASK_ENV` to "production" when deploying final build_
+_Note: remember to switch `FLASK_ENV` to "production" when deploying final build_
 
 ---
 
@@ -131,4 +147,25 @@ _The following instructions assume UNIX-based OS. If you are on Windows, you nee
    $ git stash pop
    ```
 
-#### Note: `diary` branch will be merged into `main` at the end of each sprint
+_Note: `diary` branch will be merged into `main` at the end of each sprint_
+
+---
+
+## IDE Tooling
+
+Below are suggestions for toolings.
+The only necessary ones are the **Formatters**, so that committed code is consistent, keeping `git` diffs cleaner and Peer Reviews easier.
+
+_Note: The below assumes `VS Code` IDE is being used_
+
+| Language | Formatter    | Linter      | Lang. Server |
+| -------- | ------------ | ----------- | ------------ |
+| Python   | _black_      | Python (MS) | Pylance      |
+| JS       | _ Prettier _ | ESLint      | -            |
+
+Other useful extensions:
+
+- **vscode-nvm** - automatically uses the correct `node` version
+- **Git Graph** - clear graphical representation of `git` history
+- **Todo Tree** - nicely collects all `TODO:`, `FIXME:`, `BUG:`, etc tags in a tab
+- **SQLite** - perform independent SQL queries in a separate window
