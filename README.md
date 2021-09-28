@@ -193,7 +193,7 @@ Other useful extensions:
 
 * **Naming convention:**
   We will use the following pattern for branch names:
-  `<type>-<f/b>-<descriptive-name>`
+  `<type>-<f/b>/<descriptive-name>`
   where f = frontend, b = backend
 
 ### 🌿 **Creating a new branch**
@@ -206,8 +206,8 @@ You can create a branch from either the command line or from VS Code.
 - With CLI:
 
   ```sh
-  git checkout -b feat-f-registration-page  <--this is your local branch
-  git push -u origin feat-f-registration-page  <--this sets the remote ("online") branch
+  git checkout -b feat-f/registration-page  <--this is your local branch
+  git push -u origin feat-f/registration-page  <--this sets the remote ("online") branch
   ```
 
 - With VS Code:
@@ -215,7 +215,7 @@ You can create a branch from either the command line or from VS Code.
   ![branchicon](https://code.visualstudio.com/assets/docs/editor/versioncontrol/git-status-bar-sync.png)
   ii. Click on "Create new branch":
   ![newbranch](https://code.visualstudio.com/assets/docs/editor/versioncontrol/gitbranches.png)
-  iii. Enter `feat-f-registration-page`
+  iii. Enter `feat-f/registration-page`
   iv. Click on the cloud icon to push your new branch to github:
   ![cloudicon](https://code.visualstudio.com/assets/docs/editor/versioncontrol/git-status-bar-publish.png)
 
