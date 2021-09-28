@@ -1,9 +1,9 @@
+import { UserContext } from 'contexts/UserContext';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { Link, useHistory } from 'react-router-dom';
-import { UserContext } from '../../contexts/UserContext';
 
 const Login: FC = () => {
   const { isAuthenticated, authenticate } = useContext(UserContext);

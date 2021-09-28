@@ -1,9 +1,9 @@
+import { UserContext } from 'contexts/UserContext';
 import React, { useContext } from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../../contexts/UserContext';
 import './Header.module.css';
 
 const Header = () => {
@@ -26,6 +26,11 @@ const Header = () => {
                   Register
                 </Link>
               </>
+            )}
+            {isAuthenticated && (
+              <Link to='/user/logout' className='btn btn-info'>
+                Logout
+              </Link>
             )}
           </Col>
         </Row>

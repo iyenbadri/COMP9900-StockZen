@@ -1,9 +1,10 @@
+import axios from 'axios';
+import { UserContext } from 'contexts/UserContext';
 import React, { FC, useContext, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { Link, useHistory } from 'react-router-dom';
-import { UserContext } from '../../contexts/UserContext';
 
 const Register: FC = () => {
   const { authenticate, logout } = useContext(UserContext);
@@ -15,7 +16,18 @@ const Register: FC = () => {
 
   const history = useHistory();
 
-  const doRegister = () => {};
+  const doRegister = async () => {
+    let payload = {
+      firstName,
+      lastName,
+      email,
+      password,
+    };
+
+    try {
+      let response = await axios.post('/user/register', payload);
+    } catch (e) {}
+  };
 
   const doAuthen = () => {
     authenticate();
@@ -110,7 +122,7 @@ const Register: FC = () => {
       </Row>
       <Row>
         <Col>
-          <Button>Create Account</Button>
+          <Button onClick={() => doRegister()}>Create Account</Button>
         </Col>
       </Row>
 

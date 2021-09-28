@@ -1,16 +1,18 @@
-import React, { FC, createContext, useState, useEffect } from 'react';
+import React, { createContext, FC, useEffect, useState } from 'react';
 // import api from '../../api';
 
 interface IUserContext {
   isAuthenticated: boolean;
   authenticate: () => void;
   logout: () => void;
+  checkEmailUnique: (email: string) => boolean;
 }
 
 const contextDefaultValues: IUserContext = {
   isAuthenticated: false,
   authenticate: () => {},
   logout: () => {},
+  checkEmailUnique: (email: string) => true,
 };
 
 export const UserContext = createContext<IUserContext>(contextDefaultValues);
@@ -38,12 +40,17 @@ const UserProvider: FC = ({ children }): any => {
     localStorage.setItem('isAuthenticated', '0');
   };
 
+  const checkEmailUnique = (email: string) => {
+    return false;
+  };
+
   return (
     <UserContext.Provider
       value={{
         isAuthenticated,
         authenticate,
         logout,
+        checkEmailUnique,
       }}
     >
       {children}

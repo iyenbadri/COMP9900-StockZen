@@ -1,6 +1,6 @@
+import TestOnly from 'components/TESTONLY';
 import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
-import TestOnly from '../../components/TESTONLY';
 
 const Landing: FC = () => {
   return (
