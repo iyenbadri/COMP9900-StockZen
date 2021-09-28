@@ -1,0 +1,27 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Backend-Runner",
+			"type": "shell",
+			"command": "cd stockzen-backend && source .venv/bin/activate && flask run"
+		},
+		{
+			"label": "Frontend-Runner",
+			"type": "shell",
+			"command": "cd stockzen-frontend && yarn start"
+		},
+		{
+			"label": "Dev",
+			"dependsOn": [
+				"Backend-Runner",
+				"Frontend-Runner"
+			],
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	],
+}

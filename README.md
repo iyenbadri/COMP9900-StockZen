@@ -9,10 +9,11 @@ Technical READMEs are located within the respective frontend / backend folders.
 
 ## Contents:
 
-:whale: [Project Structure](#project-structure)
-:bee: [Installation Guide](#installation-guide)
-:frog: [Diary](#pushing-your-diary)
-:baby_chick: [IDE Tooling: Formatters & Extensions](#IDE-tooling)
+🐳 [Project Structure](#project-structure)
+🐝 [Installation Guide](#installation-guide)
+🐸 [Diary](#pushing-your-diary)
+🐣 [IDE Tooling: Formatters & Extensions](#ide-tooling)
+🐶 [Branching / Pull Requests](#development-practices)
 
 ---
 
@@ -39,20 +40,28 @@ _The following instructions assume UNIX-based OS. If you are on Windows, you nee
    - you can manage your `node` version with `nvm` (Node Version Manager)
    - a `.nvmrc` file is committed to the repo to assist with this. Install `vscode-nvm` extension to always automatically use the correct `node` version
 
-2. Navigate into `stockzen-frontend` and install with `yarn`:
+2. Ensure `yarn` is installed. Otherwise:
+
+   ```sh
+   $ npm install --global yarn
+   ```
+
+3. Navigate into `stockzen-frontend` and install with `yarn`:
 
    ```sh
    $ cd stockzen-frontend
    $ yarn
    ```
 
-3. Run:
+4. Run:
 
    ```sh
    $ npm install
    ```
 
-4. To start the frontend development server, do:
+   _Note: `npm install` needs to be run after every `git pull` in case there are new dependencies_
+
+5. To start the frontend development server, do:
 
    ```sh
    $ yarn start
@@ -106,6 +115,9 @@ _The following instructions assume UNIX-based OS. If you are on Windows, you nee
    The build will recompile and deploy automatically on saving changes, but a manual refresh of the Swagger page may be necessary to fetch the latest changes.
 
 _Note: remember to switch `FLASK_ENV` to "production" when deploying final build_
+
+➡️ _Shortcut_:
+_Once you have set everything up, VSCode has been configured so you can just do: `ctrl+p` and enter`task Dev` to start all development servers at once_
 
 ---
 
@@ -169,3 +181,61 @@ Other useful extensions:
 - **Git Graph** - clear graphical representation of `git` history
 - **Todo Tree** - nicely collects all `TODO:`, `FIXME:`, `BUG:`, etc tags in a tab
 - **SQLite** - perform independent SQL queries in a separate window
+
+---
+
+## Development Practices
+
+- **Types of branches:**
+  `feat` - new feature, coming from a Jira subtask
+  `bugfix` - fixing something previously commited that has bugs
+  `review` - just a code review, but might refactor or make some changes
+
+* **Naming convention:**
+  We will use the following pattern for branch names:
+  `<type>-<f/b>-<descriptive-name>`
+  where f = frontend, b = backend
+
+### 🌿 **Creating a new branch**
+
+You will most often create a new branch when you start working on a new feature (i.e. when a new subtask is assigned to you)
+
+**Example subtask: `Frontend Registration page and input validation`**
+You can create a branch from either the command line or from VS Code.
+
+- With CLI:
+
+  ```sh
+  git checkout -b feat-f-registration-page  <--this is your local branch
+  git push -u origin feat-f-registration-page  <--this sets the remote ("online") branch
+  ```
+
+- With VS Code:
+  i. Click on the branch icon on the bottom left:
+  ![branchicon](https://code.visualstudio.com/assets/docs/editor/versioncontrol/git-status-bar-sync.png)
+  ii. Click on "Create new branch":
+  ![newbranch](https://code.visualstudio.com/assets/docs/editor/versioncontrol/gitbranches.png)
+  iii. Enter `feat-f-registration-page`
+  iv. Click on the cloud icon to push your new branch to github:
+  ![cloudicon](https://code.visualstudio.com/assets/docs/editor/versioncontrol/git-status-bar-publish.png)
+
+You can now start working from here, and make commits and pushes etc.
+
+### 🤝 **Pull Requests**
+
+Pull Requests are for when you're done with your part and you want to submit/merge your changes to `main` - someone will need to review your code before this can happen.
+(You could also PR when you just need a peer review - use the `draft` PR option)
+
+Please ensure you have tested your feature as much as possible before requesting a PR - the reviewer should not need to test that everything works.
+
+1. Create a PR:
+
+   - If you have recently pushed your branch to github, there will be a banner that says `Create pull request` which you can click on
+
+   - Otherwise navigate to the Pull Requests tab and click `New pull request`
+
+2. Follow the pre-loaded PR template instructions to complete the PR details.
+
+3. Add a `reviewer` and add yourself as `initiator`
+
+4. Add an appropriate tag. Submit. Wait for feedback.
