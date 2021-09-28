@@ -1,7 +1,7 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 const Input = () => {
-  return <Fragment></Fragment>;
+  return <></>;
 };
 
 export default Input;
