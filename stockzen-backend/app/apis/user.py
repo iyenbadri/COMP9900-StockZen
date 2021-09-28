@@ -9,16 +9,19 @@
 
 import crypt
 
-from app import login
+import app.utils.auth_utils as auth
+from app import login_manager
+from app.database.schema import Users
+from flask import redirect, request, url_for
 from flask_restx import Namespace, Resource, abort, fields, marshal
 
-api = Namespace("users", description="User related operations")
+api = Namespace("user", description="User related operations")
 
 userRegisterReq = api.model(
     "Incoming user data on Register",
     {
-        "firstName": fields.String(required=True, description="first name"),
-        "lastName": fields.String(required=True, description="last name"),
+        "first_name": fields.String(required=True, description="first name"),
+        "last_name": fields.String(required=True, description="last name"),
         "email": fields.String(required=True, description="email address"),
         "password": fields.String(required=True, description="plaintext password"),
     },
@@ -42,7 +45,7 @@ userLoginRes = api.model(
 
 
 @api.route("/login")
-@login.user_loader
+@login_manager.user_loader
 class User(Resource):
     @api.marshal_with(userLoginRes)
     @api.doc("user_login")
@@ -69,10 +72,24 @@ class User(Resource):
 
 @api.route("/register")
 class User(Resource):
-    @api.doc("create_new_user")
     def post(self):
-        registerRequest = marshal(api.payload, userRegisterReq)
-        # db should automatically increment user ID primary keys?
+        registerRequest = marshal(request.form, userRegisterReq)
+
+        import pprint
+
+        pprint(registerRequest)
+
+        email = registerRequest.email
+        first_name = registerRequest.first_name
+        last_name = registerRequest.last_name
+        plain_password = registerRequest.password
+
+        user = auth.get_user(email)
+        if user:
+            return {"message": "user already exists"}, 409
+
+        if auth.add_user(email, first_name, last_name, plain_password):
+            return {"message": "user successfully registered"}, 200
 
         # some function to try adding user to database
         # try:
@@ -80,4 +97,12 @@ class User(Resource):
         # catch:
         #   abort(500, type="dbError")
 
-        return {"message": "user successfully registered"}
+
+@login_manager.user_loader
+def user_loader(user_id: int):
+    """Given *user_id*, return the associated User object.
+
+    :param unicode user_id: user_id (email) user to retrieve
+
+    """
+    return Users.query.get(user_id)

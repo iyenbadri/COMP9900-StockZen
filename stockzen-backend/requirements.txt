@@ -11,6 +11,8 @@ click==8.0.1
 Flask==2.0.1
 Flask-Login==0.5.0
 flask-restx==0.5.1
+Flask-SQLAlchemy==2.5.1
+greenlet==1.1.1
 idna==3.2
 itsdangerous==2.0.1
 Jinja2==3.0.1
@@ -26,6 +28,7 @@ pytz==2021.1
 regex==2021.9.24
 requests==2.26.0
 six==1.16.0
+SQLAlchemy==1.4.25
 tomli==1.2.1
 typing-extensions==3.10.0.2
 urllib3==1.26.7
