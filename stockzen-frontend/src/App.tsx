@@ -1,13 +1,21 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import './App.css';
-import TestOnly from './components/TESTONLY';
+import Landing from './pages/Landing'
+import User from './pages/User'
 
 function App() {
   return (
     <div className='App'>
-      <header className='App-header'>
-        <TestOnly></TestOnly>
-      </header>
+      <Router>
+        <Switch>
+          <Route exact path={'/'} component={Landing} />
+          <Route path={'/user'} component={User} />
+          {/* <Route path={'/regulator'} component={Regulator} />
+          <Route path={'/participant'} component={Participant} /> */}
+          {/* <Route path={'/track'} component={Track} /> */}
+        </Switch>
+      </Router>
     </div>
   );
 }
