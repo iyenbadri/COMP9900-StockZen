@@ -109,7 +109,9 @@ const Register: FC = () => {
         </Col>
       </Row>
       <Row>
-        <Button>Create Account</Button>
+        <Col>
+          <Button>Create Account</Button>
+        </Col>
       </Row>
 
       <Row>

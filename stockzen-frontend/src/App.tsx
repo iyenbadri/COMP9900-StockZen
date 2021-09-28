@@ -1,3 +1,5 @@
+import 'bootstrap/dist/css/bootstrap-utilities.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
@@ -11,18 +13,20 @@ function App() {
   const { isAuthenticated } = useContext(UserContext);
 
   return (
-    <div className={`App ${isAuthenticated ? 'user--authenticated' : ''}`}>
-      <Header></Header>
+    <div className={`${isAuthenticated ? 'user--authenticated' : ''}`}>
       <Router>
-        <Switch>
-          <Route exact path={'/'} component={Landing} />
-          <Route path={'/user'} component={User} />
-          {/* <Route path={'/regulator'} component={Regulator} />
+        <Header></Header>
+        <div className='App'>
+          <Switch>
+            <Route exact path={'/'} component={Landing} />
+            <Route path={'/user'} component={User} />
+            {/* <Route path={'/regulator'} component={Regulator} />
           <Route path={'/participant'} component={Participant} /> */}
-          {/* <Route path={'/track'} component={Track} /> */}
-        </Switch>
+            {/* <Route path={'/track'} component={Track} /> */}
+          </Switch>
+        </div>
+        <Footer></Footer>
       </Router>
-      <Footer></Footer>
     </div>
   );
 }

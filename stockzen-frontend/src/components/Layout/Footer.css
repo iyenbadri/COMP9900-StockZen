@@ -1,10 +1,10 @@
-.footer {
+footer {
   min-height: 100px;
   color: #c2fff6;
   background-color: #1c2541;
 }
 
-.user--authenticated .footer {
+.user--authenticated footer {
   background-color: #5bc0be;
   color: #3a506b;
 }

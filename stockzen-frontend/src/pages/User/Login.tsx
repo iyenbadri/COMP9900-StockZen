@@ -59,18 +59,22 @@ const Login: FC = () => {
       </Row>
 
       <Row>
-        <Button
-          onClick={(ev) => {
-            ev.preventDefault();
-            doAuthen();
-          }}
-        >
-          Login
-        </Button>
+        <Col>
+          <Button
+            onClick={(ev) => {
+              ev.preventDefault();
+              doAuthen();
+            }}
+          >
+            Login
+          </Button>
+        </Col>
       </Row>
 
       <Row>
-        <Link to='/'>Home</Link>
+        <Col>
+          <Link to='/'>Home</Link>
+        </Col>
       </Row>
     </>
   );
