@@ -1,15 +1,21 @@
-import React, { FC, useContext } from 'react';
-import Row from 'react-bootstrap/Row';
+import React, { FC, useContext, useState } from 'react';
+import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 import { Link, useHistory } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 
-import TestOnly from '../../components/TESTONLY';
-
-const Landing: FC = () => {
+const Register: FC = () => {
   const { authenticate, logout } = useContext(UserContext);
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
 
   const history = useHistory();
+
+  const doRegister = () => {};
 
   const doAuthen = () => {
     authenticate();
@@ -24,21 +30,109 @@ const Landing: FC = () => {
   return (
     <>
       <Row>
-        <Col>FirstName</Col>
-        <Col>LastName</Col>
+        <Col>
+          First Name <span style={{ color: 'red' }}>*</span>
+        </Col>
       </Row>
       <Row>
-        <TestOnly></TestOnly>
+        <Col>
+          <input
+            onChange={(ev) => {
+              setFirstName(ev.target.value);
+            }}
+          ></input>
+        </Col>
       </Row>
+      <Row>
+        <Col>
+          Last Name <span style={{ color: 'red' }}>*</span>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col>
+          <input
+            onChange={(ev) => {
+              setLastName(ev.target.value);
+            }}
+          ></input>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col>
+          Email <span style={{ color: 'red' }}>*</span>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col>
+          <input
+            onChange={(ev) => {
+              setEmail(ev.target.value);
+            }}
+          ></input>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col>
+          Password <span style={{ color: 'red' }}>*</span>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col>
+          <input
+            type='password'
+            onChange={(ev) => {
+              setPassword(ev.target.value);
+            }}
+          ></input>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col>
+          Confirm Password <span style={{ color: 'red' }}>*</span>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col>
+          <input
+            type='password'
+            onChange={(ev) => {
+              setConfirmPassword(ev.target.value);
+            }}
+          ></input>
+        </Col>
+      </Row>
+      <Row>
+        <Button>Create Account</Button>
+      </Row>
+
       <Row>
         <Link to='/'>Home</Link>
       </Row>
       <Row>
         <Col>
-          <a href='#' onClick={() => doAuthen()}>
+          <a
+            href='#'
+            onClick={(ev) => {
+              ev.preventDefault();
+              doAuthen();
+            }}
+          >
             Test Loging
           </a>{' '}
-          <a href='#' onClick={() => doLogout()}>
+          <a
+            href='#'
+            onClick={(ev) => {
+              ev.preventDefault();
+              doLogout();
+            }}
+          >
             Test Logout
           </a>
         </Col>
@@ -47,4 +141,4 @@ const Landing: FC = () => {
   );
 };
 
-export default Landing;
+export default Register;
