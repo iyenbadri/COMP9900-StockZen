@@ -4,10 +4,10 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { useForm } from 'react-hook-form';
-import { isTypeAliasDeclaration } from 'typescript';
 import styles from './Register.module.css';
 
 const Register: FC = () => {
+  // Form validation helpers
   const {
     register,
     handleSubmit,
@@ -15,20 +15,16 @@ const Register: FC = () => {
     formState: { errors },
   } = useForm();
 
-  // const [firstName, setFirstName] = useState<string>('');
-  // const [lastName, setLastName] = useState<string>('');
-  // const [email, setEmail] = useState<string>('');
-  // const [password, setPassword] = useState<string>('');
-  // const [confirmPassword, setConfirmPassword] = useState<string>('');
-
+  // Error message from backend
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  //const history = useHistory();
-
+  // Password for confirm
   const password = useRef({});
   password.current = watch('password', '');
 
+  // Do register with backend when submit
   const onRegister = async (data: any) => {
+    // Clear error message
     setErrorMessage('');
 
     let payload = {
@@ -39,12 +35,16 @@ const Register: FC = () => {
     };
 
     try {
+      // POST to backend
       let response = await axios.post('/user/register', payload);
+
+      // Read the response
       if (response.data.message === 'user successfully registered') {
         // TODO: Implement register successfully page.
         alert(response.data.message);
       }
     } catch (e: any) {
+      // Display error message.
       setErrorMessage(e.response?.data?.message);
     }
   };
