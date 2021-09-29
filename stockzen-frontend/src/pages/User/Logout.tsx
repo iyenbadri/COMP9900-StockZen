@@ -9,7 +9,7 @@ const Logout: FC = () => {
     if (isAuthenticated) {
       logout();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, logout]);
 
   return <Redirect to='/'></Redirect>;
 };

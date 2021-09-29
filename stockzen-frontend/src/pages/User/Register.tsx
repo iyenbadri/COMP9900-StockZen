@@ -131,24 +131,22 @@ const Register: FC = () => {
       </Row>
       <Row>
         <Col>
-          <a
-            href='#'
+          <button
             onClick={(ev) => {
               ev.preventDefault();
               doAuthen();
             }}
           >
             Test Loging
-          </a>{' '}
-          <a
-            href='#'
+          </button>{' '}
+          <button
             onClick={(ev) => {
               ev.preventDefault();
               doLogout();
             }}
           >
             Test Logout
-          </a>
+          </button>
         </Col>
       </Row>
     </>

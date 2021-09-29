@@ -15,7 +15,7 @@
   }
 }
 
-.App-header {
+.AppHeader {
   background-color: #282c34;
   min-height: calc(100vh - var(--header-height) - var(--footer-height));
   display: flex;

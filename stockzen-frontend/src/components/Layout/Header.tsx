@@ -17,8 +17,8 @@ const Header = () => {
         <Row>
           <Col sm={6} className='text-start'>
             <Link to='/'>
-              {!isAuthenticated && <img src={logo_light} alt='StockZen' />}
-              {isAuthenticated && <img src={logo_dark} alt='StockZen' />}
+              {isAuthenticated && <img src={logo_light} alt='StockZen' />}
+              {!isAuthenticated && <img src={logo_dark} alt='StockZen' />}
             </Link>
           </Col>
           <Col sm={6} className='text-end'>

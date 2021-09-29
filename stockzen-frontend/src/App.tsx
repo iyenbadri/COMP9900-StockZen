@@ -7,14 +7,14 @@ import Landing from 'pages/Landing';
 import User from 'pages/User';
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import './App.css';
+import styles from './App.module.css';
 
 function App() {
   return (
     <div>
       <Router>
         <Header></Header>
-        <div className='App'>
+        <div className={styles.AppHeader}>
           <Switch>
             <Route exact path={'/'} component={Landing} />
             <Route path={'/user'} component={User} />
