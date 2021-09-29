@@ -1,9 +1,12 @@
 import os
 
 from config import APP_DB_PATH
+from dotenv import load_dotenv
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+
+load_dotenv()  # load all env vars
 
 app = Flask(__name__)
 
@@ -15,11 +18,14 @@ app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{APP_DB_PATH}"  # path to db
 db = SQLAlchemy()
 db.init_app(app)
 
-# uncomment the following to create a new database at APP_DB_PATH
-# with app.app_context():
-#     from app.database.schema import Users
+# Set the following flag in .flaskenv to create a new database at APP_DB_PATH
+# Should only be done for the first run in production
+CREATE_NEW_DB = os.environ.get("CREATE_NEW_DB")
+if CREATE_NEW_DB == "True":
+    with app.app_context():
+        from app.database.schema import User
 
-#     db.create_all()
+        db.create_all()
 
 # ==============================================================================
 # Login Manager
