@@ -28,4 +28,5 @@ On Sunday, we had a stand-up meeting which we told what have we done, what will 
 and what's blocking us. 
 
 I started implement the UI part including registration, login, logout. I and Khai worked
-together to setup the environment for development and for a smoothe experience. .
+together to setup the environment for development and for a smoothe experience. 
+
