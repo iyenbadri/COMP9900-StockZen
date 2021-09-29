@@ -1,3 +1,5 @@
+@import 'variables.css';
+
 .App {
   text-align: center;
 }
@@ -13,9 +15,9 @@
   }
 }
 
-.App-header {
+.AppHeader {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
   display: flex;
   flex-direction: column;
   align-items: center;

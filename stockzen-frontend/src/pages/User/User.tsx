@@ -1,7 +1,9 @@
+import { UserContext } from 'contexts/UserContext';
 import React, { FC, useContext } from 'react';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import Login from './Login';
+import Logout from './Logout';
 import Register from './Register';
-import { UserContext } from '../../contexts/UserContext';
 
 const User: FC = () => {
   const { path } = useRouteMatch();
@@ -20,8 +22,10 @@ const User: FC = () => {
 
           <div className='column is-9'>
             <Switch>
+              <Route path={`${path}/login`} component={Login} />
               {/* <Route exact path={path} component={Dashboard} /> */}
-              <Route exact path={`${path}/register`} component={Register} />
+              <Route path={`${path}/register`} component={Register} />
+              <Route path={`${path}/logout`} component={Logout} />
             </Switch>
           </div>
         </div>
