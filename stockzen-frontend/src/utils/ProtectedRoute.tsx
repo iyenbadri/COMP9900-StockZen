@@ -1,6 +1,6 @@
+import { UserContext } from 'contexts/UserContext';
 import React, { FC, useContext } from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import { UserContext } from '../contexts/UserContext';
 
 interface IProps {
   component: React.Component;
