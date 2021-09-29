@@ -45,6 +45,12 @@ We use `.flaskenv` to keep track of environment variables. Please do the followi
 
    - Once you have confirmed that the file has been created in `stockzen-backend/app/database/app.sqlite`, **change this flag to `CREATE_NEW_DB=False` so that your database doesn't get overwritten every time the app compiles**.
 
+### How it runs:
+
+- `flask run` calls `stockzen.py`, which calls `app/__init__.py` which calls `app/apis/__init__.py`
+- `apis/__init__.py`'s only job is to consolidate all the backend APIs into the main app
+  - this allows us to define separate API namespaces cleanly
+
 ## Architecture
 
 **Core:**
