@@ -150,7 +150,9 @@ const Register: FC = () => {
               'Password is not matched'}
           </Col>
 
-          <Col xs={12}>{errorMessage}</Col>
+          <Col xs={12} className={styles.errorMessage}>
+            {errorMessage}
+          </Col>
           {/* -- Submit Button -- */}
           <Col xs={12}>
             <Button type='submit'>Create Account</Button>
