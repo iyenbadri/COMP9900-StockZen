@@ -1,0 +1,22 @@
+Week 1
+
+After team formation and project selection on the first lab, researched Yahoo finance 
+website and similar stock management web services to analyse existing functionalities 
+and come up with novel ones. On Sunday team meeting, had discussion about project 
+objectives and technology stack.
+
+
+========================================================================================
+Week 2
+
+Worked on system architecture part of project proposal: draft diagram and descriptions 
+about software structure and user types. Went through several tutorials of React and 
+Javascript for upcoming frontend coding.
+
+========================================================================================
+Week 3
+
+Completed proposal's system architecture part including UML use case diagram. 
+Set up GitHub and development environment.
+
+(Will be updated more at the end of the week)
