@@ -1,12 +1,10 @@
 import axios from 'axios';
-import { UserContext } from 'contexts/UserContext';
-import React, { FC, useContext, useRef } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
-
+import { isTypeAliasDeclaration } from 'typescript';
 import styles from './Register.module.css';
 
 const Register: FC = () => {
@@ -17,12 +15,13 @@ const Register: FC = () => {
     formState: { errors },
   } = useForm();
 
-  const { authenticate, logout } = useContext(UserContext);
   // const [firstName, setFirstName] = useState<string>('');
   // const [lastName, setLastName] = useState<string>('');
   // const [email, setEmail] = useState<string>('');
   // const [password, setPassword] = useState<string>('');
   // const [confirmPassword, setConfirmPassword] = useState<string>('');
+
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   //const history = useHistory();
 
@@ -30,26 +29,24 @@ const Register: FC = () => {
   password.current = watch('password', '');
 
   const onRegister = async (data: any) => {
+    setErrorMessage('');
+
     let payload = {
       firstName: data.firstName,
       lastName: data.lastName,
       password: data.password,
-      email: data.email
+      email: data.email,
     };
 
     try {
       let response = await axios.post('/user/register', payload);
-    } catch (e) {}
-  };
-
-  const doAuthen = () => {
-    authenticate();
-    // history.push('/');
-  };
-
-  const doLogout = () => {
-    logout();
-    //  history.push('/');
+      if (response.data.message === 'user successfully registered') {
+        // TODO: Implement register successfully page.
+        alert(response.data.message);
+      }
+    } catch (e: any) {
+      setErrorMessage(e.response?.data?.message);
+    }
   };
 
   return (
@@ -77,10 +74,10 @@ const Register: FC = () => {
           <Col xs={12}>
             <input
               {...register('lastName', { required: true, maxLength: 40 })}
-              placeholder="Last Name"
+              placeholder='Last Name'
             ></input>
           </Col>
-          <Col xs={12}  className={styles.errorMessage}>
+          <Col xs={12} className={styles.errorMessage}>
             {errors.lastName?.type === 'required' && 'Last name is required'}
           </Col>
 
@@ -92,7 +89,7 @@ const Register: FC = () => {
             <input
               type='email'
               {...register('email', { required: true })}
-              placeholder="Email Address"
+              placeholder='Email Address'
             ></input>
           </Col>
           <Col xs={12} className={styles.errorMessage}>
@@ -116,7 +113,7 @@ const Register: FC = () => {
                   symbol: (val) => /[^a-zA-Z0-9]/.test(val),
                 },
               })}
-              placeholder="Password"
+              placeholder='Password'
             ></input>
           </Col>
           <Col xs={12} className={styles.errorMessage}>
@@ -142,10 +139,10 @@ const Register: FC = () => {
               {...register('confirmPassword', {
                 required: true,
                 validate: {
-                  match: (val) =>  val === password.current
+                  match: (val) => val === password.current,
                 },
               })}
-              placeholder="Password"
+              placeholder='Password'
             ></input>
           </Col>
           <Col xs={12} className={styles.errorMessage}>
@@ -153,35 +150,13 @@ const Register: FC = () => {
               'Password is not matched'}
           </Col>
 
+          <Col xs={12}>{errorMessage}</Col>
           {/* -- Submit Button -- */}
           <Col xs={12}>
             <Button type='submit'>Create Account</Button>
           </Col>
         </Row>
       </form>
-      <Row>
-        <Link to='/'>Home</Link>
-      </Row>
-      <Row>
-        <Col>
-          <button
-            onClick={(ev) => {
-              ev.preventDefault();
-              doAuthen();
-            }}
-          >
-            Test Loging
-          </button>{' '}
-          <button
-            onClick={(ev) => {
-              ev.preventDefault();
-              doLogout();
-            }}
-          >
-            Test Logout
-          </button>
-        </Col>
-      </Row>
     </>
   );
 };
