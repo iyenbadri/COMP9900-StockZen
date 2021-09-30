@@ -1,6 +1,12 @@
 :root {
-  --stockzen-dark: #1c2541;
-  --stockzen-light: #5bc0be;
+  --zen-1: #0b132b;
+  --zen-2: #1c2541;
+  --zen-3: #3a506b;
+  --zen-4: #5bc0be;
+  --zen-5: #c2fff6;
+
+  --stockzen-dark: var(--zen-2);
+  --stockzen-light: var(--zen-4);
   --header-height: 50px;
   --footer-height: 100px;
 }
