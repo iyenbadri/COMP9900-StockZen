@@ -1,36 +1,34 @@
-import { UserContext } from 'contexts/UserContext';
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Login from './Login';
 import Logout from './Logout';
 import Register from './Register';
+import styles from './User.module.css';
 
 const User: FC = () => {
   const { path } = useRouteMatch();
-  const { isAuthenticated } = useContext(UserContext);
 
   return (
-    <>
-      {/* <HomeNavbar type={'participant'} />
-      <CurrentActiveUser /> */}
-      <div className='container mt-5'>
-        <div className='columns'>
-          <div className='column is-3'>
-            {/* <SideNavBar type={'participant'} /> */}
-            {isAuthenticated ? 'Logged in' : 'Guest'}
-          </div>
-
-          <div className='column is-9'>
+    <div className={styles.hero}>
+      <Container>
+        <Row>
+          <Col
+            sm={{ offset: 2, span: 8 }}
+            lg={{ offset: 3, span: 6 }}
+            xl={{ offset: 4, span: 4 }}
+          >
             <Switch>
               <Route path={`${path}/login`} component={Login} />
-              {/* <Route exact path={path} component={Dashboard} /> */}
               <Route path={`${path}/register`} component={Register} />
               <Route path={`${path}/logout`} component={Logout} />
             </Switch>
-          </div>
-        </div>
-      </div>
-    </>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
 };
 
