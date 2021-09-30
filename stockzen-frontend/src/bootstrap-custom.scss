@@ -20,8 +20,13 @@ $theme-colors: (
   'dark': #212529,
 );
 
-$btn-border-width: 0px;
+$btn-font-weight: 500;
+$btn-border-width: 2px;
 $body-color: $zen-3;
+
+$font-family-sans-serif: 'Rubik', system-ui, -apple-system, 'Segoe UI', Roboto,
+  'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif,
+  'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji' !default;
 
 // Import Bootstrap and its default variables
 @import '~bootstrap/scss/bootstrap.scss';
