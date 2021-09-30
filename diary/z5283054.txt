@@ -33,6 +33,22 @@ together to setup the environment for development and for a smoothe experience.
 
 We agreed to use pull request to review code before merge changes into main branch.
 
+We agree to finalise the proposal on Thurday, I took a look a gave some comments.
+
+I finished implement the UI of the user registration page along with the user registration
+success page. I customised the colors in Bootstrap to match out selected colors
+(https://coolors.co/0b132b-1c2541-3a506b-5bc0be-c2fff6).
+
+I have a discussion with Khai that we have to find a way to query data from AlphaVantage
+because there are limits on how many requests could be made in a period of time.
+
+We had assign each member a user story to officially start our development process. I
+chose to work on the user registration story. Khai chose a responsive design story.
+Jeehyun chose the user login story. Gunjan chose the portfolio creation story. And
+Badrivishal chose portfolio rename/delete story.
+
+As there are so many tools used, I encountered a problem of too many tools to keep track.
+I will find a way to reduce the problem.
 
 
 *****************
