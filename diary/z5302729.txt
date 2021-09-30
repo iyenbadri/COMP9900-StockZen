@@ -1,0 +1,15 @@
+IT Capstone Diary
+
+Week 1:
+•	Finalizing Project: Exploring feasibility, scope of projects.
+•	Exploring stock related websites: Yahoo Finance portfolio, Google Finance etc.
+Week 2:
+•	Brainstorming Novel/Normal feature research
+•	Backend Technology discussion python, sqlite, RESTX
+•	Stock prediction articles for ML 
+•	Setting up communication channels, Git, Atlassian 
+Week 3:
+•	Briefing Alphavantage API capabilities 
+•	Proposal Background
+
+
