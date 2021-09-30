@@ -1,7 +1,7 @@
 from datetime import datetime
 
-import sqlalchemy
 from app import db
+from flask_login import UserMixin
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship
@@ -17,7 +17,14 @@ from werkzeug.security import check_password_hash, generate_password_hash
 # Columns can store PickleType or LargeBinary!
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
+    """SQLAlchemy ORM class for user object instances
+
+    Inherits from UserMixin for default Flask-Login user states.
+        Note:   Default ID for login management is User ID (PK),
+                override get_id() to use an alternative ID
+    """
+
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     email = Column(String(40), unique=True)
@@ -31,24 +38,6 @@ class User(db.Model):
 
     def check_password(self, password) -> bool:
         return check_password_hash(self.password_hash, password)
-
-    # ==========================================================================
-    #  Flask-Login defaults for a logged in user
-    # ==========================================================================
-    def is_active(self):
-        """True, as all users are active."""
-        return True
-
-    def get_id(self):
-        """Return the email address to satisfy Flask-Login's requirements."""
-        return self.id
-
-    def is_authenticated(self):
-        """Return True if the user is authenticated."""
-        return True
-
-    def is_anonymous(self):
-        return False
 
     # # one-to-many relationship
     # listings = relationship(
