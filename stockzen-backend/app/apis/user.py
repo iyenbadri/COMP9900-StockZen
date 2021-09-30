@@ -9,10 +9,14 @@
 
 import crypt
 
-from app import login
+import app.utils.auth_utils as auth
+from app import login_manager
+from app.database.schema import User
+from flask import redirect, request, url_for
+from flask_login import current_user
 from flask_restx import Namespace, Resource, abort, fields, marshal
 
-api = Namespace("users", description="User related operations")
+api = Namespace("user", description="User related operations")
 
 userRegisterReq = api.model(
     "Incoming user data on Register",
@@ -42,42 +46,49 @@ userLoginRes = api.model(
 
 
 @api.route("/login")
-@login.user_loader
+@login_manager.user_loader
 class User(Resource):
     @api.marshal_with(userLoginRes)
     @api.doc("user_login")
     def post(self):
-        loginRequest = marshal(api.payload, userLoginReq)
+        loginRequest = marshal(request.json, userLoginReq)
 
-        pwdSalt = crypt.mksalt()
-        hashedPwd = crypt.crypt(loginRequest["password"], pwdSalt)
+        email = loginRequest["email"]
+        plain_password = loginRequest["password"]
 
-        # some function to verify user from database
-        # try:
-        # # this function should use werkzeug.security.check_password_hash internally
-        #   dbVerifyUser(loginData.email, hashedPwd)
-        # catch:
-        #   abort(401, type="verifyError")
-        # somefunction to fetch user initials from db
-        # try:
-        #   id, initials = dbGetLogin();
-        # catch:
-        #   abort(500, type="dbError")
+        auth_status = auth.validate_login(email, plain_password)
 
-        return {"id": 12345, "initials": "TEST_INITIALS"}  # mock response
+        return auth_status
 
 
 @api.route("/register")
 class User(Resource):
-    @api.doc("create_new_user")
     def post(self):
-        registerRequest = marshal(api.payload, userRegisterReq)
-        # db should automatically increment user ID primary keys?
+        registerRequest = marshal(request.json, userRegisterReq)
 
-        # some function to try adding user to database
-        # try:
-        #   dbAddUser(registerRequest)
-        # catch:
-        #   abort(500, type="dbError")
+        email = registerRequest["email"]
+        first_name = registerRequest["firstName"]
+        last_name = registerRequest["lastName"]
+        plain_password = registerRequest["password"]
 
-        return {"message": "user successfully registered"}
+        if current_user.is_authenticated:
+            return {"message": "user already logged in"}, 409
+
+        if auth.email_exists(email):
+            return {"message": "email already exists"}, 409
+
+        if auth.add_user(email, first_name, last_name, plain_password):
+            return {"message": "user successfully registered"}, 200
+
+        return
+
+
+@login_manager.user_loader
+def user_loader(user_id: int):
+    """Flask_Login requirement:
+    Given *user_id*, return the associated User object.
+
+    :param unicode user_id: user_id (email) user to retrieve
+
+    """
+    return User.query.get(user_id)
