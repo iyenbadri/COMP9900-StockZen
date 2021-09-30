@@ -1,0 +1,26 @@
+@import 'variables.scss';
+
+// change the theme
+$theme-colors: (
+  'zen-1': $zen-1,
+  'zen-2': $zen-2,
+  'zen-3': $zen-3,
+  'zen-4': $zen-4,
+  'zen-5': $zen-5,
+  // Default bootstrap colors
+  'primary': $zen-4,
+  'secondary': #6c757d,
+  'success': #198754,
+  'info': #0dcaf0,
+  'warning': #ffc107,
+  'danger': #dc3545,
+  'light': #f8f9fa,
+  'dark': #212529,
+);
+
+$btn-border-width: 0px;
+$body-color: $zen-3;
+
+// Import Bootstrap and its default variables
+@import '~bootstrap/scss/bootstrap.scss';
+@import '~bootstrap/scss/bootstrap-utilities.scss';
