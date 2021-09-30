@@ -7,7 +7,7 @@ const Footer = () => {
 
   return (
     <footer className={isAuthenticated ? styles.userAuthenticated : ''}>
-      &copy; StockZen 2021. All rights reserved
+      &copy; StockZen 2021. All Rights Reserved.
     </footer>
   );
 };

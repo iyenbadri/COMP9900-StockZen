@@ -4,6 +4,10 @@ footer {
   min-height: var(--footer-height);
   color: #c2fff6;
   background-color: var(--stockzen-dark);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 footer.userAuthenticated {
