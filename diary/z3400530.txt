@@ -1,0 +1,97 @@
+===========================================================================
+WEEK 1
+===========================================================================
+
+Group formation, created Jira account, still waiting on GitHub to be activated. Set up some Epics in Jira.
+
+Organised Teams meeting for 19th Sept to discuss project objectives, user stories, and tech stack/system architecture.
+
+Meeting: decided on 8 core/novel objectives, distributed research/investigation workloads.
+
+Initialised backlog creation and refinement process (Rittisak wrote initial user stories), writing of some Acceptance Criteria.
+
+===========================================================================
+WEEK 2
+===========================================================================
+
+Created epics for each objective, split objectives into User Stories.
+
+Set up slack channel with Teams and Jira integrations.
+
+Meeting 1: consensus on objectives, distributed workload for Proposal.
+
+Rittisak and I refined all the user stories and wrote the acceptance criteriaWe updated the project objectives accordingly
+We discussed options for frontend design and structure, and decided on our approach.
+
+Technical obstacle: Design and Storyboard
+While we initially wanted to go with a Balsamiq/Figma combo, Figma-only seemed to be a much better/ hi res option for wireframing, as it also provided a real life example for frontend devs to work on.
+I drafted up colour palette, font, and Figma designs; chose the project name and logo design. 
+Held a 1-hr design meeting with Gunjan to figure out the page flow.
+I continued design of pages in Figma, completing design of Landing, Login/Register, Home, Portfolio, Stock Page and other minor functionailites. I created an SVG image for the StockZen logo.
+
+I updated all sprint dates on Jira and reviewed all project objectives and made adjustments to user stories
+
+Meeting 2: Gunjan presented backend and AlphaVantage API, Jeehyun talked about system design, Rittisak and I talked about front end design. 
+
+Meeting 3: Separate meeting with Badri to catch up on designs and wireframes.
+
+Planned work: All proposal tasks, Devops setup
+Achieved: All mostly achieved, with some work redistribution to accommodate some members.
+
+===========================================================================
+Week 3
+===========================================================================
+
+Set up github classroom repo and project folder structure.
+Wrote a README file so that everyone could install and use the same dev environment in a consistent manner.
+Rittisak and I had a discussion around IDE tooling and git practises. I updated the formatting settings and include more instructions in the README.
+I set up some tooling and task shortcuts for running the dev environment.
+
+I continued on the Figma designs for the Challenge pages.
+
+Meeting 1: Presented Figma designs and PR / feature branching process on Teams Meeting. Sprint 1 started.
+
+Wrote up detailed process for branching and PR.
+
+Did PR review for Contexts use case in React.
+Did PR for Rittisak's branch on feat-f/register; merged branch into main.
+
+Wrote up the initial frontend / backend boilerplate code + some test code to confirm communications between front/backend.
+Developed feat-b/register, set up SQLAlchemy and researched password storage.
+Wrote backend registration endpoints and password hashing process.
+Submitted PR for this. 
+
+Searched for medal assets for challenge page.
+
+Compiled all sections into final proposal, including formatting. Rewrote several sections due to some mistakes, inaccuracies, missing parts, and for general improvements. Received feedback from Rittisak and made further changes.
+
+Planned work: finish proposal, start on Sprint 1
+Achieved: All mostly achieved - proposal delayed by 1 day, but sprint started early by 1 day. All good.
+
+===========================================================================
+Week 4
+===========================================================================
+
+===========================================================================
+Week 5
+===========================================================================
+
+===========================================================================
+Week 6
+===========================================================================
+
+===========================================================================
+Week 7
+===========================================================================
+
+===========================================================================
+Week 8
+===========================================================================
+
+===========================================================================
+Week 9
+===========================================================================
+
+===========================================================================
+Week 10
+===========================================================================
