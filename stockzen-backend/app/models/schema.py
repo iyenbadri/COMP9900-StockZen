@@ -33,7 +33,7 @@ class User(db.Model):
         return check_password_hash(self.password_hash, password)
 
     # ==========================================================================
-    # For Flask-Login
+    #  Flask-Login defaults for a logged in user
     # ==========================================================================
     def is_active(self):
         """True, as all users are active."""
@@ -41,10 +41,10 @@ class User(db.Model):
 
     def get_id(self):
         """Return the email address to satisfy Flask-Login's requirements."""
-        return self.email
+        return self.id
 
     def is_authenticated(self):
-        """Return True if the user is authenticated (i.e. valid login)."""
+        """Return True if the user is authenticated."""
         return True
 
     def is_anonymous(self):

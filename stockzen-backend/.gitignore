@@ -139,5 +139,5 @@ dmypy.json
 cython_debug/
 
 .vscode/
-app/database/*.db
-app/database/*.sqlite
+*.db
+*.sqlite

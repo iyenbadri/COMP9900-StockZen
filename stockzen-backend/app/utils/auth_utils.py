@@ -1,16 +1,21 @@
-from typing import Tuple
+from typing import Dict, Union
 
-from app.database.schema import User
+from app.models.schema import User
 
 from . import db_utils as db
+from .enums import AuthStatus
 
 
-def email_exists(email: str) -> bool:
+def email_exists(email: str) -> AuthStatus:
     """Check if user email already exists"""
-    return db.query_user(email) != None
+    if db.query_user(email):
+        return AuthStatus.USER_FOUND
+    return AuthStatus.USER_NOT_FOUND
 
 
-def add_user(email: str, first_name: str, last_name: str, plain_password: str) -> bool:
+def add_user(
+    email: str, first_name: str, last_name: str, plain_password: str
+) -> AuthStatus:
     """Add a user to the database, return bool of success status"""
     new_user = User(
         email=email,
@@ -19,18 +24,26 @@ def add_user(email: str, first_name: str, last_name: str, plain_password: str) -
     )
     new_user.set_password(plain_password)  # carry out hash and save to user object
 
-    commit_successful = db.commit_user(new_user)
-    return commit_successful
+    if db.insert_user(new_user):
+        return AuthStatus.USER_ADDED
+    return AuthStatus.USER_NOT_ADDED
 
 
-def validate_login(email: str, plain_password: str) -> Tuple[dict, int]:
+def validate_login(email: str, plain_password: str) -> Union[User, AuthStatus]:
     """Validates user login and returns response message"""
     user = db.query_user(email)
 
     if not user:
-        return {"message": "User was not found"}, 403
-
+        return AuthStatus.USER_NOT_FOUND
     if user.check_password(plain_password):
-        return {"message": "Login success"}, 200
+        return user
+    else:
+        return AuthStatus.INCORRECT_PASSWORD
 
-    return {"message": "Incorrect password"}, 401
+
+UserDetails = Dict[str, str]
+
+
+def extract_user_details(user: User) -> UserDetails:
+    """Takes a User instance and returns user details dict"""
+    return {"firstName": user.first_name, "lastName": user.last_name}
