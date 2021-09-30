@@ -23,7 +23,7 @@ db.init_app(app)
 CREATE_NEW_DB = os.environ.get("CREATE_NEW_DB")
 if CREATE_NEW_DB == "True":
     with app.app_context():
-        from app.database.schema import User
+        from app.models.schema import User
 
         db.create_all()
 
@@ -41,7 +41,7 @@ login_manager.init_app(app)
 # ==============================================================================
 from .apis import all_apis
 
-all_apis.init_app(app)
+all_apis.init_app(app, validate=True)
 
 # ==============================================================================
 # Dev Mode browser

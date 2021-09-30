@@ -24,8 +24,7 @@ class User(db.Model):
     first_name = Column(String(40))
     last_name = Column(String(40))
     password_hash = Column(String(110))
-    authenticated = Column(Boolean, default=False)
-    validated = Column(Boolean, default=True)
+    validated = Column(Boolean, default=True)  # FIXME: placeholder for validation feature
 
     def set_password(self, password) -> None:
         self.password_hash = generate_password_hash(password)
@@ -38,7 +37,7 @@ class User(db.Model):
     # ==========================================================================
     def is_active(self):
         """True, as all users are active."""
-        return self.validated
+        return True
 
     def get_id(self):
         """Return the email address to satisfy Flask-Login's requirements."""
@@ -46,7 +45,7 @@ class User(db.Model):
 
     def is_authenticated(self):
         """Return True if the user is authenticated (i.e. valid login)."""
-        return self.authenticated
+        return True
 
     def is_anonymous(self):
         return False
