@@ -3,6 +3,7 @@ import React, { FC, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import Form from 'react-bootstrap/Form';
 import { useForm } from 'react-hook-form';
 import styles from './Register.module.css';
 
@@ -50,73 +51,72 @@ const Register: FC = () => {
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onRegister)}>
-        <Row>
+    <div className={styles.formWrapper}>
+      <h3 className={styles.formTitle}>Sign up</h3>
+      <Form onSubmit={handleSubmit(onRegister)}>
+        <Form.Group controlId='firstName' className={styles.controlGroup}>
           {/* -- First Name -- */}
-          <Col xs={12}>
-            First Name <span style={{ color: 'red' }}>*</span>
-          </Col>
-          <Col xs={12}>
-            <input
-              {...register('firstName', { required: true, maxLength: 40 })}
-              placeholder='First Name'
-            ></input>
-          </Col>
-          <Col xs={12} className={styles.errorMessage}>
+          <Form.Label className={styles.formLabel}>First Name</Form.Label>
+          <span className={styles.formRequired}> *</span>
+
+          <Form.Control
+            {...register('firstName', { required: true, maxLength: 40 })}
+            placeholder='First Name'
+          ></Form.Control>
+          <Form.Text className={styles.errorMessage}>
             {errors.firstName?.type === 'required' && 'First name is required'}
-          </Col>
+          </Form.Text>
+        </Form.Group>
 
+        <Form.Group controlId='lastName' className={styles.controlGroup}>
           {/* -- Last Name -- */}
-          <Col xs={12}>
-            Last Name <span style={{ color: 'red' }}>*</span>
-          </Col>
-          <Col xs={12}>
-            <input
-              {...register('lastName', { required: true, maxLength: 40 })}
-              placeholder='Last Name'
-            ></input>
-          </Col>
-          <Col xs={12} className={styles.errorMessage}>
+          <Form.Label className={styles.formLabel}>Last Name</Form.Label>
+          <span className={styles.formRequired}> *</span>
+
+          <Form.Control
+            {...register('lastName', { required: true, maxLength: 40 })}
+            placeholder='Last Name'
+          ></Form.Control>
+          <Form.Text className={styles.errorMessage}>
             {errors.lastName?.type === 'required' && 'Last name is required'}
-          </Col>
+          </Form.Text>
+        </Form.Group>
 
+        <Form.Group controlId='email' className={styles.controlGroup}>
           {/* -- Email -- */}
-          <Col xs={12}>
-            Email Address <span style={{ color: 'red' }}>*</span>
-          </Col>
-          <Col xs={12}>
-            <input
-              type='email'
-              {...register('email', { required: true })}
-              placeholder='Email Address'
-            ></input>
-          </Col>
-          <Col xs={12} className={styles.errorMessage}>
-            {errors.email?.type === 'required' && 'Email is required'}
-          </Col>
+          <Form.Label className={styles.formLabel}>Email Address</Form.Label>
+          <span className={styles.formRequired}> *</span>
 
+          <Form.Control
+            type='email'
+            {...register('email', { required: true })}
+            placeholder='Email Address'
+          ></Form.Control>
+          <Form.Text className={styles.errorMessage}>
+            {errors.email?.type === 'required' && 'Email is required'}
+          </Form.Text>
+        </Form.Group>
+
+        <Form.Group controlId='password' className={styles.controlGroup}>
           {/* -- Password -- */}
-          <Col xs={12}>
-            Password <span style={{ color: 'red' }}>*</span>
-          </Col>
-          <Col xs={12}>
-            <input
-              type='password'
-              {...register('password', {
-                required: true,
-                minLength: 8,
-                validate: {
-                  lower: (val) => /[a-z]/.test(val),
-                  upper: (val) => /[A-Z]/.test(val),
-                  number: (val) => /[0-9]/.test(val),
-                  symbol: (val) => /[^a-zA-Z0-9]/.test(val),
-                },
-              })}
-              placeholder='Password'
-            ></input>
-          </Col>
-          <Col xs={12} className={styles.errorMessage}>
+          <Form.Label className={styles.formLabel}>Password</Form.Label>
+          <span className={styles.formRequired}> *</span>
+
+          <Form.Control
+            type='password'
+            {...register('password', {
+              required: true,
+              minLength: 8,
+              validate: {
+                lower: (val) => /[a-z]/.test(val),
+                upper: (val) => /[A-Z]/.test(val),
+                number: (val) => /[0-9]/.test(val),
+                symbol: (val) => /[^a-zA-Z0-9]/.test(val),
+              },
+            })}
+            placeholder='Password'
+          ></Form.Control>
+          <Form.Text className={styles.errorMessage}>
             {errors.password?.type === 'required' && 'Password is required'}
             {errors.password?.type === 'minLength' && 'Password is too short'}
             {errors.password?.type === 'lower' &&
@@ -127,39 +127,41 @@ const Register: FC = () => {
               'Password must contains at least one digit'}
             {errors.password?.type === 'symbol' &&
               'Password must contains at least one symbol'}
-          </Col>
+          </Form.Text>
+        </Form.Group>
 
+        <Form.Group controlId='confirmPassword' className={styles.controlGroup}>
           {/* -- Confirm Password -- */}
-          <Col xs={12}>
-            Confirm Password <span style={{ color: 'red' }}>*</span>
-          </Col>
-          <Col xs={12}>
-            <input
-              type='password'
-              {...register('confirmPassword', {
-                required: true,
-                validate: {
-                  match: (val) => val === password.current,
-                },
-              })}
-              placeholder='Password'
-            ></input>
-          </Col>
-          <Col xs={12} className={styles.errorMessage}>
+          <Form.Label className={styles.formLabel}>Confirm Password</Form.Label>
+          <span className={styles.formRequired}> *</span>
+
+          <Form.Control
+            type='password'
+            {...register('confirmPassword', {
+              required: true,
+              validate: {
+                match: (val) => val === password.current,
+              },
+            })}
+            placeholder='Password'
+          ></Form.Control>
+          <Form.Text className={styles.errorMessage}>
             {errors.confirmPassword?.type === 'match' &&
               'Password is not matched'}
-          </Col>
+          </Form.Text>
+        </Form.Group>
 
-          <Col xs={12} className={styles.errorMessage}>
-            {errorMessage}
-          </Col>
+        <Row className='text-center'>
           {/* -- Submit Button -- */}
           <Col xs={12}>
             <Button type='submit'>Create Account</Button>
           </Col>
+          <Col xs={12} className={styles.errorMessage}>
+            {errorMessage}
+          </Col>
         </Row>
-      </form>
-    </>
+      </Form>
+    </div>
   );
 };
 
