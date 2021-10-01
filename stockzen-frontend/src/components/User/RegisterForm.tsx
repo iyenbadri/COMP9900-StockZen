@@ -30,20 +30,26 @@ const RegisterForm: FC<IProps> = (props) => {
 
   const isEmailUnique = async (email: string): Promise<boolean> => {
     try {
-      let response = await axios.get('/user/email-unique', {
-        params: { email: email },
-      });
-
-      if (response.data) {
+      // Query the existance
+      let response = await axios.head('/user/' + encodeURIComponent(email));
+      if (response.status === 200) {
+        // If no error then it means email is alread exists in backend.
+        setEmailErrorMessage('Email is already in used');
+        return false;
+      } else {
+        // Else then it is unknown
+        setEmailErrorMessage('Unexpected response from server');
+        return false;
+      }
+    } catch (ex: any) {
+      if (ex.response?.status === 404) {
+        // 404 indicates that the email is not found
         setEmailErrorMessage('');
         return true;
       } else {
-        setEmailErrorMessage('Email is already used');
+        setEmailErrorMessage('An error occurred. Please try again later.');
         return false;
       }
-    } catch (ex) {
-      setEmailErrorMessage('An error occurred. Please try again later.');
-      return false;
     }
   };
 
