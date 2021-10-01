@@ -1,34 +1,9 @@
 @import 'variables.css';
 
-.errorMessage {
-  /* padding-left: 20px; */
-  font-size: 0.5em;
-  color: rgb(204, 0, 0);
-}
-
 .formWrapper {
   background-color: rgba(200, 200, 200, 0.9);
   padding: 40px;
   margin-top: 80px;
   border-radius: 10px;
   color: #3a506b;
-}
-
-.formTitle {
-  text-align: center;
-  font-weight: bold;
-  color: var(--theme-darkened);
-  text-shadow: 0px 0px 2px var(--stockzen-light);
-}
-
-.formLabel {
-  font-weight: bold;
-}
-
-.formRequired {
-  color: rgb(204, 0, 0);
-}
-
-.controlGroup {
-  margin-bottom: 20px;
 }
