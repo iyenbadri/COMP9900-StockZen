@@ -1,11 +1,12 @@
+===========================================
 Week 1
 
 I registered my Atlassian account, linked my GitHub account. I posted in the Team forum
-that I’m seeking for a team.
+that I was seeking for a team.
 
 We formed a team in week 1 lab session. We decided to work on the stock portfolio
-project and we book a next meeting to be 19 Sunday on what to do in the proposal.
-We appoint Khai as our team Scruum master as he has some experience on the method.
+project and we scheduled our next meeting to be 19 Sunday on what to do in the proposal.
+We appointed Khai as our team Scruum master as he has some experience on the method.
 
 ============================================
 Week 2
@@ -16,10 +17,14 @@ Slack as a communication tool and Team as a meeting platform.
 In the lab session, we ask some questions about the objective. After that we talk about
 how to implement the project.
 
-For the proposla, I and Khai were working on the objectives/user stories part. Jee was
-working on the Use case and Artitechture diagram. Ban was working on the design and
-wireframe. Gun was working on the backgroud.
+For the proposal, I and Khai were working on the objectives/user stories part. Jeehyun
+was working on the Use case and Artitechture diagram. Badri was working on the design
+and wireframe. Gunjan was working on the backgroud.
 
+Khai also supplied us with design of screens on Figma. The url is 
+https://www.figma.com/file/6mRp53T7zyFzjplBT84vtw/Stockzen?node-id=66%3A89
+
+K 1
 
 ============================================
 Week 3
@@ -42,6 +47,10 @@ success page. I customised the colors in Bootstrap to match out selected colors
 I have a discussion with Khai that we have to find a way to query data from AlphaVantage
 because there are limits on how many requests could be made in a period of time.
 
+After I finished some of the task, I requested a pull request to Jeehyun and Khai.
+The easy one I requested a review from Jeehyun and the complex one I requested a review
+from Khai.
+
 We had assign each member a user story to officially start our development process. I
 chose to work on the user registration story. Khai chose a responsive design story.
 Jeehyun chose the user login story. Gunjan chose the portfolio creation story. And
@@ -50,6 +59,10 @@ Badrivishal chose portfolio rename/delete story.
 As there are so many tools used, I encountered a problem of too many tools to keep track.
 I will find a way to reduce the problem.
 
+K 2
+J 1
+G 1
+B 0.35
 
 *****************
 Update diary - RK
