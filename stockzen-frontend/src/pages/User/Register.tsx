@@ -1,155 +1,167 @@
 import axios from 'axios';
-import { UserContext } from 'contexts/UserContext';
-import React, { FC, useContext, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import { Link, useHistory } from 'react-router-dom';
+import Form from 'react-bootstrap/Form';
+import { useForm } from 'react-hook-form';
+import styles from './Register.module.css';
 
 const Register: FC = () => {
-  const { authenticate, logout } = useContext(UserContext);
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  // Form validation helpers
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
 
-  const history = useHistory();
+  // Error message from backend
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const doRegister = async () => {
+  // Password for confirm
+  const password = useRef({});
+  password.current = watch('password', '');
+
+  // Do register with backend when submit
+  const onRegister = async (data: any) => {
+    // Clear error message
+    setErrorMessage('');
+
     let payload = {
-      firstName,
-      lastName,
-      email,
-      password,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      password: data.password,
+      email: data.email,
     };
 
     try {
+      // POST to backend
       let response = await axios.post('/user/register', payload);
-    } catch (e) {}
-  };
 
-  const doAuthen = () => {
-    authenticate();
-    // history.push('/');
-  };
-
-  const doLogout = () => {
-    logout();
-    //  history.push('/');
+      // Read the response
+      if (response.data.message === 'user successfully registered') {
+        // TODO: Implement register successfully page.
+        alert(response.data.message);
+      }
+    } catch (e: any) {
+      // Display error message.
+      setErrorMessage(e.response?.data?.message);
+    }
   };
 
   return (
-    <>
-      <Row>
-        <Col>
-          First Name <span style={{ color: 'red' }}>*</span>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <input
-            onChange={(ev) => {
-              setFirstName(ev.target.value);
-            }}
-          ></input>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          Last Name <span style={{ color: 'red' }}>*</span>
-        </Col>
-      </Row>
+    <div className={styles.formWrapper}>
+      <h3 className={styles.formTitle}>Sign up</h3>
+      <Form onSubmit={handleSubmit(onRegister)}>
+        <Form.Group controlId='firstName' className={styles.controlGroup}>
+          {/* -- First Name -- */}
+          <Form.Label className={styles.formLabel}>First Name</Form.Label>
+          <span className={styles.formRequired}> *</span>
 
-      <Row>
-        <Col>
-          <input
-            onChange={(ev) => {
-              setLastName(ev.target.value);
-            }}
-          ></input>
-        </Col>
-      </Row>
+          <Form.Control
+            {...register('firstName', { required: true, maxLength: 40 })}
+            placeholder='First Name'
+          ></Form.Control>
+          <Form.Text className={styles.errorMessage}>
+            {errors.firstName?.type === 'required' && 'First name is required'}
+          </Form.Text>
+        </Form.Group>
 
-      <Row>
-        <Col>
-          Email <span style={{ color: 'red' }}>*</span>
-        </Col>
-      </Row>
+        <Form.Group controlId='lastName' className={styles.controlGroup}>
+          {/* -- Last Name -- */}
+          <Form.Label className={styles.formLabel}>Last Name</Form.Label>
+          <span className={styles.formRequired}> *</span>
 
-      <Row>
-        <Col>
-          <input
-            onChange={(ev) => {
-              setEmail(ev.target.value);
-            }}
-          ></input>
-        </Col>
-      </Row>
+          <Form.Control
+            {...register('lastName', { required: true, maxLength: 40 })}
+            placeholder='Last Name'
+          ></Form.Control>
+          <Form.Text className={styles.errorMessage}>
+            {errors.lastName?.type === 'required' && 'Last name is required'}
+          </Form.Text>
+        </Form.Group>
 
-      <Row>
-        <Col>
-          Password <span style={{ color: 'red' }}>*</span>
-        </Col>
-      </Row>
+        <Form.Group controlId='email' className={styles.controlGroup}>
+          {/* -- Email -- */}
+          <Form.Label className={styles.formLabel}>Email Address</Form.Label>
+          <span className={styles.formRequired}> *</span>
 
-      <Row>
-        <Col>
-          <input
+          <Form.Control
+            type='email'
+            {...register('email', { required: true })}
+            placeholder='Email Address'
+          ></Form.Control>
+          <Form.Text className={styles.errorMessage}>
+            {errors.email?.type === 'required' && 'Email is required'}
+          </Form.Text>
+        </Form.Group>
+
+        <Form.Group controlId='password' className={styles.controlGroup}>
+          {/* -- Password -- */}
+          <Form.Label className={styles.formLabel}>Password</Form.Label>
+          <span className={styles.formRequired}> *</span>
+
+          <Form.Control
             type='password'
-            onChange={(ev) => {
-              setPassword(ev.target.value);
-            }}
-          ></input>
-        </Col>
-      </Row>
+            {...register('password', {
+              required: true,
+              minLength: 8,
+              validate: {
+                lower: (val) => /[a-z]/.test(val),
+                upper: (val) => /[A-Z]/.test(val),
+                number: (val) => /[0-9]/.test(val),
+                symbol: (val) => /[^a-zA-Z0-9]/.test(val),
+              },
+            })}
+            placeholder='Password'
+          ></Form.Control>
+          <Form.Text className={styles.errorMessage}>
+            {errors.password?.type === 'required' && 'Password is required'}
+            {errors.password?.type === 'minLength' && 'Password is too short'}
+            {errors.password?.type === 'lower' &&
+              'Password must contains at least one lower case letter'}
+            {errors.password?.type === 'upper' &&
+              'Password must contains at least one upper case letter'}
+            {errors.password?.type === 'number' &&
+              'Password must contains at least one digit'}
+            {errors.password?.type === 'symbol' &&
+              'Password must contains at least one symbol'}
+          </Form.Text>
+        </Form.Group>
 
-      <Row>
-        <Col>
-          Confirm Password <span style={{ color: 'red' }}>*</span>
-        </Col>
-      </Row>
+        <Form.Group controlId='confirmPassword' className={styles.controlGroup}>
+          {/* -- Confirm Password -- */}
+          <Form.Label className={styles.formLabel}>Confirm Password</Form.Label>
+          <span className={styles.formRequired}> *</span>
 
-      <Row>
-        <Col>
-          <input
+          <Form.Control
             type='password'
-            onChange={(ev) => {
-              setConfirmPassword(ev.target.value);
-            }}
-          ></input>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Button onClick={() => doRegister()}>Create Account</Button>
-        </Col>
-      </Row>
+            {...register('confirmPassword', {
+              required: true,
+              validate: {
+                match: (val) => val === password.current,
+              },
+            })}
+            placeholder='Password'
+          ></Form.Control>
+          <Form.Text className={styles.errorMessage}>
+            {errors.confirmPassword?.type === 'match' &&
+              'Password is not matched'}
+          </Form.Text>
+        </Form.Group>
 
-      <Row>
-        <Link to='/'>Home</Link>
-      </Row>
-      <Row>
-        <Col>
-          <button
-            onClick={(ev) => {
-              ev.preventDefault();
-              doAuthen();
-            }}
-          >
-            Test Loging
-          </button>{' '}
-          <button
-            onClick={(ev) => {
-              ev.preventDefault();
-              doLogout();
-            }}
-          >
-            Test Logout
-          </button>
-        </Col>
-      </Row>
-    </>
+        <Row className='text-center'>
+          {/* -- Submit Button -- */}
+          <Col xs={12}>
+            <Button type='submit'>Create Account</Button>
+          </Col>
+          <Col xs={12} className={styles.errorMessage}>
+            {errorMessage}
+          </Col>
+        </Row>
+      </Form>
+    </div>
   );
 };
 
