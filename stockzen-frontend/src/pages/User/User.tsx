@@ -16,9 +16,9 @@ const User: FC = () => {
       <Container>
         <Row>
           <Col
-            sm={{ offset: 2, span: 8 }}
+            sm={{ offset: 1, span: 10 }}
+            md={{ offset: 2, span: 8 }}
             lg={{ offset: 3, span: 6 }}
-            xl={{ offset: 4, span: 4 }}
           >
             <Switch>
               <Route path={`${path}/login`} component={Login} />

@@ -22,19 +22,27 @@ const RegisterForm: FC<IProps> = (props) => {
 
   // Error message from backend
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [emailErrorMessage, setEmailErrorMessage] = useState<string>('');
 
   // Password for confirm
   const password = useRef({});
   password.current = watch('password', '');
 
-  const isEmailUnique = async (email: string) => {
+  const isEmailUnique = async (email: string): Promise<boolean> => {
     try {
       let response = await axios.get('/user/email-unique', {
         params: { email: email },
       });
 
-      return response.data;
+      if (response.data) {
+        setEmailErrorMessage('');
+        return true;
+      } else {
+        setEmailErrorMessage('Email is already used');
+        return false;
+      }
     } catch (ex) {
+      setEmailErrorMessage('An error occurred. Please try again later.');
       return false;
     }
   };
@@ -114,7 +122,7 @@ const RegisterForm: FC<IProps> = (props) => {
           ></Form.Control>
           <Form.Text className={styles.errorMessage}>
             {errors.email?.type === 'required' && 'Email is required'}
-            {errors.email?.type === 'unique' && 'Email is already used'}
+            {errors.email?.type === 'unique' && emailErrorMessage}
           </Form.Text>
         </Form.Group>
 

@@ -24,16 +24,16 @@ const Header = () => {
           <Col sm={6} className='text-end'>
             {!isAuthenticated && (
               <>
-                <Link to='/user/login' className='btn btn-info me-3'>
+                <Link to='/user/login' className='btn btn-zen-5 me-3'>
                   Login
                 </Link>
-                <Link to='/user/register' className='btn btn-info'>
+                <Link to='/user/register' className='btn btn-primary'>
                   Register
                 </Link>
               </>
             )}
             {isAuthenticated && (
-              <Link to='/user/logout' className='btn btn-info'>
+              <Link to='/user/logout' className='btn btn-outline-zen-2'>
                 Logout
               </Link>
             )}
