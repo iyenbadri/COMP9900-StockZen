@@ -27,6 +27,18 @@ const RegisterForm: FC<IProps> = (props) => {
   const password = useRef({});
   password.current = watch('password', '');
 
+  const isEmailUnique = async (email: string) => {
+    try {
+      let response = await axios.get('/user/email-unique', {
+        params: { email: email },
+      });
+
+      return response.data;
+    } catch (ex) {
+      return false;
+    }
+  };
+
   // Do register with backend when submit
   const onRegister = async (data: any) => {
     // Clear error message
@@ -92,11 +104,17 @@ const RegisterForm: FC<IProps> = (props) => {
 
           <Form.Control
             type='email'
-            {...register('email', { required: true })}
+            {...register('email', {
+              required: true,
+              validate: {
+                unique: async (val) => isEmailUnique(val),
+              },
+            })}
             placeholder='Email Address'
           ></Form.Control>
           <Form.Text className={styles.errorMessage}>
             {errors.email?.type === 'required' && 'Email is required'}
+            {errors.email?.type === 'unique' && 'Email is already used'}
           </Form.Text>
         </Form.Group>
 
