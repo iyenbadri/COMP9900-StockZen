@@ -103,12 +103,13 @@ class UserRouter(Resource):
 class UserRouter(Resource):
     @login_required
     @api.doc("get_user_details")
-    def head(self):
+    @api.response(401, "Unauthorized")
+    def get(self):
         user_details = auth.extract_user_details(current_user)
         return user_details
 
 
-@api.route("/<email>")  # not called 'ID', which is database ID
+@api.route("/<email>")
 @api.doc(params={"email": "User email"})
 class UserRouter(Resource):
     @api.doc("does_email_exist")
