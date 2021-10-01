@@ -1,0 +1,9 @@
+# Flask/backend environment vars go here
+# Copy to a new file called .flaskenv
+#   Get SESSION_KEY from another developer
+#   Sign up for your own Alpha Vantage API Key 
+FLASK_APP=stockzen.py
+FLASK_ENV=development
+CREATE_NEW_DB=False
+SESSION_KEY=
+AV_API_KEY=
