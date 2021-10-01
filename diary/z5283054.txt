@@ -66,3 +66,23 @@ B 0.35
 
 *****************
 Update diary - RK
+*****************
+
+
+You should also include in this diary the following information (if applicable) about the
+project progress:
+- what was planned for the period since the last work diary entry
+- what was finished
+- what were the main technical and non-technical obstacles and how they were
+overcome (or what was tried and did not work)
+- what was not finished, why this happened, how this affects the overall project
+progress and what adjustments (if any) are needed so the success of the project is not
+endangered
+- what is planned for the next period (e.g., next week)
+We expect that other members of the team may access this file to know where others are
+up to, but you should not modify your peer’s work diary.
+
+========= Meeting =========
+What have you done?
+What will you do?
+What's blocking you?
