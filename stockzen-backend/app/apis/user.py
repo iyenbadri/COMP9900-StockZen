@@ -109,12 +109,25 @@ class UserRouter(Resource):
         return user_details
 
 
+@api.route("/<email>")
+@api.doc(params={"email": "User email"})
+class UserRouter(Resource):
+    @api.doc("does_email_exist")
+    @api.response(200, "User found")
+    @api.response(404, "User not found")
+    def head(self, email):
+        email_status = auth.email_exists(email)
+        if email_status == AuthStatus.USER_FOUND:
+            return {"message": "user exists"}, 200
+        return {"message": "user not found"}, 404
+
+
 @login_manager.user_loader
 def user_loader(user_id: int):
     """Flask_Login requirement:
     Given *user_id*, return the associated User object.
 
-    :param unicode user_id: user_id  user to retrieve
+    :param unicode user_id: user_id (NOT email) user to retrieve
 
     """
     return User.query.get(user_id)
