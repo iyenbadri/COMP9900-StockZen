@@ -1,14 +1,14 @@
 import { UserContext } from 'contexts/UserContext';
-import React, { FC, useContext } from 'react';
+import React, { useContext } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 
-interface IProps {
-  component: React.Component;
-}
-
-const ProtectedRoute: FC<IProps> = ({
+const ProtectedRoute = ({
   component: Component,
   ...restOfProps
+}: {
+  component: any;
+  path?: string | readonly string[] | undefined;
+  exact?: boolean | undefined;
 }) => {
   const { isAuthenticated } = useContext(UserContext);
 
@@ -17,7 +17,7 @@ const ProtectedRoute: FC<IProps> = ({
       {...restOfProps}
       render={(props) =>
         isAuthenticated ? (
-          <React.Component {...props} />
+          <Component {...restOfProps} />
         ) : (
           <Redirect to='/user/login' />
         )

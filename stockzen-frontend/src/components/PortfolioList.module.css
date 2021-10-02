@@ -1,0 +1,40 @@
+@import 'variables.css';
+
+.portfolioTable {
+  width: 100%;
+}
+
+.tableHeader {
+  display: flex;
+}
+
+.rowHandle {
+  width: 20px;
+}
+
+.rowPortfolio {
+}
+
+.rowStocks {
+  text-align: right;
+}
+
+.rowMargetValue {
+  text-align: right;
+}
+
+.rowChange {
+  text-align: right;
+}
+
+.rowTotalGain {
+  text-align: right;
+}
+
+.tableRow .rowPortfolio,
+.tableRow .rowChange,
+.tableRow .rowTotalGain,
+.tableRow .rowStocks,
+.tableRow .rowMargetValue {
+  font-size: 0.7em;
+}
