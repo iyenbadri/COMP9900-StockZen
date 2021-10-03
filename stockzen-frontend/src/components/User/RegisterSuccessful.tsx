@@ -13,7 +13,9 @@ const RegisterSuccessful: FC<IProps> = (props) => {
     <>
       <div className={styles.message}>
         <p className={styles.names}>
-          Welcome, {props.firstName} {props.lastName} !
+          Welcome,
+          <br />
+          {props.firstName} {props.lastName} !
         </p>
         <div>
           <img className={styles.tick} src={TickIcon} alt='green tick icon' />
