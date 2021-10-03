@@ -1,155 +1,32 @@
-import axios from 'axios';
-import { UserContext } from 'contexts/UserContext';
-import React, { FC, useContext, useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import { Link, useHistory } from 'react-router-dom';
+import RegisterForm from 'components/User/RegisterForm';
+import RegisterSuccessful from 'components/User/RegisterSuccessful';
+import React, { FC, useState } from 'react';
+import styles from './Register.module.css';
 
 const Register: FC = () => {
-  const { authenticate, logout } = useContext(UserContext);
+  const [isRegisterSuccessful, setRegisterSuccessful] =
+    useState<boolean>(false);
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [confirmPassword, setConfirmPassword] = useState<string>('');
-
-  const history = useHistory();
-
-  const doRegister = async () => {
-    let payload = {
-      firstName,
-      lastName,
-      email,
-      password,
-    };
-
-    try {
-      let response = await axios.post('/user/register', payload);
-    } catch (e) {}
-  };
-
-  const doAuthen = () => {
-    authenticate();
-    // history.push('/');
-  };
-
-  const doLogout = () => {
-    logout();
-    //  history.push('/');
-  };
 
   return (
-    <>
-      <Row>
-        <Col>
-          First Name <span style={{ color: 'red' }}>*</span>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <input
-            onChange={(ev) => {
-              setFirstName(ev.target.value);
-            }}
-          ></input>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          Last Name <span style={{ color: 'red' }}>*</span>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col>
-          <input
-            onChange={(ev) => {
-              setLastName(ev.target.value);
-            }}
-          ></input>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col>
-          Email <span style={{ color: 'red' }}>*</span>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col>
-          <input
-            onChange={(ev) => {
-              setEmail(ev.target.value);
-            }}
-          ></input>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col>
-          Password <span style={{ color: 'red' }}>*</span>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col>
-          <input
-            type='password'
-            onChange={(ev) => {
-              setPassword(ev.target.value);
-            }}
-          ></input>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col>
-          Confirm Password <span style={{ color: 'red' }}>*</span>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col>
-          <input
-            type='password'
-            onChange={(ev) => {
-              setConfirmPassword(ev.target.value);
-            }}
-          ></input>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Button onClick={() => doRegister()}>Create Account</Button>
-        </Col>
-      </Row>
-
-      <Row>
-        <Link to='/'>Home</Link>
-      </Row>
-      <Row>
-        <Col>
-          <button
-            onClick={(ev) => {
-              ev.preventDefault();
-              doAuthen();
-            }}
-          >
-            Test Loging
-          </button>{' '}
-          <button
-            onClick={(ev) => {
-              ev.preventDefault();
-              doLogout();
-            }}
-          >
-            Test Logout
-          </button>
-        </Col>
-      </Row>
-    </>
+    <div className={styles.formWrapper}>
+      {!isRegisterSuccessful && (
+        <RegisterForm
+          onRegisterSuccess={(firstName, lastName) => {
+            setFirstName(firstName);
+            setLastName(lastName);
+            setRegisterSuccessful(true);
+          }}
+        ></RegisterForm>
+      )}
+      {isRegisterSuccessful && (
+        <RegisterSuccessful
+          firstName={firstName}
+          lastName={lastName}
+        ></RegisterSuccessful>
+      )}
+    </div>
   );
 };
 

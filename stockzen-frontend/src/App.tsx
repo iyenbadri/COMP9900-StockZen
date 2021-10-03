@@ -1,5 +1,4 @@
-import 'bootstrap/dist/css/bootstrap-utilities.min.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-custom.scss';
 import Footer from 'components/Layout/Footer';
 import Header from 'components/Layout/Header';
 import UserProvider from 'contexts/UserContext';
