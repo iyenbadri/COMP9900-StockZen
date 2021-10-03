@@ -33,11 +33,13 @@ const UserProvider: FC = ({ children }): any => {
   const authenticate = () => {
     setIsAuthenticated(true);
     localStorage.setItem('isAuthenticated', '1');
+    //document.body.style.backgroundColor = '#5bc0be';
   };
 
   const logout = () => {
     setIsAuthenticated(false);
     localStorage.setItem('isAuthenticated', '0');
+    //document.body.style.backgroundColor = '#1c2541';
   };
 
   const checkEmailUnique = (email: string) => {
