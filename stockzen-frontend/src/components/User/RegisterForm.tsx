@@ -34,7 +34,7 @@ const RegisterForm: FC<IProps> = (props) => {
       let response = await axios.head('/user/' + encodeURIComponent(email));
       if (response.status === 200) {
         // If no error then it means email is alread exists in backend.
-        setEmailErrorMessage('Email is already in used');
+        setEmailErrorMessage('Email is already in use');
         return false;
       } else {
         // Else then it is unknown
@@ -81,7 +81,7 @@ const RegisterForm: FC<IProps> = (props) => {
 
   return (
     <>
-      <h3 className={styles.formTitle}>Sign up</h3>
+      <h3 className={`my-3 ${styles.formTitle} outerStroke`}>Sign up</h3>
       <Form onSubmit={handleSubmit(onRegister)}>
         <Form.Group controlId='firstName' className={styles.controlGroup}>
           {/* -- First Name -- */}
@@ -90,7 +90,6 @@ const RegisterForm: FC<IProps> = (props) => {
 
           <Form.Control
             {...register('firstName', { required: true, maxLength: 40 })}
-            placeholder='First Name'
           ></Form.Control>
           <Form.Text className={styles.errorMessage}>
             {errors.firstName?.type === 'required' && 'First name is required'}
@@ -104,7 +103,6 @@ const RegisterForm: FC<IProps> = (props) => {
 
           <Form.Control
             {...register('lastName', { required: true, maxLength: 40 })}
-            placeholder='Last Name'
           ></Form.Control>
           <Form.Text className={styles.errorMessage}>
             {errors.lastName?.type === 'required' && 'Last name is required'}
@@ -124,7 +122,6 @@ const RegisterForm: FC<IProps> = (props) => {
                 unique: async (val) => isEmailUnique(val),
               },
             })}
-            placeholder='Email Address'
           ></Form.Control>
           <Form.Text className={styles.errorMessage}>
             {errors.email?.type === 'required' && 'Email is required'}
@@ -149,19 +146,18 @@ const RegisterForm: FC<IProps> = (props) => {
                 symbol: (val) => /[^a-zA-Z0-9]/.test(val),
               },
             })}
-            placeholder='Password'
           ></Form.Control>
           <Form.Text className={styles.errorMessage}>
             {errors.password?.type === 'required' && 'Password is required'}
             {errors.password?.type === 'minLength' && 'Password is too short'}
             {errors.password?.type === 'lower' &&
-              'Password must contains at least one lower case letter'}
+              'Password must contain at least one lower case letter'}
             {errors.password?.type === 'upper' &&
-              'Password must contains at least one upper case letter'}
+              'Password must contain at least one upper case letter'}
             {errors.password?.type === 'number' &&
-              'Password must contains at least one digit'}
+              'Password must contain at least one digit'}
             {errors.password?.type === 'symbol' &&
-              'Password must contains at least one symbol'}
+              'Password must contain at least one symbol'}
           </Form.Text>
         </Form.Group>
 
@@ -178,7 +174,6 @@ const RegisterForm: FC<IProps> = (props) => {
                 match: (val) => val === password.current,
               },
             })}
-            placeholder='Password'
           ></Form.Control>
           <Form.Text className={styles.errorMessage}>
             {errors.confirmPassword?.type === 'match' &&
@@ -186,10 +181,10 @@ const RegisterForm: FC<IProps> = (props) => {
           </Form.Text>
         </Form.Group>
 
-        <Row className='text-center'>
+        <Row className='my-4 text-center'>
           {/* -- Submit Button -- */}
           <Col xs={12}>
-            <Button type='submit'>Create Account</Button>
+            <Button type='submit'>Create account</Button>
           </Col>
           <Col xs={12} className={styles.errorMessage}>
             {errorMessage}
