@@ -2,11 +2,11 @@
 
 header {
   min-height: var(--header-height);
-  color: #c2fff6;
+  color: var(--zen-5);
   background-color: var(--stockzen-dark);
 }
 
 header.userAuthenticated {
   background-color: var(--stockzen-light);
-  color: #3a506b;
+  color: var(--zen-3);
 }
