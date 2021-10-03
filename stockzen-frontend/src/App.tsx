@@ -14,7 +14,7 @@ function App() {
     <div>
       <Router>
         <Header></Header>
-        <div className={styles.AppHeader}>
+        <div className={styles.appContainer}>
           <Switch>
             <Route exact path={'/'} component={Landing} />
             <Route path={'/user'} component={User} />
