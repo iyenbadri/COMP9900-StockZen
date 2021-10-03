@@ -135,7 +135,8 @@ def user_loader(user_id: int):
 
 @api.route("/logout")
 class UserRouter(Resource):
+    @login_required
     @api.response(200, "logged out")
-    def get(self):
+    def post(self):
         logout_user()
         return {"message": "You have succesfully logged out"}, 200
