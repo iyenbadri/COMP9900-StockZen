@@ -1,13 +1,11 @@
+import crossIcon from 'assets/icon-outlines/outline-cross.svg';
+import editIcon from 'assets/icon-outlines/outline-edit-1.svg';
+import handleIcon from 'assets/icon-outlines/outline-menu-vertical.svg';
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
 import { Link, useRouteMatch } from 'react-router-dom';
 import styles from './PortfolioList.module.css';
 import PortfolioListSummary from './PortfolioListSummary';
-import crossIcon from 'assets/icon-outlines/outline-cross.svg';
-import handleIcon from 'assets/icon-outlines/outline-menu-vertical.svg';
-import editIcon from 'assets/icon-outlines/outline-edit-1.svg';
 
 const PortfolioList = () => {
   const { path } = useRouteMatch();
