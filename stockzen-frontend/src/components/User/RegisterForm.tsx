@@ -177,7 +177,7 @@ const RegisterForm: FC<IProps> = (props) => {
           ></Form.Control>
           <Form.Text className={styles.errorMessage}>
             {errors.confirmPassword?.type === 'match' &&
-              'Password is not matched'}
+              'Passwords do not match'}
           </Form.Text>
         </Form.Group>
 
