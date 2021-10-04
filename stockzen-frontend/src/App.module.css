@@ -2,7 +2,7 @@
 
 .hero {
   background-image: url('assets/hero-banner.jpg');
-  background-position: center center;
+  background-position: center 35%;
   background-size: cover;
   width: 100vw;
   min-height: calc(100vh - var(--footer-height) - var(--header-height));
