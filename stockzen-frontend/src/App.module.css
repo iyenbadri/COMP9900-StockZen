@@ -38,5 +38,5 @@
 :global(input[class^='form']) {
   padding: 4px 12px;
   border: 1px solid var(--zen-3);
-  background-color: rgba(255, 255, 255, 0.55);
+  background-color: rgba(255, 255, 255, 0.4);
 }
