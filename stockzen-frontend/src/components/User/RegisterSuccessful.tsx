@@ -1,6 +1,6 @@
 import TickIcon from 'assets/icon-outlines/outline-check-circle-green.svg';
 import React, { FC } from 'react';
-import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styles from './RegisterSuccessful.module.css';
 
 interface IProps {
@@ -26,11 +26,9 @@ const RegisterSuccessful: FC<IProps> = (props) => {
           You may login to your new account now.
         </p>
         <div>
-          <Router>
-            <Link to='/user/login' className='my-3 btn btn-primary'>
-              Log in
-            </Link>
-          </Router>
+          <Link to='/user/login' className='my-3 btn btn-primary'>
+            Log in
+          </Link>
         </div>
       </div>
     </>

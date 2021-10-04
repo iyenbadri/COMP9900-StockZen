@@ -81,7 +81,7 @@ const RegisterForm: FC<IProps> = (props) => {
 
   return (
     <>
-      <h3 className={`my-3 ${styles.formTitle} outerStroke`}>Sign up</h3>
+      <h3 className={`my-2 ${styles.formTitle} outerStroke`}>Sign up</h3>
       <Form onSubmit={handleSubmit(onRegister)}>
         <Form.Group controlId='firstName' className={styles.controlGroup}>
           {/* -- First Name -- */}
@@ -181,7 +181,7 @@ const RegisterForm: FC<IProps> = (props) => {
           </Form.Text>
         </Form.Group>
 
-        <Row className='my-4 text-center'>
+        <Row className='my-3 text-center'>
           {/* -- Submit Button -- */}
           <Col xs={12}>
             <Button type='submit'>Create account</Button>
