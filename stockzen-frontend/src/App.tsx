@@ -3,6 +3,7 @@ import Footer from 'components/Layout/Footer';
 import Header from 'components/Layout/Header';
 import UserProvider from 'contexts/UserContext';
 import Landing from 'pages/Landing';
+import Portfolio from 'pages/Portfolio';
 import User from 'pages/User';
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -13,10 +14,11 @@ function App() {
     <div>
       <Router>
         <Header></Header>
-        <div className={styles.AppHeader}>
+        <div className={styles.appContainer}>
           <Switch>
             <Route exact path={'/'} component={Landing} />
             <Route path={'/user'} component={User} />
+            <Route path={'/portfolio'} component={Portfolio} />
             {/* <Route path={'/regulator'} component={Regulator} />
           <Route path={'/participant'} component={Participant} /> */}
             {/* <Route path={'/track'} component={Track} /> */}

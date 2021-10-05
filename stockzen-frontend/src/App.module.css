@@ -1,4 +1,8 @@
 @import 'variables.css';
+.appContainer {
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
+}
+
 /* 
 .App {
   text-align: center;
