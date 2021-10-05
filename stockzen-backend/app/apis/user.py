@@ -7,14 +7,18 @@
 # Implementation: https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-v-user-logins
 # ==============================================================================
 
+from datetime import datetime
+
 import app.utils.auth_utils as auth
-from app import login_manager
-from app.models.schema import User
+from app import db, login_manager
+from app.models.schema import Portfolio, User, StockLot
 from app.utils.enums import AuthStatus
 from flask import request
 from flask_login import current_user
 from flask_login.utils import login_required, login_user
 from flask_restx import Namespace, Resource, fields, marshal
+from sqlalchemy.sql.sqltypes import TIMESTAMP
+
 
 api = Namespace("user", description="User related operations")
 
@@ -25,6 +29,23 @@ userRegisterReq = api.model(
         "lastName": fields.String(required=True, description="last name"),
         "email": fields.String(required=True, description="email address"),
         "password": fields.String(required=True, description="plaintext password"),
+    },
+)
+
+addPortfolioReq = api.model(
+    "Incoming Portfolio data",
+    {
+        "user_id": fields.Integer(required=True, description="first name"),
+        "portfolio_name": fields.String(required=True, description="email address"),
+    },
+)
+
+addStockReq = api.model(
+    "Incoming Stock data",
+    {
+        "code": fields.String(required=True, description="Trading name"),
+        "name": fields.String(required=True, description="Company Name"),
+        "price": fields.Float(required=True, description="Price_per_share"),
     },
 )
 
@@ -131,3 +152,79 @@ def user_loader(user_id: int):
 
     """
     return User.query.get(user_id)
+
+
+@api.route("/add_portfolio")
+class PortfolioCRUD(Resource):
+    @api.doc("user_registration")
+    @api.expect(addPortfolioReq)
+    @api.response(409, "Registration conflict")
+    def post(self):
+        registerRequest = marshal(request.json, addPortfolioReq)
+
+        user_id = registerRequest["user_id"]
+        portfolio_name = registerRequest["portfolio_name"].lower()
+
+        # if current_user.is_authenticated:
+        #     return {"message": "user already logged in"}, 409
+
+        # if auth.email_exists(email) == AuthStatus.USER_FOUND:
+        #     return {"message": "email already exists"}, 409
+
+        if add_portfolio(user_id, portfolio_name) == AuthStatus.USER_ADDED:
+            return {"message": "portfolio successfully registered"}, 200
+
+        return {"message": "create error occurred"}, 500
+
+@api.route("/add_stock")
+class Stock_LotCRUD(Resource):
+    @api.doc("user_registration")
+    @api.expect(addStockReq)
+    @api.response(409, "Registration conflict")
+    def post(self):
+        registerRequest = marshal(request.json, addStockReq)
+
+        name = registerRequest["name"].lower()
+        code = registerRequest["code"].upper()
+        price = registerRequest["price"]
+
+        # if current_user.is_authenticated:
+        #     return {"message": "user already logged in"}, 409
+
+        # if auth.email_exists(email) == AuthStatus.USER_FOUND:
+        #     return {"message": "email already exists"}, 409
+
+        if add_stock(code, name, price) == AuthStatus.USER_ADDED:
+            return {"message": "stock successfully registered"}, 200
+
+        return {"message": "create error occurred"}, 500
+
+def add_portfolio(user_id: int, portfolio_name: str) -> AuthStatus:
+    """Add a portfolio to the database, return bool of success status"""
+    new_portfolio = Portfolio(
+        user_id=user_id,
+        portfolio_name=portfolio_name,
+        stock_count=1,
+        timestamp=datetime.now(),
+    )
+    try:
+        db.session.add(new_portfolio)
+        db.session.commit()
+        return AuthStatus.USER_ADDED
+    except:
+        return AuthStatus.USER_NOT_ADDED
+
+def add_stock(code: int, name: str, price: float) -> AuthStatus:
+    """Add a stock to the database, return bool of success status"""
+    new_stock_lot = StockLot(
+        code=code,
+        name=name,
+        price=price,
+        added=datetime.now(),
+    )
+    try:
+        db.session.add(new_stock_lot)
+        db.session.commit()
+        return AuthStatus.USER_ADDED
+    except:
+        return AuthStatus.USER_NOT_ADDED
