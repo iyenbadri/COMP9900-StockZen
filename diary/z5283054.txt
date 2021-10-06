@@ -95,13 +95,16 @@ B 0.35
 Week 4
 
 # Planned:      Implement the portfolio list, top performance widget.
-# Finished:     The portfolio list is implemented.
-# Issue:        The backend doesn't have endpoint to retrieve the data.
-# Unfinished:   -
+# Finished:     The portfolio list is implemented along with the rename/delete functionalities.
+# Issue:        The backend doesn't have endpoint to retrieve the data, rename the portfolio, or
+                delete it yet.
+# Unfinished:   Data persistant in the data base as there is no endpoint for that yet.
 # Next:         - 
 
 On Sunday, I implemented the layout of the portfolio list (using dummy data as backend hasn't
-the endpoint yet.) We also had a meeting this day.
+the endpoint yet.).
+
+On Wednesday, I implemented the funcitonalities of rename/delete of a portfolio.
 
 -----------------------------------------------------------------------------------------
 You should also include in this diary the following information (if applicable) about the
