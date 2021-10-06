@@ -12,7 +12,7 @@ from app import login_manager
 from app.models.schema import User
 from app.utils.enums import AuthStatus
 from flask import request
-from flask_login import current_user
+from flask_login import current_user, logout_user
 from flask_login.utils import login_required, login_user
 from flask_restx import Namespace, Resource, fields, marshal
 
@@ -131,3 +131,12 @@ def user_loader(user_id: int):
 
     """
     return User.query.get(user_id)
+
+
+@api.route("/logout")
+class UserRouter(Resource):
+    @login_required
+    @api.response(200, "logged out")
+    def post(self):
+        logout_user()
+        return {"message": "You have succesfully logged out"}, 200
