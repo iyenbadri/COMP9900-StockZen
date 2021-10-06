@@ -1,22 +1,46 @@
+========================================================================================
+
 Week 1
 
-After team formation and project selection on the first lab, researched Yahoo finance 
-website and similar stock management web services to analyse existing functionalities 
-and come up with novel ones. On Sunday team meeting, had discussion about project 
-objectives and technology stack.
+- Team formation and project selection done on the first lab.
+- Researched Yahoo finance website and similar stock management web services to analyse 
+  existing functionalities and come up with novel ones.
+- On Sunday team meeting, had discussion about project objectives and technology stack.
 
 
 ========================================================================================
+
 Week 2
 
-Worked on system architecture part of project proposal: draft diagram and descriptions 
-about software structure and user types. Went through several tutorials of React and 
-Javascript for upcoming frontend coding.
+• Planned  : Project proposal work - system architecture part 
+• Achieved : Almost done, further detailed descriptions and UML diagram to be attached
+
+- Worked on system architecture part of project proposal: draft software design and 
+  descriptions about structure and user types. 
+- Went through several tutorials of React and Javascript for upcoming frontend coding.
 
 ========================================================================================
+
 Week 3
 
-Completed proposal's system architecture part including UML use case diagram. 
-Set up GitHub and development environment.
+• Planned  : Final project proposal submission, start Sprint 1
+• Achieved : All I planned.
+  *But spent too much time on learning frontend dev -> Need to speed up learning process!
 
-(Will be updated more at the end of the week)
+- Completed project proposal's system architecture part including UML use case diagram.
+- Reviewed final proposal with some comments.
+- Set up GitHub and development environment.
+- Reviewed a couple of Pull Requests from Rittisak.
+- Explored CSS, React, and TypeScript tutorials for upcoming frontend coding.
+- Got started on frontend login page layout.
+
+========================================================================================
+
+Week 4
+
+• Planned  :
+• Achieved :
+
+- To be updated
+
+========================================================================================
