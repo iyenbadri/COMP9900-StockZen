@@ -3,7 +3,7 @@ import editIcon from 'assets/icon-outlines/outline-edit-1.svg';
 import handleIcon from 'assets/icon-outlines/outline-menu-vertical.svg';
 import React, { FC, useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import Input from 'react-bootstrap/Input';
+import Form from 'react-bootstrap/Form';
 import { Link, useRouteMatch } from 'react-router-dom';
 import styles from './PortfolioList.module.css';
 import PortfolioListSummary from './PortfolioListSummary';
@@ -18,7 +18,7 @@ interface IPortfolioListRow {
   marketValue: number | null;
   totalGain: number | null;
   totalGainPercent: number | null;
-  updatePortfolioName?: (name: string) => void;
+  updatePortfolioName?: (id: number, name: string) => void;
 }
 
 const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
@@ -27,6 +27,8 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
     style: 'currency',
     currency: 'USD',
   });
+
+  const [portfolioName, setPortfolioName] = useState<string>(prop.name);
 
   const [isEditingName, setIsEditingName] = useState<boolean>(false);
 
@@ -42,6 +44,12 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
     }
   };
 
+  const updatePortfolioName = () => {
+    if (prop.updatePortfolioName != null) {
+      prop.updatePortfolioName(prop.id, portfolioName);
+    }
+    setIsEditingName(false);
+  };
 
   return (
     <div className={styles.tableRow}>
@@ -51,14 +59,40 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
         </span>
         <span className={styles.rowPortfolio}>
           {isEditingName ? (
-            <Input value={prop.name} onBlur={(ev: React.FocusEvent<HTMLInputElement>)=>{prop.updatePortfolioName?(ev.target.value)}} />
+            <Form.Control
+              value={portfolioName}
+              style={{ width: '100%', padding: 0 }}
+              autoFocus
+              onChange={(ev) => {
+                setPortfolioName(ev.target.value);
+              }}
+              onBlur={updatePortfolioName}
+              onKeyDown={(ev) => {
+                console.log(ev.key);
+                switch (ev.key) {
+                  case 'Enter':
+                    updatePortfolioName();
+                    break;
+                  case 'Escape':
+                    setIsEditingName(false);
+                    break;
+                }
+              }}
+            />
           ) : (
             <Link to={`${path}/${prop.id}`} className={styles.rowPortfolioLink}>
               {prop.name}
             </Link>
           )}
-
-          <button className={`${styles.editButton} p-0`}>
+        </span>
+        <span className={styles.rowEditButton}>
+          <button
+            type='button'
+            className={`${styles.editButton} p-0`}
+            onClick={(ev) => {
+              setIsEditingName(true);
+            }}
+          >
             <img src={editIcon} alt='edit' width={18} />
           </button>
         </span>
@@ -156,6 +190,7 @@ const PortfolioList = () => {
               Portfolio
             </Button>
           </span>
+          <span className={styles.rowEditButton}></span>
           <span className={styles.rowStocks}>
             <Button variant={'light'} size={'sm'}>
               Stocks
@@ -181,7 +216,22 @@ const PortfolioList = () => {
       </div>
 
       {portfolios.map((port, index) => {
-        return <PortfolioListRow key={port.id} {...port}></PortfolioListRow>;
+        return (
+          <PortfolioListRow
+            key={port.id}
+            {...port}
+            updatePortfolioName={(id, name) => {
+              setPortfolios(
+                portfolios.map((x) => {
+                  return {
+                    ...x,
+                    name: x.id === id ? name : x.name,
+                  };
+                })
+              );
+            }}
+          ></PortfolioListRow>
+        );
       })}
     </>
   );
