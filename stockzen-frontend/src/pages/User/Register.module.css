@@ -1,9 +1,1 @@
 @import 'variables.css';
-
-.formWrapper {
-  background-color: rgba(200, 200, 200, 0.9);
-  padding: 40px;
-  margin-top: 80px;
-  border-radius: 10px;
-  color: #3a506b;
-}

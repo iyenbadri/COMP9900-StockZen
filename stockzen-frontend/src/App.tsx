@@ -1,32 +1,35 @@
 import 'bootstrap-custom.scss';
 import Footer from 'components/Layout/Footer';
 import Header from 'components/Layout/Header';
-import UserProvider from 'contexts/UserContext';
+import UserProvider, { UserContext } from 'contexts/UserContext';
 import Landing from 'pages/Landing';
 import Portfolio from 'pages/Portfolio';
 import User from 'pages/User';
-import React from 'react';
+import React, { useContext } from 'react';
+import { Container } from 'react-bootstrap';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import styles from './App.module.css';
 
 function App() {
+  const { isAuthenticated } = useContext(UserContext);
+
   return (
-    <div>
-      <Router>
+    <Router>
+      <div className={styles.app}>
         <Header></Header>
-        <div className={styles.appContainer}>
+        <Container
+          fluid
+          className={`${styles.appContent} ${!isAuthenticated && styles.hero}`}
+        >
           <Switch>
             <Route exact path={'/'} component={Landing} />
             <Route path={'/user'} component={User} />
             <Route path={'/portfolio'} component={Portfolio} />
-            {/* <Route path={'/regulator'} component={Regulator} />
-          <Route path={'/participant'} component={Participant} /> */}
-            {/* <Route path={'/track'} component={Track} /> */}
           </Switch>
-        </div>
+        </Container>
         <Footer></Footer>
-      </Router>
-    </div>
+      </div>
+    </Router>
   );
 }
 

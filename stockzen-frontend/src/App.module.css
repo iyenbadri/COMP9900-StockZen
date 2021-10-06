@@ -1,44 +1,33 @@
 @import 'variables.css';
-.appContainer {
-  min-height: calc(100vh - var(--header-height) - var(--footer-height));
+
+.hero {
+  background-image: url('assets/hero-banner.jpg');
+  background-position: center 35%;
+  background-size: cover;
+  width: 100vw;
+  min-height: calc(100vh - var(--footer-height) - var(--header-height));
 }
 
-/* 
-.App {
+/** GLOBALS: 
+ * All selectors here should be prefixed with ":global" to switch
+ *  to the global scope, i.e. no unique suffix id added on compile 
+ */
+
+/* adds a green stroke around the text */
+:global(.outerStroke) {
+  text-shadow: -1px -1px 0 var(--zen-4), 1px -1px 0 var(--zen-4),
+    -1px 1px 0 var(--zen-4), 1px 1px 0 var(--zen-4);
+}
+
+:global(.btn) {
+  min-width: 80px;
+  padding: 4px 8px;
   text-align: center;
+  letter-spacing: -0.01rem;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+:global(input[class^='form']) {
+  padding: 4px 12px;
+  border: 1px solid var(--zen-3);
+  background-color: rgba(255, 255, 255, 0.55);
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.AppHeader {
-  background-color: #282c34;
-  min-height: calc(100vh - var(--header-height) - var(--footer-height));
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */
