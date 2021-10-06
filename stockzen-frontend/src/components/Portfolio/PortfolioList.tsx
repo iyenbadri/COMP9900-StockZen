@@ -4,10 +4,10 @@ import handleIcon from 'assets/icon-outlines/outline-menu-vertical.svg';
 import React, { FC, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 import { Link, useRouteMatch } from 'react-router-dom';
 import styles from './PortfolioList.module.css';
 import PortfolioListSummary from './PortfolioListSummary';
-//import EditPortfolioName from './EditPortfolioName';
 
 interface IPortfolioListRow {
   id: number;
@@ -19,6 +19,7 @@ interface IPortfolioListRow {
   totalGain: number | null;
   totalGainPercent: number | null;
   updatePortfolioName?: (id: number, name: string) => void;
+  showDeleteModal?: (id: number, name: string) => void;
 }
 
 const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
@@ -126,7 +127,14 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
         </span>
       </span>
       <span className={styles.rowDelete}>
-        <button className={`p-0 ${styles.deleteButton}`}>
+        <button
+          className={`p-0 ${styles.deleteButton}`}
+          onClick={() => {
+            if (prop.showDeleteModal != null) {
+              prop.showDeleteModal(prop.id, prop.name);
+            }
+          }}
+        >
           <img src={crossIcon} alt='cross' />
         </button>
       </span>
@@ -135,6 +143,12 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
 };
 
 const PortfolioList = () => {
+  const [deletingPortfolioName, setDeletingPortfolioName] =
+    useState<string>('');
+  const [deletingPortfolioId, setDeletingPortfolioId] = useState<number>();
+  const [showDeletePortfolioModal, setShowDeletePortfolioModal] =
+    useState<boolean>(false);
+
   const [portfolios, setPortfolios] = useState([
     {
       name: 'My portfolio 1',
@@ -173,6 +187,37 @@ const PortfolioList = () => {
 
   return (
     <>
+      <Modal
+        show={showDeletePortfolioModal}
+        onHide={() => setShowDeletePortfolioModal(false)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Delete portfolio</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Do you want to delete portfolio {deletingPortfolioName}?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant={'danger'}
+            onClick={(ev) => {
+              // TODO: Call backend to delete the portfolio here.
+              setPortfolios(
+                portfolios.filter((x) => x.id !== deletingPortfolioId)
+              );
+              setShowDeletePortfolioModal(false);
+            }}
+          >
+            Yes
+          </Button>
+          <Button
+            variant={'secondary'}
+            onClick={(ev) => setShowDeletePortfolioModal(false)}
+          >
+            No
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <PortfolioListSummary></PortfolioListSummary>
 
       <div className={styles.tableToolbar}>
@@ -220,7 +265,13 @@ const PortfolioList = () => {
           <PortfolioListRow
             key={port.id}
             {...port}
+            showDeleteModal={(id, name) => {
+              setDeletingPortfolioId(id);
+              setDeletingPortfolioName(name);
+              setShowDeletePortfolioModal(true);
+            }}
             updatePortfolioName={(id, name) => {
+              // TODO: Call backend to rename the portfolio here.
               setPortfolios(
                 portfolios.map((x) => {
                   return {
