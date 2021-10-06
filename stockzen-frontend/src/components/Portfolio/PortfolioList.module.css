@@ -63,6 +63,7 @@
 .rowHandle {
   flex-basis: 25px;
   color: var(--zen-3);
+  flex-shrink: 0;
 }
 
 .rowPortfolio {
@@ -90,14 +91,21 @@
   border-color: transparent;
 }
 
+.rowEditButton {
+  flex-basis: 25px;
+  flex-shrink: 0;
+}
+
 .rowStocks {
   text-align: right;
   flex-basis: 85px;
+  flex-shrink: 0;
 }
 
 .rowMargetValue {
   text-align: right;
   flex-basis: 109px;
+  flex-shrink: 0;
 }
 
 .rowChange {
@@ -105,6 +113,7 @@
   flex-basis: 75px;
   display: inline-block;
   text-align: right;
+  flex-shrink: 0;
 }
 
 .rowTotalGain {
@@ -112,11 +121,13 @@
   flex-basis: 88px;
   display: inline-block;
   text-align: right;
+  flex-shrink: 0;
 }
 
 .rowDelete {
   flex-basis: 35px;
   text-align: right;
+  flex-shrink: 0;
 }
 
 @media (any-hover: hover) {
