@@ -34,7 +34,6 @@ const LoginForm: FC<IProps> = (props) => {
         localStorage.setItem('firstName', response.data.firstName);
         localStorage.setItem('lastName', response.data.lastName);
         localStorage.setItem('email', data.email);
-        localStorage.setItem('password', data.password);
       }
     } catch (e: any) {
       if (e.response.status === 401) {
