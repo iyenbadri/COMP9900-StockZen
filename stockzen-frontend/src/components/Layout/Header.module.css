@@ -2,8 +2,22 @@
 
 header {
   min-height: var(--header-height);
-  color: var(--zen-5);
   background-color: var(--stockzen-dark);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.headerContainer {
+  height: 38px;
+}
+
+header img {
+  transform: scale(0.8);
+}
+
+header a {
+  color: #1c2541;
 }
 
 header.userAuthenticated {
