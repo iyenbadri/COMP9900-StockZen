@@ -1,6 +1,5 @@
-import PortfolioList from 'components/PortfolioList';
-import { UserContext } from 'contexts/UserContext';
-import React, { FC, useContext } from 'react';
+import PortfolioList from 'components/Portfolio/PortfolioList';
+import React, { FC } from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';

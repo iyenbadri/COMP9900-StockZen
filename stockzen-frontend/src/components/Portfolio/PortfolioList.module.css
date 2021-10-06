@@ -1,0 +1,174 @@
+@import 'variables.css';
+
+.tableToolbar {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 10px;
+}
+
+.toolbarText {
+  flex-basis: auto;
+  flex-grow: 1;
+}
+
+.toolbarControls {
+}
+
+.portfolioTable {
+  width: 100%;
+}
+
+.moneyGain {
+  color: #5bc07d;
+}
+
+.moneyLoss {
+  color: #e26b6b;
+}
+
+.tableHeader,
+.tableRow {
+  display: flex;
+  margin-bottom: 7px;
+  align-items: center;
+}
+
+.tableHeader {
+  margin-bottom: 0px;
+}
+
+.tableHeader button {
+  font-weight: 400;
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--zen-3);
+}
+
+.rowPortInfo {
+  flex-grow: 1;
+  flex-basis: auto;
+  display: flex;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding: 5px 10px 5px 5px;
+  align-items: center;
+}
+
+.tableRow .rowPortInfo {
+  border-color: var(--zen-5);
+  background-color: rgba(196, 196, 196, 0.6);
+  min-height: 50px;
+}
+
+.rowHandle {
+  flex-basis: 25px;
+  color: var(--zen-3);
+}
+
+.rowPortfolio {
+  flex-grow: 1;
+  flex-basis: auto;
+  align-items: center;
+}
+
+.rowPortfolioLink {
+  text-decoration: none;
+  color: var(--zen-3);
+  font-weight: 600;
+  font-size: 0.9em;
+}
+
+.editButton {
+  padding: 0;
+  background-color: transparent;
+  border-color: transparent;
+  margin-left: 5px;
+}
+
+.deleteButton {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.rowStocks {
+  text-align: right;
+  flex-basis: 85px;
+}
+
+.rowMargetValue {
+  text-align: right;
+  flex-basis: 109px;
+}
+
+.rowChange {
+  text-align: right;
+  flex-basis: 75px;
+  display: inline-block;
+  text-align: right;
+}
+
+.rowTotalGain {
+  text-align: right;
+  flex-basis: 88px;
+  display: inline-block;
+  text-align: right;
+}
+
+.rowDelete {
+  flex-basis: 35px;
+  text-align: right;
+}
+
+@media (any-hover: hover) {
+  .rowDelete button {
+    visibility: hidden;
+  }
+
+  .tableRow:hover .rowDelete button {
+    visibility: visible;
+  }
+
+  .rowHandle img {
+    display: none;
+  }
+
+  .tableRow:hover .rowHandle img {
+    display: block;
+  }
+
+  .editButton {
+    visibility: hidden;
+  }
+
+  .tableRow:hover .editButton {
+    visibility: visible;
+  }
+}
+
+.percent {
+  font-size: 0.8em;
+}
+
+/* .tableRow .rowPortfolio, */
+.tableRow .rowChange,
+.tableRow .rowTotalGain,
+.tableRow .rowStocks,
+.tableRow .rowMargetValue {
+  font-size: 0.8em;
+}
+
+/*   
+  md: 768px,
+  lg: 992px, */
+
+@media only screen and (max-width: 767px) {
+  .rowStocks {
+    display: none;
+  }
+  .rowTotalGain {
+    display: none;
+  }
+  .rowChange {
+    display: none;
+  }
+}
