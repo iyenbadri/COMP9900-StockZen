@@ -12,4 +12,7 @@ Week 3:
 •	Briefing Alphavantage API capabilities 
 •	Proposal Background
 
+Week 4:
+•	Defined and executed logout API route 
+•	Created Alpha Vantage local Database
 
