@@ -12,7 +12,7 @@ import PortfolioListSummary from './PortfolioListSummary';
 interface IPortfolioListRow {
   id: number;
   name: string;
-  stocks: number;
+  stock_count: number;
   change: number | null;
   changePercent: number | null;
   marketValue: number | null;
@@ -47,7 +47,9 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
 
   const updatePortfolioName = () => {
     if (prop.updatePortfolioName != null) {
-      prop.updatePortfolioName(prop.id, portfolioName);
+      if (portfolioName.length > 0 && portfolioName.length <= 50) {
+        prop.updatePortfolioName(prop.id, portfolioName);
+      }
     }
     setIsEditingName(false);
   };
@@ -64,6 +66,7 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
               value={portfolioName}
               style={{ width: '100%', padding: 0 }}
               autoFocus
+              maxLength={50}
               onChange={(ev) => {
                 setPortfolioName(ev.target.value);
               }}
@@ -97,7 +100,7 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
             <img src={editIcon} alt='edit' width={18} />
           </button>
         </span>
-        <span className={styles.rowStocks}>{prop.stocks}</span>
+        <span className={styles.rowStocks}>{prop.stock_count}</span>
         <span className={styles.rowMargetValue}>
           {prop.marketValue == null
             ? '-'
@@ -153,7 +156,7 @@ const PortfolioList = () => {
     {
       name: 'My portfolio 1',
       id: 1,
-      stocks: 3,
+      stock_count: 3,
       marketValue: 29134.3,
       change: 403.1,
       changePercent: 0.59,
@@ -163,7 +166,7 @@ const PortfolioList = () => {
     {
       name: 'My empty portfolio',
       id: 2,
-      stocks: 0,
+      stock_count: 0,
       marketValue: null,
       change: null,
       changePercent: null,
@@ -173,7 +176,7 @@ const PortfolioList = () => {
     {
       name: 'My portfolio 2',
       id: 3,
-      stocks: 15,
+      stock_count: 15,
       marketValue: 1902.31,
       change: -31.8,
       changePercent: -0.59,
