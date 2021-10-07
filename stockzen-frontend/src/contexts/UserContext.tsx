@@ -10,8 +10,8 @@ interface IUserContext {
 
 const contextDefaultValues: IUserContext = {
   isAuthenticated: false,
-  authenticate: () => {},
-  logout: () => {},
+  authenticate: () => { },
+  logout: () => { },
   checkEmailUnique: (email: string) => true,
 };
 
@@ -39,6 +39,10 @@ const UserProvider: FC = ({ children }): any => {
   const logout = () => {
     setIsAuthenticated(false);
     localStorage.setItem('isAuthenticated', '0');
+    // Remove user info from local storage
+    localStorage.removeItem('firstName');
+    localStorage.removeItem('lastName');
+    localStorage.removeItem('email');
     //document.body.style.backgroundColor = '#1c2541';
   };
 
