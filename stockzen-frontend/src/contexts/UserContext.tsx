@@ -18,17 +18,19 @@ const contextDefaultValues: IUserContext = {
 export const UserContext = createContext<IUserContext>(contextDefaultValues);
 
 const UserProvider: FC = ({ children }): any => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
+    localStorage.getItem('isAuthenticated') === '1'
+  );
 
-  const init = () => {
-    if (localStorage.getItem('isAuthenticated') === '1') {
-      setIsAuthenticated(true);
-    }
-  };
+  // const init = () => {
+  //   if (localStorage.getItem('isAuthenticated') === '1') {
+  //     setIsAuthenticated(true);
+  //   }
+  // };
 
-  useEffect(() => {
-    init();
-  }, []);
+  // useEffect(() => {
+  //   init();
+  // }, []);
 
   const authenticate = () => {
     setIsAuthenticated(true);

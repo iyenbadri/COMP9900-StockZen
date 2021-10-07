@@ -1,0 +1,37 @@
+@import 'variables.css';
+
+.options {
+  background-color: var(--zen-5);
+}
+
+.searchOption {
+  display: flex;
+  width: 100%;
+}
+
+.optionAdd {
+  flex-basis: 70px;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.optionSymbol {
+  color: var(--zen-4);
+  flex-basis: 120px;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.optionDescription {
+  color: var(--zen-3);
+  flex-grow: 1;
+  flex-shrink: 0;
+  overflow-x: auto;
+}
+
+.optionMarket {
+  color: var(--zen-3);
+  flex-basis: 100px;
+  flex-shrink: 0;
+  font-style: italic;
+}
