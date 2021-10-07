@@ -2,7 +2,6 @@ import LoginForm from 'components/User/LoginForm';
 import { UserContext } from 'contexts/UserContext';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import styles from './Login.module.css';
 
 const Login: FC = () => {
   const { isAuthenticated, authenticate } = useContext(UserContext);
@@ -23,7 +22,7 @@ const Login: FC = () => {
   };
 
   return (
-    <div className={styles.formWrapper}>
+    <>
       {!isAuthenticated && (
         <LoginForm
           onLoginSuccess={(email, password) => {
@@ -33,7 +32,7 @@ const Login: FC = () => {
           }}></LoginForm>
       )}
 
-    </div >
+    </>
   );
 };
 
