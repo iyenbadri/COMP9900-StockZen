@@ -31,8 +31,8 @@ Week 3
 - Reviewed final proposal with some comments.
 - Set up GitHub and development environment.
 - Did PR reviews for:
-  - PR#3_Footer (Rittisak)
-  - PR#15_Registration_page (Rittisak)
+  · PR#3_Footer (Rittisak)
+  · PR#15_Registration_page (Rittisak)
 - Explored CSS, React, and TypeScript tutorials for upcoming frontend coding.
 - Got started on frontend login page layout.
 
@@ -44,12 +44,12 @@ Week 4 (by 07/10; will be updated once more at the end of week)
 • Achieved : (1) Done / (2)-(3) left 
 
 - Did PR reviews for:
-  - PR#17_Porfolio_list (Rittisak)
-  - PR#20_Landing_page (Khai)
-  -
+  · PR#17_Porfolio_list (Rittisak)
+  · PR#20_Landing_page (Khai)
+  ·
 - Wrote codes and created PR for:
-  - login page layout and functionalities(error handling, user data storage)
-  - logout handling (user data deletion)
-  -
+  · login page layout and functionalities(error handling, user data storage)
+  · logout handling (user data deletion)
+  ·
 
 ========================================================================================
