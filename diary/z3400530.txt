@@ -68,10 +68,46 @@ Compiled all sections into final proposal, including formatting. Rewrote several
 Planned work: finish proposal, start on Sprint 1
 Achieved: All mostly achieved - proposal delayed by 1 day, but sprint started early by 1 day. All good.
 
+Meeting: Set up standup meeting times, discussion around Jira issues and distribution of work
+
+Spent a few hours helping Badri and Gunjan set up their development environments - now fully working.
+
+Updated feat-b/register to incorporate new user details route and update login route. 
+Also tested authentication flow with Swagger. Submitted PR.
+
+Wrote user exists route and submitted PR.
+
+Backend Sharing session with Badri and Gunjan to get them up to speed with the current backend architecture
+
+
 ===========================================================================
 Week 4
 ===========================================================================
+Helped team with envrionment issues
+PR review for Rittisak
+PR review for Gunjan
+Wrote code for layout changes, added modal and changed CSS to match Figma more closely
 
+Meeting: Figure out AV API caching behaviour
+
+Finish additional styling for registration
+Finish code for Landing Page
+Meeting: with Jeehyun for Login
+Meetings: with Badri for Performance Summary Banner
+AV API caching and database architecture
+Code for Logout page
+SQLalchemy discussion for stock_lots and users tables with Badri
+Meetings: with Badri for database architecture/SQLAlchemy
+
+Review Stock List Page PR
+Review portfolios/lots PR
+Making updates to the database structure, considering performance and updates scheme
+Meeting: with Jeehyun to review login page design, decide on approach to frontend authentication
+Drew up ER Diagram to assist with database meeting
+
+Planned work: submit proposal, complete registration and login, collect alpha vantage data
+Achieved: registration and login are 90% complete, pending review, alpha vantage data is being collected
+Some portfolio items have been worked on by Rittisak which gives us some headstart there.
 ===========================================================================
 Week 5
 ===========================================================================
