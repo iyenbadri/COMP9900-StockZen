@@ -16,3 +16,24 @@ Discussion of Project Proposal due at week 04.
 Division of task for Projec Proposal: User Stories.
 Set up of GitHub Classrooms and set up of backend development environments.
 - 26/09/2021
+
+Week 03 
+
+Planned Work:
+Working with SQLAlchemy and AlphaVantage API for setting up of databases for User Portfolios and stocks in Portfolios
+
+Self Study required:
+SQLAlchemy and AlphaVantage
+Time spent~ 3 hours
+
+Implemented work:
+Set up of databases for User stocks and Portfolios: Status- In review by Khai Liew
+
+Outstanding Work:
+User portfolio performance Banner routes
+Updated databse of stock prices, everytime a dev calls for the latest stock price.
+
+Meetings atended:
+Standup Meetings
+One on one with Khai for assistance working with SQLAlchemy an techical questions.
+- 07/10/2021
