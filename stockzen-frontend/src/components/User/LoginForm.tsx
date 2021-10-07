@@ -3,7 +3,7 @@ import React, { FC, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import styles from './LoginForm.module.css';
+import styles from './RegisterForm.module.css';
 
 interface IProps {
   onLoginSuccess: (email: string, password: string) => void;
@@ -36,22 +36,21 @@ const LoginForm: FC<IProps> = (props) => {
         localStorage.setItem('email', data.email);
       }
     } catch (e: any) {
-      if (e.response.status === 401) {
-        alert('Incorrect password.');
-      } else if (e.response.status === 403) {
-        alert('This email is not registered.');
+      if (e.response.status === 401 || e.response.status === 403) {
+        setErrorMessage('Please enter a correct email address or password.')
       } else {
-        alert('An error occurred. Please try again later.');
+        setErrorMessage('An error occurred. Please try again later.');
       }
     }
   };
 
   return (
     <>
-      <h3 className={styles.formTitle}>Log in</h3><br />
+      <h3 className={`my-2 ${styles.formTitle} outerStroke`}>Log in</h3>
       <Form onSubmit={handleSubmit(onLogin)}>
-        <Form.Group controlId='email' className={styles.controlGroup}>
+        <Form.Group controlId='email' className={`my-5 ${styles.controlGroup}`}>
           <Form.Label className={styles.formLabel}>Email Address</Form.Label>
+          <span className={styles.formRequired}> *</span>
           <Form.Control
             {...register('email', {
               required: true
@@ -63,8 +62,9 @@ const LoginForm: FC<IProps> = (props) => {
           </Form.Text>
         </Form.Group>
 
-        <Form.Group controlId='password' className={styles.controlGroup}>
+        <Form.Group controlId='password' className={`my-4 ${styles.controlGroup}`}>
           <Form.Label className={styles.formLabel}>Password</Form.Label>
+          <span className={styles.formRequired}> *</span>
           <Form.Control
             type='password'
             {...register('password', {
@@ -75,23 +75,27 @@ const LoginForm: FC<IProps> = (props) => {
           <Form.Text className={styles.errorMessage}>
             {errors.password?.type === 'required' && 'Password is required'}
           </Form.Text>
-
         </Form.Group>
-        <Row className='text-center'>
-          <Col xs={12}>
-            <Button
-              type='submit'
-            >
-              Submit
-            </Button>
+
+        <Row className={styles.errorMessage}>
+          <Col>
+            {errorMessage}
           </Col>
         </Row>
+
         <Row className='text-center'>
+          <Col xs={12}>
+            <Button className='btn mt-4 mb-2' type='submit'>Submit</Button>
+          </Col>
+        </Row>
+
+        <Row className='my-2 text-center'>
           <Col>
             <Link to='/' className={styles.formLink}>Forgot Password?</Link>
           </Col>
         </Row>
-        <Row className='text-center'>
+
+        <Row className='mt-2 mb-3 text-center'>
           <Col>
             Don't have an account?
             <Link to='/user/register' className={styles.formLink}>Sign up</Link>
