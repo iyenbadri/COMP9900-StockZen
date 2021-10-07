@@ -24,6 +24,11 @@
   color: var(--loss-red);
 }
 
+.formLink {
+  color: var(--theme-darkened);
+  font-weight: bold;
+}
+
 .controlGroup {
   margin-bottom: 25px;
 }
