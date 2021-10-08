@@ -16,6 +16,7 @@ interface TypeaheadOption {
   symbol: string;
   description: string;
   market: string;
+  searchLabel: string;
 }
 
 const SearchWidget: FC<Prop> = (prop) => {
@@ -28,6 +29,7 @@ const SearchWidget: FC<Prop> = (prop) => {
     symbol: x.symbol,
     description: x.description,
     market: x.market,
+    searchLabel: `${x.symbol}: ${x.description}`,
   });
 
   const [showSearchInput, setShowSearchInput] = useState<boolean>(false);
@@ -62,7 +64,7 @@ const SearchWidget: FC<Prop> = (prop) => {
         <AsyncTypeahead
           id='add-a-widget'
           isLoading={isLoading}
-          labelKey='symbol'
+          labelKey='searchLabel'
           maxResults={30}
           minLength={1}
           paginate={false}
