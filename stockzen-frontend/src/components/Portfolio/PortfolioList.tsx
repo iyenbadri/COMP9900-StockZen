@@ -1,13 +1,14 @@
 import crossIcon from 'assets/icon-outlines/outline-cross.svg';
 import editIcon from 'assets/icon-outlines/outline-edit-1.svg';
 import handleIcon from 'assets/icon-outlines/outline-menu-vertical.svg';
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useContext, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { Link, useRouteMatch } from 'react-router-dom';
 import styles from './PortfolioList.module.css';
 import PortfolioListSummary from './PortfolioListSummary';
+import { TopPerformanceContext } from 'contexts/TopPerformerContext';
 
 interface IPortfolioListRow {
   id: number;
@@ -29,8 +30,13 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
     currency: 'USD',
   });
 
-  const [portfolioName, setPortfolioName] = useState<string>(prop.name);
+  const { setShowPortfolioSummary } = useContext(TopPerformanceContext);
 
+  useEffect(() => {
+    setShowPortfolioSummary(false);
+  });
+
+  const [portfolioName, setPortfolioName] = useState<string>(prop.name);
   const [isEditingName, setIsEditingName] = useState<boolean>(false);
 
   const gainLossClass = (val: number | null): string => {

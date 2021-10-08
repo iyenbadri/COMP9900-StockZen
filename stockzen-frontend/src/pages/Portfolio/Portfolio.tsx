@@ -1,5 +1,5 @@
 import PortfolioList from 'components/Portfolio/PortfolioList';
-import TopPerformerWidget from 'components/TopPerformerWidget';
+import TopPerformerWidget from 'components/Portfolio/TopPerformerWidget';
 import React, { FC } from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
