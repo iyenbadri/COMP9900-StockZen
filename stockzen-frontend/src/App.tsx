@@ -3,6 +3,7 @@ import Footer from 'components/Layout/Footer';
 import Header from 'components/Layout/Header';
 import UserProvider, { UserContext } from 'contexts/UserContext';
 import Landing from 'pages/Landing';
+import Portfolio from 'pages/Portfolio';
 import User from 'pages/User';
 import React, { useContext } from 'react';
 import { Container } from 'react-bootstrap';
@@ -23,6 +24,7 @@ function App() {
           <Switch>
             <Route exact path={'/'} component={Landing} />
             <Route path={'/user'} component={User} />
+            <Route path={'/portfolio'} component={Portfolio} />
           </Switch>
         </Container>
         <Footer></Footer>
