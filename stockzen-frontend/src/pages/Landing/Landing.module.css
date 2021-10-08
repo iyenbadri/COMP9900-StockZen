@@ -1,0 +1,33 @@
+@import 'variables.css';
+
+.text {
+  color: white;
+  font-size: 3rem;
+  line-height: 3.5rem;
+  text-align: center;
+  justify-content: center;
+  font-weight: bold;
+  padding-top: 8vh;
+  padding-bottom: 5vh;
+  text-shadow: 0 3px 7px rgba(0, 0, 0, 0.5), 0 -2px 5px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.03rem;
+}
+
+.highlight {
+  color: var(--zen-5);
+}
+
+.heroLogo {
+  max-height: 120px;
+  width: auto;
+  margin: auto;
+}
+
+.subtitle {
+  margin: auto;
+  font-weight: normal;
+  font-size: 1.6rem;
+  line-height: 2rem;
+  padding-top: 5vh;
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 -1px 8px rgba(0, 0, 0, 0.2);
+}
