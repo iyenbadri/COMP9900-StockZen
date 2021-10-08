@@ -96,6 +96,15 @@ class PortfolioCRUD(Resource):
 @api.route("/<portfolioId>")
 class PortfolioCRUD(Resource):
     @login_required
+    # @api.expect(portfolio_fetch_request)
+    @api.response(200, "Successfully retrieved portfolio data")
+    @api.response(404, "Portfolio not found")
+    def get(self, portfolioId):
+        """Fetch data for a portfolio - YET TO IMPLEMENT"""
+        # TODO: NEED TO IMPLEMENT - return single portfolio data
+        return
+
+    @login_required
     @api.expect(portfolio_update_request)
     @api.response(200, "Successfully updated portfolio name")
     @api.response(404, "Portfolio not found")

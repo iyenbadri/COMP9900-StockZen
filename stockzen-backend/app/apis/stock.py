@@ -102,6 +102,15 @@ class StockCRUD(Resource):
 @api.route("/<stockId>")
 class StockCRUD(Resource):
     @login_required
+    # @api.expect(stock_fetch_request)
+    @api.response(200, "Successfully retrieved stock row data")
+    @api.response(404, "Stock not found")
+    def get(self, stockId):
+        """Fetch data for a stock - YET TO IMPLEMENT"""
+        # TODO: NEED TO IMPLEMENT - return single stock row data
+        return
+
+    @login_required
     @api.response(200, "Successfully deleted stock")
     @api.response(404, "Stock not found")
     def delete(self, stockId):
