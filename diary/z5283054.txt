@@ -96,15 +96,21 @@ Week 4
 
 # Planned:      Implement the portfolio list, top performance widget.
 # Finished:     The portfolio list is implemented along with the rename/delete functionalities.
+                The stock search functionality is implemented using the cached listings (I'm 
+                awaiting for the endpoint.)
 # Issue:        The backend doesn't have endpoint to retrieve the data, rename the portfolio, or
-                delete it yet.
-# Unfinished:   Data persistant in the data base as there is no endpoint for that yet.
+                delete it yet. Pretty much every endpoint is not developed or merged into the main
+                branch.
+# Unfinished:   Data persistant in the data base as there are no endpoints for that yet.
 # Next:         - 
 
 On Sunday, I implemented the layout of the portfolio list (using dummy data as backend hasn't
 the endpoint yet.).
 
 On Wednesday, I implemented the funcitonalities of rename/delete of a portfolio.
+
+On Friday, I implemented the stock searching functionality. I use a listing from a cached listing
+due to there is no endpoint available for me yet.
 
 -----------------------------------------------------------------------------------------
 You should also include in this diary the following information (if applicable) about the
