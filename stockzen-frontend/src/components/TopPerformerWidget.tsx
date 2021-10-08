@@ -59,16 +59,16 @@ const TopPerformerWidget: FC = (props) => {
       </div>
       {showPortfolioSummary && (
         <>
-          <div className={styles.summaryTitle}>My holdings</div>
-          <div className={styles.summaryValue}>
+          <div className={styles.summaryTitle}>My Holdings</div>
+          <div className={`${styles.summaryValue} outerStroke`}>
             {usdFormatter.format(portfolioSummary.holding)}
           </div>
           <div className={styles.summaryTitle}>Today</div>
-          <div className={styles.summaryValue}>
+          <div className={`${styles.summaryValue} outerStroke`}>
             {portfolioSummary.todayChangePercent}%
           </div>
           <div className={styles.summaryTitle}>Overall</div>
-          <div className={styles.summaryValue}>
+          <div className={`${styles.summaryValue} outerStroke`}>
             {portfolioSummary.overallChangePercent}%
           </div>
           <hr className={styles.separatorLine} />

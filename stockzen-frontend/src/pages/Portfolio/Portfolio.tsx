@@ -1,7 +1,6 @@
 import PortfolioList from 'components/PortfolioList';
 import TopPerformerWidget from 'components/TopPerformerWidget';
-import { TopPerformanceContext } from 'contexts/TopPerformerContext';
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -10,9 +9,6 @@ import ProtectedRoute from 'utils/ProtectedRoute';
 
 const User: FC = () => {
   const { path } = useRouteMatch();
-  const { setShowPortfolioSummary } = useContext(TopPerformanceContext);
-
-  setShowPortfolioSummary(false);
 
   return (
     <Container>
