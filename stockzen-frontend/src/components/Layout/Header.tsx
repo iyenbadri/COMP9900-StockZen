@@ -13,19 +13,19 @@ const Header = () => {
 
   return (
     <header className={isAuthenticated ? styles.userAuthenticated : ''}>
-      <Container>
+      <Container className={styles.headerContainer}>
         <Row>
-          <Col sm={6} className='text-start'>
+          <Col className='text-start'>
             <Link to='/'>
               {isAuthenticated && <img src={logo_light} alt='StockZen' />}
               {!isAuthenticated && <img src={logo_dark} alt='StockZen' />}
             </Link>
           </Col>
-          <Col sm={6} className='text-end'>
+          <Col className='text-end'>
             {!isAuthenticated && (
               <>
                 <Link to='/user/login' className='btn btn-zen-5 me-3'>
-                  Login
+                  Log in
                 </Link>
                 <Link to='/user/register' className='btn btn-primary'>
                   Register

@@ -1,0 +1,17 @@
+@import 'variables.css';
+
+.names {
+  font-weight: bold;
+  font-size: 1.7rem;
+  line-height: 2rem;
+}
+
+.tick {
+  width: 8rem;
+  margin: 15px;
+}
+
+.message {
+  text-align: center;
+  font-size: 1.1rem;
+}
