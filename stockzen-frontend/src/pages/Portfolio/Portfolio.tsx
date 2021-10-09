@@ -1,6 +1,6 @@
-import PortfolioList from 'components/PortfolioList';
-import { UserContext } from 'contexts/UserContext';
-import React, { FC, useContext } from 'react';
+import PortfolioList from 'components/Portfolio/PortfolioList';
+import TopPerformerWidget from 'components/Portfolio/TopPerformerWidget';
+import React, { FC } from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -14,7 +14,7 @@ const User: FC = () => {
     <Container>
       <Row>
         <Col lg={4} className='d-none d-lg-block'>
-          Top performace stock widget
+          <TopPerformerWidget></TopPerformerWidget>
         </Col>
         <Col xs={12} lg={8}>
           <Switch>
