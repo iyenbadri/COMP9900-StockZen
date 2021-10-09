@@ -130,10 +130,6 @@
   flex-shrink: 0;
 }
 
-.stockzenColor {
-  color: var(--stockzen-light);
-}
-
 @media (any-hover: hover) {
   .rowDelete button {
     visibility: hidden;
