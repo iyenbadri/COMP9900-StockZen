@@ -1,0 +1,61 @@
+@import 'variables.css';
+
+.widget {
+  margin-top: 30px;
+}
+
+.date {
+  color: var(--zen-3);
+  opacity: 0.75;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.summaryTitle {
+  text-align: center;
+  font-weight: 800;
+}
+
+.summaryValue {
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: 500;
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 800;
+}
+
+.symbolRow {
+  height: 50px;
+}
+
+.symbol {
+  text-align: center;
+}
+
+.price {
+  text-align: center;
+}
+
+.gain {
+  text-align: center;
+}
+
+.separatorLine {
+  margin: 20px 20px;
+}
+
+.challenge {
+  text-align: center;
+}
+
+.challenge a {
+  color: var(--zen-3);
+}

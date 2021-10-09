@@ -2,6 +2,7 @@ import 'bootstrap-custom.scss';
 import Footer from 'components/Layout/Footer';
 import Header from 'components/Layout/Header';
 import UserProvider, { UserContext } from 'contexts/UserContext';
+import TopPerformerProvider from 'contexts/TopPerformerContext';
 import Landing from 'pages/Landing';
 import Portfolio from 'pages/Portfolio';
 import User from 'pages/User';
@@ -35,7 +36,9 @@ function App() {
 
 const WrappedApp = () => (
   <UserProvider>
-    <App />
+    <TopPerformerProvider>
+      <App />
+    </TopPerformerProvider>
   </UserProvider>
 );
 
