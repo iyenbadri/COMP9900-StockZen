@@ -1,13 +1,12 @@
 import axios from 'axios';
-import React, { FC, useRef, useState, useContext, useEffect } from 'react';
+import { UserContext } from 'contexts/UserContext';
+import React, { FC, useContext, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { useForm } from 'react-hook-form';
 import styles from './RegisterForm.module.css';
-import { UserContext } from 'contexts/UserContext';
-import { useHistory } from 'react-router-dom';
 
 interface IProps {
   onRegisterSuccess: (firstName: string, lastName: string) => void;
@@ -22,10 +21,7 @@ const RegisterForm: FC<IProps> = (props) => {
     formState: { errors },
   } = useForm();
 
-  const history = useHistory();
-
-  const { isAuthenticated, recheckAuthenticationStatus } =
-    useContext(UserContext);
+  const { recheckAuthenticationStatus } = useContext(UserContext);
 
   // Error message from backend
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -34,12 +30,6 @@ const RegisterForm: FC<IProps> = (props) => {
   // Password for confirm
   const password = useRef({});
   password.current = watch('password', '');
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      history.push('/portfolio');
-    }
-  }, [history, isAuthenticated]);
 
   const isEmailUnique = async (email: string): Promise<boolean> => {
     try {
