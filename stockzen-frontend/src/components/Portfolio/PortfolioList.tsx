@@ -1,14 +1,15 @@
 import crossIcon from 'assets/icon-outlines/outline-cross.svg';
 import editIcon from 'assets/icon-outlines/outline-edit-1.svg';
 import handleIcon from 'assets/icon-outlines/outline-menu-vertical.svg';
-import React, { FC, useState, useContext, useEffect } from 'react';
+import axios from 'axios';
+import { TopPerformanceContext } from 'contexts/TopPerformerContext';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { Link, useRouteMatch } from 'react-router-dom';
 import styles from './PortfolioList.module.css';
 import PortfolioListSummary from './PortfolioListSummary';
-import { TopPerformanceContext } from 'contexts/TopPerformerContext';
 
 interface IPortfolioListRow {
   id: number;
@@ -157,7 +158,10 @@ const PortfolioList = () => {
   const [deletingPortfolioId, setDeletingPortfolioId] = useState<number>();
   const [showDeletePortfolioModal, setShowDeletePortfolioModal] =
     useState<boolean>(false);
+  const [showCreatePortfolioModal, setShowCreatePortfolioModal] =
+    useState<boolean>(false);
 
+  // Fetch from /portfolio/list
   const [portfolios, setPortfolios] = useState([
     {
       name: 'My portfolio 1',
@@ -190,6 +194,31 @@ const PortfolioList = () => {
       totalGainPercent: -1.7,
     },
   ]);
+
+  // Add new portfolio to the PortfolioList
+  const [newPortfolioName, setNewPortfolioName] = useState('');
+  const createPortfolio = (ev: any) => {
+    ev.preventDefault();
+    // axios.get('/portfolio/list')
+    //   .then(res => console.log(res));
+    let portfolioID = portfolios.length + 1;
+    let newPortfolio = {
+      name: newPortfolioName,
+      id: portfolioID,
+      stock_count: 0,
+      marketValue: null,
+      change: null,
+      changePercent: null,
+      totalGain: null,
+      totalGainPercent: null,
+    };
+    setPortfolios([...portfolios, newPortfolio]);
+    portfolios.push(newPortfolio);
+    axios.post('/portfolio', { portfolioName: newPortfolioName })
+      .then(res => console.log(res));
+    // console.log(portfolios);
+    setNewPortfolioName('');
+  };
 
   // TODO: https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent/pull/17/files#r723117690
   // Will have to remove styles from the table header buttons.
@@ -227,12 +256,49 @@ const PortfolioList = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      <Modal
+        show={showCreatePortfolioModal}
+        onHide={() => setShowCreatePortfolioModal(false)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Create portfolio</Modal.Title>
+        </Modal.Header>
+        <Form onSubmit={createPortfolio}>
+          <Modal.Body>
+            Please enter a name of portfolio to create.
+            <input
+              className={`my-2 ${styles.rowPortfolio}`}
+              type='text'
+              placeholder='Portfolio name'
+              value={newPortfolioName}
+              onChange={(ev) => setNewPortfolioName(ev.target.value)}>
+            </input>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              color={styles.stockzenColor}
+              type='submit'
+              onClick={(ev) => setShowCreatePortfolioModal(false)}
+            >
+              Create
+            </Button>
+            <Button
+              variant={'secondary'}
+              onClick={(ev) => setShowCreatePortfolioModal(false)}
+            >
+              Cancel
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
       <PortfolioListSummary></PortfolioListSummary>
 
       <div className={styles.tableToolbar}>
         <h5 className={styles.toolbarText}>My Portfolios</h5>
         <div className={styles.toolbarControls}>
-          <Button variant={'light'}>Create a portfolio</Button>
+          <Button
+            variant={'light'}
+            onClick={() => setShowCreatePortfolioModal(true)}>Create a portfolio</Button>
         </div>
       </div>
 
