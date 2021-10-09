@@ -211,10 +211,9 @@ const PortfolioList = () => {
       totalGainPercent: null,
     };
     setPortfolios([...portfolios, newPortfolio]);
-    portfolios.push(newPortfolio);
     axios.post('/portfolio', { portfolioName: newPortfolioName })
-    // console.log(portfolios);
     setNewPortfolioName('');
+    setShowCreatePortfolioModal(false)
   };
 
   // TODO: https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent/pull/17/files#r723117690
@@ -273,9 +272,8 @@ const PortfolioList = () => {
           </Modal.Body>
           <Modal.Footer>
             <Button
-              color={styles.stockzenColor}
+              variant={'zen-4'}
               type='submit'
-              onClick={(ev) => setShowCreatePortfolioModal(false)}
             >
               Create
             </Button>
