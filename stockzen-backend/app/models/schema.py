@@ -101,7 +101,7 @@ class Stock(db.Model):
     stock_page_id = Column(
         Integer, ForeignKey("stock_pages.id"), nullable=False
     )  # to get current price and percent_change
-    code = Column(String(6), unique=True)
+    code = Column(String(6))
     stock_name = Column(String(40))
     price = Column(Float)  # = stock_pages.price
     change = Column(Float)  # = stock_pages.change
@@ -129,7 +129,7 @@ class Stock(db.Model):
     )
 
     # Unique Constraints (multiple column)
-    UniqueConstraint(user_id, portfolio_id, stock_page_id, "uniq_1")
+    UniqueConstraint(user_id, portfolio_id, stock_page_id)
 
     def __repr__(self):
         return f"<Stock(id={self.id}, portfolio_id={self.portfolio_id}, code={self.code}, stock_name={self.stock_name})>"
