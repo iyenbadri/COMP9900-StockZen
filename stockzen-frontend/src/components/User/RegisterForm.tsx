@@ -1,11 +1,13 @@
 import axios from 'axios';
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useRef, useState, useContext, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { useForm } from 'react-hook-form';
 import styles from './RegisterForm.module.css';
+import { UserContext } from 'contexts/UserContext';
+import { useHistory } from 'react-router-dom';
 
 interface IProps {
   onRegisterSuccess: (firstName: string, lastName: string) => void;
@@ -20,6 +22,11 @@ const RegisterForm: FC<IProps> = (props) => {
     formState: { errors },
   } = useForm();
 
+  const history = useHistory();
+
+  const { isAuthenticated, recheckAuthenticationStatus } =
+    useContext(UserContext);
+
   // Error message from backend
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [emailErrorMessage, setEmailErrorMessage] = useState<string>('');
@@ -28,6 +35,12 @@ const RegisterForm: FC<IProps> = (props) => {
   const password = useRef({});
   password.current = watch('password', '');
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      history.push('/portfolio');
+    }
+  }, [history, isAuthenticated]);
+
   const isEmailUnique = async (email: string): Promise<boolean> => {
     try {
       // Query the existance
@@ -35,6 +48,7 @@ const RegisterForm: FC<IProps> = (props) => {
       if (response.status === 200) {
         // If no error then it means email is alread exists in backend.
         setEmailErrorMessage('Email is already in use');
+        recheckAuthenticationStatus();
         return false;
       } else {
         // Else then it is unknown
@@ -74,8 +88,15 @@ const RegisterForm: FC<IProps> = (props) => {
         props.onRegisterSuccess(data.firstName, data.lastName);
       }
     } catch (e: any) {
-      // Display error message.
-      setErrorMessage(e.response?.data?.message);
+      let message = e.response?.data?.message;
+      switch (message) {
+        case 'user already logged in':
+          break;
+        default:
+          // Display error message.
+          setErrorMessage(message);
+          break;
+      }
     }
   };
 
