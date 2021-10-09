@@ -199,8 +199,6 @@ const PortfolioList = () => {
   const [newPortfolioName, setNewPortfolioName] = useState('');
   const createPortfolio = (ev: any) => {
     ev.preventDefault();
-    // axios.get('/portfolio/list')
-    //   .then(res => console.log(res));
     let portfolioID = portfolios.length + 1;
     let newPortfolio = {
       name: newPortfolioName,
@@ -215,7 +213,6 @@ const PortfolioList = () => {
     setPortfolios([...portfolios, newPortfolio]);
     portfolios.push(newPortfolio);
     axios.post('/portfolio', { portfolioName: newPortfolioName })
-      .then(res => console.log(res));
     // console.log(portfolios);
     setNewPortfolioName('');
   };
