@@ -23,6 +23,7 @@ function App() {
           <Switch>
             <Route exact path={'/'} component={Landing} />
             <Route path={'/user'} component={User} />
+            <Route path={'/portfolio'} component={Portfolio} />
           </Switch>
         </Container>
         <Footer></Footer>
