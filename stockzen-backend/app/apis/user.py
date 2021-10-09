@@ -142,10 +142,12 @@ class UserCRUD(Resource):
 @api.route("/logout")
 class UserRouter(Resource):
     @login_required
-    @api.response(200, "logged out")
+    @api.response(200, "user logged out")
     def post(self):
+        """Log out the current user"""
+
         logout_user()
-        return {"message": "You have succesfully logged out"}, 200
+        return {"message": "user successfully logged out"}, 200
 
 
 # ==============================================================================
