@@ -1,6 +1,6 @@
 import app.utils.crud_utils as util
 from app.utils import db_utils as db
-from app.utils.enums import Response
+from app.utils.enums import Status
 from flask import request
 from flask_login import current_user
 from flask_login.utils import login_required
@@ -68,12 +68,13 @@ stock_update_request = api.model(
     },
 )
 
+
 # ==============================================================================
 # API Routes/Endpoints
 # ==============================================================================
 
 
-@api.route("/<portfolioId>")
+@api.route("/list/<portfolioId>")
 class StockCRUD(Resource):
     @login_required
     @api.marshal_list_with(stock_list_response)
@@ -81,19 +82,24 @@ class StockCRUD(Resource):
     @api.response(404, "User not found")
     def get(self, portfolioId):
         """List all stocks from a portfolio"""
-        portfolio_id = portfolioId
-        stock_list = util.get_stock_list(portfolio_id)
+
+        stock_list = util.get_stock_list(portfolioId)
+
         return stock_list
 
+
+@api.route("/<portfolioId>")
+class StockCRUD(Resource):
     @login_required
     @api.expect(stock_add_request)
     def post(self, portfolioId):
         """Create a new stock row"""
+
         json = marshal(request.json, stock_add_request)
-        portfolio_id = portfolioId
+
         stock_page_id = json["stockPageId"]
 
-        if util.add_stock(portfolio_id, stock_page_id) == Response.STOCK_ADDED:
+        if util.add_stock(portfolioId, stock_page_id) == Status.SUCCESS:
             return {"message": "stock successfully added"}, 200
 
         return {"message": "Could not add stock"}, 500
@@ -102,22 +108,25 @@ class StockCRUD(Resource):
 @api.route("/<stockId>")
 class StockCRUD(Resource):
     @login_required
-    # @api.expect(stock_fetch_request)
     @api.response(200, "Successfully retrieved stock row data")
     @api.response(404, "Stock not found")
     def get(self, stockId):
-        """Fetch data for a stock - YET TO IMPLEMENT"""
-        # TODO: NEED TO IMPLEMENT - return single stock row data
-        return
+        """Fetch data for a stock row within a portfolio"""
+
+        stock_item = util.fetch_stock(stockId)
+
+        if stock_item == Status.FAIL:
+            return {"message": "stock could not be found"}, 404
+
+        return stock_item
 
     @login_required
     @api.response(200, "Successfully deleted stock")
     @api.response(404, "Stock not found")
     def delete(self, stockId):
         """Delete an existing stock row"""
-        stock_id = stockId
 
-        if util.delete_stock(stock_id) == Response.STOCK_DELETED:
+        if util.delete_stock(stockId) == Status.SUCCESS:
             return {"message": "stock successfully deleted"}, 200
 
         return {"message": "stock could not be deleted"}, 500

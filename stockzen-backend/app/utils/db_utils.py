@@ -1,34 +1,97 @@
-from typing import List, Union
+import os
+from typing import List, Optional, TypeVar, Union
 
 from app import db
-from app.models.schema import LotBought, LotSold, Portfolio, Stock, User
+from app.models.schema import LotBought, LotSold, Portfolio, Stock, StockPage, User
 from flask_login import current_user
 from sqlalchemy import func
 
+DatabaseObj = TypeVar(
+    "DatabaseObj", Portfolio, Stock, User, LotBought, LotSold, StockPage
+)
+
 # ==============================================================================
-# Helper/Shared DB Utils
+# Helpers
 # ==============================================================================
 
 
-def insert_row(new_row: Union[Portfolio, Stock, User, LotBought, LotSold]) -> bool:
-    """Commit a new database SQLA object (i.e a row), returns success bool"""
+def debug_exception(error):
+    if os.environ.get("FLASK_ENV") == "development":
+        print(
+            f"{type(error).__name__} at line {error.__traceback__.tb_lineno} of {__file__}: {error}"
+        )
+    raise error
+
+
+# ==============================================================================
+# Shared DB Utils
+# ==============================================================================
+
+
+def query_item(table: DatabaseObj, item_id: int, **filters) -> Optional[DatabaseObj]:
+    """Query a database table using item id, returns query item or None
+    **filters is of form **{col_type: id}; e.g. {"portfolio": 1}
+    """
+    try:
+        queries = [table.id == item_id, table.user_id == current_user.id]
+        print(queries)
+        for col_type, id in filters.items():
+            queries.append(getattr(table, f"{col_type}_id") == id)
+        item = table.query.filter(*queries).one()
+        return item
+    except Exception as e:
+        debug_exception(e)
+
+
+def query_all(table: DatabaseObj, **filters: int) -> Optional[List[DatabaseObj]]:
+    """Query a database table using item parent, returns list of query items or None
+    **filters is of form **{col_type: id}; e.g. {"portfolio": 1}
+    """
+    try:
+        queries = [table.user_id == current_user.id]
+        for col_type, id in filters.items():
+            queries.append(getattr(table, f"{col_type}_id") == id)
+        item_list = table.query.filter(*queries).all()
+        return item_list
+    except Exception as e:
+        debug_exception(e)
+
+
+def insert_item(new_row: DatabaseObj) -> None:
+    """Commit a new database DB object (a row), throws exception on fail"""
     try:
         db.session.add(new_row)
         db.session.commit()
-        return True
-    except:
-        return False
+    except Exception as e:
+        debug_exception(e)
 
 
-def to_dict(object, keep_date=False):
-    """Converts query result object to dict form for easier jsonification
-    Use keep_date to retain last_updated timestamp
+def update_item(
+    table: DatabaseObj,
+    item_id: int,
+    target_col: str,
+    new_value: Union[int, str, float],
+    **filters: int,
+) -> None:
+    """Update table column, throws exception on fail"""
+    try:
+        item = query_item(table, item_id, **filters)
+        setattr(item, target_col, new_value)  # updates target_col
+        db.session.commit()
+    except Exception as e:
+        debug_exception(e)
+
+
+def delete_item(table: DatabaseObj, item_id: int, **filters: int) -> None:
+    """Delete item from database, throws exception on fail
+    **filters is of form **{col_type: id}; e.g. {"portfolio": 1}
     """
-    _dict = {}
-    for key in object.__mapper__.c.keys():
-        if key != "last_updated" or keep_date:
-            _dict[key] = getattr(object, key)
-    return _dict
+    try:
+        item = query_item(table, item_id, **filters)
+        db.session.delete(item)
+        db.session.commit()
+    except Exception as e:
+        debug_exception(e)
 
 
 # ==============================================================================
@@ -36,92 +99,12 @@ def to_dict(object, keep_date=False):
 # ==============================================================================
 
 
-def query_user(email: str) -> Union[User, None]:
-    """Query a user from the database by email, returns query result or None
+def query_user(email: str) -> Optional[User]:
+    """Query a user from the database by email, returns query result or None.
     Emails are unique, so .one() ensures error thrown if >1 result
     """
     try:
         user = User.query.filter(func.lower(User.email) == func.lower(email)).one()
         return user
-    except:
-        return False
-
-
-# ==============================================================================
-# Portfolio DB Utils
-# ==============================================================================
-
-
-def query_portfolio_all() -> Union[List[Portfolio], None]:
-    """Query a portfolio from the database by user_id, returns query result or None"""
-    portfolios_list = Portfolio.query.filter(Portfolio.user_id == current_user.id).all()
-    return portfolios_list
-
-
-def update_portfolio(id: int, target_col: str, new_value: Union[int, str, float]) -> bool:
-    """Update portfolio column on database, returns success bool"""
-    try:
-        portfolio = Portfolio.query.filter(Portfolio.id == id).one()
-        setattr(portfolio, target_col, new_value)  # updates target_col
-        db.session.commit()
-        return True
-    except:
-        return False
-
-
-def delete_portfolio(id: int):
-    """Delete portfolio from database, returns success bool"""
-    try:
-        portfolio = Portfolio.query.filter(Portfolio.id == id).one()
-        db.session.delete(portfolio)
-        db.session.commit()
-        return True
-    except:
-        return False
-
-
-# ==============================================================================
-# Stock DB Utils
-# ==============================================================================
-
-
-def query_portfolio_stocks(portfolio_id: int) -> Union[List[Stock], None]:
-    """Query a portfolio's stocks from the database, returns query result or None"""
-    portfolios_list = Stock.query.filter(
-        Stock.user_id == current_user.id, Stock.portfolio_id == portfolio_id
-    ).all()
-    return portfolios_list
-
-
-def update_stock(id: int, target_col: str, new_value: Union[int, str, float]) -> bool:
-    """Update stock column on database, returns success bool"""
-    try:
-        stock = Stock.query.filter(Stock.id == id).one()
-        setattr(stock, target_col, new_value)  # updates target_col
-        db.session.commit()
-        return True
-    except:
-        return False
-
-
-def delete_stock(id: int):
-    """Delete stock from database, returns success bool"""
-    try:
-        stock = Stock.query.filter(Stock.id == id).one()
-        db.session.delete(stock)
-        db.session.commit()
-        return True
-    except:
-        return False
-
-
-# ==============================================================================
-# Lot DB Utils
-# ==============================================================================
-
-
-# XXX: for debug
-# except Exception as e:
-# print(
-#     f"{type(e).__name__} at line {e.__traceback__.tb_lineno} of {__file__}: {e}"
-# )
+    except Exception as e:
+        debug_exception(e)

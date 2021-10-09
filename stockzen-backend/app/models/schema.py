@@ -2,7 +2,7 @@ from datetime import datetime
 
 from app import db
 from flask_login import UserMixin
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import backref, relationship
 from sqlalchemy.sql.sqltypes import Boolean, DateTime, Float, Numeric
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -10,13 +10,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 # https://docs.sqlalchemy.org/en/14/orm/basic_relationships.html
 
 # SQL uses implicit auto-increment, no need to specify for non-composite PK
-
-"""
-TERMINOLOGY:
-Change = daily change/gain in price for a stock 
-
-
-"""
 
 
 class User(UserMixin, db.Model):
@@ -41,6 +34,7 @@ class User(UserMixin, db.Model):
     def check_password(self, password) -> bool:
         return check_password_hash(self.password_hash, password)
 
+    # Relationships
     # one-to-many user:portfolios
     portfolios = relationship(
         "Portfolio",
@@ -86,6 +80,7 @@ class Portfolio(db.Model):
     confidence = Column(Float, default=0)
     last_updated = Column(DateTime, default=datetime.now())
 
+    # Relationships
     # one-to-many portfolio:stocks
     stocks = relationship(
         "Stock",
@@ -118,6 +113,7 @@ class Stock(db.Model):
     value = Column(Float)  # sum(bought.value)
     last_updated = Column(DateTime, default=datetime.now())
 
+    # Relationships
     # one-to-many stock:lots
     lots_bought = relationship(
         "LotBought",
@@ -131,6 +127,9 @@ class Stock(db.Model):
         lazy="select",
         cascade="all, delete, delete-orphan",
     )
+
+    # Unique Constraints (multiple column)
+    UniqueConstraint(user_id, portfolio_id, stock_page_id, "uniq_1")
 
     def __repr__(self):
         return f"<Stock(id={self.id}, portfolio_id={self.portfolio_id}, code={self.code}, stock_name={self.stock_name})>"
@@ -170,6 +169,7 @@ class StockPage(db.Model):
     stock_name = Column(String(40))
     # TODO: Populate remaining columns
 
+    # Relationships
     # one-to-many stock_pages:stocks
     stocks = relationship(
         "Stock",

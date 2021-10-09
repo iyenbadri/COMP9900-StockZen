@@ -11,13 +11,11 @@ all_apis = Api(
 )
 
 # add each namespace api to the aggregated apis
-from .cats import api as ns1
-from .dogs import api as ns2
-from .lot import api_bought as ns3
-from .lot import api_sold as ns4
-from .portfolio import api as ns5
-from .stock import api as ns6
-from .user import api as ns7
+from .lot import api_bought as ns1
+from .lot import api_sold as ns2
+from .portfolio import api as ns3
+from .stock import api as ns4
+from .user import api as ns5
 
-for ns in [ns1, ns2, ns3, ns4, ns5, ns6, ns7]:
+for ns in [ns1, ns2, ns3, ns4, ns5]:
     all_apis.add_namespace(ns)

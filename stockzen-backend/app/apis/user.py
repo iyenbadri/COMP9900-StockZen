@@ -8,9 +8,10 @@
 # ==============================================================================
 
 import app.utils.auth_utils as auth
+import app.utils.crud_utils as util
 from app import login_manager
 from app.models.schema import User
-from app.utils.enums import Response
+from app.utils.enums import Status
 from flask import request
 from flask_login import current_user
 from flask_login.utils import login_required, login_user, logout_user
@@ -75,9 +76,9 @@ class UserCRUD(Resource):
 
         user = auth.validate_login(email, plain_password)
 
-        if user == Response.USER_NOT_FOUND:
+        if user == Status.NOT_FOUND:
             return {"message": "User not found"}, 403
-        elif user == Response.INCORRECT_PASSWORD:
+        elif user == Status.INCORRECT_PASSWORD:
             return {"message": "Incorrect password"}, 401
         else:
             login_user(user)
@@ -88,7 +89,9 @@ class UserCRUD(Resource):
 @api.route("/register")
 class UserCRUD(Resource):
     @api.expect(register_request)
+    @api.response(200, "Successful registration")
     @api.response(409, "Registration conflict")
+    @api.response(500, "Registration error")
     def post(self):
         """Register a new user"""
         json = marshal(request.json, register_request)
@@ -101,13 +104,10 @@ class UserCRUD(Resource):
         if current_user.is_authenticated:
             return {"message": "user already logged in"}, 409
 
-        if auth.email_exists(email) == Response.USER_FOUND:
+        if auth.email_exists(email) == Status.FOUND:
             return {"message": "email already exists"}, 409
 
-        if (
-            auth.add_user(email, first_name, last_name, plain_password)
-            == Response.USER_ADDED
-        ):
+        if util.add_user(email, first_name, last_name, plain_password) == Status.SUCCESS:
             return {"message": "user successfully registered"}, 200
 
         return {"message": "registration error occurred"}, 500
@@ -117,6 +117,7 @@ class UserCRUD(Resource):
 class UserCRUD(Resource):
     @login_required
     @api.doc("get user details")
+    @api.response(200, "User details found")
     @api.response(401, "Unauthorized")
     def get(self):
         """Fetch a user's details"""
@@ -133,7 +134,7 @@ class UserCRUD(Resource):
     def head(self, email):
         """Check if an email already exists"""
         email_status = auth.email_exists(email)
-        if email_status == Response.USER_FOUND:
+        if email_status == Status.FOUND:
             return {"message": "user exists"}, 200
         return {"message": "user not found"}, 404
 

@@ -1,5 +1,5 @@
 import app.utils.crud_utils as util
-from app.utils.enums import Response
+from app.utils.enums import Status
 from flask import request
 from flask_login import current_user
 from flask_login.utils import login_required
@@ -66,7 +66,7 @@ portfolio_update_request = api.model(
 # ==============================================================================
 
 
-@api.route("")
+@api.route("/list")
 class PortfolioCRUD(Resource):
     @login_required
     @api.marshal_list_with(portfolio_list_response)
@@ -74,20 +74,26 @@ class PortfolioCRUD(Resource):
     @api.response(404, "User not found")
     def get(self):
         """List all portfolios from a user"""
+
         portfolio_list = util.get_portfolio_list()
+
         return portfolio_list
 
+
+@api.route("")
+class PortfolioCRUD(Resource):
     @login_required
     @api.expect(portfolio_add_request)
     @api.response(200, "Successfully created new portfolio")
     @api.response(404, "User not found")
     def post(self):
         """Create a new portfolio"""
+
         json = marshal(request.json, portfolio_add_request)
 
         portfolio_name = json["portfolioName"]
 
-        if util.add_portfolio(portfolio_name) == Response.PORTFOLIO_ADDED:
+        if util.add_portfolio(portfolio_name) == Status.SUCCESS:
             return {"message": "portfolio successfully created"}, 200
 
         return {"message": "portfolio could not be created"}, 500
@@ -96,13 +102,17 @@ class PortfolioCRUD(Resource):
 @api.route("/<portfolioId>")
 class PortfolioCRUD(Resource):
     @login_required
-    # @api.expect(portfolio_fetch_request)
     @api.response(200, "Successfully retrieved portfolio data")
     @api.response(404, "Portfolio not found")
     def get(self, portfolioId):
-        """Fetch data for a portfolio - YET TO IMPLEMENT"""
-        # TODO: NEED TO IMPLEMENT - return single portfolio data
-        return
+        """Fetch data for a portfolio"""
+
+        portfolio_item = util.fetch_portfolio(portfolioId)
+
+        if portfolio_item == Status.FAIL:
+            return {"message": "portfolio could not be found"}, 404
+
+        return portfolio_item
 
     @login_required
     @api.expect(portfolio_update_request)
@@ -110,15 +120,12 @@ class PortfolioCRUD(Resource):
     @api.response(404, "Portfolio not found")
     def put(self, portfolioId):
         """Rename an existing portfolio"""
+
         json = marshal(request.json, portfolio_update_request)
 
-        portfolio_id = portfolioId
         new_name = json["newName"]
 
-        if (
-            util.update_portfolio_name(portfolio_id, new_name)
-            == Response.PORTFOLIO_UPDATED
-        ):
+        if util.update_portfolio_name(portfolioId, new_name) == Status.SUCCESS:
             return {"message": "portfolio name successfully updated"}, 200
 
         return {"message": "portfolio name could not be updated"}, 500
@@ -128,9 +135,8 @@ class PortfolioCRUD(Resource):
     @api.response(404, "Portfolio not found")
     def delete(self, portfolioId):
         """Delete an existing portfolio"""
-        portfolio_id = portfolioId
 
-        if util.delete_portfolio(portfolio_id) == Response.PORTFOLIO_DELETED:
+        if util.delete_portfolio(portfolioId) == Status.SUCCESS:
             return {"message": "portfolio successfully deleted"}, 200
 
         return {"message": "portfolio could not be deleted"}, 500
