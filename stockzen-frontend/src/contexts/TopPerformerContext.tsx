@@ -1,4 +1,4 @@
-import React, { createContext, FC, useEffect, useState } from 'react';
+import React, { createContext, FC, useState } from 'react';
 // import api from '../../api';
 
 interface ITopPerformerContext {
@@ -11,7 +11,7 @@ const contextDefaultValues: ITopPerformerContext = {
   setShowPortfolioSummary: (show: boolean) => {},
 };
 
-export const TopPerformanceContext =
+export const TopPerformerContext =
   createContext<ITopPerformerContext>(contextDefaultValues);
 
 const TopPerformerProvider: FC = ({ children }): any => {
@@ -19,14 +19,14 @@ const TopPerformerProvider: FC = ({ children }): any => {
     useState<boolean>(false);
 
   return (
-    <TopPerformanceContext.Provider
+    <TopPerformerContext.Provider
       value={{
         showPortfolioSummary,
         setShowPortfolioSummary,
       }}
     >
       {children}
-    </TopPerformanceContext.Provider>
+    </TopPerformerContext.Provider>
   );
 };
 

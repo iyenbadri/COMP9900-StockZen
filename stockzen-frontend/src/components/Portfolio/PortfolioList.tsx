@@ -1,17 +1,29 @@
 import crossIcon from 'assets/icon-outlines/outline-cross.svg';
 import editIcon from 'assets/icon-outlines/outline-edit-1.svg';
 import handleIcon from 'assets/icon-outlines/outline-menu-vertical.svg';
-import React, { FC, useState, useContext, useEffect } from 'react';
+import axios from 'axios';
+import { TopPerformerContext } from 'contexts/TopPerformerContext';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { Link, useRouteMatch } from 'react-router-dom';
 import styles from './PortfolioList.module.css';
 import PortfolioListSummary from './PortfolioListSummary';
-import { TopPerformanceContext } from 'contexts/TopPerformerContext';
 
-interface IPortfolioListRow {
+interface IPortfolioResponse {
   id: number;
+  portfolioName: string;
+  stockCount: number;
+  value: number;
+  change: number;
+  percChange: number;
+  gain: number;
+  percGain: number;
+}
+
+interface IPortfolio {
+  portfolioId: number;
   name: string;
   stock_count: number;
   change: number | null;
@@ -19,6 +31,9 @@ interface IPortfolioListRow {
   marketValue: number | null;
   totalGain: number | null;
   totalGainPercent: number | null;
+}
+
+interface IPortfolioListRow extends IPortfolio {
   updatePortfolioName?: (id: number, name: string) => void;
   showDeleteModal?: (id: number, name: string) => void;
 }
@@ -30,11 +45,11 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
     currency: 'USD',
   });
 
-  const { setShowPortfolioSummary } = useContext(TopPerformanceContext);
+  const { setShowPortfolioSummary } = useContext(TopPerformerContext);
 
   useEffect(() => {
     setShowPortfolioSummary(false);
-  });
+  }, []);
 
   const [portfolioName, setPortfolioName] = useState<string>(prop.name);
   const [isEditingName, setIsEditingName] = useState<boolean>(false);
@@ -54,7 +69,7 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
   const updatePortfolioName = () => {
     if (prop.updatePortfolioName != null) {
       if (portfolioName.length > 0 && portfolioName.length <= 50) {
-        prop.updatePortfolioName(prop.id, portfolioName);
+        prop.updatePortfolioName(prop.portfolioId, portfolioName);
       }
     }
     setIsEditingName(false);
@@ -90,7 +105,10 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
               }}
             />
           ) : (
-            <Link to={`${path}/${prop.id}`} className={styles.rowPortfolioLink}>
+            <Link
+              to={`${path}/${prop.portfolioId}`}
+              className={styles.rowPortfolioLink}
+            >
               {prop.name}
             </Link>
           )}
@@ -140,7 +158,7 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
           className={`p-0 ${styles.deleteButton}`}
           onClick={() => {
             if (prop.showDeleteModal != null) {
-              prop.showDeleteModal(prop.id, prop.name);
+              prop.showDeleteModal(prop.portfolioId, prop.name);
             }
           }}
         >
@@ -158,38 +176,86 @@ const PortfolioList = () => {
   const [showDeletePortfolioModal, setShowDeletePortfolioModal] =
     useState<boolean>(false);
 
-  const [portfolios, setPortfolios] = useState([
-    {
-      name: 'My portfolio 1',
-      id: 1,
-      stock_count: 3,
-      marketValue: 29134.3,
-      change: 403.1,
-      changePercent: 0.59,
-      totalGain: 1403.1,
-      totalGainPercent: 11.7,
-    },
-    {
-      name: 'My empty portfolio',
-      id: 2,
-      stock_count: 0,
-      marketValue: null,
-      change: null,
-      changePercent: null,
-      totalGain: null,
-      totalGainPercent: null,
-    },
-    {
-      name: 'My portfolio 2',
-      id: 3,
-      stock_count: 15,
-      marketValue: 1902.31,
-      change: -31.8,
-      changePercent: -0.59,
-      totalGain: -903.2,
-      totalGainPercent: -1.7,
-    },
-  ]);
+  const mapPortfolioList = (
+    portfolioList: IPortfolioResponse[]
+  ): IPortfolio[] => {
+    return portfolioList.map((x: IPortfolioResponse) => ({
+      portfolioId: x.id,
+      name: x.portfolioName,
+      stock_count: x.stockCount,
+      marketValue: x.value,
+      change: x.change,
+      changePercent: x.percChange,
+      totalGain: x.gain,
+      totalGainPercent: x.percGain,
+    }));
+  };
+
+  const [portfolios, setPortfolios] = useState<IPortfolio[]>([]);
+
+  const reloadPortfolioList = () => {
+    axios.get('/portfolio/list').then((response) => {
+      const mockData: IPortfolio[] = [
+        {
+          name: 'My portfolio 1',
+          portfolioId: -1,
+          stock_count: 3,
+          marketValue: 29134.3,
+          change: 403.1,
+          changePercent: 0.59,
+          totalGain: 1403.1,
+          totalGainPercent: 11.7,
+        },
+        {
+          name: 'My empty portfolio',
+          portfolioId: -2,
+          stock_count: 0,
+          marketValue: null,
+          change: null,
+          changePercent: null,
+          totalGain: null,
+          totalGainPercent: null,
+        },
+        {
+          name: 'My portfolio 2',
+          portfolioId: -3,
+          stock_count: 15,
+          marketValue: 1902.31,
+          change: -31.8,
+          changePercent: -0.59,
+          totalGain: -903.2,
+          totalGainPercent: -1.7,
+        },
+      ];
+
+      setPortfolios([...mockData, ...mapPortfolioList(response.data)]);
+    });
+  };
+
+  useEffect(() => {
+    reloadPortfolioList();
+  }, []);
+
+  const handlePortfolioRename = (portfolioId: number, name: string) => {
+    axios.put(`/portfolio/${portfolioId}`, { newName: name }).then(() => {
+      setPortfolios(
+        portfolios!.map((x) => {
+          return {
+            ...x,
+            name: x.portfolioId === portfolioId ? name : x.name,
+          };
+        })
+      );
+    });
+  };
+
+  const handlePortfolioDelete = () => {
+    setShowDeletePortfolioModal(false);
+
+    axios.delete(`/portfolio/${deletingPortfolioId}`).then(() => {
+      reloadPortfolioList();
+    });
+  };
 
   // TODO: https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent/pull/17/files#r723117690
   // Will have to remove styles from the table header buttons.
@@ -207,16 +273,7 @@ const PortfolioList = () => {
           Do you want to delete portfolio {deletingPortfolioName}?
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant={'danger'}
-            onClick={(ev) => {
-              // TODO: Call backend to delete the portfolio here.
-              setPortfolios(
-                portfolios.filter((x) => x.id !== deletingPortfolioId)
-              );
-              setShowDeletePortfolioModal(false);
-            }}
-          >
+          <Button variant={'danger'} onClick={handlePortfolioDelete}>
             Yes
           </Button>
           <Button
@@ -269,27 +326,17 @@ const PortfolioList = () => {
         <span className={styles.rowDelete}></span>
       </div>
 
-      {portfolios.map((port, index) => {
+      {portfolios!.map((port, index) => {
         return (
           <PortfolioListRow
-            key={port.id}
+            key={port.portfolioId}
             {...port}
-            showDeleteModal={(id, name) => {
-              setDeletingPortfolioId(id);
+            showDeleteModal={(portfolioId, name) => {
+              setDeletingPortfolioId(portfolioId);
               setDeletingPortfolioName(name);
               setShowDeletePortfolioModal(true);
             }}
-            updatePortfolioName={(id, name) => {
-              // TODO: Call backend to rename the portfolio here.
-              setPortfolios(
-                portfolios.map((x) => {
-                  return {
-                    ...x,
-                    name: x.id === id ? name : x.name,
-                  };
-                })
-              );
-            }}
+            updatePortfolioName={handlePortfolioRename}
           ></PortfolioListRow>
         );
       })}

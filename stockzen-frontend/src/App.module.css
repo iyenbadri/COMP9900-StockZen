@@ -17,6 +17,10 @@
   filter: saturate(80%) brightness(85%) contrast(85%);
 }
 
+.appContent {
+  margin-bottom: var(--footer-height);
+}
+
 /** GLOBALS: 
  * All selectors here should be prefixed with ":global" to switch
  *  to the global scope, i.e. no unique suffix id added on compile 

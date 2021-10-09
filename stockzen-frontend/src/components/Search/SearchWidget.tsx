@@ -1,14 +1,14 @@
+import plusCircle from 'assets/icon-outlines/outline-plus-circle.svg';
 import React, { FC, useState } from 'react';
+import { AsyncTypeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { AsyncTypeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
+import { Link } from 'react-router-dom';
 import listings from './listing.json';
 import styles from './SearchWidget.module.css';
-import plusCircle from 'assets/icon-outlines/outline-plus-circle.svg';
-import { Link } from 'react-router-dom';
 
 interface Prop {
-  addStock?: (symbol: string) => void;
+  addStock?: (symbol: string, stockPageId: number) => void;
 }
 
 interface TypeaheadOption {
@@ -34,6 +34,10 @@ const SearchWidget: FC<Prop> = (prop) => {
 
   const [showSearchInput, setShowSearchInput] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [addedSymbols, setAddedSymbols] = useState<string[]>([]);
+
+  // TODO : Use API to update the addedSymbols
+
   //const [query, setQuery] = useState<string>('');
   const [options, setOptions] = useState<TypeaheadOption[]>(
     listings.map(mapOptions)
@@ -46,9 +50,9 @@ const SearchWidget: FC<Prop> = (prop) => {
         onClick={() => {
           setShowSearchInput(true);
         }}
+        className='d-flex align-items-center'
       >
-        <img src={plusCircle} alt='plus' />
-        Add a stock
+        <img src={plusCircle} alt='plus' className='me-1' /> Add a stock
       </Button>
 
       <Modal
@@ -93,19 +97,23 @@ const SearchWidget: FC<Prop> = (prop) => {
                 <MenuItem option={option} position={index}>
                   <div key={option.id} className={styles.searchOption}>
                     <span className={styles.optionAdd}>
-                      <Button
-                        variant='transparent'
-                        onClick={(ev) => {
-                          ev.preventDefault();
-                          ev.stopPropagation();
+                      {!addedSymbols.includes(option.symbol) && (
+                        <Button
+                          variant='transparent'
+                          onClick={(ev) => {
+                            ev.preventDefault();
+                            ev.stopPropagation();
 
-                          if (prop.addStock != null) {
-                            prop.addStock(option.symbol);
-                          }
-                        }}
-                      >
-                        +
-                      </Button>
+                            if (prop.addStock != null) {
+                              // TODO: Retrieve the stockPageId from backend.
+                              prop.addStock(option.symbol, 1);
+                              setAddedSymbols([...addedSymbols, option.symbol]);
+                            }
+                          }}
+                        >
+                          +
+                        </Button>
+                      )}
                     </span>
                     <span className={styles.optionSymbol}>
                       <Link to={'/stock/' + option.symbol}>
