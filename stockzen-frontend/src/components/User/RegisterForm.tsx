@@ -48,7 +48,6 @@ const RegisterForm: FC<IProps> = (props) => {
       if (response.status === 200) {
         // If no error then it means email is alread exists in backend.
         setEmailErrorMessage('Email is already in use');
-        recheckAuthenticationStatus();
         return false;
       } else {
         // Else then it is unknown
@@ -91,6 +90,7 @@ const RegisterForm: FC<IProps> = (props) => {
       let message = e.response?.data?.message;
       switch (message) {
         case 'user already logged in':
+          recheckAuthenticationStatus();
           break;
         default:
           // Display error message.
