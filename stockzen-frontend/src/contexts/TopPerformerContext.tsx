@@ -1,5 +1,4 @@
 import React, { createContext, FC, useState } from 'react';
-// import api from '../../api';
 
 interface ITopPerformerContext {
   showPortfolioSummary: boolean;

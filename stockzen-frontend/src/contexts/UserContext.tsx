@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { createContext, FC, useEffect, useState } from 'react';
 // import api from '../../api';
 
@@ -5,13 +6,15 @@ interface IUserContext {
   isAuthenticated: boolean;
   authenticate: () => void;
   logout: () => void;
+  recheckAuthenticationStatus: () => void;
   checkEmailUnique: (email: string) => boolean;
 }
 
 const contextDefaultValues: IUserContext = {
   isAuthenticated: false,
-  authenticate: () => { },
-  logout: () => { },
+  authenticate: () => {},
+  logout: () => {},
+  recheckAuthenticationStatus: () => {},
   checkEmailUnique: (email: string) => true,
 };
 
@@ -22,23 +25,13 @@ const UserProvider: FC = ({ children }): any => {
     localStorage.getItem('isAuthenticated') === '1'
   );
 
-  // const init = () => {
-  //   if (localStorage.getItem('isAuthenticated') === '1') {
-  //     setIsAuthenticated(true);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   init();
-  // }, []);
-
-  const authenticate = () => {
+  const markAsLoggedIn = () => {
     setIsAuthenticated(true);
     localStorage.setItem('isAuthenticated', '1');
     //document.body.style.backgroundColor = '#5bc0be';
   };
 
-  const logout = () => {
+  const markAsLoggedOut = () => {
     setIsAuthenticated(false);
     localStorage.setItem('isAuthenticated', '0');
     // Remove user info from local storage
@@ -46,6 +39,27 @@ const UserProvider: FC = ({ children }): any => {
     localStorage.removeItem('lastName');
     localStorage.removeItem('email');
     //document.body.style.backgroundColor = '#1c2541';
+  };
+
+  const authenticate = () => {
+    // TODO call API to do the login
+    markAsLoggedIn();
+  };
+
+  const logout = () => {
+    // TODO call API to do the logout
+    markAsLoggedOut();
+  };
+
+  const recheckAuthenticationStatus = () => {
+    axios
+      .get('/user/details')
+      .then(() => {
+        markAsLoggedIn();
+      })
+      .catch(() => {
+        logout();
+      });
   };
 
   const checkEmailUnique = (email: string) => {
@@ -58,6 +72,7 @@ const UserProvider: FC = ({ children }): any => {
         isAuthenticated,
         authenticate,
         logout,
+        recheckAuthenticationStatus,
         checkEmailUnique,
       }}
     >

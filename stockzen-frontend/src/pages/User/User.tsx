@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import GuestRoute from 'utils/GuestRoute';
 import Login from './Login';
 import Logout from './Logout';
 import Register from './Register';
@@ -35,8 +36,8 @@ const User: FC = () => {
             ></CloseButton>
             <Modal.Body className={styles.modalBody}>
               <Switch>
-                <Route path={`${path}/login`} component={Login} />
-                <Route path={`${path}/register`} component={Register} />
+                <GuestRoute path={`${path}/login`} component={Login} />
+                <GuestRoute path={`${path}/register`} component={Register} />
                 <Route path={`${path}/logout`} component={Logout} />
               </Switch>
             </Modal.Body>
