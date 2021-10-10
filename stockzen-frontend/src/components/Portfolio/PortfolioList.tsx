@@ -125,7 +125,7 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
           </button>
         </span>
         <span className={styles.rowStocks}>{prop.stock_count}</span>
-        <span className={styles.rowMargetValue}>
+        <span className={styles.rowMarketValue}>
           {prop.marketValue == null
             ? '-'
             : usdFormatter.format(prop.marketValue)}
@@ -307,7 +307,7 @@ const PortfolioList = () => {
               Stocks
             </Button>
           </span>
-          <span className={styles.rowMargetValue}>
+          <span className={styles.rowMarketValue}>
             <Button variant={'light'} size={'sm'}>
               Market value
             </Button>

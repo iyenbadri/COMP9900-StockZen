@@ -195,10 +195,12 @@
 }
 
 /* .tableRow .rowPortfolio, */
+.tableRow .rowName,
+.tableRow .rowPrice,
 .tableRow .rowChange,
-.tableRow .rowTotalGain,
-.tableRow .rowStocks,
-.tableRow .rowMargetValue {
+.tableRow .rowAveragePrice,
+.tableRow .rowProfit,
+.tableRow .rowValue {
   font-size: 0.8em;
 }
 

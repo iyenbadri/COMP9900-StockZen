@@ -102,7 +102,7 @@
   flex-shrink: 0;
 }
 
-.rowMargetValue {
+.rowMarketValue {
   text-align: right;
   flex-basis: 109px;
   flex-shrink: 0;
@@ -164,7 +164,7 @@
 .tableRow .rowChange,
 .tableRow .rowTotalGain,
 .tableRow .rowStocks,
-.tableRow .rowMargetValue {
+.tableRow .rowMarketValue {
   font-size: 0.8em;
 }
 
