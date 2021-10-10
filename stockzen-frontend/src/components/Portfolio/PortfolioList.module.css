@@ -130,7 +130,7 @@
   flex-shrink: 0;
 }
 
-.modalWrapper {
+.modalWapper {
   max-width: 30%;
   position: fixed;
   left: 35%;
@@ -139,10 +139,6 @@
 
 .modalTitle {
   width: 100%;
-}
-
-.modalFooter {
-  text-align: center;
 }
 
 @media (any-hover: hover) {
