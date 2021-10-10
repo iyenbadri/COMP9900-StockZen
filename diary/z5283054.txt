@@ -109,8 +109,28 @@ the endpoint yet.).
 
 On Wednesday, I implemented the funcitonalities of rename/delete of a portfolio.
 
+On Thurday, I reviewed the pull request from Jeehyun. She implemented the login page.
+
 On Friday, I implemented the stock searching functionality. I use a listing from a cached listing
 due to there is no endpoint available for me yet.
+
+K 1
+J 0.5
+G 0.5
+B 0.5
+
+
+============================================
+Week 5
+
+# Planned:      To finish wire up the Frontend to call Backend's endpoints.
+# Finished:     I took some of Khai's task (Portfolio Page) so that he could work on the backend.
+# Issue:        A lot of endpoints are not finished and bakcend is almost has no data on the stock.
+                I had an assessment from another course this week so I have to take a time off from
+                the project. I had done almost all of my tasks so it should be okay.
+# Unfinished:   -
+# Next:         We prepared for the demo so a lot of unfinished works are frozen for it.
+
 
 -----------------------------------------------------------------------------------------
 You should also include in this diary the following information (if applicable) about the
