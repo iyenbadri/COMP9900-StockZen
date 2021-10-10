@@ -1,5 +1,6 @@
 import axios from 'axios';
-import React, { FC, useRef, useState } from 'react';
+import { UserContext } from 'contexts/UserContext';
+import React, { FC, useContext, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -19,6 +20,8 @@ const RegisterForm: FC<IProps> = (props) => {
     watch,
     formState: { errors },
   } = useForm();
+
+  const { recheckAuthenticationStatus } = useContext(UserContext);
 
   // Error message from backend
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -74,8 +77,16 @@ const RegisterForm: FC<IProps> = (props) => {
         props.onRegisterSuccess(data.firstName, data.lastName);
       }
     } catch (e: any) {
-      // Display error message.
-      setErrorMessage(e.response?.data?.message);
+      let message = e.response?.data?.message;
+      switch (message) {
+        case 'user already logged in':
+          recheckAuthenticationStatus();
+          break;
+        default:
+          // Display error message.
+          setErrorMessage(message);
+          break;
+      }
     }
   };
 
