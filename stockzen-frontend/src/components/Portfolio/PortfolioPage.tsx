@@ -28,6 +28,7 @@ interface StockListResponse {
 }
 
 interface StockData {
+  stockId: number;
   symbol: string;
   name: string;
   price: number;
@@ -146,6 +147,7 @@ const Portfolio = () => {
 
   const mapStockList = (data: StockListResponse[]): StockData[] => {
     return data.map((x) => ({
+      stockId: x.id,
       symbol: x.code,
       name: x.stockName,
       price: x.price,
@@ -243,7 +245,7 @@ const Portfolio = () => {
       </div>
 
       {stocks.map((x) => {
-        return <StockRow stockData={x}></StockRow>;
+        return <StockRow key={x.stockId} stockData={x}></StockRow>;
       })}
     </>
   );
