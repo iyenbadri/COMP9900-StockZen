@@ -45,12 +45,6 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
     currency: 'USD',
   });
 
-  const { setShowPortfolioSummary } = useContext(TopPerformerContext);
-
-  useEffect(() => {
-    setShowPortfolioSummary(false);
-  }, []);
-
   const [portfolioName, setPortfolioName] = useState<string>(prop.name);
   const [isEditingName, setIsEditingName] = useState<boolean>(false);
 
@@ -170,6 +164,8 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
 };
 
 const PortfolioList = () => {
+  const { setShowPortfolioSummary } = useContext(TopPerformerContext);
+
   const [deletingPortfolioName, setDeletingPortfolioName] =
     useState<string>('');
   const [deletingPortfolioId, setDeletingPortfolioId] = useState<number>();
@@ -233,6 +229,7 @@ const PortfolioList = () => {
   };
 
   useEffect(() => {
+    setShowPortfolioSummary(false);
     reloadPortfolioList();
   }, []);
 

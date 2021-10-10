@@ -62,7 +62,7 @@ const StockRow: FC<StockRowData> = (prop) => {
 
   return (
     <div className={styles.tableRow}>
-      <span className={styles.rowStcokInfo}>
+      <span className={styles.rowStockInfo}>
         <span className={styles.rowHandle}>
           <img src={handleIcon} alt='handle' />
         </span>
@@ -196,7 +196,7 @@ const Portfolio = () => {
       </div>
 
       <div className={styles.tableHeader}>
-        <span className={styles.rowStcokInfo}>
+        <span className={styles.rowStockInfo}>
           <span className={styles.rowHandle}></span>
           <span className={styles.rowCode}>
             <Button variant={'light'} size={'sm'}>

@@ -47,7 +47,7 @@
   min-width: 0;
 }
 
-.rowStcokInfo {
+.rowStockInfo {
   flex-grow: 1;
   flex-basis: auto;
   display: flex;
@@ -57,7 +57,7 @@
   align-items: center;
 }
 
-.tableRow .rowStcokInfo {
+.tableRow .rowStockInfo {
   border-color: var(--zen-5);
   background-color: rgba(196, 196, 196, 0.6);
   min-height: 50px;
