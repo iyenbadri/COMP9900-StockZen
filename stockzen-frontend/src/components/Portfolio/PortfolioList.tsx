@@ -4,9 +4,7 @@ import handleIcon from 'assets/icon-outlines/outline-menu-vertical.svg';
 import axios from 'axios';
 import { TopPerformanceContext } from 'contexts/TopPerformerContext';
 import React, { FC, useContext, useEffect, useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
+import { Button, Col, Form, Modal } from 'react-bootstrap';
 import { Link, useRouteMatch } from 'react-router-dom';
 import styles from './PortfolioList.module.css';
 import PortfolioListSummary from './PortfolioListSummary';
@@ -255,34 +253,39 @@ const PortfolioList = () => {
       <Modal
         show={showCreatePortfolioModal}
         onHide={() => setShowCreatePortfolioModal(false)}
+        className={styles.modalWapper}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Create portfolio</Modal.Title>
+          <Modal.Title className={styles.modalTitle}>Create portfolio</Modal.Title>
         </Modal.Header>
         <Form onSubmit={createPortfolio}>
           <Modal.Body>
             Please enter a name of portfolio to create.
-            <input
-              className={`my-2 ${styles.rowPortfolio}`}
+            <Form.Control
+              value={newPortfolioName}
               type='text'
               placeholder='Portfolio name'
-              value={newPortfolioName}
-              onChange={(ev) => setNewPortfolioName(ev.target.value)}>
-            </input>
+              className={`my-2 ${styles.rowPortfolio}`}
+              style={{ width: '70%', margin: '0 auto' }}
+              maxLength={50}
+              onChange={(ev) => setNewPortfolioName(ev.target.value)}
+            />
           </Modal.Body>
           <Modal.Footer>
-            <Button
-              variant={'zen-4'}
-              type='submit'
-            >
-              Create
-            </Button>
-            <Button
-              variant={'secondary'}
-              onClick={(ev) => setShowCreatePortfolioModal(false)}
-            >
-              Cancel
-            </Button>
+            <Col xs={12}>
+              <Button
+                type='submit'
+                variant={'zen-4'}
+              >
+                Create
+              </Button>{' '}
+              <Button
+                variant={'secondary'}
+                onClick={(ev) => setShowCreatePortfolioModal(false)}
+              >
+                Cancel
+              </Button>
+            </Col>
           </Modal.Footer>
         </Form>
       </Modal>
