@@ -12,6 +12,7 @@
   text-align: center;
   font-weight: bold;
   color: var(--theme-darkened);
+  margin-top: 0;
 }
 
 .formLabel {
@@ -21,6 +22,11 @@
 
 .formRequired {
   color: var(--loss-red);
+}
+
+.formLink {
+  color: var(--theme-darkened);
+  font-weight: bold;
 }
 
 .controlGroup {

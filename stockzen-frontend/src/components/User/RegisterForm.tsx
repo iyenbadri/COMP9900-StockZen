@@ -1,5 +1,6 @@
 import axios from 'axios';
-import React, { FC, useRef, useState } from 'react';
+import { UserContext } from 'contexts/UserContext';
+import React, { FC, useContext, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -19,6 +20,8 @@ const RegisterForm: FC<IProps> = (props) => {
     watch,
     formState: { errors },
   } = useForm();
+
+  const { recheckAuthenticationStatus } = useContext(UserContext);
 
   // Error message from backend
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -74,14 +77,22 @@ const RegisterForm: FC<IProps> = (props) => {
         props.onRegisterSuccess(data.firstName, data.lastName);
       }
     } catch (e: any) {
-      // Display error message.
-      setErrorMessage(e.response?.data?.message);
+      let message = e.response?.data?.message;
+      switch (message) {
+        case 'user already logged in':
+          recheckAuthenticationStatus();
+          break;
+        default:
+          // Display error message.
+          setErrorMessage(message);
+          break;
+      }
     }
   };
 
   return (
     <>
-      <h3 className={`my-3 ${styles.formTitle} outerStroke`}>Sign up</h3>
+      <h3 className={`my-2 ${styles.formTitle} outerStroke`}>Sign up</h3>
       <Form onSubmit={handleSubmit(onRegister)}>
         <Form.Group controlId='firstName' className={styles.controlGroup}>
           {/* -- First Name -- */}
@@ -184,7 +195,7 @@ const RegisterForm: FC<IProps> = (props) => {
           </Form.Text>
         </Form.Group>
 
-        <Row className='my-4 text-center'>
+        <Row className='my-3 text-center'>
           {/* -- Submit Button -- */}
           <Col xs={12}>
             <Button type='submit'>Create account</Button>

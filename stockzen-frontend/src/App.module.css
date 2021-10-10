@@ -1,11 +1,20 @@
 @import 'variables.css';
 
-.hero {
+.hero::before {
+  content: '';
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
   background-image: url('assets/hero-banner.jpg');
   background-position: center 35%;
   background-size: cover;
   width: 100vw;
   min-height: calc(100vh - var(--footer-height) - var(--header-height));
+  filter: saturate(80%) brightness(85%) contrast(85%);
 }
 
 /** GLOBALS: 
@@ -29,5 +38,5 @@
 :global(input[class^='form']) {
   padding: 4px 12px;
   border: 1px solid var(--zen-3);
-  background-color: rgba(255, 255, 255, 0.55);
+  background-color: rgba(255, 255, 255, 0.4);
 }
