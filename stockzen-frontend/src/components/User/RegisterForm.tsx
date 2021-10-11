@@ -154,11 +154,11 @@ const RegisterForm: FC<IProps> = (props) => {
                 !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
                   ? {}
                   : {
-                      lower: (val) => /[a-z]/.test(val),
-                      upper: (val) => /[A-Z]/.test(val),
-                      number: (val) => /[0-9]/.test(val),
-                      symbol: (val) => /[^a-zA-Z0-9]/.test(val),
-                    },
+                    lower: (val) => /[a-z]/.test(val),
+                    upper: (val) => /[A-Z]/.test(val),
+                    number: (val) => /[0-9]/.test(val),
+                    symbol: (val) => /[^a-zA-Z0-9]/.test(val),
+                  },
             })}
           ></Form.Control>
           <Form.Text className={styles.errorMessage}>
@@ -200,7 +200,7 @@ const RegisterForm: FC<IProps> = (props) => {
           <Col xs={12}>
             <Button type='submit'>Create account</Button>
           </Col>
-          <Col xs={12} className={styles.errorMessage}>
+          <Col xs={12} className={`mt-1 ${styles.backErrorMessage}`}>
             {errorMessage}
           </Col>
         </Row>
