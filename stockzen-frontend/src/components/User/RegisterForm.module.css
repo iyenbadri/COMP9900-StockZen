@@ -8,6 +8,12 @@
   color: var(--loss-red);
 }
 
+.backErrorMessage {
+  text-align: center;
+  font-style: italic;
+  color: var(--loss-red);
+}
+
 .formTitle {
   text-align: center;
   font-weight: bold;
