@@ -130,6 +130,17 @@
   flex-shrink: 0;
 }
 
+.modalWapper {
+  max-width: 30%;
+  position: fixed;
+  left: 35%;
+  text-align: center;
+}
+
+.modalTitle {
+  width: 100%;
+}
+
 @media (any-hover: hover) {
   .rowDelete button {
     visibility: hidden;
