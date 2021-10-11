@@ -1,14 +1,13 @@
 import crossIcon from 'assets/icon-outlines/outline-cross.svg';
 import editIcon from 'assets/icon-outlines/outline-edit-1.svg';
 import handleIcon from 'assets/icon-outlines/outline-menu-vertical.svg';
-import React, { FC, useState, useContext, useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
+import axios from 'axios';
+import { TopPerformanceContext } from 'contexts/TopPerformerContext';
+import React, { FC, useContext, useEffect, useState } from 'react';
+import { Button, Col, Form, Modal } from 'react-bootstrap';
 import { Link, useRouteMatch } from 'react-router-dom';
 import styles from './PortfolioList.module.css';
 import PortfolioListSummary from './PortfolioListSummary';
-import { TopPerformanceContext } from 'contexts/TopPerformerContext';
 
 interface IPortfolioListRow {
   id: number;
@@ -157,7 +156,10 @@ const PortfolioList = () => {
   const [deletingPortfolioId, setDeletingPortfolioId] = useState<number>();
   const [showDeletePortfolioModal, setShowDeletePortfolioModal] =
     useState<boolean>(false);
+  const [showCreatePortfolioModal, setShowCreatePortfolioModal] =
+    useState<boolean>(false);
 
+  // Fetch from /portfolio/list
   const [portfolios, setPortfolios] = useState([
     {
       name: 'My portfolio 1',
@@ -190,6 +192,27 @@ const PortfolioList = () => {
       totalGainPercent: -1.7,
     },
   ]);
+
+  // Add new portfolio to the PortfolioList
+  const [newPortfolioName, setNewPortfolioName] = useState('');
+  const createPortfolio = (ev: any) => {
+    ev.preventDefault();
+    let portfolioID = portfolios.length + 1;
+    let newPortfolio = {
+      name: newPortfolioName,
+      id: portfolioID,
+      stock_count: 0,
+      marketValue: null,
+      change: null,
+      changePercent: null,
+      totalGain: null,
+      totalGainPercent: null,
+    };
+    setPortfolios([...portfolios, newPortfolio]);
+    axios.post('/portfolio', { portfolioName: newPortfolioName })
+    setNewPortfolioName('');
+    setShowCreatePortfolioModal(false)
+  };
 
   // TODO: https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent/pull/17/files#r723117690
   // Will have to remove styles from the table header buttons.
@@ -227,12 +250,53 @@ const PortfolioList = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      <Modal
+        show={showCreatePortfolioModal}
+        onHide={() => setShowCreatePortfolioModal(false)}
+        className={styles.modalWapper}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title className={styles.modalTitle}>Create portfolio</Modal.Title>
+        </Modal.Header>
+        <Form onSubmit={createPortfolio}>
+          <Modal.Body>
+            Please enter a name of portfolio to create.
+            <Form.Control
+              value={newPortfolioName}
+              type='text'
+              placeholder='Portfolio name'
+              className={`my-2 ${styles.rowPortfolio}`}
+              style={{ width: '70%', margin: '0 auto' }}
+              maxLength={50}
+              onChange={(ev) => setNewPortfolioName(ev.target.value)}
+            />
+          </Modal.Body>
+          <Modal.Footer>
+            <Col xs={12}>
+              <Button
+                type='submit'
+                variant={'zen-4'}
+              >
+                Create
+              </Button>{' '}
+              <Button
+                variant={'secondary'}
+                onClick={(ev) => setShowCreatePortfolioModal(false)}
+              >
+                Cancel
+              </Button>
+            </Col>
+          </Modal.Footer>
+        </Form>
+      </Modal>
       <PortfolioListSummary></PortfolioListSummary>
 
       <div className={styles.tableToolbar}>
         <h5 className={styles.toolbarText}>My Portfolios</h5>
         <div className={styles.toolbarControls}>
-          <Button variant={'light'}>Create a portfolio</Button>
+          <Button
+            variant={'light'}
+            onClick={() => setShowCreatePortfolioModal(true)}>Create a portfolio</Button>
         </div>
       </div>
 
