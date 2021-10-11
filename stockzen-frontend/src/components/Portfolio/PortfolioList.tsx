@@ -194,40 +194,42 @@ const PortfolioList = () => {
 
   const reloadPortfolioList = () => {
     axios.get('/portfolio/list').then((response) => {
-      const mockData: IPortfolio[] = [
-        {
-          name: 'My portfolio 1',
-          portfolioId: -1,
-          stock_count: 3,
-          marketValue: 29134.3,
-          change: 403.1,
-          changePercent: 0.59,
-          totalGain: 1403.1,
-          totalGainPercent: 11.7,
-        },
-        {
-          name: 'My empty portfolio',
-          portfolioId: -2,
-          stock_count: 0,
-          marketValue: null,
-          change: null,
-          changePercent: null,
-          totalGain: null,
-          totalGainPercent: null,
-        },
-        {
-          name: 'My portfolio 2',
-          portfolioId: -3,
-          stock_count: 15,
-          marketValue: 1902.31,
-          change: -31.8,
-          changePercent: -0.59,
-          totalGain: -903.2,
-          totalGainPercent: -1.7,
-        },
-      ];
+      // const mockData: IPortfolio[] = [
+      //   {
+      //     name: 'My portfolio 1',
+      //     portfolioId: -1,
+      //     stock_count: 3,
+      //     marketValue: 29134.3,
+      //     change: 403.1,
+      //     changePercent: 0.59,
+      //     totalGain: 1403.1,
+      //     totalGainPercent: 11.7,
+      //   },
+      //   {
+      //     name: 'My empty portfolio',
+      //     portfolioId: -2,
+      //     stock_count: 0,
+      //     marketValue: null,
+      //     change: null,
+      //     changePercent: null,
+      //     totalGain: null,
+      //     totalGainPercent: null,
+      //   },
+      //   {
+      //     name: 'My portfolio 2',
+      //     portfolioId: -3,
+      //     stock_count: 15,
+      //     marketValue: 1902.31,
+      //     change: -31.8,
+      //     changePercent: -0.59,
+      //     totalGain: -903.2,
+      //     totalGainPercent: -1.7,
+      //   },
+      // ];
 
-      setPortfolios([...mockData, ...mapPortfolioList(response.data)]);
+      // setPortfolios([...mockData, ...mapPortfolioList(response.data)]);
+
+      setPortfolios(mapPortfolioList(response.data));
     });
   };
 
@@ -261,20 +263,24 @@ const PortfolioList = () => {
   const [newPortfolioName, setNewPortfolioName] = useState('');
   const createPortfolio = (ev: any) => {
     ev.preventDefault();
-    let portfolioID = portfolios.length + 1;
-    let newPortfolio = {
-      name: newPortfolioName,
-      id: portfolioID,
-      stock_count: 0,
-      marketValue: null,
-      change: null,
-      changePercent: null,
-      totalGain: null,
-      totalGainPercent: null,
-    };
-    setPortfolios([...portfolios, newPortfolio]);
-    axios.post('/portfolio', { portfolioName: newPortfolioName });
-    setNewPortfolioName('');
+    // let portfolioID = portfolios.length + 1;
+    // let newPortfolio = {
+    //   name: newPortfolioName,
+    //   portfolioId: portfolioID,
+    //   stockCount: 0,
+    //   marketValue: null,
+    //   change: null,
+    //   changePercent: null,
+    //   totalGain: null,
+    //   totalGainPercent: null,
+    // };
+    // setPortfolios([...portfolios, newPortfolio]);
+    axios.post('/portfolio', { portfolioName: newPortfolioName }).then(() => {
+      setNewPortfolioName('');
+
+      reloadPortfolioList();
+    });
+
     setShowCreatePortfolioModal(false);
   };
 
