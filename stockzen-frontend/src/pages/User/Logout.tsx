@@ -1,6 +1,9 @@
+import smileIcon from 'assets/icon-outlines/outline-emotxd-smile.svg';
 import { UserContext } from 'contexts/UserContext';
 import React, { FC, useContext, useEffect } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Button, Col, Row } from 'react-bootstrap';
+import { Redirect, useHistory } from 'react-router-dom';
+
 
 const Logout: FC = () => {
   const { isAuthenticated, logout } = useContext(UserContext);
@@ -11,7 +14,30 @@ const Logout: FC = () => {
     }
   }, [isAuthenticated, logout]);
 
-  return <Redirect to='/'></Redirect>;
+  const history = useHistory();
+
+  return (
+    <>
+      <Redirect to='/user/logout'></Redirect>
+      <h3 className='mt-4 text-center'>
+        Logout Successful!
+      </h3>
+      <Row className='mb-4 text-center'>
+        <Col>
+          See you next time <img src={smileIcon} />
+        </Col>
+      </Row>
+      <Row className='text-center'>
+        <Col xs={12}>
+          <Button
+            onClick={() => {
+              history.push('/')
+            }}>OK
+          </Button>
+        </Col>
+      </Row>
+    </>
+  );
 };
 
 export default Logout;
