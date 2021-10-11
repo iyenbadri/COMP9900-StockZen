@@ -46,11 +46,10 @@ const LoginForm: FC<IProps> = (props) => {
 
   return (
     <>
-      <h3 className={`my-2 ${styles.formTitle} outerStroke`}>Log in</h3>
+      <h3 className={`mt-4 ${styles.formTitle} outerStroke`}>Log in</h3>
       <Form onSubmit={handleSubmit(onLogin)}>
         <Form.Group controlId='email' className={`my-5 ${styles.controlGroup}`}>
           <Form.Label className={styles.formLabel}>Email Address</Form.Label>
-          <span className={styles.formRequired}> *</span>
           <Form.Control
             {...register('email', {
               required: true
@@ -64,7 +63,6 @@ const LoginForm: FC<IProps> = (props) => {
 
         <Form.Group controlId='password' className={`my-4 ${styles.controlGroup}`}>
           <Form.Label className={styles.formLabel}>Password</Form.Label>
-          <span className={styles.formRequired}> *</span>
           <Form.Control
             type='password'
             {...register('password', {
@@ -77,7 +75,7 @@ const LoginForm: FC<IProps> = (props) => {
           </Form.Text>
         </Form.Group>
 
-        <Row className={styles.errorMessage}>
+        <Row className={styles.backErrorMessage}>
           <Col>
             {errorMessage}
           </Col>
@@ -89,15 +87,16 @@ const LoginForm: FC<IProps> = (props) => {
           </Col>
         </Row>
 
-        <Row className='my-2 text-center'>
+        <Row className='mt-2 text-center'>
           <Col>
             <Link to='/' className={styles.formLink}>Forgot Password?</Link>
           </Col>
         </Row>
 
-        <Row className='mt-2 mb-3 text-center'>
+        <Row className='mt-2 mb-4 text-center'>
           <Col>
             Don't have an account?
+            {' '}
             <Link to='/user/register' className={styles.formLink}>Sign up</Link>
           </Col>
         </Row>
