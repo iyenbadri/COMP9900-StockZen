@@ -9,9 +9,17 @@
 .toolbarText {
   flex-basis: auto;
   flex-grow: 1;
+  font-size: 1.2rem;
 }
 
-.toolbarControls {
+.toolbarCreateButton {
+  color: var(--zen-3);
+  background-color: transparent;
+  border: none;
+}
+.toolbarPlusIcon {
+  width: 25px;
+  padding: 0 4px 4px 0;
 }
 
 .portfolioTable {
@@ -31,6 +39,9 @@
   display: flex;
   margin-bottom: 7px;
   align-items: center;
+}
+.tableRow {
+  margin-right: -25px;
 }
 
 .tableHeader {
@@ -79,6 +90,10 @@
   font-size: 0.9em;
 }
 
+.dragHandle:hover {
+  cursor: move;
+}
+
 .editButton {
   padding: 0;
   background-color: transparent;
@@ -98,11 +113,11 @@
 
 .rowStocks {
   text-align: right;
-  flex-basis: 85px;
+  flex-basis: 60px;
   flex-shrink: 0;
 }
 
-.rowMargetValue {
+.rowMarketValue {
   text-align: right;
   flex-basis: 109px;
   flex-shrink: 0;
@@ -120,12 +135,6 @@
   text-align: right;
   flex-basis: 88px;
   display: inline-block;
-  text-align: right;
-  flex-shrink: 0;
-}
-
-.rowDelete {
-  flex-basis: 35px;
   text-align: right;
   flex-shrink: 0;
 }

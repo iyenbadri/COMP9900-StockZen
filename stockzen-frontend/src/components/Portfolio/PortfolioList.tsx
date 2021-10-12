@@ -1,6 +1,7 @@
 import crossIcon from 'assets/icon-outlines/outline-cross.svg';
+import handleIcon from 'assets/icon-outlines/outline-drag-handle.svg';
 import editIcon from 'assets/icon-outlines/outline-edit-1.svg';
-import handleIcon from 'assets/icon-outlines/outline-menu-vertical.svg';
+import plusIcon from 'assets/icon-outlines/outline-plus-circle.svg';
 import axios from 'axios';
 import { TopPerformanceContext } from 'contexts/TopPerformerContext';
 import React, { FC, useContext, useEffect, useState } from 'react';
@@ -60,7 +61,7 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
     <div className={styles.tableRow}>
       <span className={styles.rowPortInfo}>
         <span className={styles.rowHandle}>
-          <img src={handleIcon} alt='handle' />
+          <img src={handleIcon} alt='handle' className={styles.dragHandle} />
         </span>
         <span className={styles.rowPortfolio}>
           {isEditingName ? (
@@ -103,7 +104,7 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
           </button>
         </span>
         <span className={styles.rowStocks}>{prop.stock_count}</span>
-        <span className={styles.rowMargetValue}>
+        <span className={styles.rowMarketValue}>
           {prop.marketValue == null
             ? '-'
             : usdFormatter.format(prop.marketValue)}
@@ -140,7 +141,7 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
             }
           }}
         >
-          <img src={crossIcon} alt='cross' />
+          <img src={crossIcon} alt='cross' width={20} />
         </button>
       </span>
     </div>
@@ -291,9 +292,15 @@ const PortfolioList = () => {
         <h5 className={styles.toolbarText}>My Portfolios</h5>
         <div className={styles.toolbarControls}>
           <Button
+            className={styles.toolbarCreateButton}
             variant={'light'}
             onClick={() => setShowCreatePortfolioModal(true)}
           >
+            <img
+              src={plusIcon}
+              alt='plus icon'
+              className={styles.toolbarPlusIcon}
+            />
             Create a portfolio
           </Button>
         </div>
@@ -313,7 +320,7 @@ const PortfolioList = () => {
               Stocks
             </Button>
           </span>
-          <span className={styles.rowMargetValue}>
+          <span className={styles.rowMarketValue}>
             <Button variant={'light'} size={'sm'}>
               Market value
             </Button>
