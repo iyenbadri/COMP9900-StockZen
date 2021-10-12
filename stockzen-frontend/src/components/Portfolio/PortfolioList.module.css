@@ -70,6 +70,9 @@
   flex-grow: 1;
   flex-basis: auto;
   align-items: center;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  width: 150px;
 }
 
 .rowPortfolioLink {
