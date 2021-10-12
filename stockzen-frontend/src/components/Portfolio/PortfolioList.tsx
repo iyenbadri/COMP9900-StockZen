@@ -6,6 +6,7 @@ import { TopPerformanceContext } from 'contexts/TopPerformerContext';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { Button, Col, Form, Modal } from 'react-bootstrap';
 import { Link, useRouteMatch } from 'react-router-dom';
+import { usdFormatter } from 'utils/Utilities';
 import styles from './PortfolioList.module.css';
 import PortfolioListSummary from './PortfolioListSummary';
 
@@ -24,10 +25,6 @@ interface IPortfolioListRow {
 
 const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
   const { path } = useRouteMatch();
-  const usdFormatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
 
   const { setShowPortfolioSummary } = useContext(TopPerformanceContext);
 
@@ -209,9 +206,9 @@ const PortfolioList = () => {
       totalGainPercent: null,
     };
     setPortfolios([...portfolios, newPortfolio]);
-    axios.post('/portfolio', { portfolioName: newPortfolioName })
+    axios.post('/portfolio', { portfolioName: newPortfolioName });
     setNewPortfolioName('');
-    setShowCreatePortfolioModal(false)
+    setShowCreatePortfolioModal(false);
   };
 
   // TODO: https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent/pull/17/files#r723117690
@@ -256,7 +253,9 @@ const PortfolioList = () => {
         className={styles.modalWapper}
       >
         <Modal.Header closeButton>
-          <Modal.Title className={styles.modalTitle}>Create portfolio</Modal.Title>
+          <Modal.Title className={styles.modalTitle}>
+            Create portfolio
+          </Modal.Title>
         </Modal.Header>
         <Form onSubmit={createPortfolio}>
           <Modal.Body>
@@ -273,10 +272,7 @@ const PortfolioList = () => {
           </Modal.Body>
           <Modal.Footer>
             <Col xs={12}>
-              <Button
-                type='submit'
-                variant={'zen-4'}
-              >
+              <Button type='submit' variant={'zen-4'}>
                 Create
               </Button>{' '}
               <Button
@@ -296,7 +292,10 @@ const PortfolioList = () => {
         <div className={styles.toolbarControls}>
           <Button
             variant={'light'}
-            onClick={() => setShowCreatePortfolioModal(true)}>Create a portfolio</Button>
+            onClick={() => setShowCreatePortfolioModal(true)}
+          >
+            Create a portfolio
+          </Button>
         </div>
       </div>
 
