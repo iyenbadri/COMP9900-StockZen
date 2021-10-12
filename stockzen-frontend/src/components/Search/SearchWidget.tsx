@@ -9,7 +9,7 @@ import listings from './listing.json';
 import styles from './SearchWidget.module.css';
 
 interface Prop {
-  addStock?: (symbol: string, stockPageId: number) => void;
+  addStock: (symbol: string, stockPageId: number) => void;
 }
 
 interface TypeaheadOption {
