@@ -59,15 +59,6 @@
   padding: 0;
 }
 
-/* .rowPortInfo {
-  flex-grow: 1;
-  flex-basis: auto;
-  display: flex;
-  border: 2px solid transparent;
-  border-radius: 10px;
-  padding: 5px 10px 5px 5px;
-  align-items: center;
-} */
 .rowPortInfo {
   display: grid;
   grid-template-columns: 3fr 34fr 5fr 12fr repeat(3, 15fr);
@@ -80,7 +71,7 @@
   background-color: rgba(196, 196, 196, 0.4);
   min-height: 45px;
   border: transparent;
-  border-radius: 8px;
+  border-radius: 5px;
 }
 .tableRow .rowPortInfo:hover {
   outline: 2px solid var(--zen-4);
