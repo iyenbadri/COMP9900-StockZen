@@ -59,11 +59,11 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
 
   return (
     <div className={styles.tableRow}>
-      <span className={styles.rowPortInfo}>
-        <span className={styles.rowHandle}>
+      <div className={styles.rowPortInfo}>
+        <div className={styles.rowHandle}>
           <img src={handleIcon} alt='handle' className={styles.dragHandle} />
-        </span>
-        <span className={styles.rowPortfolio}>
+        </div>
+        <div className={styles.rowPortfolio}>
           {isEditingName ? (
             <Form.Control
               value={portfolioName}
@@ -91,8 +91,8 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
               {prop.name}
             </Link>
           )}
-        </span>
-        <span className={styles.rowEditButton}>
+        </div>
+        <div className={styles.rowEditButton}>
           <button
             type='button'
             className={`${styles.editButton} p-0`}
@@ -102,14 +102,14 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
           >
             <img src={editIcon} alt='edit' width={18} />
           </button>
-        </span>
-        <span className={styles.rowStocks}>{prop.stock_count}</span>
-        <span className={styles.rowMarketValue}>
+        </div>
+        <div className={styles.rowStocks}>{prop.stock_count}</div>
+        <div className={styles.rowMarketValue}>
           {prop.marketValue == null
             ? '-'
             : usdFormatter.format(prop.marketValue)}
-        </span>
-        <span className={`${styles.rowChange} ${gainLossClass(prop.change)}`}>
+        </div>
+        <div className={`${styles.rowChange} ${gainLossClass(prop.change)}`}>
           {prop.change == null ? (
             '-'
           ) : (
@@ -118,8 +118,8 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
               <div>{usdFormatter.format(prop.change)}</div>
             </>
           )}
-        </span>
-        <span
+        </div>
+        <div
           className={`${styles.rowTotalGain} ${gainLossClass(prop.totalGain)}`}
         >
           {prop.totalGain == null ? (
@@ -130,9 +130,9 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
               <div>{usdFormatter.format(prop.totalGain)}</div>
             </>
           )}
-        </span>
-      </span>
-      <span className={styles.rowDelete}>
+        </div>
+      </div>
+      <div className={styles.rowDelete}>
         <button
           className={`p-0 ${styles.deleteButton}`}
           onClick={() => {
@@ -143,7 +143,7 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
         >
           <img src={crossIcon} alt='cross' width={20} />
         </button>
-      </span>
+      </div>
     </div>
   );
 };
@@ -307,36 +307,36 @@ const PortfolioList = () => {
       </div>
 
       <div className={styles.tableHeader}>
-        <span className={styles.rowPortInfo}>
-          <span className={styles.rowHandle}></span>
-          <span className={styles.rowPortfolio}>
+        <div className={styles.rowPortInfo}>
+          <div className={styles.rowHandle}></div>
+          <div className={styles.rowPortfolio}>
             <Button variant={'light'} size={'sm'}>
               Portfolio
             </Button>
-          </span>
-          <span className={styles.rowEditButton}></span>
-          <span className={styles.rowStocks}>
+          </div>
+          <div className={styles.rowEditButton}></div>
+          <div className={styles.rowStocks}>
             <Button variant={'light'} size={'sm'}>
               Stocks
             </Button>
-          </span>
-          <span className={styles.rowMarketValue}>
+          </div>
+          <div className={styles.rowMarketValue}>
             <Button variant={'light'} size={'sm'}>
               Market value
             </Button>
-          </span>
-          <span className={styles.rowChange}>
+          </div>
+          <div className={styles.rowChange}>
             <Button variant={'light'} size={'sm'}>
               Change
             </Button>
-          </span>
-          <span className={styles.rowTotalGain}>
+          </div>
+          <div className={styles.rowTotalGain}>
             <Button variant={'light'} size={'sm'}>
               Total gain
             </Button>
-          </span>
-        </span>
-        <span className={styles.rowDelete}></span>
+          </div>
+        </div>
+        <div className={styles.rowDelete}></div>
       </div>
 
       {portfolios.map((port, index) => {

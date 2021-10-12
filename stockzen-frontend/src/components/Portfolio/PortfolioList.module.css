@@ -10,6 +10,8 @@
   flex-basis: auto;
   flex-grow: 1;
   font-size: 1.2rem;
+  margin-left: 10px;
+  text-decoration: underline;
 }
 
 .toolbarCreateButton {
@@ -40,6 +42,7 @@
   margin-bottom: 7px;
   align-items: center;
 }
+
 .tableRow {
   margin-right: -25px;
 }
@@ -53,9 +56,10 @@
   background-color: transparent;
   border-color: transparent;
   color: var(--zen-3);
+  padding: 0;
 }
 
-.rowPortInfo {
+/* .rowPortInfo {
   flex-grow: 1;
   flex-basis: auto;
   display: flex;
@@ -63,24 +67,27 @@
   border-radius: 10px;
   padding: 5px 10px 5px 5px;
   align-items: center;
+} */
+.rowPortInfo {
+  display: grid;
+  grid-template-columns: 3fr 34fr 5fr 12fr repeat(3, 15fr);
+  width: 100%;
+  padding: 5px 10px 5px 5px;
+  align-items: center;
 }
 
 .tableRow .rowPortInfo {
-  border-color: var(--zen-5);
-  background-color: rgba(196, 196, 196, 0.6);
-  min-height: 50px;
+  background-color: rgba(196, 196, 196, 0.4);
+  min-height: 45px;
+  border: transparent;
+  border-radius: 8px;
+}
+.tableRow .rowPortInfo:hover {
+  outline: 2px solid var(--zen-4);
 }
 
 .rowHandle {
-  flex-basis: 25px;
   color: var(--zen-3);
-  flex-shrink: 0;
-}
-
-.rowPortfolio {
-  flex-grow: 1;
-  flex-basis: auto;
-  align-items: center;
 }
 
 .rowPortfolioLink {
@@ -106,43 +113,40 @@
   border-color: transparent;
 }
 
-.rowEditButton {
-  flex-basis: 25px;
-  flex-shrink: 0;
-}
-
 .rowStocks {
-  text-align: right;
-  flex-basis: 60px;
-  flex-shrink: 0;
+  text-align: center;
 }
 
-.rowMarketValue {
-  text-align: right;
-  flex-basis: 109px;
-  flex-shrink: 0;
-}
-
-.rowChange {
-  text-align: right;
-  flex-basis: 75px;
-  display: inline-block;
-  text-align: right;
-  flex-shrink: 0;
-}
-
+.rowMarketValue,
+.rowChange,
 .rowTotalGain {
   text-align: right;
-  flex-basis: 88px;
-  display: inline-block;
-  text-align: right;
-  flex-shrink: 0;
+  margin-right: 3px;
 }
 
+.rowMarketValue > button,
+.rowChange button,
+.rowTotalGain > button {
+  text-align: right;
+}
+
+.rowPortfolio > button {
+  text-align: left;
+}
+
+.rowDelete {
+  margin-left: 3px;
+}
+
+/* MODAL */
+
 .modalWapper {
+  min-width: 400px;
   max-width: 30%;
   position: fixed;
-  left: 35%;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
   text-align: center;
 }
 
@@ -177,7 +181,8 @@
 }
 
 .percent {
-  font-size: 0.8em;
+  font-size: 0.75rem;
+  line-height: 0.5rem;
 }
 
 /* .tableRow .rowPortfolio, */
@@ -185,7 +190,7 @@
 .tableRow .rowTotalGain,
 .tableRow .rowStocks,
 .tableRow .rowMargetValue {
-  font-size: 0.8em;
+  font-size: 0.88rem;
 }
 
 /*   
