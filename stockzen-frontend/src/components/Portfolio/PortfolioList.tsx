@@ -39,131 +39,6 @@ interface IPortfolioListRow extends IPortfolio {
   showDeleteModal?: (id: number, name: string) => void;
 }
 
-const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
-  const { path } = useRouteMatch();
-  const usdFormatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
-
-  const [portfolioName, setPortfolioName] = useState<string>(prop.name);
-  const [isEditingName, setIsEditingName] = useState<boolean>(false);
-
-  const gainLossClass = (val: number | null): string => {
-    if (val == null) {
-      return '';
-    } else if (val < 0) {
-      return styles.moneyLoss;
-    } else if (val > 0) {
-      return styles.moneyGain;
-    } else {
-      return '';
-    }
-  };
-
-  const updatePortfolioName = () => {
-    if (prop.updatePortfolioName != null) {
-      if (portfolioName.length > 0 && portfolioName.length <= 50) {
-        prop.updatePortfolioName(prop.portfolioId, portfolioName);
-      }
-    }
-    setIsEditingName(false);
-  };
-
-  return (
-    <div className={styles.tableRow}>
-      <span className={styles.rowPortInfo}>
-        <span className={styles.rowHandle}>
-          <img src={handleIcon} alt='handle' />
-        </span>
-        <span className={styles.rowPortfolio}>
-          {isEditingName ? (
-            <Form.Control
-              value={portfolioName}
-              style={{ width: '100%', padding: 0 }}
-              autoFocus
-              maxLength={50}
-              onChange={(ev) => {
-                setPortfolioName(ev.target.value);
-              }}
-              onBlur={updatePortfolioName}
-              onKeyDown={(ev) => {
-                console.log(ev.key);
-                switch (ev.key) {
-                  case 'Enter':
-                    updatePortfolioName();
-                    break;
-                  case 'Escape':
-                    setIsEditingName(false);
-                    break;
-                }
-              }}
-            />
-          ) : (
-            <Link
-              to={`${path}/${prop.portfolioId}`}
-              className={styles.rowPortfolioLink}
-            >
-              {prop.name}
-            </Link>
-          )}
-        </span>
-        <span className={styles.rowEditButton}>
-          <button
-            type='button'
-            className={`${styles.editButton} p-0`}
-            onClick={(ev) => {
-              setIsEditingName(true);
-            }}
-          >
-            <img src={editIcon} alt='edit' width={18} />
-          </button>
-        </span>
-        <span className={styles.rowStocks}>{prop.stock_count}</span>
-        <span className={styles.rowMarketValue}>
-          {prop.marketValue == null
-            ? '-'
-            : usdFormatter.format(prop.marketValue)}
-        </span>
-        <span className={`${styles.rowChange} ${gainLossClass(prop.change)}`}>
-          {prop.change == null ? (
-            '-'
-          ) : (
-            <>
-              <div className={styles.percent}>{prop.changePercent}%</div>
-              <div>{usdFormatter.format(prop.change)}</div>
-            </>
-          )}
-        </span>
-        <span
-          className={`${styles.rowTotalGain} ${gainLossClass(prop.totalGain)}`}
-        >
-          {prop.totalGain == null ? (
-            '-'
-          ) : (
-            <>
-              <div className={styles.percent}>{prop.totalGainPercent}%</div>
-              <div>{usdFormatter.format(prop.totalGain)}</div>
-            </>
-          )}
-        </span>
-      </span>
-      <span className={styles.rowDelete}>
-        <button
-          className={`p-0 ${styles.deleteButton}`}
-          onClick={() => {
-            if (prop.showDeleteModal != null) {
-              prop.showDeleteModal(prop.portfolioId, prop.name);
-            }
-          }}
-        >
-          <img src={crossIcon} alt='cross' />
-        </button>
-      </span>
-    </div>
-  );
-};
-
 const PortfolioList = () => {
   const { setShowPortfolioSummary } = useContext(TopPerformerContext);
 
@@ -194,41 +69,6 @@ const PortfolioList = () => {
 
   const reloadPortfolioList = () => {
     axios.get('/portfolio/list').then((response) => {
-      // const mockData: IPortfolio[] = [
-      //   {
-      //     name: 'My portfolio 1',
-      //     portfolioId: -1,
-      //     stock_count: 3,
-      //     marketValue: 29134.3,
-      //     change: 403.1,
-      //     changePercent: 0.59,
-      //     totalGain: 1403.1,
-      //     totalGainPercent: 11.7,
-      //   },
-      //   {
-      //     name: 'My empty portfolio',
-      //     portfolioId: -2,
-      //     stock_count: 0,
-      //     marketValue: null,
-      //     change: null,
-      //     changePercent: null,
-      //     totalGain: null,
-      //     totalGainPercent: null,
-      //   },
-      //   {
-      //     name: 'My portfolio 2',
-      //     portfolioId: -3,
-      //     stock_count: 15,
-      //     marketValue: 1902.31,
-      //     change: -31.8,
-      //     changePercent: -0.59,
-      //     totalGain: -903.2,
-      //     totalGainPercent: -1.7,
-      //   },
-      // ];
-
-      // setPortfolios([...mockData, ...mapPortfolioList(response.data)]);
-
       setPortfolios(mapPortfolioList(response.data));
     });
   };
@@ -263,18 +103,6 @@ const PortfolioList = () => {
   const [newPortfolioName, setNewPortfolioName] = useState('');
   const createPortfolio = (ev: any) => {
     ev.preventDefault();
-    // let portfolioID = portfolios.length + 1;
-    // let newPortfolio = {
-    //   name: newPortfolioName,
-    //   portfolioId: portfolioID,
-    //   stockCount: 0,
-    //   marketValue: null,
-    //   change: null,
-    //   changePercent: null,
-    //   totalGain: null,
-    //   totalGainPercent: null,
-    // };
-    // setPortfolios([...portfolios, newPortfolio]);
     axios.post('/portfolio', { portfolioName: newPortfolioName }).then(() => {
       setNewPortfolioName('');
 
@@ -411,6 +239,130 @@ const PortfolioList = () => {
         );
       })}
     </>
+  );
+};
+
+const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
+  const { path } = useRouteMatch();
+  const usdFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+
+  const [portfolioName, setPortfolioName] = useState<string>(prop.name);
+  const [isEditingName, setIsEditingName] = useState<boolean>(false);
+
+  const gainLossClass = (val: number | null): string => {
+    if (val == null) {
+      return '';
+    } else if (val < 0) {
+      return styles.moneyLoss;
+    } else if (val > 0) {
+      return styles.moneyGain;
+    } else {
+      return '';
+    }
+  };
+
+  const updatePortfolioName = () => {
+    if (prop.updatePortfolioName != null) {
+      if (portfolioName.length > 0 && portfolioName.length <= 50) {
+        prop.updatePortfolioName(prop.portfolioId, portfolioName);
+      }
+    }
+    setIsEditingName(false);
+  };
+
+  return (
+    <div className={styles.tableRow}>
+      <span className={styles.rowPortInfo}>
+        <span className={styles.rowHandle}>
+          <img src={handleIcon} alt='handle' />
+        </span>
+        <span className={styles.rowPortfolio}>
+          {isEditingName ? (
+            <Form.Control
+              value={portfolioName}
+              style={{ width: '100%', padding: 0 }}
+              autoFocus
+              maxLength={50}
+              onChange={(ev) => {
+                setPortfolioName(ev.target.value);
+              }}
+              onBlur={updatePortfolioName}
+              onKeyDown={(ev) => {
+                switch (ev.key) {
+                  case 'Enter':
+                    updatePortfolioName();
+                    break;
+                  case 'Escape':
+                    setIsEditingName(false);
+                    break;
+                }
+              }}
+            />
+          ) : (
+            <Link
+              to={`${path}/${prop.portfolioId}`}
+              className={styles.rowPortfolioLink}
+            >
+              {prop.name}
+            </Link>
+          )}
+        </span>
+        <span className={styles.rowEditButton}>
+          <button
+            type='button'
+            className={`${styles.editButton} p-0`}
+            onClick={(ev) => {
+              setIsEditingName(true);
+            }}
+          >
+            <img src={editIcon} alt='edit' width={18} />
+          </button>
+        </span>
+        <span className={styles.rowStocks}>{prop.stock_count}</span>
+        <span className={styles.rowMarketValue}>
+          {prop.marketValue == null
+            ? '-'
+            : usdFormatter.format(prop.marketValue)}
+        </span>
+        <span className={`${styles.rowChange} ${gainLossClass(prop.change)}`}>
+          {prop.change == null ? (
+            '-'
+          ) : (
+            <>
+              <div className={styles.percent}>{prop.changePercent}%</div>
+              <div>{usdFormatter.format(prop.change)}</div>
+            </>
+          )}
+        </span>
+        <span
+          className={`${styles.rowTotalGain} ${gainLossClass(prop.totalGain)}`}
+        >
+          {prop.totalGain == null ? (
+            '-'
+          ) : (
+            <>
+              <div className={styles.percent}>{prop.totalGainPercent}%</div>
+              <div>{usdFormatter.format(prop.totalGain)}</div>
+            </>
+          )}
+        </span>
+      </span>
+      <span className={styles.rowDelete}>
+        <button
+          className={`p-0 ${styles.deleteButton}`}
+          onClick={() => {
+            if (prop.showDeleteModal != null) {
+              prop.showDeleteModal(prop.portfolioId, prop.name);
+            }
+          }}
+        >
+          <img src={crossIcon} alt='cross' />
+        </button>
+      </span>
+    </div>
   );
 };
 
