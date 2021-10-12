@@ -1,4 +1,5 @@
 import plusCircle from 'assets/icon-outlines/outline-plus-circle.svg';
+import plusIcon from 'assets/icon-outlines/outline-plus-small.svg';
 import React, { FC, useState } from 'react';
 import { AsyncTypeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
 import Button from 'react-bootstrap/Button';
@@ -104,18 +105,17 @@ const SearchWidget: FC<Prop> = (prop) => {
                             ev.preventDefault();
                             ev.stopPropagation();
 
-                            if (prop.addStock != null) {
-                              // TODO: Retrieve the stockPageId from backend.
-                              prop.addStock(option.symbol, 1);
-                              setAddedSymbols([...addedSymbols, option.symbol]);
-                            }
+                            // TODO: Retrieve the stockPageId from backend.
+                            prop.addStock(option.symbol, 1);
+                            setAddedSymbols([...addedSymbols, option.symbol]);
                           }}
                         >
-                          +
+                          <img src={plusIcon} alt='add' />
                         </Button>
                       )}
                     </span>
                     <span className={styles.optionSymbol}>
+                      {/* TODO: Will fix the nested `a` tag bug later. Have to find a way to fix it first */}
                       <Link to={'/stock/' + option.symbol}>
                         {option.symbol}
                       </Link>
