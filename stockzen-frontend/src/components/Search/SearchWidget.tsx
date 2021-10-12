@@ -1,11 +1,12 @@
+import plusCircle from 'assets/icon-outlines/outline-plus-circle.svg';
+import plusIcon from 'assets/icon-outlines/outline-plus-small.svg';
 import React, { FC, useState } from 'react';
+import { AsyncTypeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { AsyncTypeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
+import { Link } from 'react-router-dom';
 import listings from './listing.json';
 import styles from './SearchWidget.module.css';
-import plusCircle from 'assets/icon-outlines/outline-plus-circle.svg';
-import { Link } from 'react-router-dom';
 
 interface Prop {
   addStock?: (symbol: string) => void;
@@ -90,7 +91,7 @@ const SearchWidget: FC<Prop> = (prop) => {
           renderMenu={(results, menuProps) => (
             <Menu {...menuProps} className={styles.options}>
               {results.map((option, index) => (
-                <MenuItem option={option} position={index}>
+                <MenuItem option={option} position={index} as={'div'}>
                   <div key={option.id} className={styles.searchOption}>
                     <span className={styles.optionAdd}>
                       <Button
@@ -104,10 +105,11 @@ const SearchWidget: FC<Prop> = (prop) => {
                           }
                         }}
                       >
-                        +
+                        <img src={plusIcon} alt='add' />
                       </Button>
                     </span>
                     <span className={styles.optionSymbol}>
+                      {/* TODO: Will fix the nested `a` tag bug later. Have to find a way to fix it first */}
                       <Link to={'/stock/' + option.symbol}>
                         {option.symbol}
                       </Link>
