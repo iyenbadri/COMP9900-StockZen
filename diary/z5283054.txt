@@ -142,6 +142,8 @@ due to most of the endpoints are not available/not finished.
 
 This week I mostly do a minor fix to my code.
 
+Gunjan did some work on loading the stock data but there is no endpoint for the frontend yet.
+
 Personally I think Jeehyun, Badrivishal, Gunjan worked a bit too slow. Almost no progress during
 the week. And all of them never consult me on anything but they might talk with each other so
 I'm not sure. Gunjan and Badrivishal did a lot of research on the stock API but there is almost
@@ -151,6 +153,7 @@ might give them a low score if their contribution is low or incomplete.
 
 K 1
 J 0.5
+G 0.3
 
 
 -----------------------------------------------------------------------------------------
