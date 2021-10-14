@@ -30,7 +30,7 @@ const User: FC = () => {
             backdrop='static'
             keyboard={false}
           >
-            {!(location.pathname === '/user/logout') && (
+            {!(location.pathname === `${path}/logout`) && (
               <CloseButton
                 className={styles.closeButton}
                 onClick={() => {
