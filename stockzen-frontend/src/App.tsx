@@ -1,12 +1,14 @@
 import 'bootstrap-custom.scss';
 import Footer from 'components/Layout/Footer';
 import Header from 'components/Layout/Header';
+import TopPerformerProvider from 'contexts/TopPerformerContext';
 import UserProvider, { UserContext } from 'contexts/UserContext';
 import Landing from 'pages/Landing';
 import User from 'pages/User';
 import React, { useContext } from 'react';
 import { Container } from 'react-bootstrap';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import GuestRoute from 'utils/GuestRoute';
 import styles from './App.module.css';
 
 function App() {
@@ -21,7 +23,7 @@ function App() {
           className={`${styles.appContent} ${!isAuthenticated && styles.hero}`}
         >
           <Switch>
-            <Route exact path={'/'} component={Landing} />
+            <GuestRoute exact path={'/'} component={Landing} />
             <Route path={'/user'} component={User} />
             <Route path={'/portfolio'} component={Portfolio} />
           </Switch>
@@ -34,7 +36,9 @@ function App() {
 
 const WrappedApp = () => (
   <UserProvider>
-    <App />
+    <TopPerformerProvider>
+      <App />
+    </TopPerformerProvider>
   </UserProvider>
 );
 
