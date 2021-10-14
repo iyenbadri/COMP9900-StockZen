@@ -61,7 +61,7 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
     <div className={styles.tableRow}>
       <div className={styles.rowPortInfo}>
         <div className={styles.rowHandle}>
-          <img src={handleIcon} alt='handle' className={styles.dragHandle} />
+          <img src={handleIcon} alt='handle' />
         </div>
         <div className={styles.rowPortfolio}>
           {isEditingName ? (
