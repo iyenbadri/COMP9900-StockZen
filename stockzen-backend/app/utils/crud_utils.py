@@ -26,6 +26,73 @@ def to_dict(object, timestamp=False) -> Union[dict, Status]:
 
 
 # ==============================================================================
+# Dummy User Utils
+# ==============================================================================
+
+
+def add_dummyusers():
+    new_user = User(
+        email="anotheruser1@gmail.com",
+        first_name="another1",
+        last_name="user1",
+    )
+    new_user.set_password('password123')
+    try:
+        db.insert_item(new_user)
+        print("user1 Email:{} added.....".format(new_user.email))
+    except:
+        print("USER1 NOT INSERTED !!!!")
+    
+    new_user = User(
+        email="anotheruser2@gmail.com",
+        first_name="another2",
+        last_name="user2",
+    )
+    new_user.set_password('password123')
+    try:
+        db.insert_item(new_user)
+        print("user2 Email:{} added.....".format(new_user.email))
+    except:
+        print("USER2 NOT INSERTED !!!!")
+    
+    new_user = User(
+        email="anotheruser3@gmail.com",
+        first_name="another3",
+        last_name="user3",
+    )
+    new_user.set_password('password123')
+    try:
+        db.insert_item(new_user)
+        print("user3 Email:{} added.....".format(new_user.email))
+    except:
+        print("USER3 NOT INSERTED !!!!")
+    
+    new_user = User(
+        email="anotheruser4@gmail.com",
+        first_name="another4",
+        last_name="user4",
+    )
+    new_user.set_password('password123')
+    try:
+        db.insert_item(new_user)
+        print("user4 Email:{} added.....".format(new_user.email))
+    except:
+        print("USER4 NOT INSERTED !!!!")
+    
+    new_user = User(
+        email="anotheruser5@gmail.com",
+        first_name="another5",
+        last_name="user5",
+    )
+    new_user.set_password('password123')
+    try:
+        db.insert_item(new_user)
+        print("user5 Email:{} added.....".format(new_user.email))
+    except:
+        print("USER5 NOT INSERTED !!!!")
+
+
+# ==============================================================================
 # User Utils
 # ==============================================================================
 
@@ -43,7 +110,8 @@ def add_user(email: str, first_name: str, last_name: str, plain_password: str) -
         db.insert_item(new_user)
         return Status.SUCCESS
     except:
-        return Status.FAIL
+        return Status.FAIL    
+
 
 
 # ==============================================================================
