@@ -4,6 +4,7 @@ import Header from 'components/Layout/Header';
 import TopPerformerProvider from 'contexts/TopPerformerContext';
 import UserProvider, { UserContext } from 'contexts/UserContext';
 import Landing from 'pages/Landing';
+import Portfolio from 'pages/Portfolio';
 import User from 'pages/User';
 import React, { useContext } from 'react';
 import { Container } from 'react-bootstrap';
