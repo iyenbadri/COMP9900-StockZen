@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { createContext, FC, useEffect, useState } from 'react';
+import React, { createContext, FC, useState } from 'react';
 // import api from '../../api';
 
 interface IUserContext {
@@ -12,9 +12,9 @@ interface IUserContext {
 
 const contextDefaultValues: IUserContext = {
   isAuthenticated: false,
-  authenticate: () => {},
-  logout: () => {},
-  recheckAuthenticationStatus: () => {},
+  authenticate: () => { },
+  logout: () => { },
+  recheckAuthenticationStatus: () => { },
   checkEmailUnique: (email: string) => true,
 };
 
@@ -47,8 +47,14 @@ const UserProvider: FC = ({ children }): any => {
   };
 
   const logout = () => {
-    // TODO call API to do the logout
-    markAsLoggedOut();
+    // Call API to do the logout
+    axios
+      .post('/user/logout')
+      .then(res => {
+        if (res.status === 200) {
+          markAsLoggedOut();
+        }
+      })
   };
 
   const recheckAuthenticationStatus = () => {

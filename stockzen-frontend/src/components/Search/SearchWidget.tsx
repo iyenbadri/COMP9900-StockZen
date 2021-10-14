@@ -71,7 +71,7 @@ const SearchWidget: FC<Prop> = (prop) => {
           isLoading={isLoading}
           labelKey='searchLabel'
           maxResults={30}
-          minLength={1}
+          minLength={2}
           paginate={false}
           options={options}
           placeholder='Begin typing stock symbol or name'
