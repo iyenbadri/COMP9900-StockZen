@@ -1,0 +1,221 @@
+@import 'variables.css';
+
+.tableToolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: end;
+  margin-bottom: 10px;
+}
+
+.toolbarText {
+  flex-basis: auto;
+  flex-grow: 1;
+}
+
+.toolbarControls {
+}
+
+.portfolioTable {
+  width: 100%;
+}
+
+.moneyGain {
+  color: #5bc07d;
+}
+
+.moneyLoss {
+  color: #e26b6b;
+}
+
+.tableHeader,
+.tableRow {
+  display: flex;
+  margin-bottom: 7px;
+  align-items: center;
+}
+
+.tableHeader {
+  margin-bottom: 0px;
+}
+
+.tableHeader button {
+  font-weight: 400;
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--zen-3);
+  padding: 0px;
+  min-width: 0;
+}
+
+.rowStockInfo {
+  flex-grow: 1;
+  flex-basis: auto;
+  display: flex;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding: 5px 10px 5px 5px;
+  align-items: center;
+}
+
+.tableRow .rowStockInfo {
+  border-color: var(--zen-5);
+  background-color: rgba(196, 196, 196, 0.6);
+  min-height: 50px;
+}
+
+.rowHandle {
+  flex-basis: 25px;
+  color: var(--zen-3);
+  flex-shrink: 0;
+}
+
+.rowCode {
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-basis: 70px;
+  text-align: center;
+}
+
+.rowName {
+  flex-grow: 10;
+  flex-basis: 100px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+.rowStockLink {
+  text-decoration: none;
+  color: var(--zen-4);
+  font-weight: 700;
+  font-size: 0.9em;
+}
+
+/* .editButton {
+  padding: 0;
+  background-color: transparent;
+  border-color: transparent;
+  margin-left: 5px;
+}
+
+.deleteButton {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.rowEditButton {
+  flex-basis: 25px;
+  flex-shrink: 0;
+} */
+
+.rowPrice {
+  text-align: right;
+  flex-basis: 85px;
+  flex-shrink: 0;
+}
+
+.rowChange {
+  text-align: right;
+  flex-basis: 75px;
+  flex-shrink: 0;
+  flex-grow: 0.5;
+}
+
+.rowAveragePrice {
+  text-align: right;
+  flex-basis: 90px;
+  flex-shrink: 0;
+  flex-grow: 0.5;
+}
+
+.rowProfit {
+  text-align: right;
+  flex-basis: 65px;
+  flex-shrink: 0;
+  flex-grow: 0.5;
+}
+
+.rowProfit {
+  text-align: right;
+  flex-basis: 88px;
+  display: inline-block;
+  text-align: right;
+  flex-shrink: 0;
+  flex-grow: 0.5;
+}
+
+.rowValue {
+  text-align: right;
+  flex-basis: 109px;
+  flex-shrink: 0;
+  flex-grow: 0.5;
+}
+
+.rowPredict {
+  text-align: right;
+  flex-basis: 88px;
+  text-align: right;
+  flex-shrink: 0;
+  flex-grow: 0.5;
+}
+
+/* .rowDelete {
+  flex-basis: 35px;
+  text-align: right;
+  flex-shrink: 0;
+} */
+
+@media (any-hover: hover) {
+  .rowDelete button {
+    visibility: hidden;
+  }
+
+  .tableRow:hover .rowDelete button {
+    visibility: visible;
+  }
+
+  .rowHandle img {
+    display: none;
+  }
+
+  .tableRow:hover .rowHandle img {
+    display: block;
+  }
+
+  .editButton {
+    visibility: hidden;
+  }
+
+  .tableRow:hover .editButton {
+    visibility: visible;
+  }
+}
+
+.percent {
+  font-size: 0.8em;
+}
+
+/* .tableRow .rowPortfolio, */
+.tableRow .rowName,
+.tableRow .rowPrice,
+.tableRow .rowChange,
+.tableRow .rowAveragePrice,
+.tableRow .rowProfit,
+.tableRow .rowValue {
+  font-size: 0.8em;
+}
+
+/*   
+  md: 768px,
+  lg: 992px, */
+
+@media only screen and (max-width: 767px) {
+  .rowStocks {
+    display: none;
+  }
+  .rowTotalGain {
+    display: none;
+  }
+  .rowChange {
+    display: none;
+  }
+}

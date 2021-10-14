@@ -1,5 +1,5 @@
 import PortfolioList from 'components/Portfolio/PortfolioList';
-import PortfolioComponent from 'components/Portfolio/Portfolio';
+import PortfolioPage from 'components/Portfolio/PortfolioPage';
 import TopPerformerWidget from 'components/Portfolio/TopPerformerWidget';
 import React, { FC } from 'react';
 import Col from 'react-bootstrap/Col';
@@ -22,7 +22,7 @@ const Portfolio: FC = () => {
             <ProtectedRoute exact path={`${path}`} component={PortfolioList} />
             <ProtectedRoute
               path={`${path}/:portfolioId`}
-              component={PortfolioComponent}
+              component={PortfolioPage}
             />
           </Switch>
         </Col>
