@@ -16,7 +16,6 @@ from flask import request
 from flask_login import current_user
 from flask_login.utils import login_required, login_user, logout_user
 from flask_restx import Namespace, Resource, fields, marshal
-from app.utils.crud_utils import add_dummyusers
 
 api = Namespace("user", description="User related operations")
 
@@ -139,18 +138,6 @@ class UserCRUD(Resource):
             return {"message": "user exists"}, 200
         return {"message": "user not found"}, 404
 
-
-@api.route("/add_dummy_users")
-class UserCRUD(Resource):
-    @api.response(200, "Dummy Users Added")
-    @api.response(400, "Users already added")
-    def get(self):
-        """Check if an email already exists"""
-        email_status = auth.email_exists("anotheruser1@gmail.com")
-        if email_status != Status.FOUND:
-            add_dummyusers()
-            return {"message": "dummy users added"}, 200
-        return {"message": "dummy users already added"}, 400
 
 @api.route("/logout")
 class UserRouter(Resource):
