@@ -61,7 +61,7 @@
 
 .rowPortInfo {
   display: grid;
-  grid-template-columns: 3fr 34fr 5fr 12fr repeat(3, 15fr);
+  grid-template-columns: 5fr 34fr 5fr 12fr repeat(3, 15fr);
   width: 100%;
   padding: 5px 10px 5px 5px;
   align-items: center;
@@ -113,6 +113,10 @@
 .rowTotalGain {
   text-align: right;
   margin-right: 3px;
+}
+.rowChange,
+.rowTotalGain {
+  margin-bottom: -3px;
 }
 
 .rowMarketValue > button,
@@ -173,10 +177,9 @@
 
 .percent {
   font-size: 0.75rem;
-  line-height: 0.5rem;
+  line-height: 0.6rem;
 }
 
-/* .tableRow .rowPortfolio, */
 .tableRow .rowChange,
 .tableRow .rowTotalGain,
 .tableRow .rowStocks,
