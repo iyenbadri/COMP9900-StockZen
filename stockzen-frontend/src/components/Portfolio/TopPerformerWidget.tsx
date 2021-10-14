@@ -1,8 +1,8 @@
-import React, { FC, useContext } from 'react';
-import moment from 'moment';
-import styles from './TopPerformerWidget.module.css';
-import { Link } from 'react-router-dom';
 import { TopPerformanceContext } from 'contexts/TopPerformerContext';
+import moment from 'moment';
+import React, { FC, useContext } from 'react';
+import { Link } from 'react-router-dom';
+import styles from './TopPerformerWidget.module.css';
 
 // interface IProps {
 //   firstName: string;
@@ -15,8 +15,8 @@ const TopPerformerWidget: FC = (props) => {
     currency: 'USD',
   });
 
-  let topPerformarsLastUpdate = new Date();
-  let topPerformars = [
+  let topPerformersLastUpdate = new Date();
+  let topPerformers = [
     {
       symbol: 'GOOG',
       price: 2853.35,
@@ -55,7 +55,7 @@ const TopPerformerWidget: FC = (props) => {
   return (
     <div className={styles.widget}>
       <div className={styles.date}>
-        {moment(topPerformarsLastUpdate).format('dddd Do MMMM h:mma')}
+        {moment(topPerformersLastUpdate).format('dddd Do MMMM h:mma')}
       </div>
       {showPortfolioSummary && (
         <>
@@ -74,8 +74,8 @@ const TopPerformerWidget: FC = (props) => {
           <hr className={styles.separatorLine} />
         </>
       )}
-      <div className={styles.title}>Today's top performars</div>
-      <table style={{ width: '100%' }}>
+      <div className={styles.title}>Today's top performers</div>
+      <table className={styles.table}>
         <thead>
           <tr>
             <th className={styles.symbol}>Symbol</th>
@@ -84,7 +84,7 @@ const TopPerformerWidget: FC = (props) => {
           </tr>
         </thead>
         <tbody>
-          {topPerformars.map((stock, index) => {
+          {topPerformers.map((stock, index) => {
             return (
               <tr key={stock.symbol} className={styles.symbolRow}>
                 <td className={styles.symbol}>{stock.symbol}</td>

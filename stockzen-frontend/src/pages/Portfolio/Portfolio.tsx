@@ -1,5 +1,5 @@
-import PortfolioList from 'components/Portfolio/PortfolioList';
 import PortfolioComponent from 'components/Portfolio/Portfolio';
+import PortfolioList from 'components/Portfolio/PortfolioList';
 import TopPerformerWidget from 'components/Portfolio/TopPerformerWidget';
 import React, { FC } from 'react';
 import Col from 'react-bootstrap/Col';
@@ -13,8 +13,8 @@ const Portfolio: FC = () => {
 
   return (
     <Container>
-      <Row>
-        <Col lg={4} className='d-none d-lg-block'>
+      <Row className='justify-content-evenly'>
+        <Col lg={3} className='d-none d-lg-block'>
           <TopPerformerWidget></TopPerformerWidget>
         </Col>
         <Col xs={12} lg={8}>
