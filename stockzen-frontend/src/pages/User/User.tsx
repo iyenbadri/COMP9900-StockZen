@@ -3,7 +3,7 @@ import { CloseButton, Modal } from 'react-bootstrap';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import GuestRoute from 'utils/GuestRoute';
 import Login from './Login';
 import Logout from './Logout';
@@ -13,6 +13,8 @@ import styles from './User.module.css';
 const User: FC = () => {
   const { path } = useRouteMatch();
   const history = useHistory();
+  const location = useLocation();
+
   return (
     <Container>
       <Row>
@@ -28,12 +30,14 @@ const User: FC = () => {
             backdrop='static'
             keyboard={false}
           >
-            <CloseButton
-              className={styles.closeButton}
-              onClick={() => {
-                history.goBack();
-              }}
-            ></CloseButton>
+            {!(location.pathname === `${path}/logout`) && (
+              <CloseButton
+                className={styles.closeButton}
+                onClick={() => {
+                  history.goBack();
+                }}
+              ></CloseButton>
+            )}
             <Modal.Body className={styles.modalBody}>
               <Switch>
                 <GuestRoute path={`${path}/login`} component={Login} />
