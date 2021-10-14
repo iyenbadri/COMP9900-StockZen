@@ -61,15 +61,10 @@ def get_portfolio_list() -> Status:
         return Status.FAIL
 
 
-def add_portfolio(portfolio_name: str, user_id: str = None) -> Status:
-    """Add a portfolio to the database, return success status
-    :param user_id can be passed in to add portfolio for specific user
-    """
-    if not user_id:
-        user_id = current_user.id
-
+def add_portfolio(portfolio_name: str) -> Status:
+    """Add a portfolio to the database, return success status"""
     new_portfolio = Portfolio(
-        user_id=user_id,
+        user_id=current_user.id,
         portfolio_name=portfolio_name,
     )
     try:
