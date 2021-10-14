@@ -146,6 +146,15 @@ def delete_stock(stock_id: int) -> Status:
         return Status.FAIL
 
 
+def search_stock(stock_string: str) -> Status:
+    try:
+        stock_lst = db.query_stock_pages(stock_string)
+        stock_lst = [{"code":stock.code,"stock_name":stock.stock_name} for stock in stock_lst]
+        return stock_lst
+    except:
+        return Status.FAIL
+
+
 # ==============================================================================
 # Lot Utils
 # ==============================================================================

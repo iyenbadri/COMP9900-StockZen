@@ -105,6 +105,22 @@ class StockCRUD(Resource):
         return {"message": "Could not add stock"}, 500
 
 
+@api.route("/<stockquery>")
+class StockpageCRUD(Resource):
+    @login_required
+    # @api.marshal_list_with(stock_list_response)
+    @api.response(200, "Successfully retrieved list of stocks")
+    @api.response(404, "No results were found")
+    def get(self, stockquery):
+        """List of related stocks Limit(30)"""
+        stock_list = util.search_stock(stockquery)
+        if stock_list == Status.FAIL:
+            return {"message":"Exception occured, check backend logs"},500
+        if stock_list == []:
+            return stock_list,404
+        return stock_list,200
+
+
 @api.route("/<stockId>")
 class StockCRUD(Resource):
     @login_required

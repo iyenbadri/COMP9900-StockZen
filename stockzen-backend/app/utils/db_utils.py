@@ -4,7 +4,7 @@ from typing import List, Optional, TypeVar, Union
 from app import db
 from app.models.schema import LotBought, LotSold, Portfolio, Stock, StockPage, User
 from flask_login import current_user
-from sqlalchemy import func
+from sqlalchemy import asc, func, or_
 
 DatabaseObj = TypeVar(
     "DatabaseObj", Portfolio, Stock, User, LotBought, LotSold, StockPage
@@ -106,5 +106,28 @@ def query_user(email: str) -> Optional[User]:
     try:
         user = User.query.filter(func.lower(User.email) == func.lower(email)).one()
         return user
+    except Exception as e:
+        debug_exception(e)
+
+
+# ==============================================================================
+# Stock Pages DB Utils
+# ==============================================================================
+
+
+def query_stock_pages(name: str):
+    try:
+        stocks = (
+            StockPage.query.filter(
+                or_(
+                    StockPage.stock_name.like("%" + name + "%"),
+                    StockPage.code.like("%" + name + "%"),
+                )
+            )
+            .order_by(StockPage.code.asc(), StockPage.stock_name.asc())
+            .limit(30)
+            .all()
+        )
+        return stocks
     except Exception as e:
         debug_exception(e)
