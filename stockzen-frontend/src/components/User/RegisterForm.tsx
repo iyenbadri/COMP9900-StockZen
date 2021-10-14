@@ -93,7 +93,7 @@ const RegisterForm: FC<IProps> = (props) => {
   return (
     <>
       <h3 className={`my-2 ${styles.formTitle} outerStroke`}>Sign up</h3>
-      <Form onSubmit={handleSubmit(onRegister)}>
+      <Form autoComplete='off' onSubmit={handleSubmit(onRegister)}>
         <Form.Group controlId='firstName' className={styles.controlGroup}>
           {/* -- First Name -- */}
           <Form.Label className={styles.formLabel}>First Name</Form.Label>
@@ -154,11 +154,11 @@ const RegisterForm: FC<IProps> = (props) => {
                 !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
                   ? {}
                   : {
-                    lower: (val) => /[a-z]/.test(val),
-                    upper: (val) => /[A-Z]/.test(val),
-                    number: (val) => /[0-9]/.test(val),
-                    symbol: (val) => /[^a-zA-Z0-9]/.test(val),
-                  },
+                      lower: (val) => /[a-z]/.test(val),
+                      upper: (val) => /[A-Z]/.test(val),
+                      number: (val) => /[0-9]/.test(val),
+                      symbol: (val) => /[^a-zA-Z0-9]/.test(val),
+                    },
             })}
           ></Form.Control>
           <Form.Text className={styles.errorMessage}>
