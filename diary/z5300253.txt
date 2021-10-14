@@ -37,3 +37,22 @@ Meetings atended:
 Standup Meetings
 One on one with Khai for assistance working with SQLAlchemy an techical questions.
 - 07/10/2021
+
+Week 04:
+
+Issues:
+Week 04 Lab: Identified AV api won't be suitable for the project in terms of its scope and limitations, look for alternatives.
+Figuring out Stock page calculation on the chosen API to display results on the user's screen.
+
+Planned Work:
+Working collaboratively with Gunjan conducting market research on Alternative API and integration with our current build.
+Jira: Adding dummy User data to the databse for allowing for testing. Merged with changes made by Khai.
+Jira: Creating a stock search endpoint. Currently in Code review.
+
+Meetings Attended:
+Usual stand ups with Team to figure out the way forward and usual updates.
+Meeting with Gunjan: Discuss progress regarding Yahoo finance API.
+Meeting with Khai and Rittisak For implementing the stock search endpoint and detailed walk through of the acceptance criteria.
+
+Time spent: ~>10 hours
+- 14/10/2021
