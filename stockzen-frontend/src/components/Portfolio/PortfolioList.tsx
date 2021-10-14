@@ -28,7 +28,7 @@ interface IPortfolioResponse {
 interface IPortfolio {
   portfolioId: number;
   name: string;
-  stock_count: number;
+  stockCount: number;
   change: number | null;
   changePercent: number | null;
   marketValue: number | null;
@@ -58,7 +58,7 @@ const PortfolioList = () => {
     return portfolioList.map((x: IPortfolioResponse) => ({
       portfolioId: x.id,
       name: x.portfolioName,
-      stock_count: x.stockCount,
+      stockCount: x.stockCount,
       marketValue: x.value,
       change: x.change,
       changePercent: x.percChange,
@@ -325,7 +325,7 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
             <img src={editIcon} alt='edit' width={18} />
           </button>
         </div>
-        <div className={styles.rowStocks}>{prop.stock_count}</div>
+        <div className={styles.rowStocks}>{prop.stockCount}</div>
         <div className={styles.rowMarketValue}>
           {prop.marketValue == null
             ? '-'
