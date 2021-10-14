@@ -2,7 +2,7 @@ import smileIcon from 'assets/icon-outlines/outline-emotxd-smile.svg';
 import { UserContext } from 'contexts/UserContext';
 import React, { FC, useContext, useEffect } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
-import { Redirect, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 
 const Logout: FC = () => {
@@ -18,7 +18,6 @@ const Logout: FC = () => {
 
   return (
     <>
-      <Redirect to='/user/logout'></Redirect>
       <h3 className='mt-4 text-center'>
         Logout Successful!
       </h3>
