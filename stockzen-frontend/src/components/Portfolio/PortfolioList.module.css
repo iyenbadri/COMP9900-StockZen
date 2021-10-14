@@ -182,8 +182,8 @@
 .tableRow .rowChange,
 .tableRow .rowTotalGain,
 .tableRow .rowStocks,
-.tableRow .rowMargetValue {
-  font-size: 0.88rem;
+.tableRow .rowMarketValue {
+  font-size: 0.9rem;
 }
 
 /*   
