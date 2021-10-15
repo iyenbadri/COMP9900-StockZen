@@ -40,10 +40,7 @@ portfolio_list_response = api.model(
             required=True,
             description="percentage capital gains made by portfolio",
         ),
-        "prediction": fields.Integer(
-            description="ML Classifier prediction on stock price"
-        ),
-        "confidence": fields.Float(description="Confidence of prediction"),
+        "order": fields.Integer(required=True, description="new portfolio order"),
     },
 )
 
@@ -54,10 +51,18 @@ portfolio_add_request = api.model(
     },
 )
 
-portfolio_update_request = api.model(
+portfolio_rename_request = api.model(
     "Request: Rename portfolio",
     {
         "newName": fields.String(required=True, description="new portfolio name"),
+    },
+)
+
+portfolio_reorder_request = api.model(
+    "Request: Reorder portfolios",
+    {
+        "id": fields.Integer(required=True, description="portfolio id"),
+        "order": fields.Integer(required=True, description="new portfolio order"),
     },
 )
 
@@ -71,13 +76,33 @@ class PortfolioCRUD(Resource):
     @login_required
     @api.marshal_list_with(portfolio_list_response)
     @api.response(200, "Successfully retrieved list")
-    @api.response(404, "User not found")
     def get(self):
         """List all portfolios from a user"""
 
         portfolio_list = util.get_portfolio_list()
 
         return portfolio_list
+
+    @login_required
+    @api.expect([portfolio_reorder_request])
+    @api.response(200, "Successfully updated list order")
+    @api.response(409, "Error: Non-unique order numbers")
+    def put(self):
+        """Update portfolio list row ordering"""
+
+        jsonArray = marshal(
+            request.json, portfolio_reorder_request
+        )  # array of json objects
+
+        # return error if any order is non-unique
+        orderList = [json["order"] for json in jsonArray]
+        if len(orderList) > len(set(orderList)):
+            return {"message": "Failed: non-unique order numbers were provided"}, 409
+
+        if util.reorder_portfolio_list(jsonArray) == Status.SUCCESS:
+            return {"message": "portfolio list successfully reordered"}, 200
+
+        return {"message": "portfolio list could not be reordered"}, 500
 
 
 @api.route("")
@@ -115,13 +140,13 @@ class PortfolioCRUD(Resource):
         return portfolio_item
 
     @login_required
-    @api.expect(portfolio_update_request)
+    @api.expect(portfolio_rename_request)
     @api.response(200, "Successfully updated portfolio name")
     @api.response(404, "Portfolio not found")
     def put(self, portfolioId):
         """Rename an existing portfolio"""
 
-        json = marshal(request.json, portfolio_update_request)
+        json = marshal(request.json, portfolio_rename_request)
 
         new_name = json["newName"]
 

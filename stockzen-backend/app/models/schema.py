@@ -76,8 +76,7 @@ class Portfolio(db.Model):
     perc_change = Column(Float, default=0)  # portfolios.change / portfolios.value
     gain = Column(Float, default=0)  # sum(stocks.gain)
     perc_gain = Column(Float, default=0)  # portfolios.gain / portfolios.value
-    prediction = Column(Integer, default=0)  # -1 for down, 0 no change, 1 for up
-    confidence = Column(Float, default=0)
+    order = Column(Integer, nullable=False, default=0)  # track row order, default to top
     last_updated = Column(DateTime, default=datetime.now())
 
     # Relationships
@@ -100,7 +99,7 @@ class Stock(db.Model):
     portfolio_id = Column(Integer, ForeignKey("portfolios.id"), nullable=False)
     stock_page_id = Column(
         Integer, ForeignKey("stock_pages.id"), nullable=False
-    )  # to get current price and percent_change
+    )  # to get current price, change, percent_change, prediction, confidence
     code = Column(String(6))
     stock_name = Column(String(40))
     price = Column(Float)  # = stock_pages.price
@@ -111,6 +110,7 @@ class Stock(db.Model):
     gain = Column(Float)  # (stocks.price - bought.avg_price) * stocks.units_held
     perc_gain = Column(Float)  # stocks.gain / (stocks.units_held * bought.avg_price)
     value = Column(Float)  # sum(bought.value)
+    order = Column(Integer, nullable=False, unique=True, default=id)  # track row order
     last_updated = Column(DateTime, default=datetime.now())
 
     # Relationships
@@ -167,6 +167,8 @@ class StockPage(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     code = Column(String(6), unique=True)
     stock_name = Column(String(40))
+    prediction = Column(Integer, default=0)  # -1 for down, 0 no change, 1 for up
+    confidence = Column(Float, default=0)
     # TODO: Populate remaining columns
 
     # Relationships

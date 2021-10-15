@@ -49,6 +49,11 @@ stock_list_response = api.model(
             description="percentage capital gain made by stock",
         ),
         "value": fields.Float(required=True, description="stock market value"),
+        "prediction": fields.Integer(
+            description="ML Classifier prediction on stock price"
+        ),
+        "confidence": fields.Float(description="Confidence of prediction"),
+        "order": fields.Integer(required=True, description="new portfolio order"),
     },
 )
 
@@ -65,6 +70,14 @@ stock_update_request = api.model(
     "Request: Rename stock row",
     {
         "newName": fields.String(required=True, description="new stock name"),
+    },
+)
+
+stock_reorder_request = api.model(
+    "Request: Reorder stocks rows",
+    {
+        "id": fields.Integer(required=True, description="stock id"),
+        "order": fields.Integer(required=True, description="new stock order"),
     },
 )
 
