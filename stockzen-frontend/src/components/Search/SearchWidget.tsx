@@ -9,7 +9,7 @@ import listings from './listing.json';
 import styles from './SearchWidget.module.css';
 
 interface Prop {
-  addStock?: (symbol: string) => void;
+  addStock: (symbol: string, stockPageId: number) => void;
 }
 
 interface TypeaheadOption {
@@ -35,6 +35,10 @@ const SearchWidget: FC<Prop> = (prop) => {
 
   const [showSearchInput, setShowSearchInput] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [addedSymbols, setAddedSymbols] = useState<string[]>([]);
+
+  // TODO : Use API to update the addedSymbols
+
   //const [query, setQuery] = useState<string>('');
   const [options, setOptions] = useState<TypeaheadOption[]>(
     listings.map(mapOptions)
@@ -47,9 +51,9 @@ const SearchWidget: FC<Prop> = (prop) => {
         onClick={() => {
           setShowSearchInput(true);
         }}
+        className='d-flex align-items-center'
       >
-        <img src={plusCircle} alt='plus' />
-        Add a stock
+        <img src={plusCircle} alt='plus' className='me-1' /> Add a stock
       </Button>
 
       <Modal
@@ -91,22 +95,24 @@ const SearchWidget: FC<Prop> = (prop) => {
           renderMenu={(results, menuProps) => (
             <Menu {...menuProps} className={styles.options}>
               {results.map((option, index) => (
-                <MenuItem option={option} position={index} as={'div'}>
+                <MenuItem option={option} position={index}>
                   <div key={option.id} className={styles.searchOption}>
                     <span className={styles.optionAdd}>
-                      <Button
-                        variant='transparent'
-                        onClick={(ev) => {
-                          ev.preventDefault();
-                          ev.stopPropagation();
+                      {!addedSymbols.includes(option.symbol) && (
+                        <Button
+                          variant='transparent'
+                          onClick={(ev) => {
+                            ev.preventDefault();
+                            ev.stopPropagation();
 
-                          if (prop.addStock != null) {
-                            prop.addStock(option.symbol);
-                          }
-                        }}
-                      >
-                        <img src={plusIcon} alt='add' />
-                      </Button>
+                            // TODO: Retrieve the stockPageId from backend.
+                            prop.addStock(option.symbol, 1);
+                            setAddedSymbols([...addedSymbols, option.symbol]);
+                          }}
+                        >
+                          <img src={plusIcon} alt='add' />
+                        </Button>
+                      )}
                     </span>
                     <span className={styles.optionSymbol}>
                       {/* TODO: Will fix the nested `a` tag bug later. Have to find a way to fix it first */}

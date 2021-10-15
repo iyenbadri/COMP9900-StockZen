@@ -1,4 +1,4 @@
-import { TopPerformanceContext } from 'contexts/TopPerformerContext';
+import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import moment from 'moment';
 import React, { FC, useContext } from 'react';
 import { Link } from 'react-router-dom';
@@ -50,7 +50,7 @@ const TopPerformerWidget: FC = (props) => {
     overallChangePercent: -10.76,
   };
 
-  const { showPortfolioSummary } = useContext(TopPerformanceContext);
+  const { showPortfolioSummary } = useContext(TopPerformerContext);
 
   return (
     <div className={styles.widget}>
