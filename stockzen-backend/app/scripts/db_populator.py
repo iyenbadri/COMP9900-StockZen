@@ -38,8 +38,14 @@ with app.app_context():
         """
         Generates n random portfolios
         """
+        last_id = 0
+        last_row = Portfolio.query.order_by(Portfolio.id.desc()).first()
+        if last_row:
+            last_id = last_row.id
+
         for _ in range(n_portfolios):
-            random_id = randrange(*user_id_range)
+            # random_id = randrange(*user_id_range)
+            random_id = 1
             portfolio_name = faker.bs()
             stock_count = randrange(0, 20)
             value = round(uniform(-100000, 100000), 4)
@@ -48,6 +54,7 @@ with app.app_context():
             gain = round(uniform(-10000, 10000), 4)
             perc_gain = round(uniform(-150, 150), 4)
 
+            last_id += 1  # to maintain unique order
             new_portfolio = Portfolio(
                 user_id=random_id,
                 portfolio_name=portfolio_name,
@@ -57,6 +64,7 @@ with app.app_context():
                 perc_change=perc_change,
                 gain=gain,
                 perc_gain=perc_gain,
+                order=last_id,
             )
             try:
                 db.insert_item(new_portfolio)
