@@ -13,7 +13,7 @@ const LoginForm: FC<IProps> = (props) => {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm();
 
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -23,7 +23,7 @@ const LoginForm: FC<IProps> = (props) => {
 
     let payload = {
       email: data.email,
-      password: data.password
+      password: data.password,
     };
 
     try {
@@ -37,7 +37,7 @@ const LoginForm: FC<IProps> = (props) => {
       }
     } catch (e: any) {
       if (e.response.status === 401 || e.response.status === 403) {
-        setErrorMessage('Please enter a correct email address or password.')
+        setErrorMessage('Please enter a correct email address or password.');
       } else {
         setErrorMessage('An error occurred. Please try again later.');
       }
@@ -47,12 +47,12 @@ const LoginForm: FC<IProps> = (props) => {
   return (
     <>
       <h3 className={`mt-4 ${styles.formTitle} outerStroke`}>Log in</h3>
-      <Form onSubmit={handleSubmit(onLogin)}>
-        <Form.Group controlId='email' className={`my-5 ${styles.controlGroup}`}>
+      <Form autoComplete='off' onSubmit={handleSubmit(onLogin)}>
+        <Form.Group controlId='email' className={`my-4 ${styles.controlGroup}`}>
           <Form.Label className={styles.formLabel}>Email Address</Form.Label>
           <Form.Control
             {...register('email', {
-              required: true
+              required: true,
             })}
             placeholder=''
           ></Form.Control>
@@ -61,12 +61,15 @@ const LoginForm: FC<IProps> = (props) => {
           </Form.Text>
         </Form.Group>
 
-        <Form.Group controlId='password' className={`my-4 ${styles.controlGroup}`}>
+        <Form.Group
+          controlId='password'
+          className={`my-4 ${styles.controlGroup}`}
+        >
           <Form.Label className={styles.formLabel}>Password</Form.Label>
           <Form.Control
             type='password'
             {...register('password', {
-              required: true
+              required: true,
             })}
             placeholder=''
           ></Form.Control>
@@ -76,28 +79,31 @@ const LoginForm: FC<IProps> = (props) => {
         </Form.Group>
 
         <Row className={styles.backErrorMessage}>
-          <Col>
-            {errorMessage}
-          </Col>
+          <Col>{errorMessage}</Col>
         </Row>
 
         <Row className='text-center'>
           <Col xs={12}>
-            <Button className='btn mt-4 mb-2' type='submit'>Submit</Button>
+            <Button className='btn mt-4 mb-2' type='submit'>
+              Submit
+            </Button>
           </Col>
         </Row>
 
         <Row className='mt-2 text-center'>
           <Col>
-            <Link to='/' className={styles.formLink}>Forgot Password?</Link>
+            <Link to='/' className={styles.formLink}>
+              Forgot Password?
+            </Link>
           </Col>
         </Row>
 
         <Row className='mt-2 mb-4 text-center'>
           <Col>
-            Don't have an account?
-            {' '}
-            <Link to='/user/register' className={styles.formLink}>Sign up</Link>
+            Don't have an account?{' '}
+            <Link to='/user/register' className={styles.formLink}>
+              Sign up
+            </Link>
           </Col>
         </Row>
       </Form>
