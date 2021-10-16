@@ -1,3 +1,5 @@
+import { DndContext, DragEndEvent, useDndMonitor } from '@dnd-kit/core';
+import { arrayMove, SortableContext, useSortable } from '@dnd-kit/sortable';
 import crossIcon from 'assets/icon-outlines/outline-cross.svg';
 import handleIcon from 'assets/icon-outlines/outline-drag-handle.svg';
 import editIcon from 'assets/icon-outlines/outline-edit-1.svg';
@@ -13,6 +15,7 @@ import { Link, useRouteMatch } from 'react-router-dom';
 import { usdFormatter } from 'utils/Utilities';
 import styles from './PortfolioList.module.css';
 import PortfolioListSummary from './PortfolioListSummary';
+import { CSS } from '@dnd-kit/utilities';
 
 interface IPortfolioResponse {
   id: number;
@@ -26,6 +29,7 @@ interface IPortfolioResponse {
 }
 
 interface IPortfolio {
+  id: string;
   portfolioId: number;
   name: string;
   stockCount: number;
@@ -52,10 +56,13 @@ const PortfolioList = () => {
   const [showCreatePortfolioModal, setShowCreatePortfolioModal] =
     useState<boolean>(false);
 
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+
   const mapPortfolioList = (
     portfolioList: IPortfolioResponse[]
   ): IPortfolio[] => {
     return portfolioList.map((x: IPortfolioResponse) => ({
+      id: x.id.toString(),
       portfolioId: x.id,
       name: x.portfolioName,
       stockCount: x.stockCount,
@@ -112,6 +119,29 @@ const PortfolioList = () => {
     });
 
     setShowCreatePortfolioModal(false);
+  };
+
+  const handleDragStart = () => {
+    setIsDragging(true);
+  };
+
+  const handleDragEnd = (ev: DragEndEvent) => {
+    setIsDragging(false);
+
+    const { active, over } = ev;
+    if (over !== null) {
+      if (active.id !== over.id) {
+        setPortfolios((portfolios) => {
+          const oldIndex = portfolios.findIndex((x) => x.id === active.id);
+          const newIndex = portfolios.findIndex((x) => x.id === over.id);
+          const newList = arrayMove(portfolios, oldIndex, newIndex);
+
+          // TODO: Call API to reorder the list.
+
+          return newList;
+        });
+      }
+    }
   };
 
   // TODO: https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent/pull/17/files#r723117690
@@ -232,20 +262,26 @@ const PortfolioList = () => {
         <div className={styles.rowDelete}></div>
       </div>
 
-      {portfolios!.map((port, index) => {
-        return (
-          <PortfolioListRow
-            key={port.portfolioId}
-            {...port}
-            showDeleteModal={(portfolioId, name) => {
-              setDeletingPortfolioId(portfolioId);
-              setDeletingPortfolioName(name);
-              setShowDeletePortfolioModal(true);
-            }}
-            updatePortfolioName={handlePortfolioRename}
-          ></PortfolioListRow>
-        );
-      })}
+      <div className={isDragging ? styles.dragging : styles.notDragging}>
+        <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
+          <SortableContext items={portfolios}>
+            {portfolios!.map((port, index) => {
+              return (
+                <PortfolioListRow
+                  key={port.portfolioId}
+                  {...port}
+                  showDeleteModal={(portfolioId, name) => {
+                    setDeletingPortfolioId(portfolioId);
+                    setDeletingPortfolioName(name);
+                    setShowDeletePortfolioModal(true);
+                  }}
+                  updatePortfolioName={handlePortfolioRename}
+                ></PortfolioListRow>
+              );
+            })}
+          </SortableContext>
+        </DndContext>
+      </div>
     </>
   );
 };
@@ -255,6 +291,14 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
 
   const [portfolioName, setPortfolioName] = useState<string>(prop.name);
   const [isEditingName, setIsEditingName] = useState<boolean>(false);
+
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: prop.portfolioId.toString(),
+      attributes: { role: 'portfolio' },
+    });
+
+  const style = { transform: CSS.Transform.toString(transform), transition };
 
   const gainLossClass = (val: number | null): string => {
     if (val == null) {
@@ -278,10 +322,20 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
   };
 
   return (
-    <div className={styles.tableRow}>
+    <div
+      ref={setNodeRef}
+      className={styles.tableRow}
+      style={style}
+      {...attributes}
+    >
       <div className={styles.rowPortInfo}>
         <div className={styles.rowHandle}>
-          <img src={handleIcon} alt='handle' className={styles.dragHandle} />
+          <img
+            src={handleIcon}
+            alt='handle'
+            className={styles.dragHandle}
+            {...listeners}
+          />
         </div>
         <div className={styles.rowPortfolio}>
           {isEditingName ? (

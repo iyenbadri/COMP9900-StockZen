@@ -152,11 +152,11 @@
     visibility: hidden;
   }
 
-  .tableRow:hover .rowDelete button {
+  .notDragging .tableRow:hover .rowDelete button {
     visibility: visible;
   }
 
-  .tableRow:hover .rowPortInfo {
+  .notDragging .tableRow:hover .rowPortInfo {
     outline: 1px solid var(--zen-4);
     background-color: var(--zen-5);
   }
@@ -165,7 +165,7 @@
     display: none;
   }
 
-  .tableRow:hover .rowHandle img {
+  .notDragging .tableRow:hover .rowHandle img {
     cursor: move;
     display: block;
   }
@@ -174,7 +174,7 @@
     visibility: hidden;
   }
 
-  .tableRow:hover .editButton {
+  .notDragging .tableRow:hover .editButton {
     visibility: visible;
   }
 }
