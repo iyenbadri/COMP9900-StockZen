@@ -78,6 +78,11 @@
   color: var(--zen-3);
 }
 
+.rowPortfolio {
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+}
+
 .rowPortfolioLink {
   text-decoration: none;
   color: var(--zen-3);

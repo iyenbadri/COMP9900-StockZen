@@ -28,7 +28,7 @@ interface IPortfolioResponse {
 interface IPortfolio {
   portfolioId: number;
   name: string;
-  stock_count: number;
+  stockCount: number;
   change: number | null;
   changePercent: number | null;
   marketValue: number | null;
@@ -40,127 +40,6 @@ interface IPortfolioListRow extends IPortfolio {
   updatePortfolioName?: (id: number, name: string) => void;
   showDeleteModal?: (id: number, name: string) => void;
 }
-
-const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
-  const { path } = useRouteMatch();
-
-  const [portfolioName, setPortfolioName] = useState<string>(prop.name);
-  const [isEditingName, setIsEditingName] = useState<boolean>(false);
-
-  const gainLossClass = (val: number | null): string => {
-    if (val == null) {
-      return '';
-    } else if (val < 0) {
-      return styles.moneyLoss;
-    } else if (val > 0) {
-      return styles.moneyGain;
-    } else {
-      return '';
-    }
-  };
-
-  const updatePortfolioName = () => {
-    if (prop.updatePortfolioName != null) {
-      if (portfolioName.length > 0 && portfolioName.length <= 50) {
-        prop.updatePortfolioName(prop.portfolioId, portfolioName);
-      }
-    }
-    setIsEditingName(false);
-  };
-
-  return (
-    <div className={styles.tableRow}>
-      <div className={styles.rowPortInfo}>
-        <div className={styles.rowHandle}>
-          <img src={handleIcon} alt='handle' />
-        </div>
-        <div className={styles.rowPortfolio}>
-          {isEditingName ? (
-            <Form.Control
-              value={portfolioName}
-              style={{ width: '100%', padding: 0 }}
-              autoFocus
-              maxLength={50}
-              onChange={(ev) => {
-                setPortfolioName(ev.target.value);
-              }}
-              onBlur={updatePortfolioName}
-              onKeyDown={(ev) => {
-                console.log(ev.key);
-                switch (ev.key) {
-                  case 'Enter':
-                    updatePortfolioName();
-                    break;
-                  case 'Escape':
-                    setIsEditingName(false);
-                    break;
-                }
-              }}
-            />
-          ) : (
-            <Link
-              to={`${path}/${prop.portfolioId}`}
-              className={styles.rowPortfolioLink}
-            >
-              {prop.name}
-            </Link>
-          )}
-        </div>
-        <div className={styles.rowEditButton}>
-          <button
-            type='button'
-            className={`${styles.editButton} p-0`}
-            onClick={(ev) => {
-              setIsEditingName(true);
-            }}
-          >
-            <img src={editIcon} alt='edit' width={18} />
-          </button>
-        </div>
-        <div className={styles.rowStocks}>{prop.stock_count}</div>
-        <div className={styles.rowMarketValue}>
-          {prop.marketValue == null
-            ? '-'
-            : usdFormatter.format(prop.marketValue)}
-        </div>
-        <div className={`${styles.rowChange} ${gainLossClass(prop.change)}`}>
-          {prop.change == null ? (
-            '-'
-          ) : (
-            <>
-              <div className={styles.percent}>{prop.changePercent}%</div>
-              <div>{usdFormatter.format(prop.change)}</div>
-            </>
-          )}
-        </div>
-        <div
-          className={`${styles.rowTotalGain} ${gainLossClass(prop.totalGain)}`}
-        >
-          {prop.totalGain == null ? (
-            '-'
-          ) : (
-            <>
-              <div className={styles.percent}>{prop.totalGainPercent}%</div>
-              <div>{usdFormatter.format(prop.totalGain)}</div>
-            </>
-          )}
-        </div>
-      </div>
-      <div className={styles.rowDelete}>
-        <button
-          className={`p-0 ${styles.deleteButton}`}
-          onClick={() => {
-            if (prop.showDeleteModal != null) {
-              prop.showDeleteModal(prop.portfolioId, prop.name);
-            }
-          }}
-        >
-          <img src={crossIcon} alt='cross' width={20} />
-        </button>
-      </div>
-    </div>
-  );
-};
 
 const PortfolioList = () => {
   const { setShowPortfolioSummary } = useContext(TopPerformerContext);
@@ -179,7 +58,7 @@ const PortfolioList = () => {
     return portfolioList.map((x: IPortfolioResponse) => ({
       portfolioId: x.id,
       name: x.portfolioName,
-      stock_count: x.stockCount,
+      stockCount: x.stockCount,
       marketValue: x.value,
       change: x.change,
       changePercent: x.percChange,
@@ -192,41 +71,6 @@ const PortfolioList = () => {
 
   const reloadPortfolioList = () => {
     axios.get('/portfolio/list').then((response) => {
-      // const mockData: IPortfolio[] = [
-      //   {
-      //     name: 'My portfolio 1',
-      //     portfolioId: -1,
-      //     stock_count: 3,
-      //     marketValue: 29134.3,
-      //     change: 403.1,
-      //     changePercent: 0.59,
-      //     totalGain: 1403.1,
-      //     totalGainPercent: 11.7,
-      //   },
-      //   {
-      //     name: 'My empty portfolio',
-      //     portfolioId: -2,
-      //     stock_count: 0,
-      //     marketValue: null,
-      //     change: null,
-      //     changePercent: null,
-      //     totalGain: null,
-      //     totalGainPercent: null,
-      //   },
-      //   {
-      //     name: 'My portfolio 2',
-      //     portfolioId: -3,
-      //     stock_count: 15,
-      //     marketValue: 1902.31,
-      //     change: -31.8,
-      //     changePercent: -0.59,
-      //     totalGain: -903.2,
-      //     totalGainPercent: -1.7,
-      //   },
-      // ];
-
-      // setPortfolios([...mockData, ...mapPortfolioList(response.data)]);
-
       setPortfolios(mapPortfolioList(response.data));
     });
   };
@@ -261,18 +105,6 @@ const PortfolioList = () => {
   const [newPortfolioName, setNewPortfolioName] = useState('');
   const createPortfolio = (ev: any) => {
     ev.preventDefault();
-    // let portfolioID = portfolios.length + 1;
-    // let newPortfolio = {
-    //   name: newPortfolioName,
-    //   portfolioId: portfolioID,
-    //   stockCount: 0,
-    //   marketValue: null,
-    //   change: null,
-    //   changePercent: null,
-    //   totalGain: null,
-    //   totalGainPercent: null,
-    // };
-    // setPortfolios([...portfolios, newPortfolio]);
     axios.post('/portfolio', { portfolioName: newPortfolioName }).then(() => {
       setNewPortfolioName('');
 
@@ -415,6 +247,126 @@ const PortfolioList = () => {
         );
       })}
     </>
+  );
+};
+
+const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
+  const { path } = useRouteMatch();
+
+  const [portfolioName, setPortfolioName] = useState<string>(prop.name);
+  const [isEditingName, setIsEditingName] = useState<boolean>(false);
+
+  const gainLossClass = (val: number | null): string => {
+    if (val == null) {
+      return '';
+    } else if (val < 0) {
+      return styles.moneyLoss;
+    } else if (val > 0) {
+      return styles.moneyGain;
+    } else {
+      return '';
+    }
+  };
+
+  const updatePortfolioName = () => {
+    if (prop.updatePortfolioName != null) {
+      if (portfolioName.length > 0 && portfolioName.length <= 50) {
+        prop.updatePortfolioName(prop.portfolioId, portfolioName);
+      }
+    }
+    setIsEditingName(false);
+  };
+
+  return (
+    <div className={styles.tableRow}>
+      <div className={styles.rowPortInfo}>
+        <div className={styles.rowHandle}>
+          <img src={handleIcon} alt='handle' className={styles.dragHandle} />
+        </div>
+        <div className={styles.rowPortfolio}>
+          {isEditingName ? (
+            <Form.Control
+              value={portfolioName}
+              style={{ width: '100%', padding: 0 }}
+              autoFocus
+              maxLength={50}
+              onChange={(ev) => {
+                setPortfolioName(ev.target.value);
+              }}
+              onBlur={updatePortfolioName}
+              onKeyDown={(ev) => {
+                switch (ev.key) {
+                  case 'Enter':
+                    updatePortfolioName();
+                    break;
+                  case 'Escape':
+                    setIsEditingName(false);
+                    break;
+                }
+              }}
+            />
+          ) : (
+            <Link
+              to={`${path}/${prop.portfolioId}`}
+              className={styles.rowPortfolioLink}
+            >
+              {prop.name}
+            </Link>
+          )}
+        </div>
+        <div className={styles.rowEditButton}>
+          <button
+            type='button'
+            className={`${styles.editButton} p-0`}
+            onClick={(ev) => {
+              setIsEditingName(true);
+            }}
+          >
+            <img src={editIcon} alt='edit' width={18} />
+          </button>
+        </div>
+        <div className={styles.rowStocks}>{prop.stockCount}</div>
+        <div className={styles.rowMarketValue}>
+          {prop.marketValue == null
+            ? '-'
+            : usdFormatter.format(prop.marketValue)}
+        </div>
+        <div className={`${styles.rowChange} ${gainLossClass(prop.change)}`}>
+          {prop.change == null ? (
+            '-'
+          ) : (
+            <>
+              <div className={styles.percent}>{prop.changePercent}%</div>
+              <div>{usdFormatter.format(prop.change)}</div>
+            </>
+          )}
+        </div>
+        <div
+          className={`${styles.rowTotalGain} ${gainLossClass(prop.totalGain)}`}
+        >
+          {prop.totalGain == null ? (
+            '-'
+          ) : (
+            <>
+              <div className={styles.percent}>{prop.totalGainPercent}%</div>
+              <div>{usdFormatter.format(prop.totalGain)}</div>
+            </>
+          )}
+        </div>
+      </div>
+      <div className={styles.rowDelete}>
+        <button
+          className={`p-0 ${styles.deleteButton}`}
+          onClick={() => {
+            if (prop.showDeleteModal != null) {
+              prop.showDeleteModal(prop.portfolioId, prop.name);
+            }
+          }}
+        >
+          <img src={crossIcon} alt='cross' width={20} />
+        </button>
+      </div>
+    </div>
   );
 };
 

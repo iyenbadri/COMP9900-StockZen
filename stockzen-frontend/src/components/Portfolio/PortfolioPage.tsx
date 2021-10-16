@@ -44,100 +44,6 @@ interface StockRowData {
   readonly stockData: StockData;
 }
 
-const StockRow: FC<StockRowData> = (prop) => {
-  const numberFormatter = new Intl.NumberFormat('en-US', {
-    style: 'decimal',
-  });
-
-  const gainLossClass = (val: number | null): string => {
-    if (val == null) {
-      return '';
-    } else if (val < 0) {
-      return styles.moneyLoss;
-    } else if (val > 0) {
-      return styles.moneyGain;
-    } else {
-      return '';
-    }
-  };
-
-  return (
-    <div className={styles.tableRow}>
-      <span className={styles.rowStockInfo}>
-        <span className={styles.rowHandle}>
-          <img src={handleIcon} alt='handle' />
-        </span>
-        <span className={styles.rowCode}>
-          <Link
-            to={`/stock/${prop.stockData.symbol}`}
-            className={styles.rowStockLink}
-          >
-            {prop.stockData.symbol}
-          </Link>
-        </span>
-        <span className={`${styles.rowName} d-block d-sm-none d-xl-block`}>
-          {prop.stockData.name}
-        </span>
-        <span className={styles.rowPrice}>
-          {numberFormatter.format(prop.stockData.price)}
-        </span>
-        <span
-          className={`${styles.rowChange} ${gainLossClass(
-            prop.stockData.change
-          )}`}
-        >
-          {prop.stockData.change == null ? (
-            '-'
-          ) : (
-            <>
-              <div className={styles.percent}>
-                {prop.stockData.changePercent}%
-              </div>
-              <div>{prop.stockData.change}</div>
-            </>
-          )}
-        </span>
-        <span className={`${styles.rowAveragePrice} d-block d-lg-none`}>
-          {prop.stockData.averagePrice}
-        </span>
-        <span
-          className={`${styles.rowProfit} ${gainLossClass(
-            prop.stockData.profit
-          )}`}
-        >
-          {prop.stockData.profit == null ? (
-            '-'
-          ) : (
-            <>
-              <div className={styles.percent}>
-                {prop.stockData.profitPercent}%
-              </div>
-              <div>{prop.stockData.profit}</div>
-            </>
-          )}
-        </span>
-        <span className={styles.rowValue}>
-          {numberFormatter.format(prop.stockData.value)}
-        </span>
-        <span className={styles.rowPredict}>+</span>
-      </span>
-
-      {/* <span className={styles.rowDelete}>
-        <button
-          className={`p-0 ${styles.deleteButton}`}
-          onClick={() => {
-            if (prop.showDeleteModal != null) {
-              prop.showDeleteModal(prop.portfolioId, prop.name);
-            }
-          }}
-        >
-          <img src={crossIcon} alt='cross' />
-        </button>
-      </span> */}
-    </div>
-  );
-};
-
 const Portfolio = () => {
   //const [showSearchWidget, setShowSearchWidget] = useState<boolean>(false);
   const { setShowPortfolioSummary } = useContext(TopPerformerContext);
@@ -248,6 +154,100 @@ const Portfolio = () => {
         return <StockRow key={x.stockId} stockData={x}></StockRow>;
       })}
     </>
+  );
+};
+
+const StockRow: FC<StockRowData> = (prop) => {
+  const numberFormatter = new Intl.NumberFormat('en-US', {
+    style: 'decimal',
+  });
+
+  const gainLossClass = (val: number | null): string => {
+    if (val == null) {
+      return '';
+    } else if (val < 0) {
+      return styles.moneyLoss;
+    } else if (val > 0) {
+      return styles.moneyGain;
+    } else {
+      return '';
+    }
+  };
+
+  return (
+    <div className={styles.tableRow}>
+      <span className={styles.rowStockInfo}>
+        <span className={styles.rowHandle}>
+          <img src={handleIcon} alt='handle' />
+        </span>
+        <span className={styles.rowCode}>
+          <Link
+            to={`/stock/${prop.stockData.symbol}`}
+            className={styles.rowStockLink}
+          >
+            {prop.stockData.symbol}
+          </Link>
+        </span>
+        <span className={`${styles.rowName} d-block d-sm-none d-xl-block`}>
+          {prop.stockData.name}
+        </span>
+        <span className={styles.rowPrice}>
+          {numberFormatter.format(prop.stockData.price)}
+        </span>
+        <span
+          className={`${styles.rowChange} ${gainLossClass(
+            prop.stockData.change
+          )}`}
+        >
+          {prop.stockData.change == null ? (
+            '-'
+          ) : (
+            <>
+              <div className={styles.percent}>
+                {prop.stockData.changePercent}%
+              </div>
+              <div>{prop.stockData.change}</div>
+            </>
+          )}
+        </span>
+        <span className={`${styles.rowAveragePrice} d-block d-lg-none`}>
+          {prop.stockData.averagePrice}
+        </span>
+        <span
+          className={`${styles.rowProfit} ${gainLossClass(
+            prop.stockData.profit
+          )}`}
+        >
+          {prop.stockData.profit == null ? (
+            '-'
+          ) : (
+            <>
+              <div className={styles.percent}>
+                {prop.stockData.profitPercent}%
+              </div>
+              <div>{prop.stockData.profit}</div>
+            </>
+          )}
+        </span>
+        <span className={styles.rowValue}>
+          {numberFormatter.format(prop.stockData.value)}
+        </span>
+        <span className={styles.rowPredict}>+</span>
+      </span>
+
+      {/* <span className={styles.rowDelete}>
+        <button
+          className={`p-0 ${styles.deleteButton}`}
+          onClick={() => {
+            if (prop.showDeleteModal != null) {
+              prop.showDeleteModal(prop.portfolioId, prop.name);
+            }
+          }}
+        >
+          <img src={crossIcon} alt='cross' />
+        </button>
+      </span> */}
+    </div>
   );
 };
 

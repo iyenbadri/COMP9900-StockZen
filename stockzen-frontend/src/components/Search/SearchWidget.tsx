@@ -70,6 +70,7 @@ const SearchWidget: FC<Prop> = (prop) => {
           id='add-a-widget'
           isLoading={isLoading}
           labelKey='searchLabel'
+          delay={350}
           maxResults={30}
           minLength={2}
           paginate={false}
@@ -95,8 +96,8 @@ const SearchWidget: FC<Prop> = (prop) => {
           renderMenu={(results, menuProps) => (
             <Menu {...menuProps} className={styles.options}>
               {results.map((option, index) => (
-                <MenuItem option={option} position={index}>
-                  <div key={option.id} className={styles.searchOption}>
+                <MenuItem key={option.id} option={option} position={index}>
+                  <div className={styles.searchOption}>
                     <span className={styles.optionAdd}>
                       {!addedSymbols.includes(option.symbol) && (
                         <Button
