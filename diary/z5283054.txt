@@ -128,7 +128,7 @@ Week 5
 # Issue:        A lot of endpoints are not finished and bakcend is almost has no data on the stock.
                 I had an assessment from another course this week so I have to take a time off from
                 the project. I had done almost all of my tasks so it should be okay.
-# Unfinished:   -
+# Unfinished:   The search widget as the backend endpoint is not available at all.
 # Next:         We prepared for the demo so a lot of unfinished works are frozen for it.
 
 
@@ -144,6 +144,8 @@ This week I mostly do a minor fix to my code.
 
 Gunjan did some work on loading the stock data but there is no endpoint for the frontend yet.
 
+Khai did a wonderful presentation in the demo this week.
+
 Personally I think Jeehyun, Badrivishal, Gunjan worked a bit too slow. Almost no progress during
 the week. And all of them never consult me on anything but they might talk with each other so
 I'm not sure. Gunjan and Badrivishal did a lot of research on the stock API but there is almost
@@ -155,6 +157,20 @@ K 1
 J 0.5
 G 0.3
 
+
+============================================
+Week 6
+
+# Planned:      Implement the sorting of portfolio list/portfolio page
+# Finished:     Fix a bug in the top performer widget.
+# Issue:        -
+# Unfinished:   -
+# Next:         -
+
+I implemented the drag/drop and the temporary sort functionality of the portfolio page.
+We did the retrospective this week.
+
+K 1
 
 -----------------------------------------------------------------------------------------
 You should also include in this diary the following information (if applicable) about the
