@@ -4,10 +4,21 @@ import React, { FC, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './TopPerformerWidget.module.css';
 
+import lossArrow from 'assets/icon-outlines/outline-arrow-down-circle-red.svg';
+import gainArrow from 'assets/icon-outlines/outline-arrow-up-circle-green.svg';
+
 // interface IProps {
 //   firstName: string;
 //   lastName: string;
 // }
+
+// does not show any img if no change
+const gainLossArrow = (change: number) => {
+  if (change > 0)
+    return <img src={gainArrow} alt='up green arrow' width={30} height={30} />;
+  if (change < 0)
+    return <img src={lossArrow} alt='down red arrow' width={30} height={30} />;
+};
 
 const TopPerformerWidget: FC = (props) => {
   const usdFormatter = new Intl.NumberFormat('en-US', {
@@ -65,10 +76,12 @@ const TopPerformerWidget: FC = (props) => {
           </div>
           <div className={styles.summaryTitle}>Today</div>
           <div className={`${styles.summaryValue} outerStroke`}>
+            {gainLossArrow(portfolioSummary.todayChangePercent)}
             {portfolioSummary.todayChangePercent}%
           </div>
           <div className={styles.summaryTitle}>Overall</div>
           <div className={`${styles.summaryValue} outerStroke`}>
+            {gainLossArrow(portfolioSummary.overallChangePercent)}
             {portfolioSummary.overallChangePercent}%
           </div>
           <hr className={styles.separatorLine} />
