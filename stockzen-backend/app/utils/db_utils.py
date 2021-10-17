@@ -1,5 +1,5 @@
 import os
-from typing import List, Optional, TypeVar, Union
+from typing import List, Mapping, NewType, Optional, TypeVar, Union
 
 from app import db
 from app.models.schema import LotBought, LotSold, Portfolio, Stock, StockPage, User
@@ -9,6 +9,8 @@ from sqlalchemy import func
 DatabaseObj = TypeVar(
     "DatabaseObj", Portfolio, Stock, User, LotBought, LotSold, StockPage
 )
+ColumnName = NewType("ColumnName", str)
+ColumnVal = TypeVar("ColumnVal", Union[int, str, float])
 
 # ==============================================================================
 # Helpers
@@ -63,22 +65,25 @@ def insert_item(new_row: DatabaseObj) -> None:
         db.session.add(new_row)
         db.session.commit()
     except Exception as e:
+        db.session.rollback()
         debug_exception(e)
 
 
-def update_item(
+def update_item_columns(
     table: DatabaseObj,
     item_id: int,
-    target_col: str,
-    new_value: Union[int, str, float],
+    col_val_pairs: Mapping[ColumnName, ColumnVal],
     **filters: int,
 ) -> None:
-    """Update table column, throws exception on fail"""
+    """Update table column, throws exception on fail
+    :param col_val_pairs is a dict of column names:values to be updated"""
     try:
         item = query_item(table, item_id, **filters)
-        setattr(item, target_col, new_value)  # updates target_col
+        for target_col, new_value in col_val_pairs.items():
+            setattr(item, target_col, new_value)  # updates target_col
         db.session.commit()
     except Exception as e:
+        db.session.rollback()
         debug_exception(e)
 
 
@@ -91,6 +96,7 @@ def delete_item(table: DatabaseObj, item_id: int, **filters: int) -> None:
         db.session.delete(item)
         db.session.commit()
     except Exception as e:
+        db.session.rollback()
         debug_exception(e)
 
 
