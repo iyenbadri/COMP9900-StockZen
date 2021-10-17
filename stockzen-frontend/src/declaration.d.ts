@@ -9,7 +9,6 @@ interface IPortfolio {
     marketValue: number | null;
     totalGain: number | null;
     totalGainPercent: number | null;
-
 }
 
 interface TableOrdering<T extends string> {

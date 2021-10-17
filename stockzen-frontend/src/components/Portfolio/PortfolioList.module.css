@@ -74,9 +74,9 @@
   border-radius: 5px;
 }
 
-.tempSort .dragHandle {
+/* .tempSort .dragHandle {
   display: none;
-}
+} */
 
 .rowHandle {
   color: var(--zen-3);
