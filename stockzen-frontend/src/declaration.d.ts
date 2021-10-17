@@ -1,5 +1,5 @@
 interface IPortfolio {
-    id: string;
+    draggableId: string;
     ordering: number;
     portfolioId: number;
     name: string;

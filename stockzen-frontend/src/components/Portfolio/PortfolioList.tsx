@@ -1,12 +1,17 @@
-import { DndContext, DragEndEvent } from '@dnd-kit/core';
-import { arrayMove, SortableContext } from '@dnd-kit/sortable';
+import { arrayMoveImmutable } from 'array-move';
 import orderDown from 'assets/icon-outlines/outline-chevron-down-small.svg';
 import orderUp from 'assets/icon-outlines/outline-chevron-up-small.svg';
 import plusIcon from 'assets/icon-outlines/outline-plus-circle.svg';
 import axios from 'axios';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import { Ordering } from 'enums';
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
+import {
+  DragDropContext,
+  Droppable,
+  DropResult,
+  ResponderProvided,
+} from 'react-beautiful-dnd';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -81,73 +86,79 @@ const PortfolioList = () => {
   const [portfolios, _setPortfolios] = useState<IPortfolio[]>([]);
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
-  const setPortfolios = (
-    portfolios: IPortfolio[],
-    tableOrdering: TableOrdering<PortfolioColumn>
-  ) => {
-    if (tableOrdering.column === '') {
-      portfolios = portfolios.sort((a, b) => a.ordering - b.ordering);
-    } else {
-      portfolios = portfolios.sort((a, b) => {
-        if (tableOrdering.column !== '') {
-          const keyA = a[tableOrdering.column] ?? 0;
-          const keyB = b[tableOrdering.column] ?? 0;
+  const setPortfolios = useCallback(
+    (
+      portfolios: IPortfolio[],
+      tableOrdering: TableOrdering<PortfolioColumn>
+    ) => {
+      if (tableOrdering.column === '') {
+        portfolios = portfolios.sort((a, b) => a.ordering - b.ordering);
+      } else {
+        portfolios = portfolios.sort((a, b) => {
+          if (tableOrdering.column !== '') {
+            const keyA = a[tableOrdering.column] ?? 0;
+            const keyB = b[tableOrdering.column] ?? 0;
 
-          if (keyA > keyB) {
-            return tableOrdering.ordering;
-          } else if (keyB > keyA) {
-            return -tableOrdering.ordering;
+            if (keyA > keyB) {
+              return tableOrdering.ordering;
+            } else if (keyB > keyA) {
+              return -tableOrdering.ordering;
+            } else {
+              return a.ordering - b.ordering;
+            }
           } else {
             return a.ordering - b.ordering;
           }
-        } else {
-          return a.ordering - b.ordering;
-        }
-      });
-    }
+        });
+      }
 
-    _setPortfolios(portfolios);
-  };
+      _setPortfolios(portfolios);
+    },
+    [_setPortfolios]
+  );
 
-  const mapPortfolioList = (
-    portfolioList: IPortfolioResponse[]
-  ): IPortfolio[] => {
-    return portfolioList.map((x: IPortfolioResponse) => ({
-      id: x.id.toString(),
-      ordering: x.ordering ?? Math.random(), // TODO map to API response
-      portfolioId: x.id,
-      name: x.portfolioName,
-      stockCount: x.stockCount,
-      marketValue: x.value,
-      change: x.change,
-      changePercent: x.percChange,
-      totalGain: x.gain,
-      totalGainPercent: x.percGain,
-    }));
-  };
+  const mapPortfolioList = useCallback(
+    (portfolioList: IPortfolioResponse[]): IPortfolio[] => {
+      return portfolioList.map((port: IPortfolioResponse) => ({
+        draggableId: `portfolio-${port.id}`,
+        ordering: port.ordering ?? Math.random(), // TODO: map to API response
+        portfolioId: port.id,
+        name: port.portfolioName,
+        stockCount: port.stockCount,
+        marketValue: port.value,
+        change: port.change,
+        changePercent: port.percChange,
+        totalGain: port.gain,
+        totalGainPercent: port.percGain,
+      }));
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
-  const reloadPortfolioList = () => {
+  const reloadPortfolioList = useCallback(() => {
     axios.get('/portfolio/list').then((response) => {
       setPortfolios(mapPortfolioList(response.data), tableOrdering);
     });
-  };
+  }, [tableOrdering, setPortfolios, mapPortfolioList]);
 
-  useEffect(() => {
-    setShowPortfolioSummary(false);
-    reloadPortfolioList();
-  }, []);
+  useEffect(
+    () => {
+      setShowPortfolioSummary(false);
+      reloadPortfolioList();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const handlePortfolioRename = (portfolioId: number, name: string) => {
     axios.put(`/portfolio/${portfolioId}`, { newName: name }).then(() => {
-      setPortfolios(
-        portfolios!.map((x) => {
-          return {
-            ...x,
-            name: x.portfolioId === portfolioId ? name : x.name,
-          };
-        }),
-        tableOrdering
-      );
+      const newList = portfolios!.map((x) => ({
+        ...x,
+        name: x.portfolioId === portfolioId ? name : x.name,
+      }));
+
+      setPortfolios(newList, tableOrdering);
     });
   };
 
@@ -176,27 +187,26 @@ const PortfolioList = () => {
     setIsDragging(true);
   };
 
-  const handleDragEnd = (ev: DragEndEvent) => {
+  const handleDragEnd = (result: DropResult, provided: ResponderProvided) => {
     setIsDragging(false);
 
-    const { active, over } = ev;
-    if (over !== null) {
-      if (active.id !== over.id) {
-        _setPortfolios((portfolios) => {
-          const oldIndex = portfolios.findIndex((x) => x.id === active.id);
-          const newIndex = portfolios.findIndex((x) => x.id === over.id);
-          const newList = arrayMove(portfolios, oldIndex, newIndex);
+    if (result.destination != null) {
+      _setPortfolios((portfolios) => {
+        const newList = arrayMoveImmutable(
+          portfolios,
+          result.source.index,
+          result.destination!.index
+        );
 
-          // TODO: Call API to reorder the list.
+        for (let i = 0; i < newList.length; i++) {
+          newList[i].ordering = i;
+        }
 
-          for (let i = 0; i < newList.length; i++) {
-            newList[i].ordering = i;
-          }
+        // TODO: Call API to reorder the list in the backend.
 
-          return newList;
-        });
-        setTableOrdering({ column: '', ordering: Ordering.Unknown });
-      }
+        return newList;
+      });
+      setTableOrdering({ column: '', ordering: Ordering.Unknown });
     }
   };
 
@@ -396,25 +406,32 @@ const PortfolioList = () => {
           tableOrdering.column !== '' ? styles.tempSort : ''
         }`}
       >
-        <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-          <SortableContext items={portfolios}>
-            {portfolios!.map((port, index) => {
-              return (
-                <PortfolioListRow
-                  key={port.portfolioId}
-                  {...port}
-                  isTempSort={tableOrdering.column !== ''}
-                  showDeleteModal={(portfolioId, name) => {
-                    setDeletingPortfolioId(portfolioId);
-                    setDeletingPortfolioName(name);
-                    setShowDeletePortfolioModal(true);
-                  }}
-                  updatePortfolioName={handlePortfolioRename}
-                ></PortfolioListRow>
-              );
-            })}
-          </SortableContext>
-        </DndContext>
+        <DragDropContext
+          onDragEnd={handleDragEnd}
+          onDragStart={handleDragStart}
+        >
+          <Droppable droppableId='portfolio-list' type='portfolio'>
+            {(provided, snapshot) => (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {portfolios!.map((port, index) => (
+                  <PortfolioListRow
+                    key={port.portfolioId}
+                    index={index}
+                    port={port}
+                    isTempSort={tableOrdering.column !== ''}
+                    showDeleteModal={(portfolioId, name) => {
+                      setDeletingPortfolioId(portfolioId);
+                      setDeletingPortfolioName(name);
+                      setShowDeletePortfolioModal(true);
+                    }}
+                    updatePortfolioName={handlePortfolioRename}
+                  ></PortfolioListRow>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
     </>
   );

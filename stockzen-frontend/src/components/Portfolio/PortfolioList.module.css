@@ -39,12 +39,12 @@
 .tableHeader,
 .tableRow {
   display: flex;
-  margin-bottom: 7px;
   align-items: center;
 }
 
 .tableRow {
   margin-right: -25px;
+  padding-bottom: 7px;
 }
 
 .tableHeader {

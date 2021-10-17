@@ -1,33 +1,27 @@
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import crossIcon from 'assets/icon-outlines/outline-cross.svg';
 import handleIcon from 'assets/icon-outlines/outline-drag-handle.svg';
 import editIcon from 'assets/icon-outlines/outline-edit-1.svg';
 import React, { FC, useState } from 'react';
+import { Draggable } from 'react-beautiful-dnd';
 import Form from 'react-bootstrap/Form';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { usdFormatter } from 'utils/Utilities';
 import styles from './PortfolioList.module.css';
 
-interface IPortfolioListRow extends IPortfolio {
-  isTempSort: boolean;
+interface IPortfolioListRow {
+  isTempSort?: boolean;
   updatePortfolioName?: (id: number, name: string) => void;
   showDeleteModal?: (id: number, name: string) => void;
+  index: number;
+  port: IPortfolio;
 }
 
 const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
+  const { port } = prop;
   const { path } = useRouteMatch();
 
-  const [portfolioName, setPortfolioName] = useState<string>(prop.name);
+  const [portfolioName, setPortfolioName] = useState<string>(port.name);
   const [isEditingName, setIsEditingName] = useState<boolean>(false);
-
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({
-      id: prop.portfolioId.toString(),
-      attributes: { role: 'portfolio' },
-    });
-
-  const style = { transform: CSS.Transform.toString(transform), transition };
 
   const gainLossClass = (val: number | null): string => {
     if (val == null) {
@@ -44,114 +38,119 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
   const updatePortfolioName = () => {
     if (prop.updatePortfolioName != null) {
       if (portfolioName.length > 0 && portfolioName.length <= 50) {
-        prop.updatePortfolioName(prop.portfolioId, portfolioName);
+        prop.updatePortfolioName(port.portfolioId, portfolioName);
       }
     }
     setIsEditingName(false);
   };
 
   return (
-    <div
-      ref={setNodeRef}
-      className={styles.tableRow}
-      style={style}
-      {...attributes}
-    >
-      <div className={styles.rowPortInfo}>
-        <div className={styles.rowHandle}>
-          {!prop.isTempSort && (
-            <img
-              src={handleIcon}
-              alt='handle'
-              className={styles.dragHandle}
-              {...listeners}
-            />
-          )}
+    <Draggable draggableId={port.draggableId} index={prop.index}>
+      {(provided, snapshot) => (
+        <div ref={provided.innerRef} {...provided.draggableProps}>
+          <div className={styles.tableRow}>
+            <div className={styles.rowPortInfo}>
+              <div className={styles.rowHandle}>
+                <img
+                  src={handleIcon}
+                  alt='handle'
+                  className={styles.dragHandle}
+                  {...provided.dragHandleProps}
+                />
+              </div>
+              <div className={styles.rowPortfolio}>
+                {isEditingName ? (
+                  <Form.Control
+                    value={portfolioName}
+                    style={{ width: '100%', padding: 0 }}
+                    autoFocus
+                    maxLength={50}
+                    onChange={(ev) => {
+                      setPortfolioName(ev.target.value);
+                    }}
+                    onBlur={updatePortfolioName}
+                    onKeyDown={(ev) => {
+                      switch (ev.key) {
+                        case 'Enter':
+                          updatePortfolioName();
+                          break;
+                        case 'Escape':
+                          setIsEditingName(false);
+                          break;
+                      }
+                    }}
+                  />
+                ) : (
+                  <Link
+                    to={`${path}/${port.portfolioId}`}
+                    className={styles.rowPortfolioLink}
+                  >
+                    {port.name}
+                  </Link>
+                )}
+              </div>
+              <div className={styles.rowEditButton}>
+                <button
+                  type='button'
+                  className={`${styles.editButton} p-0`}
+                  onClick={(ev) => {
+                    setIsEditingName(true);
+                  }}
+                >
+                  <img src={editIcon} alt='edit' width={18} />
+                </button>
+              </div>
+              <div className={styles.rowStocks}>{port.stockCount}</div>
+              <div className={styles.rowMarketValue}>
+                {port.marketValue == null
+                  ? '-'
+                  : usdFormatter.format(port.marketValue)}
+              </div>
+              <div
+                className={`${styles.rowChange} ${gainLossClass(port.change)}`}
+              >
+                {port.change == null ? (
+                  '-'
+                ) : (
+                  <>
+                    <div className={styles.percent}>{port.changePercent}%</div>
+                    <div>{usdFormatter.format(port.change)}</div>
+                  </>
+                )}
+              </div>
+              <div
+                className={`${styles.rowTotalGain} ${gainLossClass(
+                  port.totalGain
+                )}`}
+              >
+                {port.totalGain == null ? (
+                  '-'
+                ) : (
+                  <>
+                    <div className={styles.percent}>
+                      {port.totalGainPercent}%
+                    </div>
+                    <div>{usdFormatter.format(port.totalGain)}</div>
+                  </>
+                )}
+              </div>
+            </div>
+            <div className={styles.rowDelete}>
+              <button
+                className={`p-0 ${styles.deleteButton}`}
+                onClick={() => {
+                  if (prop.showDeleteModal != null) {
+                    prop.showDeleteModal(port.portfolioId, port.name);
+                  }
+                }}
+              >
+                <img src={crossIcon} alt='cross' width={20} />
+              </button>
+            </div>
+          </div>
         </div>
-        <div className={styles.rowPortfolio}>
-          {isEditingName ? (
-            <Form.Control
-              value={portfolioName}
-              style={{ width: '100%', padding: 0 }}
-              autoFocus
-              maxLength={50}
-              onChange={(ev) => {
-                setPortfolioName(ev.target.value);
-              }}
-              onBlur={updatePortfolioName}
-              onKeyDown={(ev) => {
-                switch (ev.key) {
-                  case 'Enter':
-                    updatePortfolioName();
-                    break;
-                  case 'Escape':
-                    setIsEditingName(false);
-                    break;
-                }
-              }}
-            />
-          ) : (
-            <Link
-              to={`${path}/${prop.portfolioId}`}
-              className={styles.rowPortfolioLink}
-            >
-              {prop.portfolioId}: {prop.name}
-            </Link>
-          )}
-        </div>
-        <div className={styles.rowEditButton}>
-          <button
-            type='button'
-            className={`${styles.editButton} p-0`}
-            onClick={(ev) => {
-              setIsEditingName(true);
-            }}
-          >
-            <img src={editIcon} alt='edit' width={18} />
-          </button>
-        </div>
-        <div className={styles.rowStocks}>{prop.stockCount}</div>
-        <div className={styles.rowMarketValue}>
-          {prop.marketValue == null
-            ? '-'
-            : usdFormatter.format(prop.marketValue)}
-        </div>
-        <div className={`${styles.rowChange} ${gainLossClass(prop.change)}`}>
-          {prop.change == null ? (
-            '-'
-          ) : (
-            <>
-              <div className={styles.percent}>{prop.changePercent}%</div>
-              <div>{usdFormatter.format(prop.change)}</div>
-            </>
-          )}
-        </div>
-        <div
-          className={`${styles.rowTotalGain} ${gainLossClass(prop.totalGain)}`}
-        >
-          {prop.totalGain == null ? (
-            '-'
-          ) : (
-            <>
-              <div className={styles.percent}>{prop.totalGainPercent}%</div>
-              <div>{usdFormatter.format(prop.totalGain)}</div>
-            </>
-          )}
-        </div>
-      </div>
-      <div className={styles.rowDelete}>
-        <button
-          className={`p-0 ${styles.deleteButton}`}
-          onClick={() => {
-            if (prop.showDeleteModal != null) {
-              prop.showDeleteModal(prop.portfolioId, prop.name);
-            }
-          }}
-        >
-          <img src={crossIcon} alt='cross' width={20} />
-        </button>
-      </div>
-    </div>
+      )}
+    </Draggable>
   );
 };
 
