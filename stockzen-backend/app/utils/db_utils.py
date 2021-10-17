@@ -10,7 +10,7 @@ DatabaseObj = TypeVar(
     "DatabaseObj", Portfolio, Stock, User, LotBought, LotSold, StockPage
 )
 ColumnName = NewType("ColumnName", str)
-ColumnVal = TypeVar("ColumnVal", Union[int, str, float])
+ColumnVal = TypeVar("ColumnVal", int, str, float)
 
 # ==============================================================================
 # Helpers
