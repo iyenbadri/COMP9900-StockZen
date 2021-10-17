@@ -51,6 +51,14 @@
   min-height: 28px;
 }
 
+.tableHeader .rowCode button {
+  justify-content: flex-start;
+}
+
+.tableHeader .rowName button {
+  justify-content: center;
+}
+
 .rowStockInfo {
   flex-grow: 1;
   flex-basis: auto;
