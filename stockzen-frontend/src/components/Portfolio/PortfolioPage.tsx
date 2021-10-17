@@ -240,7 +240,7 @@ const PortfolioPage = () => {
           overflowX: 'auto',
         }}
       >
-        <div style={{ minWidth: '690px', margin: '0 1px' }}>
+        <div style={{ minWidth: '615px', margin: '0 1px' }}>
           <div className={styles.tableHeader}>
             <span className={styles.rowStockInfo}>
               <span className={styles.rowHandle}></span>
