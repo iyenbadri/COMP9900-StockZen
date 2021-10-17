@@ -238,9 +238,6 @@ const PortfolioList = () => {
     );
   };
 
-  // TODO: https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent/pull/17/files#r723117690
-  // Will have to remove styles from the table header buttons.
-
   return (
     <>
       <Modal
