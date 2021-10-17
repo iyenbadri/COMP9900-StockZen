@@ -234,145 +234,156 @@ const PortfolioPage = () => {
         </Button>
       </div>
 
-      <div className={styles.tableHeader}>
-        <span className={styles.rowStockInfo}>
-          <span className={styles.rowHandle}></span>
-          <span className={styles.rowCode}>
-            <Button
-              variant='transparent'
-              size={'sm'}
-              onClick={() => handleTempSort('symbol')}
-            >
-              Code
-              <OrderingIndicator
-                target='symbol'
-                ordering={tableOrdering}
-              ></OrderingIndicator>
-            </Button>
-          </span>
-          <span className={`${styles.rowName} d-block d-sm-none d-xl-block`}>
-            <Button
-              variant='transparent'
-              size={'sm'}
-              onClick={() => handleTempSort('name')}
-            >
-              Name
-              <OrderingIndicator
-                target='name'
-                ordering={tableOrdering}
-              ></OrderingIndicator>
-            </Button>
-          </span>
-          <span className={styles.rowPrice}>
-            <Button
-              variant='transparent'
-              size={'sm'}
-              onClick={() => handleTempSort('price')}
-            >
-              Price
-              <OrderingIndicator
-                target='price'
-                ordering={tableOrdering}
-              ></OrderingIndicator>
-            </Button>
-          </span>
-          <span className={styles.rowChange}>
-            <Button
-              variant='transparent'
-              size={'sm'}
-              onClick={() => handleTempSort('change')}
-            >
-              Change
-              <OrderingIndicator
-                target='change'
-                ordering={tableOrdering}
-              ></OrderingIndicator>
-            </Button>
-          </span>
-          <span
-            className={`${styles.rowAveragePrice} d-block d-lg-none  d-xl-block`}
-          >
-            <Button
-              variant='transparent'
-              size={'sm'}
-              onClick={() => handleTempSort('averagePrice')}
-            >
-              Avg price
-              <OrderingIndicator
-                target='averagePrice'
-                ordering={tableOrdering}
-              ></OrderingIndicator>
-            </Button>
-          </span>
-          <span className={styles.rowProfit}>
-            <Button
-              variant='transparent'
-              size={'sm'}
-              onClick={() => handleTempSort('profit')}
-            >
-              Profit
-              <OrderingIndicator
-                target='profit'
-                ordering={tableOrdering}
-              ></OrderingIndicator>
-            </Button>
-          </span>
-          <span className={styles.rowValue}>
-            <Button
-              variant='transparent'
-              size={'sm'}
-              onClick={() => handleTempSort('value')}
-            >
-              Value
-              <OrderingIndicator
-                target='value'
-                ordering={tableOrdering}
-              ></OrderingIndicator>
-            </Button>
-          </span>
-          <span className={styles.rowPredict}>
-            <Button
-              variant='transparent'
-              size={'sm'}
-              onClick={() => handleTempSort('prediction')}
-            >
-              Predict
-              <OrderingIndicator
-                target='prediction'
-                ordering={tableOrdering}
-              ></OrderingIndicator>
-            </Button>
-          </span>
-        </span>
-        {/* <span className={styles.rowDelete}></span> */}
-      </div>
-
       <div
-        className={`${isDragging ? styles.dragging : styles.notDragging} ${
-          tableOrdering.column !== '' ? styles.tempSort : ''
-        }`}
+        style={{
+          maxWidth: '100vw',
+          overflowX: 'auto',
+        }}
       >
-        <DragDropContext
-          onDragEnd={handleDragEnd}
-          onDragStart={handleDragStart}
-        >
-          <Droppable droppableId='stock-list' type='stock'>
-            {(provided, snapshot) => (
-              <div ref={provided.innerRef} {...provided.droppableProps}>
-                {stocks.map((stock, index) => {
-                  return (
-                    <PortfolioPageRow
-                      key={stock.stockId}
-                      index={index}
-                      stock={stock}
-                    ></PortfolioPageRow>
-                  );
-                })}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+        <div style={{ minWidth: '690px', margin: '0 1px' }}>
+          <div className={styles.tableHeader}>
+            <span className={styles.rowStockInfo}>
+              <span className={styles.rowHandle}></span>
+              <span className={styles.rowCode}>
+                <Button
+                  variant='transparent'
+                  size={'sm'}
+                  onClick={() => handleTempSort('symbol')}
+                >
+                  Code
+                  <OrderingIndicator
+                    target='symbol'
+                    ordering={tableOrdering}
+                  ></OrderingIndicator>
+                </Button>
+              </span>
+              <span
+                className={`${styles.rowName} d-block d-sm-none d-xl-block`}
+              >
+                <Button
+                  variant='transparent'
+                  size={'sm'}
+                  onClick={() => handleTempSort('name')}
+                >
+                  Name
+                  <OrderingIndicator
+                    target='name'
+                    ordering={tableOrdering}
+                  ></OrderingIndicator>
+                </Button>
+              </span>
+              <span className={styles.rowPrice}>
+                <Button
+                  variant='transparent'
+                  size={'sm'}
+                  onClick={() => handleTempSort('price')}
+                >
+                  Price
+                  <OrderingIndicator
+                    target='price'
+                    ordering={tableOrdering}
+                  ></OrderingIndicator>
+                </Button>
+              </span>
+              <span className={styles.rowChange}>
+                <Button
+                  variant='transparent'
+                  size={'sm'}
+                  onClick={() => handleTempSort('change')}
+                >
+                  Change
+                  <OrderingIndicator
+                    target='change'
+                    ordering={tableOrdering}
+                  ></OrderingIndicator>
+                </Button>
+              </span>
+              <span
+                className={`${styles.rowAveragePrice} d-block d-lg-none  d-xl-block`}
+              >
+                <Button
+                  variant='transparent'
+                  size={'sm'}
+                  onClick={() => handleTempSort('averagePrice')}
+                >
+                  Avg price
+                  <OrderingIndicator
+                    target='averagePrice'
+                    ordering={tableOrdering}
+                  ></OrderingIndicator>
+                </Button>
+              </span>
+              <span className={styles.rowProfit}>
+                <Button
+                  variant='transparent'
+                  size={'sm'}
+                  onClick={() => handleTempSort('profit')}
+                >
+                  Profit
+                  <OrderingIndicator
+                    target='profit'
+                    ordering={tableOrdering}
+                  ></OrderingIndicator>
+                </Button>
+              </span>
+              <span className={styles.rowValue}>
+                <Button
+                  variant='transparent'
+                  size={'sm'}
+                  onClick={() => handleTempSort('value')}
+                >
+                  Value
+                  <OrderingIndicator
+                    target='value'
+                    ordering={tableOrdering}
+                  ></OrderingIndicator>
+                </Button>
+              </span>
+              <span className={styles.rowPredict}>
+                <Button
+                  variant='transparent'
+                  size={'sm'}
+                  onClick={() => handleTempSort('prediction')}
+                >
+                  Predict
+                  <OrderingIndicator
+                    target='prediction'
+                    ordering={tableOrdering}
+                  ></OrderingIndicator>
+                </Button>
+              </span>
+            </span>
+            {/* <span className={styles.rowDelete}></span> */}
+          </div>
+
+          <div
+            className={`${isDragging ? styles.dragging : styles.notDragging} ${
+              tableOrdering.column !== '' ? styles.tempSort : ''
+            }`}
+          >
+            <DragDropContext
+              onDragEnd={handleDragEnd}
+              onDragStart={handleDragStart}
+            >
+              <Droppable droppableId='stock-list' type='stock'>
+                {(provided, snapshot) => (
+                  <div ref={provided.innerRef} {...provided.droppableProps}>
+                    {stocks.map((stock, index) => {
+                      return (
+                        <PortfolioPageRow
+                          key={stock.stockId}
+                          index={index}
+                          stock={stock}
+                        ></PortfolioPageRow>
+                      );
+                    })}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+          </div>
+        </div>
       </div>
     </>
   );
