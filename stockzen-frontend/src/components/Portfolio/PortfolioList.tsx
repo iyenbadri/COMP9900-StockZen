@@ -32,11 +32,6 @@ interface IPortfolioResponse {
   percGain: number;
 }
 
-interface OrderingIndicatorProp {
-  target: string;
-  ordering: TableOrdering<string>;
-}
-
 type PortfolioColumn =
   | 'name'
   | 'marketValue'

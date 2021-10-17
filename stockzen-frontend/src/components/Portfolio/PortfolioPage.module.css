@@ -30,12 +30,11 @@
 .tableHeader,
 .tableRow {
   display: flex;
-  margin-bottom: 7px;
   align-items: center;
 }
 
-.tableHeader {
-  margin-bottom: 0px;
+.tableRow {
+  padding-bottom: 7px;
 }
 
 .tableHeader button {
@@ -45,20 +44,25 @@
   color: var(--zen-3);
   padding: 0px;
   min-width: 0;
+
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  min-height: 28px;
 }
 
 .rowStockInfo {
   flex-grow: 1;
   flex-basis: auto;
   display: flex;
-  border: 2px solid transparent;
+  /* border: 2px solid transparent; */
   border-radius: 10px;
   padding: 5px 10px 5px 5px;
   align-items: center;
 }
 
 .tableRow .rowStockInfo {
-  border-color: var(--zen-5);
+  /* border-color: var(--zen-5); */
   background-color: rgba(var(--row-gray-rgb), 0.6);
   min-height: 50px;
 }
@@ -74,6 +78,9 @@
   flex-shrink: 0;
   flex-basis: 70px;
   text-align: center;
+
+  overflow-x: hidden;
+  text-overflow: ellipsis;
 }
 
 .rowName {
@@ -81,6 +88,7 @@
   flex-basis: 100px;
   overflow-x: hidden;
   text-overflow: ellipsis;
+  padding-left: 10px;
 }
 
 .rowStockLink {
@@ -109,29 +117,29 @@
 
 .rowPrice {
   text-align: right;
-  flex-basis: 85px;
+  flex-basis: 80px;
   flex-shrink: 0;
 }
 
 .rowChange {
   text-align: right;
-  flex-basis: 75px;
+  flex-basis: 80px;
   flex-shrink: 0;
-  flex-grow: 0.5;
+  flex-grow: 0.2;
 }
 
 .rowAveragePrice {
   text-align: right;
   flex-basis: 90px;
   flex-shrink: 0;
-  flex-grow: 0.5;
+  flex-grow: 0.2;
 }
 
 .rowProfit {
   text-align: right;
   flex-basis: 65px;
   flex-shrink: 0;
-  flex-grow: 0.5;
+  flex-grow: 0.2;
 }
 
 .rowProfit {
@@ -140,14 +148,14 @@
   display: inline-block;
   text-align: right;
   flex-shrink: 0;
-  flex-grow: 0.5;
+  flex-grow: 0.2;
 }
 
 .rowValue {
   text-align: right;
   flex-basis: 109px;
   flex-shrink: 0;
-  flex-grow: 0.5;
+  flex-grow: 0.2;
 }
 
 .rowPredict {
@@ -155,7 +163,7 @@
   flex-basis: 88px;
   text-align: right;
   flex-shrink: 0;
-  flex-grow: 0.5;
+  flex-grow: 0.2;
 }
 
 /* .rowDelete {
@@ -174,11 +182,16 @@
   }
 
   .rowHandle img {
-    display: none;
+    visibility: hidden;
   }
 
   .tableRow:hover .rowHandle img {
-    display: block;
+    visibility: visible;
+  }
+
+  .notDragging .tableRow:hover .rowStockInfo {
+    outline: 1px solid var(--zen-4);
+    background-color: var(--zen-5);
   }
 
   .editButton {
