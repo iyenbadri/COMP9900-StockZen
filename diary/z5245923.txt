@@ -38,18 +38,35 @@ Week 3
 
 ========================================================================================
 
-Week 4 (by 07/10; will be updated once more at the end of week)
+Week 4 
 
 • Planned  : Coding for (1)login page (2)responsive design (3)portfolio functionality
-• Achieved : (1) Done / (2)-(3) left 
+• Achieved : Mostly done
 
 - Did PR reviews for:
   · PR#17_Porfolio_list (Rittisak)
   · PR#20_Landing_page (Khai)
-  ·
 - Wrote codes and created PR for:
   · login page layout and functionalities(error handling, user data storage)
   · logout handling (user data deletion)
-  ·
+  · portfolio creation functionality
+- Had meeting with Khai to discuss about implementation of login page
 
 ========================================================================================
+
+Week 5 (Will be updated again at the end of week)
+
+• Planned  : 
+• Achieved : 
+
+- Did PR reviews for:
+  · PR#28_Frontend_search_widget (Rittisak)
+  · PR#41_Fix_user_redirection (Rittisak)
+  ·
+- Wrote codes and created PR for:
+  · logout handling (page layout modification, API wireup)
+  · 
+- Had meeting with Khai to discuss about logout page layout
+
+========================================================================================
+
