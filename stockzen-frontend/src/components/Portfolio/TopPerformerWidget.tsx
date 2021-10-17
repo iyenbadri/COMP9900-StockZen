@@ -1,11 +1,10 @@
+import lossArrow from 'assets/icon-outlines/outline-arrow-down-circle-red.svg';
+import gainArrow from 'assets/icon-outlines/outline-arrow-up-circle-green.svg';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import moment from 'moment';
 import React, { FC, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './TopPerformerWidget.module.css';
-
-import lossArrow from 'assets/icon-outlines/outline-arrow-down-circle-red.svg';
-import gainArrow from 'assets/icon-outlines/outline-arrow-up-circle-green.svg';
 
 // interface IProps {
 //   firstName: string;
