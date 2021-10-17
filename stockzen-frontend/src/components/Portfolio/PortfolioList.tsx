@@ -257,6 +257,7 @@ const PortfolioList = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
       <Modal
         show={showCreatePortfolioModal}
         onHide={() => setShowCreatePortfolioModal(false)}

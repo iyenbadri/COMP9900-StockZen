@@ -93,9 +93,7 @@ const PortfolioPage = () => {
         stockId: stock.id,
         draggableId: `stock-${stock.id}`,
         ordering: stock.order ?? Math.random(), // TODO: map the backend data
-        symbol:
-          stock.code ??
-          Math.random().toString() + ' ' + Math.random().toString(),
+        symbol: stock.code ?? Math.random().toString(),
         name: stock.stockName ?? Math.random().toString(),
         price: stock.price ?? Math.random() * 10000 - 5000,
         change: stock.change ?? Math.random() * 10000 - 5000,
