@@ -93,7 +93,9 @@ const PortfolioPage = () => {
         stockId: stock.id,
         draggableId: `stock-${stock.id}`,
         ordering: stock.order ?? Math.random(), // TODO: map the backend data
-        symbol: stock.code ?? Math.random().toString(),
+        symbol:
+          stock.code ??
+          Math.random().toString() + ' ' + Math.random().toString(),
         name: stock.stockName ?? Math.random().toString(),
         price: stock.price ?? Math.random() * 10000 - 5000,
         change: stock.change ?? Math.random() * 10000 - 5000,
@@ -238,6 +240,7 @@ const PortfolioPage = () => {
         style={{
           maxWidth: '100vw',
           overflowX: 'auto',
+          marginRight: '-35px',
         }}
       >
         <div style={{ minWidth: '615px', margin: '0 1px' }}>
@@ -257,9 +260,7 @@ const PortfolioPage = () => {
                   ></OrderingIndicator>
                 </Button>
               </span>
-              <span
-                className={`${styles.rowName} d-block d-sm-none d-xl-block`}
-              >
+              <span className={`${styles.rowName} d-none d-xxl-block`}>
                 <Button
                   variant='transparent'
                   size={'sm'}
@@ -353,7 +354,7 @@ const PortfolioPage = () => {
                 </Button>
               </span>
             </span>
-            {/* <span className={styles.rowDelete}></span> */}
+            <span className={styles.rowDelete}></span>
           </div>
 
           <div
@@ -374,6 +375,7 @@ const PortfolioPage = () => {
                           key={stock.stockId}
                           index={index}
                           stock={stock}
+                          showDeleteModal={() => {}}
                         ></PortfolioPageRow>
                       );
                     })}

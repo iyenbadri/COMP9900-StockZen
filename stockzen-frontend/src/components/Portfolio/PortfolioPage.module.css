@@ -174,11 +174,16 @@
   flex-grow: 0.2;
 }
 
-/* .rowDelete {
+.rowDelete {
   flex-basis: 35px;
   text-align: right;
   flex-shrink: 0;
-} */
+}
+
+.deleteButton {
+  background-color: transparent;
+  border-color: transparent;
+}
 
 @media (any-hover: hover) {
   .rowDelete button {

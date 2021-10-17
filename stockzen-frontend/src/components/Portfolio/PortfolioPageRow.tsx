@@ -1,4 +1,5 @@
 import handleIcon from 'assets/icon-outlines/outline-drag-handle.svg';
+import crossIcon from 'assets/icon-outlines/outline-cross.svg';
 import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { Draggable } from 'react-beautiful-dnd';
@@ -7,6 +8,7 @@ import styles from './PortfolioPage.module.css';
 interface PortfolioPageRowProp {
   readonly stock: IStock;
   readonly index: number;
+  readonly showDeleteModal: (stockId: number, stock: string) => void;
 }
 
 const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
@@ -50,9 +52,7 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                   {stock.symbol}
                 </Link>
               </span>
-              <span
-                className={`${styles.rowName} d-block d-sm-none d-xl-block`}
-              >
+              <span className={`${styles.rowName} d-none d-xxl-block`}>
                 {stock.name}
               </span>
               <span className={styles.rowPrice}>
@@ -97,18 +97,18 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
               <span className={styles.rowPredict}>+</span>
             </span>
 
-            {/* <span className={styles.rowDelete}>
-          <button
-            className={`p-0 ${styles.deleteButton}`}
-            onClick={() => {
-              if (prop.showDeleteModal != null) {
-                prop.showDeleteModal(prop.portfolioId, prop.name);
-              }
-            }}
-          >
-            <img src={crossIcon} alt='cross' />
-          </button>
-        </span> */}
+            <span className={styles.rowDelete}>
+              <button
+                className={`p-0 ${styles.deleteButton}`}
+                onClick={() => {
+                  if (props.showDeleteModal != null) {
+                    props.showDeleteModal(stock.stockId, stock.name);
+                  }
+                }}
+              >
+                <img src={crossIcon} alt='cross' />
+              </button>
+            </span>
           </div>
         </div>
       )}
