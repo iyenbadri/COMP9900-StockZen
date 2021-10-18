@@ -85,7 +85,7 @@
 }
 
 .deleteButton {
-  min-width: 0;
+  min-width: 0 !important;
   visibility: hidden;
 }
 
