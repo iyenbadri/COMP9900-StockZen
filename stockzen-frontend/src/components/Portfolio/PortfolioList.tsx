@@ -22,7 +22,7 @@ import PortfolioListSummary from './PortfolioListSummary';
 
 interface IPortfolioResponse {
   id: number;
-  order: number | undefined;
+  order: number;
   portfolioName: string;
   stockCount: number;
   value: number;
@@ -121,7 +121,7 @@ const PortfolioList = () => {
     (portfolioList: IPortfolioResponse[]): IPortfolio[] => {
       return portfolioList.map((port: IPortfolioResponse) => ({
         draggableId: `portfolio-${port.id}`,
-        ordering: port.order ?? Math.random(),
+        ordering: port.order,
         portfolioId: port.id,
         name: port.portfolioName,
         stockCount: port.stockCount,
