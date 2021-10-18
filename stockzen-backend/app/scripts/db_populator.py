@@ -1,13 +1,16 @@
+import json
+import os
 from random import randrange, uniform
 from typing import Tuple
 
 from app import app
-from app.models.schema import Portfolio, User
+from app import db as DB
+from app.models.schema import Portfolio, StockPage, User
 from app.utils import db_utils as db
-from app.utils.crud_utils import add_stock_page, add_user
-
+from app.utils.crud_utils import add_user
 from app.utils.enums import Status
 from faker import Faker
+from sqlalchemy import func
 
 # ==============================================================================
 # Dummy User Populator
@@ -16,6 +19,7 @@ from faker import Faker
 Run with: python3 -m app.scripts.db_populator
 """
 faker = Faker()
+
 
 def generate_dummy_users(n_users: int):
     """
@@ -76,17 +80,40 @@ def generate_dummy_portfolios(n_portfolios: int, user_id_range: Tuple[int, int])
             return Status.FAIL
 
 
-def generate_dummy_stock_pages(n_pages):
+def generate_dummy_stock_pages():
     """
     Generates dummy stock page data
     """
-    for _ in range(n_pages):
-        code = faker.lexify(text="????")
-        stock_name = faker.company()
-        if add_stock_page(code, stock_name) == Status.FAIL:
-            print("Could not add dummy stock page")
-        else:
-            print("Dummy stock page added")
+
+    with open(os.path.join(os.path.dirname(__file__), "listing.json")) as f:
+        listing = json.load(f)
+
+    for stock in listing:
+        try:
+            q = (
+                DB.session.query(StockPage)
+                .filter(StockPage.code == stock["symbol"])
+                .exists()
+            )
+
+            if DB.session.query(q).scalar():
+                continue
+
+            DB.session.add(
+                StockPage(code=stock["symbol"], stock_name=stock["description"])
+            )
+            # if add_stock_page(code, stock_name) == Status.FAIL:
+            #     print("Could not add dummy stock page")
+            # else:
+            #     print("Dummy stock page added")
+
+        except KeyboardInterrupt:
+            break
+        except Exception as ex:
+            print(ex)
+            DB.session.rollback()
+
+    DB.session.commit()
 
 
 def generate_dummy_data(n_users=10, n_portfolios_max=30, n_stock_pages=100):
@@ -114,4 +141,4 @@ def generate_dummy_data(n_users=10, n_portfolios_max=30, n_stock_pages=100):
 
 if __name__ == "__main__":
     with app.app_context():
-        generate_dummy_data(10)
+        generate_dummy_stock_pages()
