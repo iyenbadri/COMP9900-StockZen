@@ -33,7 +33,7 @@ def generate_dummy_users(n_users: int):
             print("Dummy user added")
 
 
-def generate_dummy_portfolios(n_portfolios: int):
+def generate_dummy_portfolios(n_portfolios: int, user_id_range: Tuple[int, int]):
     """
     Generates n random portfolios
     """
@@ -43,8 +43,8 @@ def generate_dummy_portfolios(n_portfolios: int):
         last_id = last_row.id
 
     for _ in range(n_portfolios):
-        # random_id = randrange(*user_id_range)
-        random_id = 1
+        random_id = randrange(*user_id_range)
+        # random_id = 1
         portfolio_name = faker.bs()
         stock_count = randrange(0, 20)
         value = round(uniform(-100000, 100000), 4)
@@ -76,7 +76,7 @@ def generate_dummy_portfolios(n_portfolios: int):
             return Status.FAIL
 
 
-def generate_dummy_stock_pages(n_pages=100):
+def generate_dummy_stock_pages(n_pages):
     """
     Generates dummy stock page data
     """
@@ -89,19 +89,29 @@ def generate_dummy_stock_pages(n_pages=100):
             print("Dummy stock page added")
 
 
-def generate_dummy_data(n_users=10, n_portfolios_max=30):
+def generate_dummy_data(n_users=10, n_portfolios_max=30, n_stock_pages=100):
     """
     Generates dummy user data
     """
+    # USERS
     generate_dummy_users(n_users)
+
+    # PORTFOLIOS
+    # get last active id, for other table allocation
+    last_id = User.query.order_by(User.id.desc()).first().id
+    start_id = last_id - n_users + 1
+    end_id = last_id + 1
+    user_id_range = (start_id, end_id)
 
     for _ in range(n_users):
         n_portfolios = randrange(0, n_portfolios_max)
 
-        generate_dummy_portfolios(n_portfolios)
+        generate_dummy_portfolios(n_portfolios, user_id_range)
+
+    # STOCK PAGES
+    generate_dummy_stock_pages(n_stock_pages)
 
 
 if __name__ == "__main__":
     with app.app_context():
         generate_dummy_data(10)
-        generate_dummy_stock_pages()
