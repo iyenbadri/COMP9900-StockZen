@@ -46,7 +46,7 @@ def query_item(table: DatabaseObj, item_id: int, **filters) -> Optional[Database
 
 
 def query_all(table: DatabaseObj, **filters: int) -> Optional[List[DatabaseObj]]:
-    """Query a database table using item parent, returns list of query items or None.
+    """Query a database table using item parent, returns list of query items or None
     **filters is of form **{col_type: id}; e.g. {"portfolio": 1}
     """
     try:

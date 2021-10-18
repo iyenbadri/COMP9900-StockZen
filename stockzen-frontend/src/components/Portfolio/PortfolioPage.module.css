@@ -3,6 +3,7 @@
 .tableToolbar {
   display: flex;
   align-items: flex-end;
+  justify-content: end;
   margin-bottom: 10px;
 }
 
@@ -42,9 +43,11 @@
   background-color: transparent;
   border-color: transparent;
   color: var(--zen-3);
+  padding: 0px;
+  min-width: 0;
 }
 
-.rowPortInfo {
+.rowStockInfo {
   flex-grow: 1;
   flex-basis: auto;
   display: flex;
@@ -54,65 +57,112 @@
   align-items: center;
 }
 
-.tableRow .rowPortInfo {
+.tableRow .rowStockInfo {
   border-color: var(--zen-5);
-  background-color: rgba(196, 196, 196, 0.6);
+  background-color: rgba(var(--row-gray-rgb), 0.6);
   min-height: 50px;
 }
 
 .rowHandle {
   flex-basis: 25px;
   color: var(--zen-3);
+  flex-shrink: 0;
 }
 
-.rowPortfolio {
+.rowCode {
   flex-grow: 1;
-  flex-basis: auto;
-  align-items: center;
+  flex-shrink: 0;
+  flex-basis: 70px;
+  text-align: center;
 }
 
-.rowPortfolioLink {
+.rowName {
+  flex-grow: 10;
+  flex-basis: 100px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+.rowStockLink {
   text-decoration: none;
-  color: var(--zen-3);
-  font-weight: 600;
+  color: var(--zen-4);
+  font-weight: 700;
   font-size: 0.9em;
 }
 
-.editButton {
+/* .editButton {
   padding: 0;
   background-color: transparent;
   border-color: transparent;
   margin-left: 5px;
 }
 
-.rowStocks {
-  text-align: right;
-  flex-basis: 85px;
+.deleteButton {
+  background-color: transparent;
+  border-color: transparent;
 }
 
-.rowMargetValue {
+.rowEditButton {
+  flex-basis: 25px;
+  flex-shrink: 0;
+} */
+
+.rowPrice {
   text-align: right;
-  flex-basis: 109px;
+  flex-basis: 85px;
+  flex-shrink: 0;
 }
 
 .rowChange {
   text-align: right;
   flex-basis: 75px;
-  display: inline-block;
-  text-align: right;
+  flex-shrink: 0;
+  flex-grow: 0.5;
 }
 
-.rowTotalGain {
+.rowAveragePrice {
+  text-align: right;
+  flex-basis: 90px;
+  flex-shrink: 0;
+  flex-grow: 0.5;
+}
+
+.rowProfit {
+  text-align: right;
+  flex-basis: 65px;
+  flex-shrink: 0;
+  flex-grow: 0.5;
+}
+
+.rowProfit {
   text-align: right;
   flex-basis: 88px;
   display: inline-block;
   text-align: right;
+  flex-shrink: 0;
+  flex-grow: 0.5;
 }
 
-.rowDelete {
+.rowValue {
+  text-align: right;
+  flex-basis: 109px;
+  flex-shrink: 0;
+  flex-grow: 0.5;
+}
+
+.rowPredict {
+  text-align: right;
+  flex-basis: 88px;
+  text-align: right;
+  flex-shrink: 0;
+  flex-grow: 0.5;
+}
+
+/* .rowDelete {
   flex-basis: 35px;
   text-align: right;
-}
+  flex-shrink: 0;
+} */
 
 @media (any-hover: hover) {
   .rowDelete button {
@@ -145,10 +195,12 @@
 }
 
 /* .tableRow .rowPortfolio, */
+.tableRow .rowName,
+.tableRow .rowPrice,
 .tableRow .rowChange,
-.tableRow .rowTotalGain,
-.tableRow .rowStocks,
-.tableRow .rowMargetValue {
+.tableRow .rowAveragePrice,
+.tableRow .rowProfit,
+.tableRow .rowValue {
   font-size: 0.8em;
 }
 

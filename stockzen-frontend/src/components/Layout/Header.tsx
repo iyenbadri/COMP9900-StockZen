@@ -16,7 +16,7 @@ const Header = () => {
       <Container className={styles.headerContainer}>
         <Row>
           <Col className='text-start'>
-            <Link to='/'>
+            <Link to={isAuthenticated ? '/portfolio' : '/'}>
               {isAuthenticated && <img src={logo_light} alt='StockZen' />}
               {!isAuthenticated && <img src={logo_dark} alt='StockZen' />}
             </Link>
