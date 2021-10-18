@@ -5,6 +5,7 @@ from app import app
 from app.models.schema import Portfolio, User
 from app.utils import db_utils as db
 from app.utils.crud_utils import add_stock_page, add_user
+
 from app.utils.enums import Status
 from faker import Faker
 
@@ -15,7 +16,6 @@ from faker import Faker
 Run with: python3 -m app.scripts.db_populator
 """
 faker = Faker()
-
 
 def generate_dummy_users(n_users: int):
     """

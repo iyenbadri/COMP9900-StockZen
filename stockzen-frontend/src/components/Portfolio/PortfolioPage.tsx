@@ -3,7 +3,7 @@ import refresh from 'assets/icon-outlines/outline-refresh-small.svg';
 import axios from 'axios';
 import SearchWidget from 'components/Search/SearchWidget';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState, useCallback } from 'react';
 import Button from 'react-bootstrap/Button';
 import { Link, useParams } from 'react-router-dom';
 import styles from './PortfolioPage.module.css';
@@ -43,6 +43,127 @@ interface StockData {
 interface StockRowData {
   readonly stockData: StockData;
 }
+
+const PortfolioPage = () => {
+  //const [showSearchWidget, setShowSearchWidget] = useState<boolean>(false);
+  const { setShowPortfolioSummary } = useContext(TopPerformerContext);
+
+  const { portfolioId } = useParams<RouteRarams>();
+  const [stocks, setStocks] = useState<StockData[]>([]);
+
+  const mapStockList = useCallback(
+    (data: StockListResponse[]): StockData[] => {
+      return data.map((stock) => ({
+        stockId: stock.id,
+        symbol: stock.code,
+        name: stock.stockName,
+        price: stock.price,
+        change: stock.change,
+        changePercent: stock.percChange,
+        averagePrice: stock.avgPrice,
+        profit: stock.gain,
+        profitPercent: stock.percGain,
+        value: stock.value,
+      }));
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  const reloadStockList = useCallback(() => {
+    axios.get(`/stock/list/${portfolioId}`).then((response) => {
+      setStocks(mapStockList(response.data));
+    });
+  }, [portfolioId, mapStockList, setStocks]);
+
+  useEffect(
+    () => {
+      setShowPortfolioSummary(true);
+      reloadStockList();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  const handleAddStock = (symbol: string, stockPageId: number) => {
+    axios
+      .post(`/stock/${portfolioId}`, { stockPageId: stockPageId })
+      .then(() => {
+        reloadStockList();
+      });
+  };
+
+  return (
+    <>
+      <div>
+        <PortfolioPageSummary></PortfolioPageSummary>
+      </div>
+      <hr />
+
+      <div className={styles.tableToolbar}>
+        <SearchWidget addStock={handleAddStock}></SearchWidget>
+        <Button
+          variant='light'
+          className='ms-1 text-muted d-flex align-items-center'
+        >
+          <img src={refresh} alt='refresh' style={{ opacity: 0.5 }} />
+          Refresh
+        </Button>
+      </div>
+
+      <div className={styles.tableHeader}>
+        <span className={styles.rowStockInfo}>
+          <span className={styles.rowHandle}></span>
+          <span className={styles.rowCode}>
+            <Button variant={'light'} size={'sm'}>
+              Code
+            </Button>
+          </span>
+          <span className={`${styles.rowName} d-block d-sm-none d-xl-block`}>
+            <Button variant={'light'} size={'sm'}>
+              Name
+            </Button>
+          </span>
+          <span className={styles.rowPrice}>
+            <Button variant={'light'} size={'sm'}>
+              Price
+            </Button>
+          </span>
+          <span className={styles.rowChange}>
+            <Button variant={'light'} size={'sm'}>
+              Change
+            </Button>
+          </span>
+          <span className={`${styles.rowAveragePrice} d-block d-lg-none`}>
+            <Button variant={'light'} size={'sm'}>
+              Avg price
+            </Button>
+          </span>
+          <span className={styles.rowProfit}>
+            <Button variant={'light'} size={'sm'}>
+              Profit
+            </Button>
+          </span>
+          <span className={styles.rowValue}>
+            <Button variant={'light'} size={'sm'}>
+              Value
+            </Button>
+          </span>
+          <span className={styles.rowPredict}>
+            <Button variant={'light'} size={'sm'}>
+              Predict
+            </Button>
+          </span>
+        </span>
+        {/* <span className={styles.rowDelete}></span> */}
+      </div>
+
+      {stocks.map((x) => {
+        return <StockRow key={x.stockId} stockData={x}></StockRow>;
+      })}
+    </>
+  );
+};
 
 const StockRow: FC<StockRowData> = (prop) => {
   const numberFormatter = new Intl.NumberFormat('en-US', {
@@ -138,117 +259,4 @@ const StockRow: FC<StockRowData> = (prop) => {
   );
 };
 
-const Portfolio = () => {
-  //const [showSearchWidget, setShowSearchWidget] = useState<boolean>(false);
-  const { setShowPortfolioSummary } = useContext(TopPerformerContext);
-
-  const { portfolioId } = useParams<RouteRarams>();
-  const [stocks, setStocks] = useState<StockData[]>([]);
-
-  const mapStockList = (data: StockListResponse[]): StockData[] => {
-    return data.map((x) => ({
-      stockId: x.id,
-      symbol: x.code,
-      name: x.stockName,
-      price: x.price,
-      change: x.change,
-      changePercent: x.percChange,
-      averagePrice: x.avgPrice,
-      profit: x.gain,
-      profitPercent: x.percGain,
-      value: x.value,
-    }));
-  };
-
-  const reloadStockList = () => {
-    axios.get(`/stock/list/${portfolioId}`).then((response) => {
-      setStocks(mapStockList(response.data));
-    });
-  };
-
-  useEffect(() => {
-    setShowPortfolioSummary(true);
-    reloadStockList();
-  }, []);
-
-  const handleAddStock = (symbol: string, stockPageId: number) => {
-    axios
-      .post(`/stock/${portfolioId}`, { stockPageId: stockPageId })
-      .then(() => {
-        reloadStockList();
-      });
-  };
-
-  return (
-    <>
-      <div>
-        <PortfolioPageSummary></PortfolioPageSummary>
-      </div>
-      <hr />
-
-      <div className={styles.tableToolbar}>
-        <SearchWidget addStock={handleAddStock}></SearchWidget>
-        <Button
-          variant='light'
-          className='ms-1 text-muted d-flex align-items-center'
-        >
-          <img src={refresh} alt='refresh' style={{ opacity: 0.5 }} />
-          Refresh
-        </Button>
-      </div>
-
-      <div className={styles.tableHeader}>
-        <span className={styles.rowStockInfo}>
-          <span className={styles.rowHandle}></span>
-          <span className={styles.rowCode}>
-            <Button variant={'light'} size={'sm'}>
-              Code
-            </Button>
-          </span>
-          <span className={`${styles.rowName} d-block d-sm-none d-xl-block`}>
-            <Button variant={'light'} size={'sm'}>
-              Name
-            </Button>
-          </span>
-          <span className={styles.rowPrice}>
-            <Button variant={'light'} size={'sm'}>
-              Price
-            </Button>
-          </span>
-          <span className={styles.rowChange}>
-            <Button variant={'light'} size={'sm'}>
-              Change
-            </Button>
-          </span>
-          <span className={`${styles.rowAveragePrice} d-block d-lg-none`}>
-            <Button variant={'light'} size={'sm'}>
-              Avg price
-            </Button>
-          </span>
-          <span className={styles.rowProfit}>
-            <Button variant={'light'} size={'sm'}>
-              Profit
-            </Button>
-          </span>
-          <span className={styles.rowValue}>
-            <Button variant={'light'} size={'sm'}>
-              Value
-            </Button>
-          </span>
-          <span className={styles.rowPredict}>
-            <Button variant={'light'} size={'sm'}>
-              Predict
-            </Button>
-          </span>
-        </span>
-        {/* <span className={styles.rowDelete}></span> */}
-      </div>
-
-      {stocks.map((x) => {
-        return <StockRow key={x.stockId} stockData={x}></StockRow>;
-      })}
-    </>
-  );
-};
-
-export default Portfolio;
+export default PortfolioPage;

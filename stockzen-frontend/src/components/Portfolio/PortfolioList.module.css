@@ -39,12 +39,12 @@
 .tableHeader,
 .tableRow {
   display: flex;
-  margin-bottom: 7px;
   align-items: center;
 }
 
 .tableRow {
   margin-right: -25px;
+  padding-bottom: 7px;
 }
 
 .tableHeader {
@@ -68,17 +68,23 @@
 }
 
 .tableRow .rowPortInfo {
-  background-color: rgba(196, 196, 196, 0.4);
+  background-color: rgba(var(--row-gray-rgb), 0.7);
   min-height: 45px;
   border: transparent;
   border-radius: 5px;
 }
-.tableRow .rowPortInfo:hover {
-  outline: 2px solid var(--zen-4);
-}
+
+/* .tempSort .dragHandle {
+  display: none;
+} */
 
 .rowHandle {
   color: var(--zen-3);
+}
+
+.tableRow .rowPortfolio {
+  text-overflow: ellipsis;
+  overflow-x: hidden;
 }
 
 .rowPortfolioLink {
@@ -86,10 +92,6 @@
   color: var(--zen-3);
   font-weight: 600;
   font-size: 0.9em;
-}
-
-.dragHandle:hover {
-  cursor: move;
 }
 
 .editButton {
@@ -154,15 +156,21 @@
     visibility: hidden;
   }
 
-  .tableRow:hover .rowDelete button {
+  .notDragging .tableRow:hover .rowDelete button {
     visibility: visible;
+  }
+
+  .notDragging .tableRow:hover .rowPortInfo {
+    outline: 1px solid var(--zen-4);
+    background-color: var(--zen-5);
   }
 
   .rowHandle img {
     display: none;
   }
 
-  .tableRow:hover .rowHandle img {
+  .notDragging .tableRow:hover .rowHandle img {
+    cursor: move;
     display: block;
   }
 
@@ -170,7 +178,7 @@
     visibility: hidden;
   }
 
-  .tableRow:hover .editButton {
+  .notDragging .tableRow:hover .editButton {
     visibility: visible;
   }
 }
@@ -183,8 +191,8 @@
 .tableRow .rowChange,
 .tableRow .rowTotalGain,
 .tableRow .rowStocks,
-.tableRow .rowMargetValue {
-  font-size: 0.88rem;
+.tableRow .rowMarketValue {
+  font-size: 0.9rem;
 }
 
 /*   

@@ -1,21 +1,28 @@
-import crossIcon from 'assets/icon-outlines/outline-cross.svg';
-import handleIcon from 'assets/icon-outlines/outline-drag-handle.svg';
-import editIcon from 'assets/icon-outlines/outline-edit-1.svg';
+import { arrayMoveImmutable } from 'array-move';
+import orderDown from 'assets/icon-outlines/outline-chevron-down-small.svg';
+import orderUp from 'assets/icon-outlines/outline-chevron-up-small.svg';
 import plusIcon from 'assets/icon-outlines/outline-plus-circle.svg';
 import axios from 'axios';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
-import React, { FC, useContext, useEffect, useState } from 'react';
+import { Ordering } from 'enums';
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
+import {
+  DragDropContext,
+  Droppable,
+  DropResult,
+  ResponderProvided,
+} from 'react-beautiful-dnd';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { Link, useRouteMatch } from 'react-router-dom';
-import { usdFormatter } from 'utils/Utilities';
 import styles from './PortfolioList.module.css';
+import PortfolioListRow from './PortfolioListRow';
 import PortfolioListSummary from './PortfolioListSummary';
 
 interface IPortfolioResponse {
   id: number;
+  ordering: undefined;
   portfolioName: string;
   stockCount: number;
   value: number;
@@ -25,140 +32,38 @@ interface IPortfolioResponse {
   percGain: number;
 }
 
-interface IPortfolio {
-  portfolioId: number;
-  name: string;
-  stock_count: number;
-  change: number | null;
-  changePercent: number | null;
-  marketValue: number | null;
-  totalGain: number | null;
-  totalGainPercent: number | null;
+interface OrderingIndicatorProp {
+  target: string;
+  ordering: TableOrdering<string>;
 }
 
-interface IPortfolioListRow extends IPortfolio {
-  updatePortfolioName?: (id: number, name: string) => void;
-  showDeleteModal?: (id: number, name: string) => void;
-}
+type PortfolioColumn =
+  | 'name'
+  | 'marketValue'
+  | 'totalGain'
+  | 'change'
+  | 'stockCount';
 
-const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
-  const { path } = useRouteMatch();
-
-  const [portfolioName, setPortfolioName] = useState<string>(prop.name);
-  const [isEditingName, setIsEditingName] = useState<boolean>(false);
-
-  const gainLossClass = (val: number | null): string => {
-    if (val == null) {
-      return '';
-    } else if (val < 0) {
-      return styles.moneyLoss;
-    } else if (val > 0) {
-      return styles.moneyGain;
-    } else {
-      return '';
-    }
-  };
-
-  const updatePortfolioName = () => {
-    if (prop.updatePortfolioName != null) {
-      if (portfolioName.length > 0 && portfolioName.length <= 50) {
-        prop.updatePortfolioName(prop.portfolioId, portfolioName);
-      }
-    }
-    setIsEditingName(false);
-  };
-
+const OrderingIndicator: FC<OrderingIndicatorProp> = (props) => {
+  const { target, ordering } = props;
   return (
-    <div className={styles.tableRow}>
-      <div className={styles.rowPortInfo}>
-        <div className={styles.rowHandle}>
-          <img src={handleIcon} alt='handle' className={styles.dragHandle} />
-        </div>
-        <div className={styles.rowPortfolio}>
-          {isEditingName ? (
-            <Form.Control
-              value={portfolioName}
-              style={{ width: '100%', padding: 0 }}
-              autoFocus
-              maxLength={50}
-              onChange={(ev) => {
-                setPortfolioName(ev.target.value);
-              }}
-              onBlur={updatePortfolioName}
-              onKeyDown={(ev) => {
-                console.log(ev.key);
-                switch (ev.key) {
-                  case 'Enter':
-                    updatePortfolioName();
-                    break;
-                  case 'Escape':
-                    setIsEditingName(false);
-                    break;
-                }
-              }}
-            />
-          ) : (
-            <Link
-              to={`${path}/${prop.portfolioId}`}
-              className={styles.rowPortfolioLink}
-            >
-              {prop.name}
-            </Link>
-          )}
-        </div>
-        <div className={styles.rowEditButton}>
-          <button
-            type='button'
-            className={`${styles.editButton} p-0`}
-            onClick={(ev) => {
-              setIsEditingName(true);
-            }}
-          >
-            <img src={editIcon} alt='edit' width={18} />
-          </button>
-        </div>
-        <div className={styles.rowStocks}>{prop.stock_count}</div>
-        <div className={styles.rowMarketValue}>
-          {prop.marketValue == null
-            ? '-'
-            : usdFormatter.format(prop.marketValue)}
-        </div>
-        <div className={`${styles.rowChange} ${gainLossClass(prop.change)}`}>
-          {prop.change == null ? (
-            '-'
-          ) : (
-            <>
-              <div className={styles.percent}>{prop.changePercent}%</div>
-              <div>{usdFormatter.format(prop.change)}</div>
-            </>
-          )}
-        </div>
-        <div
-          className={`${styles.rowTotalGain} ${gainLossClass(prop.totalGain)}`}
+    <>
+      {target === ordering.column && (
+        <img
+          width={24}
+          height={24}
+          src={ordering.ordering === Ordering.Ascending ? orderUp : orderDown}
+          alt='order-indicator'
+        />
+      )}
+      {/* {target !== ordering.column && (
+        <span
+          style={{ display: 'inline-block', width: '24px', height: '24px' }}
         >
-          {prop.totalGain == null ? (
-            '-'
-          ) : (
-            <>
-              <div className={styles.percent}>{prop.totalGainPercent}%</div>
-              <div>{usdFormatter.format(prop.totalGain)}</div>
-            </>
-          )}
-        </div>
-      </div>
-      <div className={styles.rowDelete}>
-        <button
-          className={`p-0 ${styles.deleteButton}`}
-          onClick={() => {
-            if (prop.showDeleteModal != null) {
-              prop.showDeleteModal(prop.portfolioId, prop.name);
-            }
-          }}
-        >
-          <img src={crossIcon} alt='cross' width={20} />
-        </button>
-      </div>
-    </div>
+          &nbsp;
+        </span>
+      )} */}
+    </>
   );
 };
 
@@ -172,80 +77,88 @@ const PortfolioList = () => {
     useState<boolean>(false);
   const [showCreatePortfolioModal, setShowCreatePortfolioModal] =
     useState<boolean>(false);
+  const [tableOrdering, setTableOrdering] = useState<
+    TableOrdering<PortfolioColumn>
+  >({
+    column: '',
+    ordering: Ordering.Unknown,
+  });
+  const [portfolios, _setPortfolios] = useState<IPortfolio[]>([]);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
 
-  const mapPortfolioList = (
-    portfolioList: IPortfolioResponse[]
-  ): IPortfolio[] => {
-    return portfolioList.map((x: IPortfolioResponse) => ({
-      portfolioId: x.id,
-      name: x.portfolioName,
-      stock_count: x.stockCount,
-      marketValue: x.value,
-      change: x.change,
-      changePercent: x.percChange,
-      totalGain: x.gain,
-      totalGainPercent: x.percGain,
-    }));
-  };
+  const setPortfolios = useCallback(
+    (
+      portfolios: IPortfolio[],
+      tableOrdering: TableOrdering<PortfolioColumn>
+    ) => {
+      if (tableOrdering.column === '') {
+        portfolios = portfolios.sort((a, b) => a.ordering - b.ordering);
+      } else {
+        portfolios = portfolios.sort((a, b) => {
+          if (tableOrdering.column !== '') {
+            const keyA = a[tableOrdering.column] ?? 0;
+            const keyB = b[tableOrdering.column] ?? 0;
 
-  const [portfolios, setPortfolios] = useState<IPortfolio[]>([]);
+            if (keyA > keyB) {
+              return tableOrdering.ordering;
+            } else if (keyB > keyA) {
+              return -tableOrdering.ordering;
+            } else {
+              return a.ordering - b.ordering;
+            }
+          } else {
+            return a.ordering - b.ordering;
+          }
+        });
+      }
 
-  const reloadPortfolioList = () => {
+      _setPortfolios(portfolios);
+    },
+    [_setPortfolios]
+  );
+
+  const mapPortfolioList = useCallback(
+    (portfolioList: IPortfolioResponse[]): IPortfolio[] => {
+      return portfolioList.map((port: IPortfolioResponse) => ({
+        draggableId: `portfolio-${port.id}`,
+        ordering: port.ordering ?? Math.random(), // TODO: map to API response
+        portfolioId: port.id,
+        name: port.portfolioName,
+        stockCount: port.stockCount,
+        marketValue: port.value,
+        change: port.change,
+        changePercent: port.percChange,
+        totalGain: port.gain,
+        totalGainPercent: port.percGain,
+      }));
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  const reloadPortfolioList = useCallback(() => {
     axios.get('/portfolio/list').then((response) => {
-      // const mockData: IPortfolio[] = [
-      //   {
-      //     name: 'My portfolio 1',
-      //     portfolioId: -1,
-      //     stock_count: 3,
-      //     marketValue: 29134.3,
-      //     change: 403.1,
-      //     changePercent: 0.59,
-      //     totalGain: 1403.1,
-      //     totalGainPercent: 11.7,
-      //   },
-      //   {
-      //     name: 'My empty portfolio',
-      //     portfolioId: -2,
-      //     stock_count: 0,
-      //     marketValue: null,
-      //     change: null,
-      //     changePercent: null,
-      //     totalGain: null,
-      //     totalGainPercent: null,
-      //   },
-      //   {
-      //     name: 'My portfolio 2',
-      //     portfolioId: -3,
-      //     stock_count: 15,
-      //     marketValue: 1902.31,
-      //     change: -31.8,
-      //     changePercent: -0.59,
-      //     totalGain: -903.2,
-      //     totalGainPercent: -1.7,
-      //   },
-      // ];
-
-      // setPortfolios([...mockData, ...mapPortfolioList(response.data)]);
-
-      setPortfolios(mapPortfolioList(response.data));
+      setPortfolios(mapPortfolioList(response.data), tableOrdering);
     });
-  };
+  }, [tableOrdering, setPortfolios, mapPortfolioList]);
 
-  useEffect(() => {
-    setShowPortfolioSummary(false);
-    reloadPortfolioList();
-  }, []);
+  useEffect(
+    () => {
+      setShowPortfolioSummary(false);
+      reloadPortfolioList();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const handlePortfolioRename = (portfolioId: number, name: string) => {
     axios.put(`/portfolio/${portfolioId}`, { newName: name }).then(() => {
-      setPortfolios(
-        portfolios!.map((x) => {
-          return {
-            ...x,
-            name: x.portfolioId === portfolioId ? name : x.name,
-          };
-        })
-      );
+      const newList = portfolios!.map((x) => ({
+        ...x,
+        name: x.portfolioId === portfolioId ? name : x.name,
+      }));
+
+      setPortfolios(newList, tableOrdering);
     });
   };
 
@@ -261,18 +174,6 @@ const PortfolioList = () => {
   const [newPortfolioName, setNewPortfolioName] = useState('');
   const createPortfolio = (ev: any) => {
     ev.preventDefault();
-    // let portfolioID = portfolios.length + 1;
-    // let newPortfolio = {
-    //   name: newPortfolioName,
-    //   portfolioId: portfolioID,
-    //   stockCount: 0,
-    //   marketValue: null,
-    //   change: null,
-    //   changePercent: null,
-    //   totalGain: null,
-    //   totalGainPercent: null,
-    // };
-    // setPortfolios([...portfolios, newPortfolio]);
     axios.post('/portfolio', { portfolioName: newPortfolioName }).then(() => {
       setNewPortfolioName('');
 
@@ -282,8 +183,60 @@ const PortfolioList = () => {
     setShowCreatePortfolioModal(false);
   };
 
-  // TODO: https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent/pull/17/files#r723117690
-  // Will have to remove styles from the table header buttons.
+  const handleDragStart = () => {
+    setIsDragging(true);
+  };
+
+  const handleDragEnd = (result: DropResult, provided: ResponderProvided) => {
+    setIsDragging(false);
+
+    if (result.destination != null) {
+      _setPortfolios((portfolios) => {
+        const newList = arrayMoveImmutable(
+          portfolios,
+          result.source.index,
+          result.destination!.index
+        );
+
+        for (let i = 0; i < newList.length; i++) {
+          newList[i].ordering = i;
+        }
+
+        // TODO: Call API to reorder the list in the backend.
+
+        return newList;
+      });
+      setTableOrdering({ column: '', ordering: Ordering.Unknown });
+    }
+  };
+
+  const handleTempSort = (columnName: PortfolioColumn) => {
+    setTableOrdering(
+      (
+        ordering: TableOrdering<PortfolioColumn>
+      ): TableOrdering<PortfolioColumn> => {
+        if (ordering.column === columnName) {
+          switch (ordering.ordering) {
+            case Ordering.Ascending:
+              ordering = { ...ordering, ordering: Ordering.Descending };
+              break;
+            case Ordering.Descending:
+              ordering = { column: '', ordering: Ordering.Unknown };
+              break;
+            default:
+              ordering = { ...ordering, ordering: Ordering.Ascending };
+              break;
+          }
+        } else {
+          ordering = { column: columnName, ordering: Ordering.Ascending };
+        }
+
+        setPortfolios(portfolios, ordering);
+
+        return ordering;
+      }
+    );
+  };
 
   return (
     <>
@@ -371,49 +324,112 @@ const PortfolioList = () => {
         <div className={styles.rowPortInfo}>
           <div className={styles.rowHandle}></div>
           <div className={styles.rowPortfolio}>
-            <Button variant={'light'} size={'sm'}>
+            <Button
+              variant={'transparent'}
+              size={'sm'}
+              onClick={() => handleTempSort('name')}
+            >
               Portfolio
             </Button>
+
+            <OrderingIndicator
+              target='name'
+              ordering={tableOrdering}
+            ></OrderingIndicator>
           </div>
           <div className={styles.rowEditButton}></div>
+
           <div className={styles.rowStocks}>
-            <Button variant={'light'} size={'sm'}>
+            <Button
+              variant={'transparent'}
+              size={'sm'}
+              onClick={() => handleTempSort('stockCount')}
+            >
               Stocks
             </Button>
+            <OrderingIndicator
+              target='stockCount'
+              ordering={tableOrdering}
+            ></OrderingIndicator>
           </div>
+
           <div className={styles.rowMarketValue}>
-            <Button variant={'light'} size={'sm'}>
+            <Button
+              variant={'transparent'}
+              size={'sm'}
+              onClick={() => handleTempSort('marketValue')}
+            >
               Market value
             </Button>
+            <OrderingIndicator
+              target='marketValue'
+              ordering={tableOrdering}
+            ></OrderingIndicator>
           </div>
+
           <div className={styles.rowChange}>
-            <Button variant={'light'} size={'sm'}>
+            <Button
+              variant={'transparent'}
+              size={'sm'}
+              onClick={() => handleTempSort('change')}
+            >
               Change
             </Button>
+            <OrderingIndicator
+              target='change'
+              ordering={tableOrdering}
+            ></OrderingIndicator>
           </div>
+
           <div className={styles.rowTotalGain}>
-            <Button variant={'light'} size={'sm'}>
+            <Button
+              variant={'transparent'}
+              size={'sm'}
+              onClick={() => handleTempSort('totalGain')}
+            >
               Total gain
             </Button>
+            <OrderingIndicator
+              target='totalGain'
+              ordering={tableOrdering}
+            ></OrderingIndicator>
           </div>
         </div>
         <div className={styles.rowDelete}></div>
       </div>
 
-      {portfolios!.map((port, index) => {
-        return (
-          <PortfolioListRow
-            key={port.portfolioId}
-            {...port}
-            showDeleteModal={(portfolioId, name) => {
-              setDeletingPortfolioId(portfolioId);
-              setDeletingPortfolioName(name);
-              setShowDeletePortfolioModal(true);
-            }}
-            updatePortfolioName={handlePortfolioRename}
-          ></PortfolioListRow>
-        );
-      })}
+      <div
+        className={`${isDragging ? styles.dragging : styles.notDragging} ${
+          tableOrdering.column !== '' ? styles.tempSort : ''
+        }`}
+      >
+        <DragDropContext
+          onDragEnd={handleDragEnd}
+          onDragStart={handleDragStart}
+        >
+          <Droppable droppableId='portfolio-list' type='portfolio'>
+            {(provided, snapshot) => (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {portfolios!.map((port, index) => (
+                  <PortfolioListRow
+                    key={port.portfolioId}
+                    index={index}
+                    port={port}
+                    isTempSort={tableOrdering.column !== ''}
+                    showDeleteModal={(portfolioId, name) => {
+                      setDeletingPortfolioId(portfolioId);
+                      setDeletingPortfolioName(name);
+                      setShowDeletePortfolioModal(true);
+                    }}
+                    updatePortfolioName={handlePortfolioRename}
+                  ></PortfolioListRow>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </div>
     </>
   );
 };
