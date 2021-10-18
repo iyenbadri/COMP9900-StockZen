@@ -40,7 +40,7 @@ portfolio_list_response = api.model(
             required=True,
             description="percentage capital gains made by portfolio",
         ),
-        "order": fields.Integer(required=True, description="new portfolio order"),
+        "order": fields.Integer(required=True, description="portfolio order"),
     },
 )
 
@@ -90,16 +90,16 @@ class PortfolioCRUD(Resource):
     def put(self):
         """Update portfolio list row ordering"""
 
-        jsonArray = marshal(
+        json_array = marshal(
             request.json, portfolio_reorder_request
         )  # array of json objects
 
         # return error if any order is non-unique
-        orderList = [json["order"] for json in jsonArray]
+        orderList = [json["order"] for json in json_array]
         if len(orderList) > len(set(orderList)):
             return {"message": "Failed: non-unique order numbers were provided"}, 409
 
-        if util.reorder_portfolio_list(jsonArray) == Status.SUCCESS:
+        if util.reorder_portfolio_list(json_array) == Status.SUCCESS:
             return {"message": "portfolio list successfully reordered"}, 200
 
         return {"message": "portfolio list could not be reordered"}, 500
@@ -110,7 +110,6 @@ class PortfolioCRUD(Resource):
     @login_required
     @api.expect(portfolio_add_request)
     @api.response(200, "Successfully created new portfolio")
-    @api.response(404, "User not found")
     def post(self):
         """Create a new portfolio"""
 
@@ -142,7 +141,6 @@ class PortfolioCRUD(Resource):
     @login_required
     @api.expect(portfolio_rename_request)
     @api.response(200, "Successfully updated portfolio name")
-    @api.response(404, "Portfolio not found")
     def put(self, portfolioId):
         """Rename an existing portfolio"""
 
@@ -157,7 +155,6 @@ class PortfolioCRUD(Resource):
 
     @login_required
     @api.response(200, "Successfully deleted portfolio")
-    @api.response(404, "Portfolio not found")
     def delete(self, portfolioId):
         """Delete an existing portfolio"""
 
