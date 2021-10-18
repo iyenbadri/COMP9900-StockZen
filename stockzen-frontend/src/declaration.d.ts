@@ -53,4 +53,7 @@ interface StockListResponse {
     gain: number;
     percGain: number;
     value: number;
+    order: number;
+    prediction: number;
+    confidence: number;
 }
