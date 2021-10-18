@@ -1,6 +1,7 @@
 import os
 from typing import List, Optional, TypeVar, Union
-
+import numpy as np
+import pandas as pd
 from app import db
 from app.models.schema import LotBought, LotSold, Portfolio, Stock, StockPage, User
 from flask_login import current_user
@@ -108,3 +109,14 @@ def query_user(email: str) -> Optional[User]:
         return user
     except Exception as e:
         debug_exception(e)
+
+
+def symbol(conn):
+    file = "symbol.csv"
+    symbol = pd.read_csv(file)
+    symbol = symbol.reset_index()
+    symbol = symbol.drop("index", 1)
+    symbol["id"] = np.nan
+    symbols = symbol[["id", "code", "stock_name"]]
+    symbols.to_sql("stock_pages", conn, if_exists="append", index=False)
+    conn.commit()
