@@ -14,7 +14,11 @@ api = Namespace("search", description="Stock search operations")
 
 search_response = api.model(
     "Response: Filtered list of stocks that a user is searching for",
-    {},
+    {
+        "id": fields.Integer(required=True, description="stock page id"),
+        "code": fields.String(required=True, description="stock symbol/code"),
+        "stock_name": fields.String(required=True, description="stock name"),
+    },
 )
 
 # ==============================================================================

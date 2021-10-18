@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.models.schema import Portfolio, Stock, User
+from app.models.schema import Portfolio, Stock, StockPage, User
 from app.utils.enums import Status
 from flask_login import current_user
 
@@ -147,6 +147,21 @@ def delete_stock(stock_id: int) -> Status:
 
 
 # ==============================================================================
+# Stock Page Utils
+# ==============================================================================
+
+# TODO: rudimentary function for db population, needs updating
+def add_stock_page(code: str, stock_name: str) -> Status:
+    """Add a stock page to the database, return success status"""
+    new_stock_page = StockPage(code=code, stock_name=stock_name)
+    try:
+        db.insert_item(new_stock_page)
+        return Status.SUCCESS
+    except:
+        return Status.FAIL
+
+
+# ==============================================================================
 # Lot Utils
 # ==============================================================================
 # TODO
@@ -160,11 +175,6 @@ def search_stock(stock_query: str) -> Status:
     """Search for stocks by similar name/code, return success status"""
     try:
         stock_list = db.search_query(stock_query)
-        print(stock_list)
-        # stock_list = [
-        #     {"id": stock.id, "code": stock.code, "stock_name": stock.stock_name}
-        #     for stock in stock_list
-        # ]
         return stock_list
     except:
         return Status.FAIL

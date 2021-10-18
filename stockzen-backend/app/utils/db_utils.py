@@ -7,6 +7,7 @@ from config import SEARCH_LIMIT
 from flask_login import current_user
 from sqlalchemy import func, or_
 from sqlalchemy.orm import load_only
+from sqlalchemy.sql.operators import collate
 
 DatabaseObj = TypeVar(
     "DatabaseObj", Portfolio, Stock, User, LotBought, LotSold, StockPage
@@ -120,11 +121,8 @@ def query_user(email: str) -> Optional[User]:
 def search_query(search_string: str):
     """Query for stocks by name/code, returns list of query results or None."""
     try:
-        search_cols = [
-            "id",
-            "code",
-            "stock_name",
-        ]  # defer loading of all irrelevant columns
+        # defer loading of all irrelevant columns
+        search_cols = ["id", "code", "stock_name"]
 
         results_list = (
             StockPage.query.options(load_only(*search_cols))
@@ -134,8 +132,12 @@ def search_query(search_string: str):
                     StockPage.stock_name.ilike(f"{search_string}%"),
                 )
             )
-            .order_by(StockPage.code.asc(), StockPage.stock_name.asc())
-            .limit(SEARCH_LIMIT)
+            .order_by(
+                # case-insensitive ascending order
+                collate(StockPage.code, "NOCASE").asc(),
+                collate(StockPage.stock_name, "NOCASE").asc(),
+            )
+            .limit(SEARCH_LIMIT)  # configurable in config.py
             .all()
         )
         return results_list
