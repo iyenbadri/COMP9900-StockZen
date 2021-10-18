@@ -1,37 +1,44 @@
 import app.utils.crud_utils as util
-from app.utils import db_utils as db
 from app.utils.enums import Status
 from flask import request
-from flask_login import current_user
 from flask_login.utils import login_required
-from flask_restx import Namespace, Resource, fields, marshal
+from flask_restx import Namespace, Resource, fields
 
 api = Namespace("search", description="Stock search operations")
 
+# ==============================================================================
+# API Models
+# :param attribute is how the db returns a field (so only applies for responses!)
+#   used to convert to the the frontend representation, i.e. camelCase
+# ==============================================================================
+
+search_response = api.model(
+    "Response: Filtered list of stocks that a user is searching for",
+    {},
+)
 
 # ==============================================================================
 # API Routes/Endpoint for Stock Search
 # ==============================================================================
-search_request = api.model(
-    "Request: String  that represents code or name of stock",
-    {
-        "stockquery": fields.String(required=True, description="new stock name"),
-    },
-)
 
-@api.route("/<stockquery>")
+
+@api.route("")
 class StockpageCRUD(Resource):
     @login_required
-    # @api.expect(search_request)
-    # @api.marshal_list_with(stock_list_response)
+    @api.doc(params={"query": "stock query string"})
+    @api.marshal_list_with(search_response)
     @api.response(200, "Successfully retrieved list of stocks")
     @api.response(404, "No results were found")
-    def get(self, stockquery):
-        """List of related stocks Limit(30)"""
-        stock_list = util.search_stock(stockquery)
-        if stock_list == Status.FAIL:
-            return {"message":"Search could not be completed"},500
-        if stock_list == []:
-            return stock_list,404
-        return stock_list,200
+    def get(self):
+        """Stock search results"""
 
+        # We get the query string i.e. ?query=<stock_query>
+        stock_query = request.args.get("query")
+
+        stock_list = util.search_stock(stock_query)
+
+        if stock_list == Status.FAIL:
+            return {"message": "Search could not be completed"}, 500
+        if stock_list == []:
+            return stock_list, 404
+        return stock_list, 200

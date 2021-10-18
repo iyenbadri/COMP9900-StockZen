@@ -146,15 +146,25 @@ def delete_stock(stock_id: int) -> Status:
         return Status.FAIL
 
 
-def search_stock(stock_string: str) -> Status:
-    try:
-        stock_lst = db.query_stock_pages(stock_string)
-        stock_lst = [{"id":stock.id,"code":stock.code,"stock_name":stock.stock_name} for stock in stock_lst]
-        return stock_lst
-    except:
-        return Status.FAIL
-
-
 # ==============================================================================
 # Lot Utils
 # ==============================================================================
+# TODO
+
+# ==============================================================================
+# Search Utils
+# ==============================================================================
+
+
+def search_stock(stock_query: str) -> Status:
+    """Search for stocks by similar name/code, return success status"""
+    try:
+        stock_list = db.search_query(stock_query)
+        print(stock_list)
+        # stock_list = [
+        #     {"id": stock.id, "code": stock.code, "stock_name": stock.stock_name}
+        #     for stock in stock_list
+        # ]
+        return stock_list
+    except:
+        return Status.FAIL

@@ -3,8 +3,10 @@ from typing import List, Optional, TypeVar, Union
 
 from app import db
 from app.models.schema import LotBought, LotSold, Portfolio, Stock, StockPage, User
+from config import SEARCH_LIMIT
 from flask_login import current_user
-from sqlalchemy import asc, func, or_
+from sqlalchemy import func, or_
+from sqlalchemy.orm import load_only
 
 DatabaseObj = TypeVar(
     "DatabaseObj", Portfolio, Stock, User, LotBought, LotSold, StockPage
@@ -44,7 +46,7 @@ def query_item(table: DatabaseObj, item_id: int, **filters) -> Optional[Database
 
 
 def query_all(table: DatabaseObj, **filters: int) -> Optional[List[DatabaseObj]]:
-    """Query a database table using item parent, returns list of query items or None
+    """Query a database table using item parent, returns list of query items or None.
     **filters is of form **{col_type: id}; e.g. {"portfolio": 1}
     """
     try:
@@ -115,19 +117,27 @@ def query_user(email: str) -> Optional[User]:
 # ==============================================================================
 
 
-def query_stock_pages(search_string: str):
+def search_query(search_string: str):
+    """Query for stocks by name/code, returns list of query results or None."""
     try:
-        stocks = (
-            StockPage.query.filter(
+        search_cols = [
+            "id",
+            "code",
+            "stock_name",
+        ]  # defer loading of all irrelevant columns
+
+        results_list = (
+            StockPage.query.options(load_only(*search_cols))
+            .filter(
                 or_(
-                    StockPage.stock_name.ilike(search_string + "%"),
-                    StockPage.code.ilike(search_string + "%"),
+                    StockPage.code.ilike(f"{search_string}%"),
+                    StockPage.stock_name.ilike(f"{search_string}%"),
                 )
             )
             .order_by(StockPage.code.asc(), StockPage.stock_name.asc())
-            .limit(30)
+            .limit(SEARCH_LIMIT)
             .all()
         )
-        return stocks
+        return results_list
     except Exception as e:
         debug_exception(e)
