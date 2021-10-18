@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Mapping, Sequence, Union
 
 from app.models.schema import Portfolio, Stock, User
 from app.utils.enums import Status
@@ -61,6 +61,20 @@ def get_portfolio_list() -> Status:
         return Status.FAIL
 
 
+def reorder_portfolio_list(new_portfolio_orders: Sequence[Mapping[str, int]]) -> Status:
+    """Update portfolio list ordering on the database"""
+    try:
+        # loop through json dict list and update each row order
+        for portfolio in new_portfolio_orders:
+            portfolio_id = portfolio["id"]
+            order = portfolio["order"]
+            db.update_item_columns(Portfolio, portfolio_id, {"order": order})
+
+        return Status.SUCCESS
+    except:
+        return Status.FAIL
+
+
 def add_portfolio(portfolio_name: str) -> Status:
     """Add a portfolio to the database, return success status"""
     new_portfolio = Portfolio(
@@ -86,7 +100,7 @@ def fetch_portfolio(portfolio_id: int) -> Union[Portfolio, Status]:
 def update_portfolio_name(portfolio_id: int, new_name: str) -> Status:
     """Update existing portfolio name, return success status"""
     try:
-        db.update_item(Portfolio, portfolio_id, "portfolio_name", new_name)
+        db.update_item_columns(Portfolio, portfolio_id, {"portfolio_name": new_name})
         return Status.SUCCESS
     except:
         return Status.FAIL

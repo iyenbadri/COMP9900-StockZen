@@ -49,6 +49,11 @@ stock_list_response = api.model(
             description="percentage capital gain made by stock",
         ),
         "value": fields.Float(required=True, description="stock market value"),
+        "prediction": fields.Integer(
+            description="ML Classifier prediction on stock price"
+        ),
+        "confidence": fields.Float(description="Confidence of prediction"),
+        "order": fields.Integer(required=True, description="new stock order"),
     },
 )
 
@@ -68,6 +73,14 @@ stock_update_request = api.model(
     },
 )
 
+stock_reorder_request = api.model(
+    "Request: Reorder stocks rows",
+    {
+        "id": fields.Integer(required=True, description="stock id"),
+        "order": fields.Integer(required=True, description="new stock order"),
+    },
+)
+
 
 # ==============================================================================
 # API Routes/Endpoints
@@ -79,7 +92,6 @@ class StockCRUD(Resource):
     @login_required
     @api.marshal_list_with(stock_list_response)
     @api.response(200, "Successfully retrieved list")
-    @api.response(404, "User not found")
     def get(self, portfolioId):
         """List all stocks from a portfolio"""
 
@@ -122,7 +134,6 @@ class StockCRUD(Resource):
 
     @login_required
     @api.response(200, "Successfully deleted stock")
-    @api.response(404, "Stock not found")
     def delete(self, stockId):
         """Delete an existing stock row"""
 
