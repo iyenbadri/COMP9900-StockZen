@@ -380,7 +380,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           <div className={styles.lotDelete}></div>
         </div>
 
-        <hr style={{ marginBottom: '10px', marginTop: '0' }} />
+        <hr style={{ marginBottom: '5px', marginTop: '5px' }} />
 
         {lotsBought.map((lot) => (
           <div key={`lot-${lot.lotId}`} className={styles.lotRow}>
@@ -398,7 +398,8 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
               {numberFormatter.format(lot.units * priceChange)}
             </div>
             <div className={styles.lotDelete}>
-              <button
+              <Button
+                variant='transparent'
                 className={`p-0 ${styles.deleteButton}`}
                 onClick={() => {
                   setDeletingLotType(LotType.Bought);
@@ -407,12 +408,12 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 }}
               >
                 <img src={crossIcon} alt='cross' />
-              </button>
+              </Button>
             </div>
           </div>
         ))}
 
-        <hr style={{ marginBottom: '10px', marginTop: '0' }} />
+        <hr style={{ marginBottom: '5px', marginTop: '5px' }} />
 
         <div className={styles.lotRow}>
           <div className={styles.lotTradeDate}>TOTAL</div>
@@ -457,7 +458,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           <div className={styles.lotDelete}></div>
         </div>
 
-        <hr style={{ marginBottom: '10px', marginTop: '0' }} />
+        <hr style={{ marginBottom: '5px', marginTop: '5px' }} />
 
         {lotsSold.map((lot) => (
           <div key={`lot-${lot.lotId}`} className={styles.lotRow}>
@@ -477,7 +478,8 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
               )}
             </div>
             <div className={styles.lotDelete}>
-              <button
+              <Button
+                variant='transparent'
                 className={`p-0 ${styles.deleteButton}`}
                 onClick={() => {
                   setDeletingLotType(LotType.Sold);
@@ -486,12 +488,12 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 }}
               >
                 <img src={crossIcon} alt='cross' />
-              </button>
+              </Button>
             </div>
           </div>
         ))}
 
-        <hr style={{ marginBottom: '10px', marginTop: '0' }} />
+        <hr style={{ marginBottom: '5px', marginTop: '5px' }} />
 
         <div className={styles.lotRow}>
           <div className={styles.lotTradeDate}>TOTAL</div>

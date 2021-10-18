@@ -43,6 +43,8 @@
   justify-content: space-around;
   font-size: 0.9em;
   min-height: 30px;
+
+  align-items: center;
 }
 
 .lotTradeDate {
@@ -80,4 +82,17 @@
 
 .lotDelete {
   flex-basis: 40px;
+}
+
+.deleteButton {
+  min-width: 0;
+  visibility: hidden;
+}
+
+.lotRow:hover .deleteButton {
+  visibility: visible;
+}
+
+.lotRow:hover .lotTradeDate {
+  text-decoration: underline;
 }
