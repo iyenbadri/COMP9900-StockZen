@@ -18,6 +18,7 @@ import { useParams } from 'react-router-dom';
 import styles from './PortfolioPage.module.css';
 import PortfolioPageRow from './PortfolioPageRow';
 import PortfolioPageSummary from './PortfolioPageSummary';
+import stocksListing from '../Search/listing.json';
 
 interface RouteRarams {
   portfolioId?: string | undefined;
@@ -89,22 +90,26 @@ const PortfolioPage = () => {
 
   const mapStockList = useCallback(
     (data: StockListResponse[]): IStock[] => {
-      return data.map((stock) => ({
-        stockId: stock.id,
-        draggableId: `stock-${stock.id}`,
-        ordering: stock.order ?? Math.random(), // TODO: map the backend data
-        symbol: stock.code ?? Math.random().toString(),
-        name: stock.stockName ?? Math.random().toString(),
-        price: stock.price ?? Math.random() * 10000 - 5000,
-        change: stock.change ?? Math.random() * 10000 - 5000,
-        changePercent: stock.percChange ?? Math.random() * 10000 - 5000,
-        averagePrice: stock.avgPrice ?? Math.random() * 10000 - 5000,
-        profit: stock.gain ?? Math.random() * 10000 - 5000,
-        profitPercent: stock.percGain ?? Math.random() * 10000 - 5000,
-        value: stock.value ?? Math.random() * 10000 - 5000,
-        prediction: stock.prediction ?? Math.random() * 200 - 100,
-        confidence: stock.confidence ?? Math.random() * 200 - 100,
-      }));
+      return data.map((stock) => {
+        const randomIndex = Math.round(Math.random() * 10000);
+        const symbol = stocksListing[randomIndex];
+        return {
+          stockId: stock.id,
+          draggableId: `stock-${stock.id}`,
+          ordering: stock.order ?? Math.random(), // TODO: map the backend data
+          symbol: stock.code ?? symbol.symbol,
+          name: stock.stockName ?? symbol.description,
+          price: stock.price ?? Math.random() * 2000,
+          change: stock.change ?? Math.random() * 500 - 200,
+          changePercent: stock.percChange ?? Math.random() * 300 - 150,
+          averagePrice: stock.avgPrice ?? Math.random() * 100 - 50,
+          profit: stock.gain ?? Math.random() * 10000 - 5000,
+          profitPercent: stock.percGain ?? Math.random() * 10000 - 5000,
+          value: stock.value ?? Math.random() * 10000,
+          prediction: stock.prediction ?? Math.random() * 200 - 100,
+          confidence: stock.confidence ?? Math.random() * 200 - 100,
+        };
+      });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []

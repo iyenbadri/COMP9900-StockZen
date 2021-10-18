@@ -4,6 +4,8 @@ import React, { FC, useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Draggable } from 'react-beautiful-dnd';
 import styles from './PortfolioPage.module.css';
+import PortfolioPageAlert from './PortfolioPage-Alert';
+import PortfolioPageLots from './PortfolioPage-Lots';
 
 interface PortfolioPageRowProp {
   readonly stock: IStock;
@@ -55,16 +57,19 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
         <div ref={provided.innerRef} {...provided.draggableProps}>
           <div
             className={`${styles.stockWrapper} ${
-              showPanel ? styles.showPanel : styles.hidePanel
+              showPanel ? styles.panelVisible : styles.panelHidden
             }`}
           >
-            <div
-              className={styles.tableRow}
-              onClick={() => {
-                setShowPanel(!showPanel);
-              }}
-            >
-              <div className={styles.rowStockInfo}>
+            <div className={styles.tableRow}>
+              <div
+                className={styles.rowStockInfo}
+                onClick={() => {
+                  setContentHeight(
+                    (height) => ref.current?.scrollHeight ?? height
+                  );
+                  setShowPanel(!showPanel);
+                }}
+              >
                 <span className={styles.rowHandle}>
                   <img
                     src={handleIcon}
@@ -80,9 +85,13 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                     {stock.symbol}
                   </Link>
                 </span>
-                <span className={`${styles.rowName} d-none d-xxl-block`}>
-                  {stock.name}
-                </span>
+                <div className={`${styles.rowName} d-none d-xxl-block`}>
+                  <div
+                    style={{ textOverflow: 'ellipsis', overflowX: 'hidden' }}
+                  >
+                    {stock.name}
+                  </div>
+                </div>
                 <span className={styles.rowPrice}>
                   {numberFormatter.format(stock.price)}
                 </span>
@@ -140,49 +149,12 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
               >
                 <hr className={styles.panelSeparator} />
                 <div className={styles.panelContent}>
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab
-                  laudantium perspiciatis atque excepturi, totam quis cupiditate
-                  optio? Itaque, voluptatum, quasi nemo totam numquam labore
-                  doloribus sequi iusto dicta facere explicabo? Lorem ipsum
-                  dolor sit, amet consectetur adipisicing elit. Ab laudantium
-                  perspiciatis atque excepturi, totam quis cupiditate optio?
-                  Itaque, voluptatum, quasi nemo totam numquam labore doloribus
-                  sequi iusto dicta facere explicabo? Lorem ipsum dolor sit,
-                  amet consectetur adipisicing elit. Ab laudantium perspiciatis
-                  atque excepturi, totam quis cupiditate optio? Itaque,
-                  voluptatum, quasi nemo totam numquam labore doloribus sequi
-                  iusto dicta facere explicabo? Lorem ipsum dolor sit, amet
-                  consectetur adipisicing elit. Ab laudantium perspiciatis atque
-                  excepturi, totam quis cupiditate optio? Itaque, voluptatum,
-                  quasi nemo totam numquam labore doloribus sequi iusto dicta
-                  facere explicabo? Lorem ipsum dolor sit, amet consectetur
-                  adipisicing elit. Ab laudantium perspiciatis atque excepturi,
-                  totam quis cupiditate optio? Itaque, voluptatum, quasi nemo
-                  totam numquam labore doloribus sequi iusto dicta facere
-                  explicabo? Lorem ipsum dolor sit, amet consectetur adipisicing
-                  elit. Ab laudantium perspiciatis atque excepturi, totam quis
-                  cupiditate optio? Itaque, voluptatum, quasi nemo totam numquam
-                  labore doloribus sequi iusto dicta facere explicabo? Lorem
-                  ipsum dolor sit, amet consectetur adipisicing elit. Ab
-                  laudantium perspiciatis atque excepturi, totam quis cupiditate
-                  optio? Itaque, voluptatum, quasi nemo totam numquam labore
-                  doloribus sequi iusto dicta facere explicabo? Lorem ipsum
-                  dolor sit, amet consectetur adipisicing elit. Ab laudantium
-                  perspiciatis atque excepturi, totam quis cupiditate optio?
-                  Itaque, voluptatum, quasi nemo totam numquam labore doloribus
-                  sequi iusto dicta facere explicabo? Lorem ipsum dolor sit,
-                  amet consectetur adipisicing elit. Ab laudantium perspiciatis
-                  atque excepturi, totam quis cupiditate optio? Itaque,
-                  voluptatum, quasi nemo totam numquam labore doloribus sequi
-                  iusto dicta facere explicabo? Lorem ipsum dolor sit, amet
-                  consectetur adipisicing elit. Ab laudantium perspiciatis atque
-                  excepturi, totam quis cupiditate optio? Itaque, voluptatum,
-                  quasi nemo totam numquam labore doloribus sequi iusto dicta
-                  facere explicabo? Lorem ipsum dolor sit, amet consectetur
-                  adipisicing elit. Ab laudantium perspiciatis atque excepturi,
-                  totam quis cupiditate optio? Itaque, voluptatum, quasi nemo
-                  totam numquam labore doloribus sequi iusto dicta facere
-                  explicabo?
+                  <PortfolioPageAlert></PortfolioPageAlert>
+                  <hr className={styles.panelSeparator} />
+                  <PortfolioPageLots
+                    currentPrice={stock.price}
+                    priceChange={stock.change}
+                  ></PortfolioPageLots>
                 </div>
               </div>
             </div>

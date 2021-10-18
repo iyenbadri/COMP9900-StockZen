@@ -77,10 +77,11 @@
   padding: 5px 10px 5px 5px;
   align-items: center;
 
-  transition: border-radius 0.5s;
+  transition: border-radius 0.2s;
+  cursor: pointer;
 }
 
-.hidePanel .rowStockInfo {
+.panelHidden .rowStockInfo {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
@@ -98,7 +99,7 @@
 }
 
 .rowCode {
-  flex-grow: 1;
+  flex-grow: 0.2;
   flex-shrink: 0;
   flex-basis: 70px;
   text-align: center;
@@ -109,12 +110,16 @@
 }
 
 .rowName {
-  flex-grow: 10;
+  flex-grow: 0.2;
   flex-basis: 100px;
   overflow-x: hidden;
   text-overflow: ellipsis;
   padding-left: 10px;
   white-space: nowrap;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  word-wrap: break-word;
 }
 
 .rowStockLink {
@@ -142,7 +147,7 @@
 } */
 
 .panelContainer {
-  transition: 0.5s;
+  transition: 0.2s;
   overflow: hidden;
 }
 
@@ -151,34 +156,35 @@
 }
 
 .panelContent {
-  padding: 20px;
+  margin: 10px 0px;
 }
 
 .rowPrice {
   text-align: right;
   flex-basis: 80px;
   flex-shrink: 0;
+  flex-grow: 0.1;
 }
 
 .rowChange {
   text-align: right;
   flex-basis: 80px;
   flex-shrink: 0;
-  flex-grow: 0.2;
+  flex-grow: 0.1;
 }
 
 .rowAveragePrice {
   text-align: right;
   flex-basis: 90px;
   flex-shrink: 0;
-  flex-grow: 0.2;
+  flex-grow: 0.1;
 }
 
 .rowProfit {
   text-align: right;
   flex-basis: 65px;
   flex-shrink: 0;
-  flex-grow: 0.2;
+  flex-grow: 0.1;
 }
 
 .rowProfit {
@@ -187,14 +193,14 @@
   display: inline-block;
   text-align: right;
   flex-shrink: 0;
-  flex-grow: 0.2;
+  flex-grow: 0.1;
 }
 
 .rowValue {
   text-align: right;
   flex-basis: 109px;
   flex-shrink: 0;
-  flex-grow: 0.2;
+  flex-grow: 0.1;
 }
 
 .rowPredict {
@@ -202,7 +208,7 @@
   flex-basis: 88px;
   text-align: right;
   flex-shrink: 0;
-  flex-grow: 0.2;
+  flex-grow: 0.1;
 }
 
 .rowDelete {
@@ -238,7 +244,7 @@
     outline: 1px solid var(--zen-4);
   }
 
-  .notDragging .tableRow:hover .rowStockInfo {
+  .notDragging .panelHidden .tableRow:hover .rowStockInfo {
     background-color: var(--zen-5);
   }
 
