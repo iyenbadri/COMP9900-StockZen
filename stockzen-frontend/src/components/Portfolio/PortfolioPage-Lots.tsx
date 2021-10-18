@@ -238,6 +238,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 <Form.Label>Units</Form.Label>
                 <Form.Control
                   type='number'
+                  min='0'
                   {...register('units', {
                     required: true,
                   })}
@@ -302,6 +303,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 <Form.Label>Units</Form.Label>
                 <Form.Control
                   type='number'
+                  min="0"
                   {...register('units', {
                     required: true,
                   })}
