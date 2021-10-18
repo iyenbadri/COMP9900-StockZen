@@ -1,7 +1,7 @@
 import plusCircle from 'assets/icon-outlines/outline-plus-circle.svg';
 import plusIcon from 'assets/icon-outlines/outline-plus-small.svg';
 import axios, { AxiosResponse } from 'axios';
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { AsyncTypeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -9,23 +9,40 @@ import { Link } from 'react-router-dom';
 import styles from './SearchWidget.module.css';
 
 interface Prop {
+  portfolioId: string;
   addStock: (symbol: string, stockPageId: number) => void;
 }
 
 const SearchWidget: FC<Prop> = (prop) => {
-  const mapOptions = (x: SearchResponse): TypeaheadOption => ({
-    stockId: x.id,
-    symbol: x.code,
-    description: x.stock_name,
-    market: Math.random().toString(),
-    searchLabel: `${x.code}` + (x.stock_name ? ` : ${x.stock_name}` : ''),
-  });
+  const { portfolioId } = prop;
+
+  const mapOptions = useCallback(
+    (x: SearchResponse): TypeaheadOption => ({
+      stockPageId: x.id,
+      code: x.code,
+      description: x.stock_name,
+      market: Math.random().toString(),
+      searchLabel: `${x.code}` + (x.stock_name ? ` : ${x.stock_name}` : ''),
+    }),
+    []
+  );
 
   const [showSearchInput, setShowSearchInput] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [addedSymbols, setAddedSymbols] = useState<string[]>([]);
+  const [addedStockPageIds, setAddedStockIds] = useState<number[]>([]);
 
-  // TODO : Use API to update the addedSymbols
+  useEffect(() => {
+    axios
+      .get(`/stock/list/${portfolioId}`)
+      .then((response: AxiosResponse<StockListResponse[]>) => {
+        setAddedStockIds((added) => {
+          return [
+            ...added,
+            ...response.data.map((stock) => stock.stock_page_id),
+          ];
+        });
+      });
+  }, [portfolioId, setAddedStockIds]);
 
   //const [query, setQuery] = useState<string>('');
   const [options, setOptions] = useState<TypeaheadOption[]>([]);
@@ -85,18 +102,25 @@ const SearchWidget: FC<Prop> = (prop) => {
           renderMenu={(results, menuProps) => (
             <Menu {...menuProps} className={styles.options}>
               {results.map((option, index) => (
-                <MenuItem key={option.stockId} option={option} position={index}>
+                <MenuItem
+                  key={option.stockPageId}
+                  option={option}
+                  position={index}
+                >
                   <div className={styles.searchOption}>
                     <span className={styles.optionAdd}>
-                      {!addedSymbols.includes(option.symbol) && (
+                      {!addedStockPageIds.includes(option.stockPageId) && (
                         <Button
                           variant='transparent'
                           onClick={(ev) => {
                             ev.preventDefault();
                             ev.stopPropagation();
 
-                            prop.addStock(option.symbol, option.stockId);
-                            setAddedSymbols([...addedSymbols, option.symbol]);
+                            prop.addStock(option.code, option.stockPageId);
+                            setAddedStockIds([
+                              ...addedStockPageIds,
+                              option.stockPageId,
+                            ]);
                           }}
                         >
                           <img src={plusIcon} alt='add' />
@@ -105,9 +129,7 @@ const SearchWidget: FC<Prop> = (prop) => {
                     </span>
                     <span className={styles.optionSymbol}>
                       {/* TODO: Will fix the nested `a` tag bug later. Have to find a way to fix it first */}
-                      <Link to={'/stock/' + option.symbol}>
-                        {option.symbol}
-                      </Link>
+                      <Link to={'/stock/' + option.code}>{option.code}</Link>
                     </span>
                     <span className={styles.optionDescription}>
                       <div>{option.description}</div>
@@ -125,8 +147,8 @@ const SearchWidget: FC<Prop> = (prop) => {
 };
 
 interface TypeaheadOption {
-  stockId: number;
-  symbol: string;
+  stockPageId: number;
+  code: string;
   description: string;
   market: string;
   searchLabel: string;

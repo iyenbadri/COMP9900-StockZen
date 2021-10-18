@@ -15,3 +15,20 @@ interface TableOrdering<T extends string> {
     column: T | '',
     ordering: Ordering
 }
+
+
+
+interface StockListResponse {
+    id: number;
+    code: string;
+    stock_page_id: number;
+    stockName: string;
+    price: number;
+    change: number;
+    percChange: number;
+    avgPrice: number;
+    unitsHeld: number;
+    gain: number;
+    percGain: number;
+    value: number;
+}

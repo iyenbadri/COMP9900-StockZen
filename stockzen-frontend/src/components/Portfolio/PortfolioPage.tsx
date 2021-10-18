@@ -10,21 +10,7 @@ import styles from './PortfolioPage.module.css';
 import PortfolioPageSummary from './PortfolioPageSummary';
 
 interface RouteRarams {
-  portfolioId?: string | undefined;
-}
-
-interface StockListResponse {
-  id: number;
-  code: string;
-  stockName: string;
-  price: number;
-  change: number;
-  percChange: number;
-  avgPrice: number;
-  unitsHeld: number;
-  gain: number;
-  percGain: number;
-  value: number;
+  portfolioId: string;
 }
 
 interface StockData {
@@ -101,7 +87,10 @@ const PortfolioPage = () => {
       <hr />
 
       <div className={styles.tableToolbar}>
-        <SearchWidget addStock={handleAddStock}></SearchWidget>
+        <SearchWidget
+          portfolioId={portfolioId}
+          addStock={handleAddStock}
+        ></SearchWidget>
         <Button
           variant='light'
           className='ms-1 text-muted d-flex align-items-center'
