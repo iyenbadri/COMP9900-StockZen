@@ -1,9 +1,6 @@
-import { TopPerformerContext } from 'contexts/TopPerformerContext';
-import moment from 'moment';
-import React, { FC, useContext } from 'react';
-import { Link } from 'react-router-dom';
-import styles from './PortfolioPage-Panel.module.css';
+import React, { FC } from 'react';
 import Form from 'react-bootstrap/Form';
+import styles from './PortfolioPage-Panel.module.css';
 
 // interface IProps {
 //   firstName: string;

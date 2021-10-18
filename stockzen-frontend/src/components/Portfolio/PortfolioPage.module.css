@@ -3,7 +3,7 @@
 .tableToolbar {
   display: flex;
   align-items: flex-end;
-  justify-content: end;
+  justify-content: flex-end;
   margin-bottom: 10px;
 }
 

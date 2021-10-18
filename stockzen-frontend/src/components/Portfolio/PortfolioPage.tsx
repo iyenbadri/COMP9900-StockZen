@@ -102,7 +102,7 @@ const PortfolioPage = () => {
           price: stock.price ?? Math.random() * 2000,
           change: stock.change ?? Math.random() * 500 - 200,
           changePercent: stock.percChange ?? Math.random() * 300 - 150,
-          averagePrice: stock.avgPrice ?? Math.random() * 100 - 50,
+          averagePrice: stock.avgPrice ?? Math.random() * 100,
           profit: stock.gain ?? Math.random() * 10000 - 5000,
           profitPercent: stock.percGain ?? Math.random() * 10000 - 5000,
           value: stock.value ?? Math.random() * 10000,
@@ -147,7 +147,7 @@ const PortfolioPage = () => {
     axios.get(`/stock/list/${portfolioId}`).then((response) => {
       setStocks(mapStockList(response.data), tableOrdering);
     });
-  }, [portfolioId, mapStockList, setStocks]);
+  }, [portfolioId, mapStockList, setStocks, tableOrdering]);
 
   useEffect(
     () => {

@@ -152,8 +152,12 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                   <PortfolioPageAlert></PortfolioPageAlert>
                   <hr className={styles.panelSeparator} />
                   <PortfolioPageLots
+                    stockId={stock.stockId}
                     currentPrice={stock.price}
                     priceChange={stock.change}
+                    onSizeChanged={() => {
+                      setContentHeight(ref.current?.scrollHeight ?? 0);
+                    }}
                   ></PortfolioPageLots>
                 </div>
               </div>

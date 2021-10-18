@@ -1,77 +1,56 @@
-import { TopPerformerContext } from 'contexts/TopPerformerContext';
-import moment from 'moment';
-import React, {
-  FC,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-  useMemo,
-} from 'react';
-import { Link } from 'react-router-dom';
-import styles from './PortfolioPage-Panel.module.css';
-import Button from 'react-bootstrap/Button';
+import crossIcon from 'assets/icon-outlines/outline-cross.svg';
 import plusCircle from 'assets/icon-outlines/outline-plus-circle.svg';
+import { LotType } from 'enums';
+import moment from 'moment';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
+import { useForm } from 'react-hook-form';
+import styles from './PortfolioPage-Panel.module.css';
 
-// interface IProps {
-//   firstName: string;
-//   lastName: string;
-// }
-
-interface ILot {
-  units: number;
-  pricePerUnit: number;
-}
-
-interface ILotTotal {
-  units: number;
-  pricePerUnit: number;
-  price: number;
-}
-
-interface ILotBought extends ILot {
-  lotId: number;
-  tradeDate: string;
-  units: number;
-  pricePerUnit: number;
-}
-
-interface ILotSold extends ILot {
-  lotId: number;
-  tradeDate: string;
-  units: number;
-  pricePerUnit: number;
-}
-
-interface IPortfolioPageLotPro {
-  currentPrice: number;
-  priceChange: number;
-}
-
-const PortfolioPageLots: FC<IPortfolioPageLotPro> = (props) => {
-  const [lotsBought, _setLotsBought] = useState<ILotBought[]>([]);
-  const [boughtTotal, _setBoughtTotal] = useState<ILotTotal>({
-    units: 0,
-    pricePerUnit: 0,
-    price: 0,
-  });
-
-  const [lotsSold, _setLotsSold] = useState<ILotSold[]>([]);
-  const [soldTotal, _setSoldTotal] = useState<ILotTotal>({
-    units: 0,
-    pricePerUnit: 0,
-    price: 0,
-  });
-
+const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
   // const [currentPrice, setCurrentPrice] = useState(12);
   // const [priceChange, setPriceChange] = useState(1.1);
-  const { currentPrice, priceChange } = props;
+  const { stockId, currentPrice, priceChange, onSizeChanged } = props;
 
-  const numberFormatter = new Intl.NumberFormat('en-US', {
-    style: 'decimal',
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 2,
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletingLotId, setDeletingLotId] = useState<number>();
+  const [deletingLotType, setDeletingLotType] = useState<LotType>(
+    LotType.Bought
+  );
+  const [showAddLotBoughtModal, setShowAddLotBoughtModal] = useState(false);
+  const [showAddLotSoldModal, setShowAddLotSoldModal] = useState(false);
+
+  const [lotsBought, setLotsBought] = useState<ILotBought[]>([]);
+  const [boughtTotal, setBoughtTotal] = useState<ILotTotal>({
+    units: 0,
+    pricePerUnit: 0,
+    price: 0,
   });
+
+  const [lotsSold, setLotsSold] = useState<ILotSold[]>([]);
+  const [soldTotal, setSoldTotal] = useState<ILotTotal>({
+    units: 0,
+    pricePerUnit: 0,
+    price: 0,
+  });
+
+  const numberFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        style: 'decimal',
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+      }),
+    []
+  );
 
   const sumLot = useCallback((lots: ILot[]): ILotTotal => {
     const sum = lots.reduce(
@@ -89,17 +68,15 @@ const PortfolioPageLots: FC<IPortfolioPageLotPro> = (props) => {
     };
   }, []);
 
-  const setLotsBought = useCallback((lots: ILotBought[]) => {
-    _setLotsBought(lots);
+  useEffect(() => {
+    setBoughtTotal(sumLot(lotsBought));
+    onSizeChanged();
+  }, [lotsBought, setBoughtTotal, sumLot, onSizeChanged]);
 
-    _setBoughtTotal(sumLot(lots));
-  }, []);
-
-  const setLotsSold = useCallback((lots: ILotSold[]) => {
-    _setLotsSold(lots);
-
-    _setSoldTotal(sumLot(lots));
-  }, []);
+  useEffect(() => {
+    setSoldTotal(sumLot(lotsSold));
+    onSizeChanged();
+  }, [lotsSold, setSoldTotal, sumLot, onSizeChanged]);
 
   useEffect(() => {
     setLotsBought([
@@ -155,14 +132,238 @@ const PortfolioPageLots: FC<IPortfolioPageLotPro> = (props) => {
         pricePerUnit: Math.random() * 100,
       },
     ]);
-  }, []);
+  }, [setLotsBought, setLotsSold]);
+
+  const handleAddBoughtLot = async (data: any) => {
+    const payload = {
+      stockId: stockId,
+      tradeDate: moment(data.tradeDate).format('DD/MM/YYYY'),
+      units: parseFloat(data.units),
+      pricePerUnit: parseFloat(data.pricePerUnit),
+    };
+
+    // TODO: Wire up the API
+    const response = await Promise.resolve();
+
+    // TODO: Update the whole list
+    setLotsBought((lots: ILotBought[]) => {
+      return [...lots, { ...payload, lotId: Math.random() }];
+    });
+
+    setShowAddLotBoughtModal(false);
+  };
+
+  const handleAddSoldLot = async (data: any) => {
+    const payload = {
+      stockId: stockId,
+      tradeDate: moment(data.tradeDate).format('DD/MM/YYYY'),
+      units: parseFloat(data.units),
+      pricePerUnit: parseFloat(data.pricePerUnit),
+    };
+
+    // TODO: Wire up the API
+    const response = await Promise.resolve();
+
+    // TODO: Reload the whole list instead
+    setLotsSold((lots: ILotSold[]) => {
+      return [...lots, { ...payload, lotId: Math.random() }];
+    });
+
+    setShowAddLotSoldModal(false);
+  };
+
+  const handleDeleteLot = () => {
+    switch (deletingLotType) {
+      case LotType.Bought:
+        // TODO: Wire up the API
+        // axios.delete('/lot', {lotId: deletingLotId}).then(()=>{
+
+        // });
+
+        // TODO: Reload the whole list instead
+        setLotsBought((lots: ILotSold[]) => {
+          return lots.filter((x) => x.lotId !== deletingLotId);
+        });
+        break;
+      case LotType.Sold:
+        // TODO: Wire up the API
+        // axios.delete('/lot', {lotId: deletingLotId}).then(()=>{
+
+        // });
+
+        // TODO: Reload the whole list instead
+        setLotsSold((lots: ILotSold[]) => {
+          return lots.filter((x) => x.lotId !== deletingLotId);
+        });
+        break;
+    }
+    setShowDeleteModal(false);
+  };
 
   return (
     <>
+      {showAddLotBoughtModal && (
+        <Modal
+          show={showAddLotBoughtModal}
+          onHide={() => setShowAddLotBoughtModal(false)}
+          size='sm'
+        >
+          <Modal.Body>
+            <Form
+              autoComplete='off'
+              onSubmit={handleSubmit(handleAddBoughtLot)}
+            >
+              <h5>Add new lot:Bought</h5>
+
+              <Form.Group>
+                <Form.Label>Trade Date</Form.Label>
+                <Form.Control
+                  type='date'
+                  {...register('tradeDate', {
+                    required: true,
+                  })}
+                ></Form.Control>
+
+                <Form.Text className={styles.errorMessage}>
+                  {errors.tradeDate?.type === 'required' &&
+                    'Trade date is required'}
+                </Form.Text>
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Label>Units</Form.Label>
+                <Form.Control
+                  type='number'
+                  {...register('units', {
+                    required: true,
+                  })}
+                ></Form.Control>
+
+                <Form.Text className={styles.errorMessage}>
+                  {errors.units?.type === 'required' && 'Units is required'}
+                </Form.Text>
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Label>Price/unit</Form.Label>
+                <Form.Control
+                  type='number'
+                  {...register('pricePerUnit', {
+                    required: true,
+                  })}
+                ></Form.Control>
+
+                <Form.Text className={styles.errorMessage}>
+                  {errors.pricePerUnit?.type === 'required' &&
+                    'Price/unit is required'}
+                </Form.Text>
+              </Form.Group>
+
+              <div className='text-center mt-4'>
+                <Button type='submit' variant='zen-3'>
+                  OK
+                </Button>
+              </div>
+            </Form>
+          </Modal.Body>
+        </Modal>
+      )}
+
+      {showAddLotSoldModal && (
+        <Modal
+          show={showAddLotSoldModal}
+          onHide={() => setShowAddLotSoldModal(false)}
+          size='sm'
+        >
+          <Modal.Body>
+            <Form autoComplete='off' onSubmit={handleSubmit(handleAddSoldLot)}>
+              <h5>Add new lot:Sold</h5>
+
+              <Form.Group>
+                <Form.Label>Trade Date</Form.Label>
+                <Form.Control
+                  type='date'
+                  {...register('tradeDate', {
+                    required: true,
+                  })}
+                ></Form.Control>
+
+                <Form.Text className={styles.errorMessage}>
+                  {errors.tradeDate?.type === 'required' &&
+                    'Trade date is required'}
+                </Form.Text>
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Label>Units</Form.Label>
+                <Form.Control
+                  type='number'
+                  {...register('units', {
+                    required: true,
+                  })}
+                ></Form.Control>
+
+                <Form.Text className={styles.errorMessage}>
+                  {errors.units?.type === 'required' && 'Units is required'}
+                </Form.Text>
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Label>Price/unit</Form.Label>
+                <Form.Control
+                  type='number'
+                  {...register('pricePerUnit', {
+                    required: true,
+                  })}
+                ></Form.Control>
+
+                <Form.Text className={styles.errorMessage}>
+                  {errors.pricePerUnit?.type === 'required' &&
+                    'Price/unit is required'}
+                </Form.Text>
+              </Form.Group>
+
+              <div className='text-center mt-4'>
+                <Button type='submit' variant='zen-3'>
+                  OK
+                </Button>
+              </div>
+            </Form>
+          </Modal.Body>
+        </Modal>
+      )}
+
+      {showDeleteModal && (
+        <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Delete lot</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Do you want to this list?</Modal.Body>
+          <Modal.Footer>
+            <Button variant={'danger'} onClick={handleDeleteLot}>
+              Yes
+            </Button>
+            <Button
+              variant={'secondary'}
+              onClick={(ev) => setShowDeleteModal(false)}
+            >
+              No
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
+
       <div style={{ margin: '10px 20px' }}>
         <div className={styles.header}>
           <div className={styles.actionButtonContainer}>
-            <Button variant='transparent' size='sm' className='text-zen-2'>
+            <Button
+              variant='transparent'
+              size='sm'
+              className='text-zen-2'
+              onClick={() => {
+                setShowAddLotBoughtModal(true);
+              }}
+            >
               <img src={plusCircle} alt='add' />
               Add new
             </Button>
@@ -196,7 +397,18 @@ const PortfolioPageLots: FC<IPortfolioPageLotPro> = (props) => {
             <div className={styles.lotChange}>
               {numberFormatter.format(lot.units * priceChange)}
             </div>
-            <div className={styles.lotDelete}></div>
+            <div className={styles.lotDelete}>
+              <button
+                className={`p-0 ${styles.deleteButton}`}
+                onClick={() => {
+                  setDeletingLotType(LotType.Bought);
+                  setDeletingLotId(lot.lotId);
+                  setShowDeleteModal(true);
+                }}
+              >
+                <img src={crossIcon} alt='cross' />
+              </button>
+            </div>
           </div>
         ))}
 
@@ -223,7 +435,12 @@ const PortfolioPageLots: FC<IPortfolioPageLotPro> = (props) => {
       <div style={{ margin: '10px 20px' }}>
         <div className={styles.header}>
           <div className={styles.actionButtonContainer}>
-            <Button variant='transparent' size='sm' className='text-zen-2'>
+            <Button
+              variant='transparent'
+              size='sm'
+              className='text-zen-2'
+              onClick={() => setShowAddLotSoldModal(true)}
+            >
               <img src={plusCircle} alt='add' />
               Add new
             </Button>
@@ -259,7 +476,18 @@ const PortfolioPageLots: FC<IPortfolioPageLotPro> = (props) => {
                 lot.units * (lot.pricePerUnit - boughtTotal.pricePerUnit)
               )}
             </div>
-            <div className={styles.lotDelete}></div>
+            <div className={styles.lotDelete}>
+              <button
+                className={`p-0 ${styles.deleteButton}`}
+                onClick={() => {
+                  setDeletingLotType(LotType.Sold);
+                  setDeletingLotId(lot.lotId);
+                  setShowDeleteModal(true);
+                }}
+              >
+                <img src={crossIcon} alt='cross' />
+              </button>
+            </div>
           </div>
         ))}
 
@@ -287,5 +515,38 @@ const PortfolioPageLots: FC<IPortfolioPageLotPro> = (props) => {
     </>
   );
 };
+
+interface ILot {
+  units: number;
+  pricePerUnit: number;
+}
+
+interface ILotTotal {
+  units: number;
+  pricePerUnit: number;
+  price: number;
+}
+
+interface ILotBought extends ILot {
+  lotId: number;
+  tradeDate: string;
+  units: number;
+  pricePerUnit: number;
+}
+
+interface ILotSold extends ILot {
+  lotId: number;
+  tradeDate: string;
+  units: number;
+  pricePerUnit: number;
+}
+
+interface IPortfolioPageLotProp {
+  readonly stockId: number;
+  readonly currentPrice: number;
+  readonly priceChange: number;
+
+  readonly onSizeChanged: () => void;
+}
 
 export default PortfolioPageLots;
