@@ -1,36 +1,24 @@
 import plusCircle from 'assets/icon-outlines/outline-plus-circle.svg';
 import plusIcon from 'assets/icon-outlines/outline-plus-small.svg';
+import axios, { AxiosResponse } from 'axios';
 import React, { FC, useState } from 'react';
 import { AsyncTypeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { Link } from 'react-router-dom';
-import listings from './listing.json';
 import styles from './SearchWidget.module.css';
 
 interface Prop {
   addStock: (symbol: string, stockPageId: number) => void;
 }
 
-interface TypeaheadOption {
-  id: string;
-  symbol: string;
-  description: string;
-  market: string;
-  searchLabel: string;
-}
-
 const SearchWidget: FC<Prop> = (prop) => {
-  const mapOptions = (x: {
-    symbol: string;
-    description: string;
-    market: string;
-  }) => ({
-    id: x.symbol,
-    symbol: x.symbol,
-    description: x.description,
-    market: x.market,
-    searchLabel: `${x.symbol}: ${x.description}`,
+  const mapOptions = (x: SearchResponse): TypeaheadOption => ({
+    stockId: x.id,
+    symbol: x.code,
+    description: x.stock_name,
+    market: Math.random().toString(),
+    searchLabel: `${x.code}` + (x.stock_name ? ` : ${x.stock_name}` : ''),
   });
 
   const [showSearchInput, setShowSearchInput] = useState<boolean>(false);
@@ -40,9 +28,7 @@ const SearchWidget: FC<Prop> = (prop) => {
   // TODO : Use API to update the addedSymbols
 
   //const [query, setQuery] = useState<string>('');
-  const [options, setOptions] = useState<TypeaheadOption[]>(
-    listings.map(mapOptions)
-  );
+  const [options, setOptions] = useState<TypeaheadOption[]>([]);
 
   return (
     <>
@@ -83,20 +69,23 @@ const SearchWidget: FC<Prop> = (prop) => {
           onSearch={(query) => {
             query = query.toLowerCase();
             setIsLoading(true);
-            let options = listings
-              .filter(
-                (x) =>
-                  x.symbol.toLowerCase().indexOf(query) !== -1 ||
-                  x.description.toLowerCase().indexOf(query) !== -1
-              )
-              .map(mapOptions);
-            setOptions(options);
-            setIsLoading(false);
+
+            axios.get('/search?query=' + encodeURIComponent(query)).then(
+              (response: AxiosResponse<SearchResponse[]>) => {
+                let options = response.data.map(mapOptions);
+                setOptions(options);
+                setIsLoading(false);
+              },
+              () => {
+                setOptions([]);
+                setIsLoading(false);
+              }
+            );
           }}
           renderMenu={(results, menuProps) => (
             <Menu {...menuProps} className={styles.options}>
               {results.map((option, index) => (
-                <MenuItem key={option.id} option={option} position={index}>
+                <MenuItem key={option.stockId} option={option} position={index}>
                   <div className={styles.searchOption}>
                     <span className={styles.optionAdd}>
                       {!addedSymbols.includes(option.symbol) && (
@@ -106,8 +95,7 @@ const SearchWidget: FC<Prop> = (prop) => {
                             ev.preventDefault();
                             ev.stopPropagation();
 
-                            // TODO: Retrieve the stockPageId from backend.
-                            prop.addStock(option.symbol, 1);
+                            prop.addStock(option.symbol, option.stockId);
                             setAddedSymbols([...addedSymbols, option.symbol]);
                           }}
                         >
@@ -132,13 +120,22 @@ const SearchWidget: FC<Prop> = (prop) => {
           )}
         ></AsyncTypeahead>
       </Modal>
-
-      {/* <Form.Control
-        placeholder=''
-        onChange={(ev) => setSearchQuery(ev.target.value)}
-      ></Form.Control> */}
     </>
   );
 };
+
+interface TypeaheadOption {
+  stockId: number;
+  symbol: string;
+  description: string;
+  market: string;
+  searchLabel: string;
+}
+
+interface SearchResponse {
+  id: number;
+  code: string;
+  stock_name: string;
+}
 
 export default SearchWidget;
