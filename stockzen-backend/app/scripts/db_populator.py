@@ -85,34 +85,35 @@ def generate_dummy_stock_pages():
     Generates dummy stock page data
     """
 
+    # Read the file and parse it.
     with open(os.path.join(os.path.dirname(__file__), "listing.json")) as f:
         listing = json.load(f)
 
     for stock in listing:
         try:
+            # Check if code is already or not
             q = (
                 DB.session.query(StockPage)
                 .filter(StockPage.code == stock["symbol"])
                 .exists()
             )
-
             if DB.session.query(q).scalar():
                 continue
 
+            # Create and add it to database
             DB.session.add(
                 StockPage(code=stock["symbol"], stock_name=stock["description"])
             )
-            # if add_stock_page(code, stock_name) == Status.FAIL:
-            #     print("Could not add dummy stock page")
-            # else:
-            #     print("Dummy stock page added")
 
         except KeyboardInterrupt:
+            # Stop the loop if Ctrl+C is pressed
             break
         except Exception as ex:
             print(ex)
             DB.session.rollback()
+            break
 
+    # Commit to database
     DB.session.commit()
 
 
