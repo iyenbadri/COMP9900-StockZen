@@ -115,13 +115,13 @@ def query_user(email: str) -> Optional[User]:
 # ==============================================================================
 
 
-def query_stock_pages(name: str):
+def query_stock_pages(search_string: str):
     try:
         stocks = (
             StockPage.query.filter(
                 or_(
-                    StockPage.stock_name.like("%" + name + "%"),
-                    StockPage.code.like("%" + name + "%"),
+                    StockPage.stock_name.ilike(search_string + "%"),
+                    StockPage.code.ilike(search_string + "%"),
                 )
             )
             .order_by(StockPage.code.asc(), StockPage.stock_name.asc())
