@@ -11,7 +11,6 @@ interface IPortfolio {
     totalGainPercent: number | null;
 }
 
-
 interface IStock {
     ordering: number;
     stockId: number;
@@ -29,13 +28,10 @@ interface IStock {
     confidence: number;
 }
 
-
 interface TableOrdering<T extends string> {
-    column: T | '',
-    ordering: Ordering
+    column: T | '';
+    ordering: Ordering;
 }
-
-
 
 interface OrderingIndicatorProp {
     target: string;

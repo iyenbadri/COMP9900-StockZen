@@ -15,10 +15,10 @@ import {
 } from 'react-beautiful-dnd';
 import Button from 'react-bootstrap/Button';
 import { useParams } from 'react-router-dom';
+import stocksListing from '../Search/listing.json';
 import styles from './PortfolioPage.module.css';
 import PortfolioPageRow from './PortfolioPageRow';
 import PortfolioPageSummary from './PortfolioPageSummary';
-import stocksListing from '../Search/listing.json';
 
 interface RouteRarams {
   portfolioId?: string | undefined;

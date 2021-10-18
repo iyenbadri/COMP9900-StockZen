@@ -1,11 +1,11 @@
-import handleIcon from 'assets/icon-outlines/outline-drag-handle.svg';
 import crossIcon from 'assets/icon-outlines/outline-cross.svg';
-import React, { FC, useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import handleIcon from 'assets/icon-outlines/outline-drag-handle.svg';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import styles from './PortfolioPage.module.css';
+import { Link } from 'react-router-dom';
 import PortfolioPageAlert from './PortfolioPage-Alert';
 import PortfolioPageLots from './PortfolioPage-Lots';
+import styles from './PortfolioPage.module.css';
 
 interface PortfolioPageRowProp {
   readonly stock: IStock;
