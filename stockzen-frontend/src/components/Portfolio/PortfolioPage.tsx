@@ -3,7 +3,7 @@ import refresh from 'assets/icon-outlines/outline-refresh-small.svg';
 import axios from 'axios';
 import SearchWidget from 'components/Search/SearchWidget';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState, useCallback } from 'react';
 import Button from 'react-bootstrap/Button';
 import { Link, useParams } from 'react-router-dom';
 import styles from './PortfolioPage.module.css';
@@ -44,38 +44,46 @@ interface StockRowData {
   readonly stockData: StockData;
 }
 
-const Portfolio = () => {
+const PortfolioPage = () => {
   //const [showSearchWidget, setShowSearchWidget] = useState<boolean>(false);
   const { setShowPortfolioSummary } = useContext(TopPerformerContext);
 
   const { portfolioId } = useParams<RouteRarams>();
   const [stocks, setStocks] = useState<StockData[]>([]);
 
-  const mapStockList = (data: StockListResponse[]): StockData[] => {
-    return data.map((x) => ({
-      stockId: x.id,
-      symbol: x.code,
-      name: x.stockName,
-      price: x.price,
-      change: x.change,
-      changePercent: x.percChange,
-      averagePrice: x.avgPrice,
-      profit: x.gain,
-      profitPercent: x.percGain,
-      value: x.value,
-    }));
-  };
+  const mapStockList = useCallback(
+    (data: StockListResponse[]): StockData[] => {
+      return data.map((stock) => ({
+        stockId: stock.id,
+        symbol: stock.code,
+        name: stock.stockName,
+        price: stock.price,
+        change: stock.change,
+        changePercent: stock.percChange,
+        averagePrice: stock.avgPrice,
+        profit: stock.gain,
+        profitPercent: stock.percGain,
+        value: stock.value,
+      }));
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
-  const reloadStockList = () => {
+  const reloadStockList = useCallback(() => {
     axios.get(`/stock/list/${portfolioId}`).then((response) => {
       setStocks(mapStockList(response.data));
     });
-  };
+  }, [portfolioId, mapStockList, setStocks]);
 
-  useEffect(() => {
-    setShowPortfolioSummary(true);
-    reloadStockList();
-  }, []);
+  useEffect(
+    () => {
+      setShowPortfolioSummary(true);
+      reloadStockList();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const handleAddStock = (symbol: string, stockPageId: number) => {
     axios
@@ -251,4 +259,4 @@ const StockRow: FC<StockRowData> = (prop) => {
   );
 };
 
-export default Portfolio;
+export default PortfolioPage;
