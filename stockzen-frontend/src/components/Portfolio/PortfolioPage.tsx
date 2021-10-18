@@ -21,24 +21,7 @@ import PortfolioPageRow from './PortfolioPageRow';
 import PortfolioPageSummary from './PortfolioPageSummary';
 
 interface RouteRarams {
-  portfolioId?: string | undefined;
-}
-
-interface StockListResponse {
-  id: number;
-  code: string;
-  order: number | undefined;
-  stockName: string;
-  price: number;
-  change: number;
-  percChange: number;
-  avgPrice: number;
-  unitsHeld: number;
-  gain: number;
-  percGain: number;
-  value: number;
-  prediction: number;
-  confidence: number;
+  portfolioId: string;
 }
 
 type PortfolioPageColumn =
@@ -229,7 +212,10 @@ const PortfolioPage = () => {
       <hr />
 
       <div className={styles.tableToolbar}>
-        <SearchWidget addStock={handleAddStock}></SearchWidget>
+        <SearchWidget
+          portfolioId={portfolioId}
+          addStock={handleAddStock}
+        ></SearchWidget>
         <Button
           variant='light'
           className='ms-1 text-muted d-flex align-items-center'

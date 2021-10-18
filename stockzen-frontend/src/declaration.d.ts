@@ -37,3 +37,20 @@ interface OrderingIndicatorProp {
     target: string;
     ordering: TableOrdering<string>;
 }
+
+
+
+interface StockListResponse {
+    id: number;
+    code: string;
+    stock_page_id: number;
+    stockName: string;
+    price: number;
+    change: number;
+    percChange: number;
+    avgPrice: number;
+    unitsHeld: number;
+    gain: number;
+    percGain: number;
+    value: number;
+}
