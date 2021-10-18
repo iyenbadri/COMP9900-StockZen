@@ -1,7 +1,7 @@
 import crossIcon from 'assets/icon-outlines/outline-cross.svg';
 import plusCircle from 'assets/icon-outlines/outline-plus-circle.svg';
 import { LotType } from 'enums';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -82,31 +82,31 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     setLotsBought([
       {
         lotId: Math.random(),
-        tradeDate: '12/03/2021',
+        tradeDate: moment(new Date(2021, 3, 12)),
         units: 10,
         pricePerUnit: 2,
       },
       {
         lotId: Math.random(),
-        tradeDate: '01/04/2021',
+        tradeDate: moment(new Date(2021, 4, 1)),
         units: 5,
         pricePerUnit: 15,
       },
       {
         lotId: Math.random(),
-        tradeDate: '14/04/2021',
+        tradeDate: moment(new Date(2021, 4, 14)),
         units: 5,
         pricePerUnit: 17,
       },
       {
         lotId: Math.random(),
-        tradeDate: '14/04/2021',
+        tradeDate: moment(new Date(2021, 4, 14)),
         units: Math.random() * 10000,
         pricePerUnit: Math.random() * 100,
       },
       {
         lotId: Math.random(),
-        tradeDate: '14/04/2021',
+        tradeDate: moment(new Date(2021, 4, 14)),
         units: Math.random() * 10000,
         pricePerUnit: Math.random() * 100,
       },
@@ -115,19 +115,19 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     setLotsSold([
       {
         lotId: Math.random(),
-        tradeDate: '12/10/2021',
+        tradeDate: moment(new Date(2021, 10, 12)),
         units: 10,
         pricePerUnit: 2,
       },
       {
         lotId: Math.random(),
-        tradeDate: '14/11/2021',
+        tradeDate: moment(new Date(2021, 11, 12)),
         units: Math.random() * 10000,
         pricePerUnit: Math.random() * 100,
       },
       {
         lotId: Math.random(),
-        tradeDate: '15/11/2021',
+        tradeDate: moment(new Date(2021, 11, 15)),
         units: Math.random() * 10000,
         pricePerUnit: Math.random() * 100,
       },
@@ -137,7 +137,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
   const handleAddBoughtLot = async (data: any) => {
     const payload = {
       stockId: stockId,
-      tradeDate: moment(data.tradeDate).format('DD/MM/YYYY'),
+      tradeDate: moment(data.tradeDate),
       units: parseFloat(data.units),
       pricePerUnit: parseFloat(data.pricePerUnit),
     };
@@ -147,7 +147,9 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
     // TODO: Update the whole list
     setLotsBought((lots: ILotBought[]) => {
-      return [...lots, { ...payload, lotId: Math.random() }];
+      return [...lots, { ...payload, lotId: Math.random() }].sort(
+        (a, b) => a.tradeDate.unix() - b.tradeDate.unix()
+      );
     });
 
     setShowAddLotBoughtModal(false);
@@ -156,7 +158,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
   const handleAddSoldLot = async (data: any) => {
     const payload = {
       stockId: stockId,
-      tradeDate: moment(data.tradeDate).format('DD/MM/YYYY'),
+      tradeDate: moment(data.tradeDate),
       units: parseFloat(data.units),
       pricePerUnit: parseFloat(data.pricePerUnit),
     };
@@ -166,7 +168,9 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
     // TODO: Reload the whole list instead
     setLotsSold((lots: ILotSold[]) => {
-      return [...lots, { ...payload, lotId: Math.random() }];
+      return [...lots, { ...payload, lotId: Math.random() }].sort(
+        (a, b) => a.tradeDate.unix() - b.tradeDate.unix()
+      );
     });
 
     setShowAddLotSoldModal(false);
@@ -384,7 +388,9 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
         {lotsBought.map((lot) => (
           <div key={`lot-${lot.lotId}`} className={styles.lotRow}>
-            <div className={styles.lotTradeDate}>{lot.tradeDate}</div>
+            <div className={styles.lotTradeDate}>
+              {lot.tradeDate.format('DD/MM/YYYY')}
+            </div>
             <div className={styles.lotUnits}>
               {numberFormatter.format(lot.units)}
             </div>
@@ -462,7 +468,9 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
         {lotsSold.map((lot) => (
           <div key={`lot-${lot.lotId}`} className={styles.lotRow}>
-            <div className={styles.lotTradeDate}>{lot.tradeDate}</div>
+            <div className={styles.lotTradeDate}>
+              {lot.tradeDate.format('DD/MM/YYYY')}
+            </div>
             <div className={styles.lotUnits}>
               {numberFormatter.format(lot.units)}
             </div>
@@ -531,14 +539,14 @@ interface ILotTotal {
 
 interface ILotBought extends ILot {
   lotId: number;
-  tradeDate: string;
+  tradeDate: Moment;
   units: number;
   pricePerUnit: number;
 }
 
 interface ILotSold extends ILot {
   lotId: number;
-  tradeDate: string;
+  tradeDate: Moment;
   units: number;
   pricePerUnit: number;
 }
