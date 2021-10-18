@@ -16,7 +16,6 @@ Run with: python3 -m app.scripts.db_populator
 """
 faker = Faker()
 
-
 def generate_dummy_users(n_users: int):
     """
     Generates n random users with the same password
