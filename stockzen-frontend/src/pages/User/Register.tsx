@@ -1,7 +1,6 @@
 import RegisterForm from 'components/User/RegisterForm';
 import RegisterSuccessful from 'components/User/RegisterSuccessful';
 import React, { FC, useState } from 'react';
-import styles from './Register.module.css';
 
 const Register: FC = () => {
   const [isRegisterSuccessful, setRegisterSuccessful] =
@@ -10,7 +9,7 @@ const Register: FC = () => {
   const [lastName, setLastName] = useState<string>('');
 
   return (
-    <div className={styles.formWrapper}>
+    <>
       {!isRegisterSuccessful && (
         <RegisterForm
           onRegisterSuccess={(firstName, lastName) => {
@@ -26,7 +25,7 @@ const Register: FC = () => {
           lastName={lastName}
         ></RegisterSuccessful>
       )}
-    </div>
+    </>
   );
 };
 

@@ -1,5 +1,6 @@
 import axios from 'axios';
-import React, { FC, useRef, useState } from 'react';
+import { UserContext } from 'contexts/UserContext';
+import React, { FC, useContext, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -20,6 +21,8 @@ const RegisterForm: FC<IProps> = (props) => {
     formState: { errors },
   } = useForm();
 
+  const { recheckAuthenticationStatus } = useContext(UserContext);
+
   // Error message from backend
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [emailErrorMessage, setEmailErrorMessage] = useState<string>('');
@@ -34,7 +37,7 @@ const RegisterForm: FC<IProps> = (props) => {
       let response = await axios.head('/user/' + encodeURIComponent(email));
       if (response.status === 200) {
         // If no error then it means email is alread exists in backend.
-        setEmailErrorMessage('Email is already in used');
+        setEmailErrorMessage('Email is already in use');
         return false;
       } else {
         // Else then it is unknown
@@ -74,15 +77,23 @@ const RegisterForm: FC<IProps> = (props) => {
         props.onRegisterSuccess(data.firstName, data.lastName);
       }
     } catch (e: any) {
-      // Display error message.
-      setErrorMessage(e.response?.data?.message);
+      let message = e.response?.data?.message;
+      switch (message) {
+        case 'user already logged in':
+          recheckAuthenticationStatus();
+          break;
+        default:
+          // Display error message.
+          setErrorMessage(message);
+          break;
+      }
     }
   };
 
   return (
     <>
-      <h3 className={styles.formTitle}>Sign up</h3>
-      <Form onSubmit={handleSubmit(onRegister)}>
+      <h3 className={`my-2 ${styles.formTitle} outerStroke`}>Sign up</h3>
+      <Form autoComplete='off' onSubmit={handleSubmit(onRegister)}>
         <Form.Group controlId='firstName' className={styles.controlGroup}>
           {/* -- First Name -- */}
           <Form.Label className={styles.formLabel}>First Name</Form.Label>
@@ -90,7 +101,6 @@ const RegisterForm: FC<IProps> = (props) => {
 
           <Form.Control
             {...register('firstName', { required: true, maxLength: 40 })}
-            placeholder='First Name'
           ></Form.Control>
           <Form.Text className={styles.errorMessage}>
             {errors.firstName?.type === 'required' && 'First name is required'}
@@ -104,7 +114,6 @@ const RegisterForm: FC<IProps> = (props) => {
 
           <Form.Control
             {...register('lastName', { required: true, maxLength: 40 })}
-            placeholder='Last Name'
           ></Form.Control>
           <Form.Text className={styles.errorMessage}>
             {errors.lastName?.type === 'required' && 'Last name is required'}
@@ -124,7 +133,6 @@ const RegisterForm: FC<IProps> = (props) => {
                 unique: async (val) => isEmailUnique(val),
               },
             })}
-            placeholder='Email Address'
           ></Form.Control>
           <Form.Text className={styles.errorMessage}>
             {errors.email?.type === 'required' && 'Email is required'}
@@ -142,26 +150,28 @@ const RegisterForm: FC<IProps> = (props) => {
             {...register('password', {
               required: true,
               minLength: 8,
-              validate: {
-                lower: (val) => /[a-z]/.test(val),
-                upper: (val) => /[A-Z]/.test(val),
-                number: (val) => /[0-9]/.test(val),
-                symbol: (val) => /[^a-zA-Z0-9]/.test(val),
-              },
+              validate:
+                !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+                  ? {}
+                  : {
+                      lower: (val) => /[a-z]/.test(val),
+                      upper: (val) => /[A-Z]/.test(val),
+                      number: (val) => /[0-9]/.test(val),
+                      symbol: (val) => /[^a-zA-Z0-9]/.test(val),
+                    },
             })}
-            placeholder='Password'
           ></Form.Control>
           <Form.Text className={styles.errorMessage}>
             {errors.password?.type === 'required' && 'Password is required'}
             {errors.password?.type === 'minLength' && 'Password is too short'}
             {errors.password?.type === 'lower' &&
-              'Password must contains at least one lower case letter'}
+              'Password must contain at least one lower case letter'}
             {errors.password?.type === 'upper' &&
-              'Password must contains at least one upper case letter'}
+              'Password must contain at least one upper case letter'}
             {errors.password?.type === 'number' &&
-              'Password must contains at least one digit'}
+              'Password must contain at least one digit'}
             {errors.password?.type === 'symbol' &&
-              'Password must contains at least one symbol'}
+              'Password must contain at least one symbol'}
           </Form.Text>
         </Form.Group>
 
@@ -178,20 +188,19 @@ const RegisterForm: FC<IProps> = (props) => {
                 match: (val) => val === password.current,
               },
             })}
-            placeholder='Password'
           ></Form.Control>
           <Form.Text className={styles.errorMessage}>
             {errors.confirmPassword?.type === 'match' &&
-              'Password is not matched'}
+              'Passwords do not match'}
           </Form.Text>
         </Form.Group>
 
-        <Row className='text-center'>
+        <Row className='my-3 text-center'>
           {/* -- Submit Button -- */}
           <Col xs={12}>
-            <Button type='submit'>Create Account</Button>
+            <Button type='submit'>Create account</Button>
           </Col>
-          <Col xs={12} className={styles.errorMessage}>
+          <Col xs={12} className={`mt-1 ${styles.backErrorMessage}`}>
             {errorMessage}
           </Col>
         </Row>

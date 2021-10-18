@@ -7,8 +7,13 @@
 
   --stockzen-dark: var(--zen-2);
   --stockzen-light: var(--zen-4);
-  --header-height: 50px;
-  --footer-height: 100px;
+  --header-height: 70px;
+  --footer-height: 70px;
+
+  --row-gray-rgb: 196, 196, 196;
 
   --theme-darkened: #3a506b;
+
+  --loss-red: #e26b6b;
+  --gain-green: #5bc07d;
 }
