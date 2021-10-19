@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import styles from './RegisterForm.module.css';
 
 interface IProps {
-  onLoginSuccess: (email: string, password: string) => void;
+  onLoginSuccess: (email: string) => void;
 }
 
 const LoginForm: FC<IProps> = (props) => {
@@ -29,11 +29,12 @@ const LoginForm: FC<IProps> = (props) => {
     try {
       let response = await axios.post('/user/login', payload);
       if (response.status === 200) {
-        props.onLoginSuccess(data.email, data.password);
         // If user is authenticated, save user info in local storage
         localStorage.setItem('firstName', response.data.firstName);
         localStorage.setItem('lastName', response.data.lastName);
         localStorage.setItem('email', data.email);
+
+        props.onLoginSuccess(data.email);
       }
     } catch (e: any) {
       if (e.response.status === 401 || e.response.status === 403) {
