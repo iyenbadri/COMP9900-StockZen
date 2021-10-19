@@ -1,8 +1,6 @@
 import app.utils.crud_utils as util
-from app.utils import db_utils as db
 from app.utils.enums import Status
 from flask import request
-from flask_login import current_user
 from flask_login.utils import login_required
 from flask_restx import Namespace, Resource, fields, marshal
 
@@ -18,6 +16,9 @@ stock_list_response = api.model(
     "Response: Portfolio stock list",
     {
         "id": fields.Integer(required=True, description="stock id"),
+        "stockPageId": fields.Integer(
+            attribute="stock_page_id", required=True, description="stock page id"
+        ),
         "code": fields.String(required=True, description="stock symbol code"),
         "stockName": fields.String(
             attribute="stock_name", required=True, description="stock name"
