@@ -16,6 +16,9 @@ stock_list_response = api.model(
     "Response: Portfolio stock list",
     {
         "id": fields.Integer(required=True, description="stock id"),
+        "stockPageId": fields.Integer(
+            attribute="stock_page_id", required=True, description="stock page id"
+        ),
         "code": fields.String(required=True, description="stock symbol code"),
         "stockName": fields.String(
             attribute="stock_name", required=True, description="stock name"
