@@ -1,0 +1,109 @@
+@import 'variables.css';
+
+.stockHeader {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0px 2px 0px;
+}
+
+.stockName {
+  margin-bottom: 0;
+  font-weight: 700;
+}
+
+.stockCode {
+  margin-top: 0;
+  font-weight: bold;
+}
+
+.stockSummmary {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 1.0rem;
+  margin: 0px 15px 5px 0px;
+}
+
+.stockPrice {
+  flex: 0 0 content;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 0px 15px 0px 0px;
+}
+
+.stockChange {
+  flex: 0 0 content;
+  font-size: large;
+  padding: 0px 15px 0px 0px;
+}
+
+.stockPercChange {
+  flex: 0 0 content;
+  font-size: large;
+}
+
+.update {
+  margin-left: auto;
+  flex: 0 0 content;
+}
+
+.updateButton {
+  background-color: transparent;
+  border: none;
+  color: var(--row-gray-rgb);
+}
+
+.chartPlaceholder {
+  display: flex;
+  width: 850px;
+  height: 240px;
+  justify-content: center;
+  padding: 100px 100px;
+  background-color: #f7f8fa;
+  border-style: dashed;
+  border-color:var(--row-gray-rgb);
+  border-width: 0.1rem;
+  margin-bottom: 10px;
+}
+
+.tableBar {
+  display: flex;
+  width: 850px;
+  height: 34px;
+  border-bottom: 2px solid;
+  border-color: #c4c0c0;
+}
+
+.tableBar .tabs {
+  width: auto;
+  height: 34px;
+  cursor: pointer;
+  border: 2px solid;
+  border-radius: 5px 5px 0px 0px;
+  border-color: var(--zen-4);
+  padding: 3px 10px;
+  margin-right: 5px;
+  font-weight: 300;
+}
+
+.tableBar .activeTab {
+  width: auto;
+  height: 34px;
+  cursor: pointer;
+  border: 2px solid;
+  border-radius: 5px 5px 0px 0px;
+  border-color: var(--zen-4);
+  background-color: #d1d1d1;
+  padding: 3px 10px;
+  margin-right: 5px;
+  font-weight: bold;
+}
+
+.moneyGain {
+  color: var(--gain-green);
+}
+
+.moneyLoss {
+  color: var(--loss-red);
+}
