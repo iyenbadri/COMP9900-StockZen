@@ -2,7 +2,7 @@ import app.utils.crud_utils as util
 from app.utils.enums import Status
 from flask import request
 from flask_login.utils import login_required
-from flask_restx import Namespace, Resource, fields, marshal
+from flask_restx import Namespace, Resource, abort, fields, marshal
 
 api = Namespace("stock", description="Stock related operations")
 
@@ -94,6 +94,8 @@ class StockCRUD(Resource):
         """List all stocks from a portfolio"""
 
         stock_list = util.get_stock_list(portfolioId)
+        if stock_list == Status.FAIL:
+            return abort(500, "Stock list for the portfolio could not be retrieved")
 
         return stock_list
 
@@ -110,9 +112,9 @@ class StockCRUD(Resource):
         stock_page_id = json["stockPageId"]
 
         if util.add_stock(portfolioId, stock_page_id) == Status.SUCCESS:
-            return {"message": "stock successfully added"}, 200
+            return {"message": "Stock successfully added"}, 200
 
-        return {"message": "Could not add stock"}, 500
+        return abort(500, "Could not add stock")
 
 
 @api.route("/<stockId>")
@@ -126,7 +128,7 @@ class StockCRUD(Resource):
         stock_item = util.fetch_stock(stockId)
 
         if stock_item == Status.FAIL:
-            return {"message": "stock could not be found"}, 404
+            return abort(404, "Stock could not be found")
 
         return stock_item
 
@@ -136,6 +138,6 @@ class StockCRUD(Resource):
         """Delete an existing stock row"""
 
         if util.delete_stock(stockId) == Status.SUCCESS:
-            return {"message": "stock successfully deleted"}, 200
+            return {"message": "Stock successfully deleted"}, 200
 
-        return {"message": "stock could not be deleted"}, 500
+        return abort(500, "Stock could not be deleted")

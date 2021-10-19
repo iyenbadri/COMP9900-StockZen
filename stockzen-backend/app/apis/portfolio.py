@@ -82,7 +82,7 @@ class PortfolioCRUD(Resource):
 
         portfolio_list = Status.FAIL
         if portfolio_list == Status.FAIL:
-            return abort(500, "portfolio list for this user could not be retrieved")
+            return abort(500, "Portfolio list for this user could not be retrieved")
 
         return portfolio_list
 
@@ -100,12 +100,12 @@ class PortfolioCRUD(Resource):
         # return error if any order is non-unique
         orderList = [json["order"] for json in json_array]
         if len(orderList) > len(set(orderList)):
-            return {"message": "failed: non-unique order numbers were provided"}, 409
+            return abort(409, "Failed because non-unique order numbers were provided")
 
         if util.reorder_portfolio_list(json_array) == Status.SUCCESS:
-            return {"message": "portfolio list successfully reordered"}, 200
+            return {"message": "Portfolio list successfully reordered"}, 200
 
-        return {"message": "portfolio list could not be reordered"}, 500
+        return abort(500, "Portfolio list could not be reordered")
 
 
 @api.route("")
@@ -121,9 +121,9 @@ class PortfolioCRUD(Resource):
         portfolio_name = json["portfolioName"]
 
         if util.add_portfolio(portfolio_name) == Status.SUCCESS:
-            return {"message": "portfolio successfully created"}, 200
+            return {"message": "Portfolio successfully created"}, 200
 
-        return {"message": "portfolio could not be created"}, 500
+        return abort(500, "Portfolio could not be created")
 
 
 @api.route("/<portfolioId>")
@@ -137,7 +137,7 @@ class PortfolioCRUD(Resource):
         portfolio_item = util.fetch_portfolio(portfolioId)
 
         if portfolio_item == Status.FAIL:
-            return {"message": "portfolio could not be found"}, 404
+            return abort(404, "Portfolio could not be found")
 
         return portfolio_item
 
@@ -152,9 +152,9 @@ class PortfolioCRUD(Resource):
         new_name = json["newName"]
 
         if util.update_portfolio_name(portfolioId, new_name) == Status.SUCCESS:
-            return {"message": "portfolio name successfully updated"}, 200
+            return {"message": "Portfolio name successfully updated"}, 200
 
-        return {"message": "portfolio name could not be updated"}, 500
+        return abort(500, "Portfolio name could not be updated")
 
     @login_required
     @api.response(200, "Successfully deleted portfolio")
@@ -162,6 +162,6 @@ class PortfolioCRUD(Resource):
         """Delete an existing portfolio"""
 
         if util.delete_portfolio(portfolioId) == Status.SUCCESS:
-            return {"message": "portfolio successfully deleted"}, 200
+            return {"message": "Portfolio successfully deleted"}, 200
 
-        return {"message": "portfolio could not be deleted"}, 500
+        return abort(500, "Portfolio name could not be deleted")

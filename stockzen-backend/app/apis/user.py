@@ -15,7 +15,7 @@ from app.utils.enums import Status
 from flask import request
 from flask_login import current_user
 from flask_login.utils import login_required, login_user, logout_user
-from flask_restx import Namespace, Resource, fields, marshal
+from flask_restx import Namespace, Resource, abort, fields, marshal
 
 api = Namespace("user", description="User related operations")
 
@@ -77,9 +77,10 @@ class UserCRUD(Resource):
         user = auth.validate_login(email, plain_password)
 
         if user == Status.NOT_FOUND:
-            return {"message": "User not found"}, 403
+            return abort(403, "User not found")
+
         elif user == Status.INCORRECT_PASSWORD:
-            return {"message": "Incorrect password"}, 401
+            return abort(401, "Incorrect password")
         else:
             login_user(user)
             user_details = auth.extract_user_details(user)
@@ -102,15 +103,15 @@ class UserCRUD(Resource):
         plain_password = json["password"]
 
         if current_user.is_authenticated:
-            return {"message": "user already logged in"}, 409
+            return abort(409, "User already logged in")
 
         if auth.email_exists(email) == Status.FOUND:
-            return {"message": "email already exists"}, 409
+            return abort(409, "Email already exists")
 
         if util.add_user(email, first_name, last_name, plain_password) == Status.SUCCESS:
-            return {"message": "user successfully registered"}, 200
+            return {"message": "User successfully registered"}, 200
 
-        return {"message": "registration error occurred"}, 500
+        return abort(500, "Registration error occurred")
 
 
 @api.route("/details")
@@ -135,8 +136,8 @@ class UserCRUD(Resource):
         """Check if an email already exists"""
         email_status = auth.email_exists(email)
         if email_status == Status.FOUND:
-            return {"message": "user exists"}, 200
-        return {"message": "user not found"}, 404
+            return {"message": "User exists"}, 200
+        return abort(404, "User not found")
 
 
 @api.route("/logout")
@@ -147,7 +148,7 @@ class UserRouter(Resource):
         """Log out the current user"""
 
         logout_user()
-        return {"message": "user successfully logged out"}, 200
+        return {"message": "User successfully logged out"}, 200
 
 
 # ==============================================================================
