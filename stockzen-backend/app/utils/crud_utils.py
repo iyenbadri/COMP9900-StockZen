@@ -61,13 +61,13 @@ def get_portfolio_list() -> Status:
         return Status.FAIL
 
 
-def reorder_portfolio_list(jsonArray: Sequence[Mapping[str, int]]) -> Status:
+def reorder_portfolio_list(new_portfolio_orders: Sequence[Mapping[str, int]]) -> Status:
     """Update portfolio list ordering on the database"""
     try:
         # loop through json dict list and update each row order
-        for json in jsonArray:
-            portfolio_id = json["id"]
-            order = json["order"]
+        for portfolio in new_portfolio_orders:
+            portfolio_id = portfolio["id"]
+            order = portfolio["order"]
             db.update_item_columns(Portfolio, portfolio_id, {"order": order})
 
         return Status.SUCCESS
