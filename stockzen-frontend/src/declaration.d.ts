@@ -12,6 +12,7 @@ interface IPortfolio {
 }
 
 
+// The stock data for PortfolioPage and PortfolioPageRow
 interface IStock {
     ordering: number;
     stockId: number;
@@ -30,6 +31,7 @@ interface IStock {
 }
 
 
+// Temp sort parameters
 interface TableOrdering<T extends string> {
     column: T | '',
     ordering: Ordering
