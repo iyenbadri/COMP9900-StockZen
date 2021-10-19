@@ -135,7 +135,7 @@ def search_query(search_string: str):
             .filter(
                 or_(
                     StockPage.code.ilike(f"{search_string}%"),
-                    StockPage.stock_name.ilike(f"{search_string}%"),
+                    StockPage.stock_name.ilike(f"%{search_string}%"),
                 )
             )
             .order_by(
