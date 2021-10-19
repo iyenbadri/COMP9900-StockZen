@@ -263,9 +263,17 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     setShowDeleteModal(false);
   };
 
-  const handleEditLot = (data: any) => {
+  const handleEditLot = async (data: any) => {
     switch (editingLotType) {
       case LotType.Bought:
+        await addLot(
+          LotType.Bought,
+          stockId,
+          moment(data.tradeDate),
+          parseFloat(data.units),
+          parseFloat(data.pricePerUnit)
+        );
+
         // TODO: Wire up the API
         // axios.delete('/lot', {lotId: editingLotId}).then(()=>{
 
@@ -276,15 +284,16 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           return lots.filter((x) => x.lotId !== editingLotId);
         });
 
-        addLot(
-          LotType.Bought,
+        break;
+      case LotType.Sold:
+        await addLot(
+          LotType.Sold,
           stockId,
           moment(data.tradeDate),
           parseFloat(data.units),
           parseFloat(data.pricePerUnit)
         );
-        break;
-      case LotType.Sold:
+
         // TODO: Wire up the API
         // axios.delete('/lot', {lotId: editingLotId}).then(()=>{
 
@@ -295,13 +304,6 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           return lots.filter((x) => x.lotId !== editingLotId);
         });
 
-        addLot(
-          LotType.Sold,
-          stockId,
-          moment(data.tradeDate),
-          parseFloat(data.units),
-          parseFloat(data.pricePerUnit)
-        );
         break;
     }
     setShowEditingLotModal(false);
