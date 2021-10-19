@@ -3,8 +3,11 @@ from typing import List, Mapping, NewType, Optional, TypeVar, Union
 
 from app import db
 from app.models.schema import LotBought, LotSold, Portfolio, Stock, StockPage, User
+from config import SEARCH_LIMIT
 from flask_login import current_user
-from sqlalchemy import func
+from sqlalchemy import func, or_
+from sqlalchemy.orm import load_only
+from sqlalchemy.sql.operators import collate
 
 DatabaseObj = TypeVar(
     "DatabaseObj", Portfolio, Stock, User, LotBought, LotSold, StockPage
@@ -112,5 +115,37 @@ def query_user(email: str) -> Optional[User]:
     try:
         user = User.query.filter(func.lower(User.email) == func.lower(email)).one()
         return user
+    except Exception as e:
+        debug_exception(e)
+
+
+# ==============================================================================
+# Stock Pages DB Utils
+# ==============================================================================
+
+
+def search_query(search_string: str):
+    """Query for stocks by name/code, returns list of query results or None."""
+    try:
+        # defer loading of all irrelevant columns
+        search_cols = ["id", "code", "stock_name"]
+
+        results_list = (
+            StockPage.query.options(load_only(*search_cols))
+            .filter(
+                or_(
+                    StockPage.code.ilike(f"{search_string}%"),
+                    StockPage.stock_name.ilike(f"%{search_string}%"),
+                )
+            )
+            .order_by(
+                # case-insensitive ascending order
+                collate(StockPage.code, "NOCASE").asc(),
+                collate(StockPage.stock_name, "NOCASE").asc(),
+            )
+            .limit(SEARCH_LIMIT)  # configurable in config.py
+            .all()
+        )
+        return results_list
     except Exception as e:
         debug_exception(e)

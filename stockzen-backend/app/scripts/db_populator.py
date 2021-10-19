@@ -7,7 +7,7 @@ from app import app
 from app import db as DB
 from app.models.schema import Portfolio, StockPage, User
 from app.utils import db_utils as db
-from app.utils.crud_utils import add_user
+from app.utils.crud_utils import add_stock_page, add_user
 from app.utils.enums import Status
 from faker import Faker
 from sqlalchemy import func

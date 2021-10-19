@@ -1,8 +1,6 @@
 import app.utils.crud_utils as util
-from app.utils import db_utils as db
 from app.utils.enums import Status
 from flask import request
-from flask_login import current_user
 from flask_login.utils import login_required
 from flask_restx import Namespace, Resource, fields, marshal
 
