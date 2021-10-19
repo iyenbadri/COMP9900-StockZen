@@ -202,6 +202,7 @@ const PortfolioList = () => {
           newList[i].ordering = i;
         }
 
+        // Call API to update the portfolio list in backend
         axios.put(
           '/portfolio/list',
           newList.map((x) => ({ id: x.portfolioId, order: x.ordering }))
