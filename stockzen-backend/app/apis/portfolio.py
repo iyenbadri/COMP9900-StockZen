@@ -3,7 +3,7 @@ from app.utils.enums import Status
 from flask import request
 from flask_login import current_user
 from flask_login.utils import login_required
-from flask_restx import Namespace, Resource, fields, marshal
+from flask_restx import Namespace, Resource, abort, fields, marshal
 
 api = Namespace("portfolio", description="Portfolio related operations")
 
@@ -76,10 +76,13 @@ class PortfolioCRUD(Resource):
     @login_required
     @api.marshal_list_with(portfolio_list_response)
     @api.response(200, "Successfully retrieved list")
+    @api.response(500, "FAILED  retrieved list")
     def get(self):
         """List all portfolios from a user"""
 
-        portfolio_list = util.get_portfolio_list()
+        portfolio_list = Status.FAIL
+        if portfolio_list == Status.FAIL:
+            return abort(500, "portfolio list for this user could not be retrieved")
 
         return portfolio_list
 
@@ -97,7 +100,7 @@ class PortfolioCRUD(Resource):
         # return error if any order is non-unique
         orderList = [json["order"] for json in json_array]
         if len(orderList) > len(set(orderList)):
-            return {"message": "Failed: non-unique order numbers were provided"}, 409
+            return {"message": "failed: non-unique order numbers were provided"}, 409
 
         if util.reorder_portfolio_list(json_array) == Status.SUCCESS:
             return {"message": "portfolio list successfully reordered"}, 200
