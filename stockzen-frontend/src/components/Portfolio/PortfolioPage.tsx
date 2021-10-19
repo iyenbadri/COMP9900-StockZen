@@ -14,6 +14,7 @@ import {
   ResponderProvided,
 } from 'react-beautiful-dnd';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import { useParams } from 'react-router-dom';
 import stocksListing from '../Search/listing.json';
 import styles from './PortfolioPage.module.css';
@@ -70,6 +71,11 @@ const PortfolioPage = () => {
     column: '',
     ordering: Ordering.Unknown,
   });
+
+  // States for delete a stock
+  const [showDeleteStockModal, setShowDeleteStockModal] = useState(false);
+  const [deletingStockId, setDeletingStockId] = useState(0);
+  const [deletingStockName, setDeletingStockName] = useState('');
 
   const mapStockList = useCallback(
     (data: StockListResponse[]): IStock[] => {
@@ -204,8 +210,40 @@ const PortfolioPage = () => {
     );
   };
 
+  // Handle the stock delete
+  const handleStockDelete = () => {
+    setShowDeleteStockModal(false);
+
+    axios.delete(`/stock/${deletingStockId}`).then(() => {
+      reloadStockList();
+    });
+  };
+
   return (
     <>
+      <Modal
+        show={showDeleteStockModal}
+        onHide={() => setShowDeleteStockModal(false)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Delete stock</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Do you want to delete stock {deletingStockName}?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant={'danger'} onClick={handleStockDelete}>
+            Yes
+          </Button>
+          <Button
+            variant={'secondary'}
+            onClick={(ev) => setShowDeleteStockModal(false)}
+          >
+            No
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <div>
         <PortfolioPageSummary></PortfolioPageSummary>
       </div>
@@ -364,7 +402,11 @@ const PortfolioPage = () => {
                           key={stock.stockId}
                           index={index}
                           stock={stock}
-                          showDeleteModal={() => {}}
+                          showDeleteModal={(stockId: number, name: string) => {
+                            setDeletingStockId(stockId);
+                            setDeletingStockName(name);
+                            setShowDeleteStockModal(true);
+                          }}
                         ></PortfolioPageRow>
                       );
                     })}

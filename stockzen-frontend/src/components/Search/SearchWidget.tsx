@@ -31,16 +31,12 @@ const SearchWidget: FC<Prop> = (prop) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [addedStockPageIds, setAddedStockIds] = useState<number[]>([]);
 
-  useEffect(() => {
+  // A function to reload the added stock ids
+  const reloadAddedStockIds = useCallback(() => {
     axios
       .get(`/stock/list/${portfolioId}`)
       .then((response: AxiosResponse<StockListResponse[]>) => {
-        setAddedStockIds((added) => {
-          return [
-            ...added,
-            ...response.data.map((stock) => stock.stock_page_id),
-          ];
-        });
+        setAddedStockIds(response.data.map((stock) => stock.stock_page_id));
       });
   }, [portfolioId, setAddedStockIds]);
 
@@ -52,6 +48,10 @@ const SearchWidget: FC<Prop> = (prop) => {
       <Button
         variant='light'
         onClick={() => {
+          // Load the list when user click search
+          reloadAddedStockIds();
+
+          // Show the search bar
           setShowSearchInput(true);
         }}
         className='d-flex align-items-center'
