@@ -1,10 +1,11 @@
 from typing import Mapping, Sequence, Union
 
+from app import db
 from app.models.schema import Portfolio, Stock, StockPage, User
 from app.utils.enums import Status
 from flask_login import current_user
 
-from . import db_utils as db
+from . import db_utils
 
 # ==============================================================================
 # Helpers
@@ -40,7 +41,7 @@ def add_user(email: str, first_name: str, last_name: str, plain_password: str) -
     new_user.set_password(plain_password)  # carry out hash and save to user object
 
     try:
-        db.insert_item(new_user)
+        db_utils.insert_item(new_user)
         return Status.SUCCESS
     except:
         return Status.FAIL
@@ -54,7 +55,7 @@ def add_user(email: str, first_name: str, last_name: str, plain_password: str) -
 def get_portfolio_list() -> Status:
     """Get user's portfolios from database, return item or success status"""
     try:
-        sqla_list = db.query_all(Portfolio)
+        sqla_list = db_utils.query_all(Portfolio)
         dict_list = [to_dict(obj) for obj in sqla_list]
         return dict_list
     except:
@@ -68,7 +69,7 @@ def reorder_portfolio_list(new_portfolio_orders: Sequence[Mapping[str, int]]) ->
         for portfolio in new_portfolio_orders:
             portfolio_id = portfolio["id"]
             order = portfolio["order"]
-            db.update_item_columns(Portfolio, portfolio_id, {"order": order})
+            db_utils.update_item_columns(Portfolio, portfolio_id, {"order": order})
 
         return Status.SUCCESS
     except:
@@ -82,7 +83,7 @@ def add_portfolio(portfolio_name: str) -> Status:
         portfolio_name=portfolio_name,
     )
     try:
-        db.insert_item(new_portfolio)
+        db_utils.insert_item(new_portfolio)
         return Status.SUCCESS
     except:
         return Status.FAIL
@@ -91,7 +92,7 @@ def add_portfolio(portfolio_name: str) -> Status:
 def fetch_portfolio(portfolio_id: int) -> Union[Portfolio, Status]:
     """Get existing portfolio by id, return item or success status"""
     try:
-        sqla_item = db.query_item(Portfolio, portfolio_id)
+        sqla_item = db_utils.query_item(Portfolio, portfolio_id)
         return to_dict(sqla_item)
     except:
         return Status.FAIL
@@ -100,7 +101,9 @@ def fetch_portfolio(portfolio_id: int) -> Union[Portfolio, Status]:
 def update_portfolio_name(portfolio_id: int, new_name: str) -> Status:
     """Update existing portfolio name, return success status"""
     try:
-        db.update_item_columns(Portfolio, portfolio_id, {"portfolio_name": new_name})
+        db_utils.update_item_columns(
+            Portfolio, portfolio_id, {"portfolio_name": new_name}
+        )
         return Status.SUCCESS
     except:
         return Status.FAIL
@@ -109,7 +112,7 @@ def update_portfolio_name(portfolio_id: int, new_name: str) -> Status:
 def delete_portfolio(portfolio_id: int) -> Status:
     """Delete existing portfolio by id, return success status"""
     try:
-        db.delete_item(Portfolio, portfolio_id)
+        db_utils.delete_item(Portfolio, portfolio_id)
         return Status.SUCCESS
     except:
         return Status.FAIL
@@ -123,8 +126,20 @@ def delete_portfolio(portfolio_id: int) -> Status:
 def get_stock_list(portfolio_id: int) -> Status:
     """Get portfolio stocks from database, return success status"""
     try:
-        sqla_list = db.query_all(Stock, **{"portfolio": portfolio_id})
-        dict_list = [to_dict(obj) for obj in sqla_list]
+        sqla_tuples = db_utils.query_all_with_join(
+            main_table=Stock,
+            join_tables=[StockPage],
+            columns=[Stock, StockPage],
+            **{"portfolio": portfolio_id},
+        )
+        dict_list = [
+            {
+                **to_dict(stock),
+                "code": stock_page.code,
+                "stock_name": stock_page.stock_name,
+            }
+            for stock, stock_page in sqla_tuples
+        ]
         return dict_list
     except:
         return Status.FAIL
@@ -136,7 +151,7 @@ def add_stock(portfolio_id: int, stock_page_id: int) -> Status:
         user_id=current_user.id, portfolio_id=portfolio_id, stock_page_id=stock_page_id
     )
     try:
-        db.insert_item(new_stock)
+        db_utils.insert_item(new_stock)
         return Status.SUCCESS
     except:
         return Status.FAIL
@@ -145,7 +160,7 @@ def add_stock(portfolio_id: int, stock_page_id: int) -> Status:
 def fetch_stock(stock_id: int) -> Union[Stock, Status]:
     """Get existing stock by id, return item or success status"""
     try:
-        sqla_item = db.query_item(Stock, stock_id)
+        sqla_item = db_utils.query_item(Stock, stock_id)
         return to_dict(sqla_item)
     except:
         return Status.FAIL
@@ -154,7 +169,7 @@ def fetch_stock(stock_id: int) -> Union[Stock, Status]:
 def delete_stock(stock_id: int) -> Status:
     """Delete existing stock by id, return success status"""
     try:
-        db.delete_item(Stock, stock_id)
+        db_utils.delete_item(Stock, stock_id)
         return Status.SUCCESS
     except:
         return Status.FAIL
@@ -169,7 +184,7 @@ def add_stock_page(code: str, stock_name: str) -> Status:
     """Add a stock page to the database, return success status"""
     new_stock_page = StockPage(code=code, stock_name=stock_name)
     try:
-        db.insert_item(new_stock_page)
+        db_utils.insert_item(new_stock_page)
         return Status.SUCCESS
     except:
         return Status.FAIL
@@ -188,7 +203,7 @@ def add_stock_page(code: str, stock_name: str) -> Status:
 def search_stock(stock_query: str) -> Status:
     """Search for stocks by similar name/code, return success status"""
     try:
-        stock_list = db.search_query(stock_query)
+        stock_list = db_utils.search_query(stock_query)
         return stock_list
     except:
         return Status.FAIL
