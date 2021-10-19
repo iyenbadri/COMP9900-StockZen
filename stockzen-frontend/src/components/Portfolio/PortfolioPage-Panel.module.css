@@ -34,7 +34,7 @@
 .rowHeader .lotPricePerUnit,
 .rowHeader .lotValue,
 .rowHeader .lotChange,
-.rowHeader .lotDelete {
+.rowHeader .lotActions {
   text-align: center;
 }
 
@@ -54,7 +54,7 @@
 .lotTradeDate,
 .lotPricePerUnit,
 .lotValue,
-.lotDelete {
+.lotActions {
   flex-basis: 80px;
   flex-grow: 0;
   flex-shrink: 0;
@@ -80,8 +80,14 @@
   flex-shrink: 0;
 }
 
-.lotDelete {
-  flex-basis: 40px;
+.lotActions {
+  flex-basis: 80px;
+  text-align: center;
+}
+
+.editButton {
+  min-width: 0 !important;
+  visibility: hidden;
 }
 
 .deleteButton {
@@ -89,7 +95,8 @@
   visibility: hidden;
 }
 
-.lotRow:hover .deleteButton {
+.lotRow:hover .deleteButton,
+.lotRow:hover .editButton {
   visibility: visible;
 }
 
