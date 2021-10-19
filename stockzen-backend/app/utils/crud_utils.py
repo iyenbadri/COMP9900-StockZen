@@ -1,6 +1,6 @@
-from typing import Union
+from typing import Mapping, Sequence, Union
 
-from app.models.schema import Portfolio, Stock, User
+from app.models.schema import Portfolio, Stock, StockPage, User
 from app.utils.enums import Status
 from flask_login import current_user
 
@@ -61,6 +61,20 @@ def get_portfolio_list() -> Status:
         return Status.FAIL
 
 
+def reorder_portfolio_list(new_portfolio_orders: Sequence[Mapping[str, int]]) -> Status:
+    """Update portfolio list ordering on the database"""
+    try:
+        # loop through json dict list and update each row order
+        for portfolio in new_portfolio_orders:
+            portfolio_id = portfolio["id"]
+            order = portfolio["order"]
+            db.update_item_columns(Portfolio, portfolio_id, {"order": order})
+
+        return Status.SUCCESS
+    except:
+        return Status.FAIL
+
+
 def add_portfolio(portfolio_name: str) -> Status:
     """Add a portfolio to the database, return success status"""
     new_portfolio = Portfolio(
@@ -86,7 +100,7 @@ def fetch_portfolio(portfolio_id: int) -> Union[Portfolio, Status]:
 def update_portfolio_name(portfolio_id: int, new_name: str) -> Status:
     """Update existing portfolio name, return success status"""
     try:
-        db.update_item(Portfolio, portfolio_id, "portfolio_name", new_name)
+        db.update_item_columns(Portfolio, portfolio_id, {"portfolio_name": new_name})
         return Status.SUCCESS
     except:
         return Status.FAIL
@@ -147,5 +161,34 @@ def delete_stock(stock_id: int) -> Status:
 
 
 # ==============================================================================
+# Stock Page Utils
+# ==============================================================================
+
+# TODO: rudimentary function for db population, needs updating
+def add_stock_page(code: str, stock_name: str) -> Status:
+    """Add a stock page to the database, return success status"""
+    new_stock_page = StockPage(code=code, stock_name=stock_name)
+    try:
+        db.insert_item(new_stock_page)
+        return Status.SUCCESS
+    except:
+        return Status.FAIL
+
+
+# ==============================================================================
 # Lot Utils
 # ==============================================================================
+# TODO
+
+# ==============================================================================
+# Search Utils
+# ==============================================================================
+
+
+def search_stock(stock_query: str) -> Status:
+    """Search for stocks by similar name/code, return success status"""
+    try:
+        stock_list = db.search_query(stock_query)
+        return stock_list
+    except:
+        return Status.FAIL

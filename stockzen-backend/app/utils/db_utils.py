@@ -1,14 +1,19 @@
 import os
-from typing import List, Optional, TypeVar, Union
+from typing import List, Mapping, NewType, Optional, TypeVar, Union
 
 from app import db
 from app.models.schema import LotBought, LotSold, Portfolio, Stock, StockPage, User
+from config import SEARCH_LIMIT
 from flask_login import current_user
-from sqlalchemy import func
+from sqlalchemy import func, or_
+from sqlalchemy.orm import load_only
+from sqlalchemy.sql.operators import collate
 
 DatabaseObj = TypeVar(
     "DatabaseObj", Portfolio, Stock, User, LotBought, LotSold, StockPage
 )
+ColumnName = NewType("ColumnName", str)
+ColumnVal = TypeVar("ColumnVal", int, str, float)
 
 # ==============================================================================
 # Helpers
@@ -63,22 +68,25 @@ def insert_item(new_row: DatabaseObj) -> None:
         db.session.add(new_row)
         db.session.commit()
     except Exception as e:
+        db.session.rollback()
         debug_exception(e)
 
 
-def update_item(
+def update_item_columns(
     table: DatabaseObj,
     item_id: int,
-    target_col: str,
-    new_value: Union[int, str, float],
+    col_val_pairs: Mapping[ColumnName, ColumnVal],
     **filters: int,
 ) -> None:
-    """Update table column, throws exception on fail"""
+    """Update table column, throws exception on fail
+    :param col_val_pairs is a dict of column names:values to be updated"""
     try:
         item = query_item(table, item_id, **filters)
-        setattr(item, target_col, new_value)  # updates target_col
+        for target_col, new_value in col_val_pairs.items():
+            setattr(item, target_col, new_value)  # updates target_col
         db.session.commit()
     except Exception as e:
+        db.session.rollback()
         debug_exception(e)
 
 
@@ -91,6 +99,7 @@ def delete_item(table: DatabaseObj, item_id: int, **filters: int) -> None:
         db.session.delete(item)
         db.session.commit()
     except Exception as e:
+        db.session.rollback()
         debug_exception(e)
 
 
@@ -106,5 +115,37 @@ def query_user(email: str) -> Optional[User]:
     try:
         user = User.query.filter(func.lower(User.email) == func.lower(email)).one()
         return user
+    except Exception as e:
+        debug_exception(e)
+
+
+# ==============================================================================
+# Stock Pages DB Utils
+# ==============================================================================
+
+
+def search_query(search_string: str):
+    """Query for stocks by name/code, returns list of query results or None."""
+    try:
+        # defer loading of all irrelevant columns
+        search_cols = ["id", "code", "stock_name"]
+
+        results_list = (
+            StockPage.query.options(load_only(*search_cols))
+            .filter(
+                or_(
+                    StockPage.code.ilike(f"{search_string}%"),
+                    StockPage.stock_name.ilike(f"%{search_string}%"),
+                )
+            )
+            .order_by(
+                # case-insensitive ascending order
+                collate(StockPage.code, "NOCASE").asc(),
+                collate(StockPage.stock_name, "NOCASE").asc(),
+            )
+            .limit(SEARCH_LIMIT)  # configurable in config.py
+            .all()
+        )
+        return results_list
     except Exception as e:
         debug_exception(e)

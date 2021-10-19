@@ -24,7 +24,7 @@ import PortfolioListSummary from './PortfolioListSummary';
 // later to match what is actually get)
 interface IPortfolioResponse {
   id: number;
-  ordering: undefined;
+  order: number;
   portfolioName: string;
   stockCount: number;
   value: number;
@@ -155,7 +155,7 @@ const PortfolioList = () => {
     (portfolioList: IPortfolioResponse[]): IPortfolio[] => {
       return portfolioList.map((port: IPortfolioResponse) => ({
         draggableId: `portfolio-${port.id}`,
-        ordering: port.ordering ?? Math.random(), // TODO: map to API response
+        ordering: port.order,
         portfolioId: port.id,
         name: port.portfolioName,
         stockCount: port.stockCount,
@@ -266,7 +266,10 @@ const PortfolioList = () => {
           newList[i].ordering = i;
         }
 
-        // TODO: Call API to reorder the list in the backend.
+        axios.put(
+          '/portfolio/list',
+          newList.map((x) => ({ id: x.portfolioId, order: x.ordering }))
+        );
 
         // Return the list to set it.
         return newList;
