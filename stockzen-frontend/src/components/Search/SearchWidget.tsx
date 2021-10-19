@@ -21,7 +21,7 @@ const SearchWidget: FC<Prop> = (prop) => {
       stockPageId: x.id,
       code: x.code,
       description: x.stock_name,
-      market: Math.random().toString(),
+      market: Math.round(Math.random() * 100).toString(),
       searchLabel: `${x.code}` + (x.stock_name ? ` : ${x.stock_name}` : ''),
     }),
     []
@@ -79,13 +79,13 @@ const SearchWidget: FC<Prop> = (prop) => {
           paginate={false}
           options={options}
           placeholder='Begin typing stock symbol or name'
-          //onInputChange={(query) => setQuery(query)}
           onBlur={() => {
             //setShowSearchInput(false);
           }}
           onSearch={(query) => {
             query = query.toLowerCase();
             setIsLoading(true);
+            setOptions([]);
 
             axios.get('/search?query=' + encodeURIComponent(query)).then(
               (response: AxiosResponse<SearchResponse[]>) => {
