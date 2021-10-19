@@ -14,8 +14,11 @@ interface Prop {
 }
 
 const SearchWidget: FC<Prop> = (prop) => {
+  // Extract the portfolioId from properties
   const { portfolioId } = prop;
 
+  // A map function to map the response from backend to frontend object
+  // useCallback is used to cache the function
   const mapOptions = useCallback(
     (x: SearchResponse): TypeaheadOption => ({
       stockPageId: x.id,
@@ -31,10 +34,13 @@ const SearchWidget: FC<Prop> = (prop) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [addedStockPageIds, setAddedStockIds] = useState<number[]>([]);
 
+  // Init
   useEffect(() => {
+    // Call to get the list of current stocks in portfolio
     axios
       .get(`/stock/list/${portfolioId}`)
       .then((response: AxiosResponse<StockListResponse[]>) => {
+        // Set the list of stock_page_id as added stocks
         setAddedStockIds((added) => {
           return [
             ...added,
@@ -49,6 +55,7 @@ const SearchWidget: FC<Prop> = (prop) => {
 
   return (
     <>
+      {/* Button of search */}
       <Button
         variant='light'
         onClick={() => {
@@ -59,6 +66,7 @@ const SearchWidget: FC<Prop> = (prop) => {
         <img src={plusCircle} alt='plus' className='me-1' /> Add a stock
       </Button>
 
+      {/* The search modal */}
       <Modal
         show={showSearchInput}
         size='lg'
@@ -87,13 +95,16 @@ const SearchWidget: FC<Prop> = (prop) => {
             setIsLoading(true);
             setOptions([]);
 
+            // Query the search
             axios.get('/search?query=' + encodeURIComponent(query)).then(
               (response: AxiosResponse<SearchResponse[]>) => {
+                // Map the object and then set it
                 let options = response.data.map(mapOptions);
                 setOptions(options);
                 setIsLoading(false);
               },
               () => {
+                // Set to empty if failed
                 setOptions([]);
                 setIsLoading(false);
               }
@@ -109,6 +120,7 @@ const SearchWidget: FC<Prop> = (prop) => {
                 >
                   <div className={styles.searchOption}>
                     <span className={styles.optionAdd}>
+                      {/* Render the add button if it is not added */}
                       {!addedStockPageIds.includes(option.stockPageId) && (
                         <Button
                           variant='transparent'
@@ -116,7 +128,10 @@ const SearchWidget: FC<Prop> = (prop) => {
                             ev.preventDefault();
                             ev.stopPropagation();
 
+                            // Call add stock
                             prop.addStock(option.code, option.stockPageId);
+
+                            // Add it to the added stocks
                             setAddedStockIds([
                               ...addedStockPageIds,
                               option.stockPageId,
