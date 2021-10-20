@@ -67,13 +67,6 @@ const OrderingIndicator: FC<OrderingIndicatorProp> = (props) => {
           alt='order-indicator'
         />
       )}
-      {/* {target !== ordering.column && (
-          <span
-            style={{ display: 'inline-block', width: '24px', height: '24px' }}
-          >
-            &nbsp;
-          </span>
-        )} */}
     </>
   );
 };
@@ -275,14 +268,8 @@ const PortfolioPage = () => {
       </div>
 
       {/* Wrapper in case the screen is too small. It enable scrolling in case a really small screen. */}
-      <div
-        style={{
-          maxWidth: '100vw',
-          overflowX: 'auto',
-          marginRight: '-35px',
-        }}
-      >
-        <div style={{ minWidth: '615px', margin: '0 1px' }}>
+      <div className={styles.sideScrollWrapper}>
+        <div className={styles.sdieScrollContainer}>
           <div className={styles.tableHeader}>
             <span className={styles.rowStockInfo}>
               <span className={styles.rowHandle}></span>

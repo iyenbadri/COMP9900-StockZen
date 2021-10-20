@@ -27,6 +27,17 @@
   color: #e26b6b;
 }
 
+.sideScrollWrapper {
+  max-width: 100vw;
+  overflow-x: auto;
+  margin-right: -35px;
+}
+
+.sdieScrollContainer {
+  min-width: 615px;
+  margin: 0 1px;
+}
+
 .tableHeader,
 .tableRow {
   display: flex;
