@@ -76,7 +76,6 @@ class PortfolioCRUD(Resource):
     @login_required
     @api.marshal_list_with(portfolio_list_response)
     @api.response(200, "Successfully retrieved list")
-    @api.response(500, "FAILED  retrieved list")
     def get(self):
         """List all portfolios from a user"""
 
