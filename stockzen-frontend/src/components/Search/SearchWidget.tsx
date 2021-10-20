@@ -39,7 +39,7 @@ const SearchWidget: FC<Prop> = (prop) => {
     // Call to get the list of current stocks in portfolio
     axios
       .get(`/stock/list/${portfolioId}`)
-      .then((response: AxiosResponse<StockListResponse[]>) => {
+      .then((response: AxiosResponse<IStockResponse[]>) => {
         // Set the list of stock_page_id as added stocks
         setAddedStockIds((added) => {
           return [

@@ -11,14 +11,42 @@ interface IPortfolio {
     totalGainPercent: number | null;
 }
 
-interface TableOrdering<T extends string> {
-    column: T | '',
-    ordering: Ordering
+// The response from the backend (This is just a draft, will change
+// later to match what is actually get)
+interface IPortfolioResponse {
+    id: number;
+    order: number;
+    portfolioName: string;
+    stockCount: number;
+    value: number;
+    change: number;
+    percChange: number;
+    gain: number;
+    percGain: number;
 }
 
 
+// The stock data for PortfolioPage and PortfolioPageRow
+interface IStock {
+    ordering: number;
+    stockId: number;
+    draggableId: string;
+    symbol: string;
+    name: string;
+    price: number;
+    change: number;
+    changePercent: number;
+    averagePrice: number;
+    profit: number;
+    profitPercent: number;
+    value: number;
+    prediction: number;
+    confidence: number;
+}
 
-interface StockListResponse {
+
+// The reponse got from backend (Will change it later to match the actual)
+interface IStockResponse {
     id: number;
     code: string;
     stock_page_id: number;
@@ -31,4 +59,21 @@ interface StockListResponse {
     gain: number;
     percGain: number;
     value: number;
+    order: number;
+    prediction: number;
+    confidence: number;
+}
+
+
+
+// Temp sort parameters
+interface TableOrdering<T extends string> {
+    column: T | '',
+    ordering: Ordering
+}
+
+
+interface OrderingIndicatorProp {
+    target: string;
+    ordering: TableOrdering<string>;
 }
