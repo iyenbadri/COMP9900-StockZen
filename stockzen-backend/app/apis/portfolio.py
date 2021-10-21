@@ -163,4 +163,4 @@ class PortfolioCRUD(Resource):
         if util.delete_portfolio(portfolioId) == Status.SUCCESS:
             return {"message": "Portfolio successfully deleted"}, 200
 
-        return abort(500, "Portfolio name could not be deleted")
+        return abort(500, "Portfolio could not be deleted")
