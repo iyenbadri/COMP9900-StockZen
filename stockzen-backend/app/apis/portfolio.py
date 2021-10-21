@@ -79,7 +79,7 @@ class PortfolioCRUD(Resource):
     def get(self):
         """List all portfolios from a user"""
 
-        portfolio_list = Status.FAIL
+        portfolio_list = util.get_portfolio_list()
         if portfolio_list == Status.FAIL:
             return abort(500, "Portfolio list for this user could not be retrieved")
 
