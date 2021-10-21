@@ -129,11 +129,25 @@ Styling fixup code for demo
 Demo preparation
 Database population script for user and portfolio
 
-The team is bit behind on Sprint 1 but have covered some bits for Sprint 2, hopefully we can catch up.
+Progress: The team is bit behind on Sprint 1 but have covered some bits for Sprint 2, hopefully we can catch up.
+
+Coded the backend for sorting endpoint, draft PR, bugfixes
+Look into testing frameworks for backend
+Research into drag and drop options
+PR for Rittisak for drag and drop
+Ran retrospective session and backlog review
+Wrote and formatted retrospective report
 
 ===========================================================================
 Week 6
 ===========================================================================
+Submitted retrospective report and emailed to tutor
+Research on SQLA deferreds, implemented load_only 
+Further fix up to search endpoint branch for querystring and file structure, submit PR
+Bugfixes from PR review, merged portfolio reordering endpoint
+Made changes to abort calls, modify backend schema to somewhat normalise the db
+Modified stock list logic to return relevant datapoints
+Research into pytest for backend, looking at refactoring entry point into factory function to enable instanced tests
 
 ===========================================================================
 Week 7
