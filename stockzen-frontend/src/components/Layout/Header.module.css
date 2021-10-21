@@ -24,3 +24,11 @@ header.userAuthenticated {
   background-color: var(--stockzen-light);
   color: var(--zen-3);
 }
+
+.tabs {
+  size: large;
+  outline: none;
+  font-weight: bold;
+  color: var(--zen-2);
+  margin-right: 20px;
+}
