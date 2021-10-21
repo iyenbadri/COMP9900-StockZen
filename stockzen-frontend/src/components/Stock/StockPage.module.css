@@ -73,6 +73,8 @@
   height: 34px;
   border-bottom: 2px solid;
   border-color: #c4c0c0;
+  padding: 0;
+  list-style-type: none;
 }
 
 .tableBar .tabs {
