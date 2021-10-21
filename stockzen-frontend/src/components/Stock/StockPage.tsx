@@ -1,6 +1,7 @@
 import refreshIcon from 'assets/icon-outlines/outline-refresh-small.svg';
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
+import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import styles from './StockPage.module.css';
 
 // interface Stockdata {
@@ -32,15 +33,25 @@ const StockPage = () => {
 
   const [activeTab, setActiveTab] = useState(0);
 
-  const clickHandler = (idx: number) => {
-    return setActiveTab(idx);
-  }
+  const tabContents = (
+    <Tabs>
+      <TabList>
+        <Tab>Summary</Tab>
+        <Tab>Historical Data</Tab>
+        <Tab>Profile</Tab>
+      </TabList>
 
-  const tabArr = [
-    { name: 'Summary', content: 'Summary content' },
-    { name: 'Historical Data', content: 'Historical data content' },
-    { name: 'Company Data', content: 'Company data content' },
-  ];
+      <TabPanel>
+        <h4>Summary Content</h4>
+      </TabPanel>
+      <TabPanel>
+        <h4>Historical Data Content</h4>
+      </TabPanel>
+      <TabPanel>
+        <h4>Company Related Content</h4>
+      </TabPanel>
+    </Tabs>
+  );
 
   return (
     <>
@@ -79,34 +90,40 @@ const StockPage = () => {
       <div className={styles.chartPlaceholder}>
         <h3>Chart Placeholder</h3>
       </div>
-      <div className={styles.tableBar}>
-        {/* TO DO: rewrite this section using react-tabs */}
-        <div
-          className={`${activeTab === 0 ? styles.activeTab : styles.tabs}`}
-          onClick={() => {
-            clickHandler(0);
-          }}
-        >
-          Summary
-        </div>
-        <div
-          className={`${activeTab === 1 ? styles.activeTab : styles.tabs}`}
-          onClick={() => clickHandler(1)}
-        >
-          Historical Data
-        </div>
-        <div
-          className={`${activeTab === 2 ? styles.activeTab : styles.tabs}`}
-          onClick={() => clickHandler(2)}
-        >
-          Company Data
-        </div>
-      </div>
-      <div className={styles.chartPlaceholder}>
-        {/* TO DO: replace with each tab content */}
-        <h3>{tabArr[activeTab].content}</h3>
-      </div>
+      <Tabs
+        selectedIndex={activeTab}
+        onSelect={idx => setActiveTab(idx)}
+      >
+        <TabList className={styles.tableBar}>
+          <Tab
+            className={`${activeTab === 0 ? styles.activeTab : styles.tabs}`}
+          >
+            Summary
+          </Tab>
+          <Tab
+            className={`${activeTab === 1 ? styles.activeTab : styles.tabs}`}
+          >
+            Historical Data
+          </Tab>
+          <Tab
+            className={`${activeTab === 2 ? styles.activeTab : styles.tabs}`}
+          >
+            Profile
+          </Tab>
+        </TabList>
+        <TabPanel>
+          <h4>Summary Content</h4>
+        </TabPanel>
+        <TabPanel>
+          <h4>Historical Data Content</h4>
+        </TabPanel>
+        <TabPanel>
+          <h4>Company Related Content</h4>
+        </TabPanel>
+      </Tabs>
     </>
+
+
   )
 };
 
