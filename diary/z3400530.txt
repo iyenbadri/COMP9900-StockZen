@@ -83,34 +83,53 @@ Backend Sharing session with Badri and Gunjan to get them up to speed with the c
 ===========================================================================
 Week 4
 ===========================================================================
-Helped team with envrionment issues
-PR review for Rittisak
-PR review for Gunjan
-Wrote code for layout changes, added modal and changed CSS to match Figma more closely
+Help team with envrionment issues
+PR for Rittisak
+PR for Gunjan
+Code for layout changes
 
 Meeting: Figure out AV API caching behaviour
-
 Finish additional styling for registration
 Finish code for Landing Page
-Meeting: with Jeehyun for Login
-Meetings: with Badri for Performance Summary Banner
+Call with Jeehyun for Login
+Call with Badri for Performance Summary Banner
 AV API caching and database architecture
 Code for Logout page
 SQLalchemy discussion for stock_lots and users tables with Badri
-Meetings: with Badri for database architecture/SQLAlchemy
+A few more discussions with Badri about this
 
 Review Stock List Page PR
 Review portfolios/lots PR
 Making updates to the database structure, considering performance and updates scheme
-Meeting: with Jeehyun to review login page design, decide on approach to frontend authentication
-Drew up ER Diagram to assist with database meeting
 
-Planned work: submit proposal, complete registration and login, collect alpha vantage data
-Achieved: registration and login are 90% complete, pending review, alpha vantage data is being collected
-Some portfolio items have been worked on by Rittisak which gives us some headstart there.
+Updated Figma with new Lot Details Panel designs and added equations for all metrics
+Worked on the backend to 1. review Badri PR and correct mistakes 2. update the schema for new tables
+3. expand and refactor to cover endpoints for Portfolios, Stocks, Lots
+Meeting: progression check, API discussion
+Refactored backend utilities, added Fetch endpoints
+Group meeting about API - yfinance decided on.
+
+Bugfixes for backend schema
+PR review for Rittisak and Jeehyun
+Review demo plan with team
 ===========================================================================
 Week 5
 ===========================================================================
+PR for search function
+PR for portfolio pages
+Discuss data load script with Badri
+PR for logout function, research React Router
+Look into yfinance documentation
+Code for PortfolioListSummary component
+
+Discussion with Gunjan on yfinance and database
+Discussion with Badri on search database endpoint
+
+Styling fixup code for demo
+Demo preparation
+Database population script for user and portfolio
+
+The team is bit behind on Sprint 1 but have covered some bits for Sprint 2, hopefully we can catch up.
 
 ===========================================================================
 Week 6

@@ -102,7 +102,7 @@ Week 4
                 delete it yet. Pretty much every endpoint is not developed or merged into the main
                 branch.
 # Unfinished:   Data persistant in the data base as there are no endpoints for that yet.
-# Next:         - 
+# Next:         Wire up the frontend to the backend.
 
 On Sunday, I implemented the layout of the portfolio list (using dummy data as backend hasn't
 the endpoint yet.).
@@ -128,9 +128,49 @@ Week 5
 # Issue:        A lot of endpoints are not finished and bakcend is almost has no data on the stock.
                 I had an assessment from another course this week so I have to take a time off from
                 the project. I had done almost all of my tasks so it should be okay.
-# Unfinished:   -
+# Unfinished:   The search widget as the backend endpoint is not available at all.
 # Next:         We prepared for the demo so a lot of unfinished works are frozen for it.
 
+
+Due to assessment from another course, I asked for a week-off. I think it's fair because I delivered
+a lot of work in the first sprint (registration page, portfolio list, portfolio rename, portfolio delete,
+portfolio page, top performer widget, stock search, stock add). I think I fall behind the term of
+progress in another course.
+
+This week I intended to use it to wire up the frontend to the backend. I finished wire up some of it
+due to most of the endpoints are not available/not finished.
+
+This week I mostly do a minor fix to my code.
+
+Gunjan did some work on loading the stock data but there is no endpoint for the frontend yet.
+
+Khai did a wonderful presentation in the demo this week.
+
+Personally I think Jeehyun, Badrivishal, Gunjan worked a bit too slow. Almost no progress during
+the week. And all of them never consult me on anything but they might talk with each other so
+I'm not sure. Gunjan and Badrivishal did a lot of research on the stock API but there is almost
+no data available to do the work. Jeehyun finished do a login/logout page, a portfolio creation page.
+I think I have to tell them that I intend to do peer review according to their contribution. I
+might give them a low score if their contribution is low or incomplete.
+
+K 1
+J 0.5
+G 0.3
+
+
+============================================
+Week 6
+
+# Planned:      Implement the sorting of portfolio list/portfolio page
+# Finished:     Fix a bug in the top performer widget.
+# Issue:        -
+# Unfinished:   -
+# Next:         -
+
+I implemented the drag/drop and the temporary sort functionality of the portfolio page.
+We did the retrospective this week.
+
+K 1
 
 -----------------------------------------------------------------------------------------
 You should also include in this diary the following information (if applicable) about the
