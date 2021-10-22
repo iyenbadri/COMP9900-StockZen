@@ -54,10 +54,10 @@ Week 4
 
 ========================================================================================
 
-Week 5 (Will be updated again at the end of week)
+Week 5 
 
-• Planned  : 
-• Achieved : 
+• Planned  : (1) Coding for logout page (2) Plan for stock page
+• Achieved : All done, but need to show more progress in stock page ASAP
 
 - Did PR reviews for:
   · PR#28_Frontend_search_widget (Rittisak)
@@ -65,8 +65,29 @@ Week 5 (Will be updated again at the end of week)
   ·
 - Wrote codes and created PR for:
   · logout handling (page layout modification, API wireup)
-  · 
 - Had meeting with Khai to discuss about logout page layout
+- Did research, took related tutorials, studied Ken's code structures for 
+  upcoming stock page implementation
 
 ========================================================================================
 
+Week 6 
+
+• Planned  : Stock page (except for API wire up)
+• Achieved : In progress
+
+- Did PR reviews for:
+  · PR#53_Bugfix for Portfolio API wire up (Rittisak)
+  · PR#54_Bugfix for top performer widget (Rittisak)
+  · PR#57_Bugfix for login page
+  · 
+- Wrote codes and created PR for:
+  · frontend stock page layout
+  · 
+- Had discussion with Rittisak to discuss get feedback on code style and 
+  structure of stock page
+- 
+
+========================================================================================
+
+Week 7
