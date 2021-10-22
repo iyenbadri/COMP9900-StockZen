@@ -33,26 +33,6 @@ const StockPage = () => {
 
   const [activeTab, setActiveTab] = useState(0);
 
-  const tabContents = (
-    <Tabs>
-      <TabList>
-        <Tab>Summary</Tab>
-        <Tab>Historical Data</Tab>
-        <Tab>Profile</Tab>
-      </TabList>
-
-      <TabPanel>
-        <h4>Summary Content</h4>
-      </TabPanel>
-      <TabPanel>
-        <h4>Historical Data Content</h4>
-      </TabPanel>
-      <TabPanel>
-        <h4>Company Related Content</h4>
-      </TabPanel>
-    </Tabs>
-  );
-
   return (
     <>
       {/* <PortfolioListSummary></PortfolioListSummary> */}
