@@ -107,7 +107,10 @@ const SearchWidget: FC<Prop> = (prop) => {
                             ev.stopPropagation();
 
                             // TODO: Retrieve the stockPageId from backend.
-                            prop.addStock(option.symbol, 1);
+                            prop.addStock(
+                              option.symbol,
+                              Math.round(Math.random() * 100)
+                            );
                             setAddedSymbols([...addedSymbols, option.symbol]);
                           }}
                         >

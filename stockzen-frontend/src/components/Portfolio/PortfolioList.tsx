@@ -20,9 +20,11 @@ import styles from './PortfolioList.module.css';
 import PortfolioListRow from './PortfolioListRow';
 import PortfolioListSummary from './PortfolioListSummary';
 
+// The response from the backend (This is just a draft, will change
+// later to match what is actually get)
 interface IPortfolioResponse {
   id: number;
-  ordering: undefined;
+  order: number;
   portfolioName: string;
   stockCount: number;
   value: number;
@@ -32,11 +34,7 @@ interface IPortfolioResponse {
   percGain: number;
 }
 
-interface OrderingIndicatorProp {
-  target: string;
-  ordering: TableOrdering<string>;
-}
-
+// Define posible sort columns
 type PortfolioColumn =
   | 'name'
   | 'marketValue'
@@ -45,9 +43,14 @@ type PortfolioColumn =
   | 'stockCount';
 
 const OrderingIndicator: FC<OrderingIndicatorProp> = (props) => {
+  // Extract the parameter from properties
+  // target is the current column
+  // ordering is the sorting parameter (how is it sorting now)
   const { target, ordering } = props;
+
   return (
     <>
+      {/* Show if the sorting column is the same as current column */}
       {target === ordering.column && (
         <img
           width={24}
@@ -68,60 +71,91 @@ const OrderingIndicator: FC<OrderingIndicatorProp> = (props) => {
 };
 
 const PortfolioList = () => {
+  // Get the setShowPortfolioSummary from context
   const { setShowPortfolioSummary } = useContext(TopPerformerContext);
 
+  // States for delete a portfolio. name, id, showModel
   const [deletingPortfolioName, setDeletingPortfolioName] =
     useState<string>('');
   const [deletingPortfolioId, setDeletingPortfolioId] = useState<number>();
   const [showDeletePortfolioModal, setShowDeletePortfolioModal] =
     useState<boolean>(false);
+
+  // States for create portfolio
   const [showCreatePortfolioModal, setShowCreatePortfolioModal] =
     useState<boolean>(false);
+
+  // State for sorting.
   const [tableOrdering, setTableOrdering] = useState<
     TableOrdering<PortfolioColumn>
   >({
     column: '',
     ordering: Ordering.Unknown,
   });
+
+  // List of portfolios
   const [portfolios, _setPortfolios] = useState<IPortfolio[]>([]);
+
+  // State of dnd (to disable hightlight)
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
+  // Function to set the portfolio list
+  // The list need to be sorted before it set.
   const setPortfolios = useCallback(
     (
       portfolios: IPortfolio[],
       tableOrdering: TableOrdering<PortfolioColumn>
     ) => {
       if (tableOrdering.column === '') {
+        // If there is no sorting then sort the port by its `order`
+
         portfolios = portfolios.sort((a, b) => a.ordering - b.ordering);
       } else {
+        // Else sort by the value of the column
+
         portfolios = portfolios.sort((a, b) => {
           if (tableOrdering.column !== '') {
+            // This if to remove the TS complain
+
+            // Read the column value
             const keyA = a[tableOrdering.column] ?? 0;
             const keyB = b[tableOrdering.column] ?? 0;
 
+            // Compare the value and then return it
             if (keyA > keyB) {
+              // Return the comparison order.
+              // 1 mean A is higher than B, -1 mean A is lower than B, 0 if equals.
+
+              // Return the value of ordering
               return tableOrdering.ordering;
             } else if (keyB > keyA) {
+              // Return the opposite of it.
               return -tableOrdering.ordering;
             } else {
+              // Sort by the `order` if the value in column is the same.
               return a.ordering - b.ordering;
             }
           } else {
+            // Default the sorting by its `order`
+
             return a.ordering - b.ordering;
           }
         });
       }
 
+      // Set the sorted portfolios
       _setPortfolios(portfolios);
     },
     [_setPortfolios]
   );
 
+  // a function to map response from backend to pattern in frontend.
+  // useCallback is used to speed up it a bit.
   const mapPortfolioList = useCallback(
     (portfolioList: IPortfolioResponse[]): IPortfolio[] => {
       return portfolioList.map((port: IPortfolioResponse) => ({
         draggableId: `portfolio-${port.id}`,
-        ordering: port.ordering ?? Math.random(), // TODO: map to API response
+        ordering: port.order,
         portfolioId: port.id,
         name: port.portfolioName,
         stockCount: port.stockCount,
@@ -136,86 +170,127 @@ const PortfolioList = () => {
     []
   );
 
+  // Define a function to reload the portfolio list from backend.
   const reloadPortfolioList = useCallback(() => {
+    // API call
     axios.get('/portfolio/list').then((response) => {
+      // Map the result and then set it to state.
       setPortfolios(mapPortfolioList(response.data), tableOrdering);
     });
   }, [tableOrdering, setPortfolios, mapPortfolioList]);
 
+  // An init function
   useEffect(
     () => {
+      // Hide the summary in the top performer widget.
       setShowPortfolioSummary(false);
+
+      // Load the portfolio list
       reloadPortfolioList();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
+  // Handler of portfolio renmae
   const handlePortfolioRename = (portfolioId: number, name: string) => {
+    // Api call
     axios.put(`/portfolio/${portfolioId}`, { newName: name }).then(() => {
+      // Update the portfolio name if portfolioId is matched,
       const newList = portfolios!.map((x) => ({
         ...x,
         name: x.portfolioId === portfolioId ? name : x.name,
       }));
 
+      // Set the portfolio list.
       setPortfolios(newList, tableOrdering);
     });
   };
 
+  // Handler of portfolio delete
   const handlePortfolioDelete = () => {
+    // Hide the portfolio delete modal
     setShowDeletePortfolioModal(false);
 
+    // Call the API
     axios.delete(`/portfolio/${deletingPortfolioId}`).then(() => {
+      // Reload the portfolio list
       reloadPortfolioList();
     });
   };
 
   // Add new portfolio to the PortfolioList
   const [newPortfolioName, setNewPortfolioName] = useState('');
+
+  // Handler of portfolio creation
   const createPortfolio = (ev: any) => {
     ev.preventDefault();
+
+    // Call the API
     axios.post('/portfolio', { portfolioName: newPortfolioName }).then(() => {
+      // Clear the portfolio name from modal.
       setNewPortfolioName('');
 
+      // Reload the portfolio list
       reloadPortfolioList();
     });
 
+    // Hide the modal
     setShowCreatePortfolioModal(false);
   };
 
+  // Handler of drag start
+  // It set te dragging state to true.
   const handleDragStart = () => {
     setIsDragging(true);
   };
 
+  // Handler of drag end
   const handleDragEnd = (result: DropResult, provided: ResponderProvided) => {
+    // Set dragging to false
     setIsDragging(false);
 
+    // Check if it dropped in the list. Do nothing if it is dropped outside
     if (result.destination != null) {
+      // Call to update the list
       _setPortfolios((portfolios) => {
+        // Move item from source to desctinamte (according to where it's moved)
         const newList = arrayMoveImmutable(
           portfolios,
           result.source.index,
           result.destination!.index
         );
 
+        // Update the `order` of portfolio
         for (let i = 0; i < newList.length; i++) {
           newList[i].ordering = i;
         }
 
-        // TODO: Call API to reorder the list in the backend.
+        axios.put(
+          '/portfolio/list',
+          newList.map((x) => ({ id: x.portfolioId, order: x.ordering }))
+        );
 
+        // Return the list to set it.
         return newList;
       });
+
+      // Force set order to non.
       setTableOrdering({ column: '', ordering: Ordering.Unknown });
     }
   };
 
+  // Handler of temp sort
   const handleTempSort = (columnName: PortfolioColumn) => {
+    // Update the table sorting state
     setTableOrdering(
       (
         ordering: TableOrdering<PortfolioColumn>
       ): TableOrdering<PortfolioColumn> => {
         if (ordering.column === columnName) {
+          // If it is the same column then just change its direction
+          // Rotate the direction as Asc -> Desc -> None
+
           switch (ordering.ordering) {
             case Ordering.Ascending:
               ordering = { ...ordering, ordering: Ordering.Descending };
@@ -228,11 +303,14 @@ const PortfolioList = () => {
               break;
           }
         } else {
+          // Else set it as sorting column and set direction to asc
           ordering = { column: columnName, ordering: Ordering.Ascending };
         }
 
+        // Call this function to do the sorting
         setPortfolios(portfolios, ordering);
 
+        // Return to set the ordering
         return ordering;
       }
     );
@@ -240,6 +318,7 @@ const PortfolioList = () => {
 
   return (
     <>
+    {/* Delete portfolio modal */}
       <Modal
         show={showDeletePortfolioModal}
         onHide={() => setShowDeletePortfolioModal(false)}
@@ -262,6 +341,8 @@ const PortfolioList = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {/* Create portfolio Modal */}
       <Modal
         show={showCreatePortfolioModal}
         onHide={() => setShowCreatePortfolioModal(false)}
@@ -300,8 +381,12 @@ const PortfolioList = () => {
           </Modal.Footer>
         </Form>
       </Modal>
+
+
+
       <PortfolioListSummary></PortfolioListSummary>
 
+{/* Toolbar */}
       <div className={styles.tableToolbar}>
         <h5 className={styles.toolbarText}>My Portfolios</h5>
         <div className={styles.toolbarControls}>
@@ -320,6 +405,7 @@ const PortfolioList = () => {
         </div>
       </div>
 
+{/* Header of the table */}
       <div className={styles.tableHeader}>
         <div className={styles.rowPortInfo}>
           <div className={styles.rowHandle}></div>
@@ -398,6 +484,7 @@ const PortfolioList = () => {
         <div className={styles.rowDelete}></div>
       </div>
 
+{/* A wrapper to enable/disable hightlight */}
       <div
         className={`${isDragging ? styles.dragging : styles.notDragging} ${
           tableOrdering.column !== '' ? styles.tempSort : ''
