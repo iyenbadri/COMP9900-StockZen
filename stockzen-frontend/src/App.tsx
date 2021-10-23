@@ -29,7 +29,7 @@ function App() {
             <GuestRoute exact path={'/'} component={Landing} />
             <Route path={'/user'} component={User} />
             <Route path={'/portfolio'} component={Portfolio} />
-            <Route path={'/search'} component={Stock} />
+            <Route path={'/stock/:stockPageId'} component={Stock} />
           </Switch>
         </Container>
         <Footer></Footer>
