@@ -1,9 +1,12 @@
 from typing import Mapping, Sequence, Union
 
+import numpy as np
+import pandas as pd
 from app.models.schema import Portfolio, Stock, StockPage, User
 from app.utils.enums import Status
 from flask_login import current_user
 
+from . import api_utils as api
 from . import db_utils as db
 
 # ==============================================================================
@@ -163,6 +166,27 @@ def delete_stock(stock_id: int) -> Status:
 # ==============================================================================
 # Stock Page Utils
 # ==============================================================================
+def symbol(conn):
+    file = "symbol.csv"
+    symbol = pd.read_csv(file)
+    symbol = symbol.reset_index()
+    symbol = symbol.drop("index", 1)
+    symbol["id"] = np.nan
+    symbols = symbol[["id", "code", "stock_name"]]
+    symbols.to_sql("stock_pages", conn, if_exists="append", index=False)
+    conn.commit()
+
+
+def update_stock_page(stock_id: int):
+    sym = StockPage.query.filter_by(id=stock_id)
+    sym = sym.code
+    print(sym)
+    try:
+        db.update_item_columns(StockPage, stock_id, api.stockOverview(sym))
+        return Status.SUCCESS
+    except:
+        return Status.FAIL
+
 
 # TODO: rudimentary function for db population, needs updating
 def add_stock_page(code: str, stock_name: str) -> Status:
