@@ -7,9 +7,9 @@ jest.mock('axios', () => {
 });
 
 describe('Register', () => {
-  test('input validation', () => {
+  test('input validation', async () => {
     render(<Register></Register>);
-    const createPortfolioButton = screen.get(/Create a portfolio/i);
+    const createPortfolioButton = await screen.findByText(/Create account/i);
     expect(createPortfolioButton).toBeVisible();
   });
 });
