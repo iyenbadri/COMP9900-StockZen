@@ -1,51 +1,61 @@
 import plusCircle from 'assets/icon-outlines/outline-plus-circle.svg';
 import plusIcon from 'assets/icon-outlines/outline-plus-small.svg';
-import React, { FC, useState } from 'react';
+import axios, { AxiosResponse } from 'axios';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { AsyncTypeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { Link } from 'react-router-dom';
-import listings from './listing.json';
 import styles from './SearchWidget.module.css';
 
 interface Prop {
+  portfolioId: string;
   addStock: (symbol: string, stockPageId: number) => void;
 }
 
-interface TypeaheadOption {
-  id: string;
-  symbol: string;
-  description: string;
-  market: string;
-  searchLabel: string;
-}
-
 const SearchWidget: FC<Prop> = (prop) => {
-  const mapOptions = (x: {
-    symbol: string;
-    description: string;
-    market: string;
-  }) => ({
-    id: x.symbol,
-    symbol: x.symbol,
-    description: x.description,
-    market: x.market,
-    searchLabel: `${x.symbol}: ${x.description}`,
-  });
+  // Extract the portfolioId from properties
+  const { portfolioId } = prop;
+
+  // A map function to map the response from backend to frontend object
+  // useCallback is used to cache the function
+  const mapOptions = useCallback(
+    (x: SearchResponse): TypeaheadOption => ({
+      stockPageId: x.id,
+      code: x.code,
+      description: x.stock_name,
+      market: Math.round(Math.random() * 100).toString(),
+      searchLabel: `${x.code}` + (x.stock_name ? ` : ${x.stock_name}` : ''),
+    }),
+    []
+  );
 
   const [showSearchInput, setShowSearchInput] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [addedSymbols, setAddedSymbols] = useState<string[]>([]);
+  const [addedStockPageIds, setAddedStockIds] = useState<number[]>([]);
 
-  // TODO : Use API to update the addedSymbols
+  // Init
+  useEffect(() => {
+    // Call to get the list of current stocks in portfolio
+    axios
+      .get(`/stock/list/${portfolioId}`)
+      .then((response: AxiosResponse<IStockResponse[]>) => {
+        // Set the list of stock_page_id as added stocks
+        setAddedStockIds((added) => {
+          return [
+            ...added,
+            ...response.data.map((stock) => stock.stock_page_id),
+          ];
+        });
+      });
+  }, [portfolioId, setAddedStockIds]);
 
   //const [query, setQuery] = useState<string>('');
-  const [options, setOptions] = useState<TypeaheadOption[]>(
-    listings.map(mapOptions)
-  );
+  const [options, setOptions] = useState<TypeaheadOption[]>([]);
 
   return (
     <>
+      {/* Button of search */}
       <Button
         variant='light'
         onClick={() => {
@@ -56,6 +66,7 @@ const SearchWidget: FC<Prop> = (prop) => {
         <img src={plusCircle} alt='plus' className='me-1' /> Add a stock
       </Button>
 
+      {/* The search modal */}
       <Modal
         show={showSearchInput}
         size='lg'
@@ -76,39 +87,55 @@ const SearchWidget: FC<Prop> = (prop) => {
           paginate={false}
           options={options}
           placeholder='Begin typing stock symbol or name'
-          //onInputChange={(query) => setQuery(query)}
           onBlur={() => {
             //setShowSearchInput(false);
           }}
           onSearch={(query) => {
             query = query.toLowerCase();
             setIsLoading(true);
-            let options = listings
-              .filter(
-                (x) =>
-                  x.symbol.toLowerCase().indexOf(query) !== -1 ||
-                  x.description.toLowerCase().indexOf(query) !== -1
-              )
-              .map(mapOptions);
-            setOptions(options);
-            setIsLoading(false);
+            setOptions([]);
+
+            // Query the search
+            axios.get('/search?query=' + encodeURIComponent(query)).then(
+              (response: AxiosResponse<SearchResponse[]>) => {
+                // Map the object and then set it
+                let options = response.data.map(mapOptions);
+                setOptions(options);
+                setIsLoading(false);
+              },
+              () => {
+                // Set to empty if failed
+                setOptions([]);
+                setIsLoading(false);
+              }
+            );
           }}
           renderMenu={(results, menuProps) => (
             <Menu {...menuProps} className={styles.options}>
               {results.map((option, index) => (
-                <MenuItem key={option.id} option={option} position={index}>
+                <MenuItem
+                  key={option.stockPageId}
+                  option={option}
+                  position={index}
+                >
                   <div className={styles.searchOption}>
                     <span className={styles.optionAdd}>
-                      {!addedSymbols.includes(option.symbol) && (
+                      {/* Render the add button if it is not added */}
+                      {!addedStockPageIds.includes(option.stockPageId) && (
                         <Button
                           variant='transparent'
                           onClick={(ev) => {
                             ev.preventDefault();
                             ev.stopPropagation();
 
-                            // TODO: Retrieve the stockPageId from backend.
-                            prop.addStock(option.symbol, 1);
-                            setAddedSymbols([...addedSymbols, option.symbol]);
+                            // Call add stock
+                            prop.addStock(option.code, option.stockPageId);
+
+                            // Add it to the added stocks
+                            setAddedStockIds([
+                              ...addedStockPageIds,
+                              option.stockPageId,
+                            ]);
                           }}
                         >
                           <img src={plusIcon} alt='add' />
@@ -117,8 +144,8 @@ const SearchWidget: FC<Prop> = (prop) => {
                     </span>
                     <span className={styles.optionSymbol}>
                       {/* TODO: Will fix the nested `a` tag bug later. Have to find a way to fix it first */}
-                      <Link to={'/stock/' + option.symbol}>
-                        {option.symbol}
+                      <Link to={'/stock/' + option.stockPageId}>
+                        {option.code}
                       </Link>
                     </span>
                     <span className={styles.optionDescription}>
@@ -132,13 +159,22 @@ const SearchWidget: FC<Prop> = (prop) => {
           )}
         ></AsyncTypeahead>
       </Modal>
-
-      {/* <Form.Control
-        placeholder=''
-        onChange={(ev) => setSearchQuery(ev.target.value)}
-      ></Form.Control> */}
     </>
   );
 };
+
+interface TypeaheadOption {
+  stockPageId: number;
+  code: string;
+  description: string;
+  market: string;
+  searchLabel: string;
+}
+
+interface SearchResponse {
+  id: number;
+  code: string;
+  stock_name: string;
+}
 
 export default SearchWidget;
