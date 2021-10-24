@@ -25,6 +25,7 @@ interface RouteRarams {
   portfolioId: string;
 }
 
+// Define the list of sortable columns
 type PortfolioPageColumn =
   | 'symbol'
   | 'name'
@@ -35,8 +36,11 @@ type PortfolioPageColumn =
   | 'value'
   | 'prediction';
 
+// This is a copy from PortfolioList. Might create a separate file later.
 const OrderingIndicator: FC<OrderingIndicatorProp> = (props) => {
+  // Extract the properties
   const { target, ordering } = props;
+
   return (
     <>
       {target === ordering.column && (
@@ -47,24 +51,24 @@ const OrderingIndicator: FC<OrderingIndicatorProp> = (props) => {
           alt='order-indicator'
         />
       )}
-      {/* {target !== ordering.column && (
-          <span
-            style={{ display: 'inline-block', width: '24px', height: '24px' }}
-          >
-            &nbsp;
-          </span>
-        )} */}
     </>
   );
 };
 
 const PortfolioPage = () => {
-  //const [showSearchWidget, setShowSearchWidget] = useState<boolean>(false);
+  // Get the setShowPortfolioSummary from TopPerformerContext
   const { setShowPortfolioSummary } = useContext(TopPerformerContext);
 
+  // Extract the portfolioId from route
   const { portfolioId } = useParams<RouteRarams>();
+
+  // List of stock
   const [stocks, _setStocks] = useState<IStock[]>([]);
+
+  // State of dragging
   const [isDragging, setIsDragging] = useState<boolean>(false);
+
+  // The temp sort order
   const [tableOrdering, setTableOrdering] = useState<
     TableOrdering<PortfolioPageColumn>
   >({
@@ -77,13 +81,15 @@ const PortfolioPage = () => {
   const [deletingStockId, setDeletingStockId] = useState(0);
   const [deletingStockName, setDeletingStockName] = useState('');
 
+  // The function to map response from backend to frontend object
   const mapStockList = useCallback(
-    (data: StockListResponse[]): IStock[] => {
+    (data: IStockResponse[]): IStock[] => {
       return data.map((stock) => {
         const randomIndex = Math.round(Math.random() * 10000);
         const symbol = stocksListing[randomIndex];
         return {
           stockId: stock.id,
+          stockPageId: stock.stockPageId,
           draggableId: `stock-${stock.id}`,
           ordering: stock.order ?? Math.random(), // TODO: map the backend data
           symbol: stock.code ?? symbol.symbol,
@@ -104,6 +110,7 @@ const PortfolioPage = () => {
     []
   );
 
+  // A function to do the sorting. It is the same logic as in PortfolioList
   const setStocks = useCallback(
     (stocks: IStock[], tableOrdering: TableOrdering<PortfolioPageColumn>) => {
       if (tableOrdering.column === '') {
@@ -132,44 +139,62 @@ const PortfolioPage = () => {
     [_setStocks]
   );
 
+  // A function to load the stocks list
   const reloadStockList = useCallback(() => {
+    // Call the API
     axios.get(`/stock/list/${portfolioId}`).then((response) => {
+      // Map the response and then set it.
       setStocks(mapStockList(response.data), tableOrdering);
     });
   }, [portfolioId, mapStockList, setStocks, tableOrdering]);
 
+  // Init
   useEffect(
     () => {
+      // Hide the summary in the top performer widget.
       setShowPortfolioSummary(true);
+
+      // Load the stock list from backend.
       reloadStockList();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
+  // Handler of add stock
   const handleAddStock = (symbol: string, stockPageId: number) => {
+    // Call the API
     axios
       .post(`/stock/${portfolioId}`, { stockPageId: stockPageId })
       .then(() => {
+        // Then reload the stock list
         reloadStockList();
       });
   };
 
+  // Set isDragging when user start dragging the stock
+  // It is to disable the highlight
   const handleDragStart = () => {
     setIsDragging(true);
   };
 
+  // Handler when the drag end
   const handleDragEnd = (result: DropResult, provided: ResponderProvided) => {
+    // Set isDragging to faslse
     setIsDragging(false);
 
+    // If user drop it in the list
     if (result.destination != null) {
+      // Update the stock list
       _setStocks((stocks) => {
+        // Move the stock in  the array
         const newList = arrayMoveImmutable(
           stocks,
           result.source.index,
           result.destination!.index
         );
 
+        // Update the `order`
         for (let i = 0; i < newList.length; i++) {
           newList[i].ordering = i;
         }
@@ -178,15 +203,20 @@ const PortfolioPage = () => {
 
         return newList;
       });
+
+      // Reset the sorting parameter
       setTableOrdering({ column: '', ordering: Ordering.Unknown });
     }
   };
 
+  // Handler of them sort
   const handleTempSort = (columnName: PortfolioPageColumn) => {
     setTableOrdering(
       (
         ordering: TableOrdering<PortfolioPageColumn>
       ): TableOrdering<PortfolioPageColumn> => {
+        // Update the sorting parameter
+        // It rotate Asc -> Desc -> None
         if (ordering.column === columnName) {
           switch (ordering.ordering) {
             case Ordering.Ascending:
@@ -203,6 +233,7 @@ const PortfolioPage = () => {
           ordering = { column: columnName, ordering: Ordering.Ascending };
         }
 
+        // Call setStocks to update the list (do the sorting);
         setStocks(stocks, ordering);
 
         return ordering;
@@ -263,14 +294,9 @@ const PortfolioPage = () => {
         </Button>
       </div>
 
-      <div
-        style={{
-          maxWidth: '100vw',
-          overflowX: 'auto',
-          marginRight: '-35px',
-        }}
-      >
-        <div style={{ minWidth: '615px', margin: '0 1px' }}>
+      {/* Wrapper in case the screen is too small. It enable scrolling in case a really small screen. */}
+      <div className={styles.sideScrollWrapper}>
+        <div className={styles.sdieScrollContainer}>
           <div className={styles.tableHeader}>
             <span className={styles.rowStockInfo}>
               <span className={styles.rowHandle}></span>
@@ -384,6 +410,7 @@ const PortfolioPage = () => {
             <span className={styles.rowDelete}></span>
           </div>
 
+          {/* Wrapper to enable/disable hightlight when dragging */}
           <div
             className={`${isDragging ? styles.dragging : styles.notDragging} ${
               tableOrdering.column !== '' ? styles.tempSort : ''
