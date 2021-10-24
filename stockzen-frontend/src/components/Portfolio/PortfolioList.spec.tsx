@@ -3,7 +3,11 @@ import React from 'react';
 import PortfolioList from './PortfolioList';
 
 jest.mock('axios', () => {
-  return {};
+  return {
+    get: async () => {
+      return [];
+    },
+  };
 });
 
 describe('PortfolioList', () => {

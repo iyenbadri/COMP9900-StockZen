@@ -26,5 +26,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: stockzen-frontend/package-lock.json
     - run: npm install
+      working-directory: stockzen-frontend
     - run: npm test
+      working-directory: stockzen-frontend
