@@ -12,13 +12,6 @@ import styles from './Header.module.css';
 const Header = () => {
   const { isAuthenticated } = useContext(UserContext);
   const location = useLocation();
-  // List of pages without tabs
-  const basicHeader = [
-    '/',
-    '/user/login',
-    '/user/register',
-    '/user/logout'
-  ]
 
   return (
     <header className={isAuthenticated ? styles.userAuthenticated : ''}>
@@ -30,7 +23,7 @@ const Header = () => {
               {!isAuthenticated && <img src={logo_dark} alt='StockZen' />}
             </Link>
           </Col>
-          {!(location.pathname in basicHeader) && (
+          {isAuthenticated && (
             <Col xs={6}>
               <Link to="/portfolio">
                 <Button
