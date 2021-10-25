@@ -169,17 +169,16 @@ def delete_stock(stock_id: int) -> Status:
 def symbol(conn):
     file = "symbol.csv"
     symbol = pd.read_csv(file)
-    symbol = symbol.reset_index()
-    symbol = symbol.drop("index", 1)
-    symbol["id"] = np.nan
-    symbols = symbol[["id", "code", "stock_name"]]
-    symbols.to_sql("stock_pages", conn, if_exists="append", index=False)
+    symbols = symbol[["code", "stock_name", "exchange"]]
+    symbols.to_sql("stock_pages", conn, if_exists="fail", index=False)
     conn.commit()
 
 
 def update_stock_page(stock_id: int):
-    sym = StockPage.query.filter_by(id=stock_id)
-    sym = sym.code
+    stock = (
+        StockPage.query.options(load_only(StockPage.code)).filter_by(id=stock_id).one()
+    )
+    sym = stock.code
     print(sym)
     try:
         db.update_item_columns(StockPage, stock_id, api.stockOverview(sym))
