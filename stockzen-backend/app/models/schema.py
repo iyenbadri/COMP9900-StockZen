@@ -93,6 +93,14 @@ class Portfolio(db.Model):
 
 
 class Stock(db.Model):
+    # Columns to be returned from a JOIN:
+    # --------------------------------------------------------------------------
+    # code = Column(String(6))
+    # stock_name = Column(String(40))
+    # price = Column(Float)  # = stock_pages.price
+    # change = Column(Float)  # = stock_pages.change
+    # perc_change = Column(Float)  # = stock_pages.perc_change
+
     __tablename__ = "stocks"
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
@@ -100,11 +108,6 @@ class Stock(db.Model):
     stock_page_id = Column(
         Integer, ForeignKey("stock_pages.id"), nullable=False
     )  # to get current price, change, percent_change, prediction, confidence
-    code = Column(String(6))
-    stock_name = Column(String(40))
-    price = Column(Float)  # = stock_pages.price
-    change = Column(Float)  # = stock_pages.change
-    perc_change = Column(Float)  # = stock_pages.perc_change
     avg_price = Column(Float)  # = bought.avg_price
     units_held = Column(Integer)  # sum(bought.units) - sum(sold.units)  -> not displayed
     gain = Column(Float)  # (stocks.price - bought.avg_price) * stocks.units_held
@@ -131,8 +134,8 @@ class Stock(db.Model):
     # Unique Constraints (multiple column)
     UniqueConstraint(user_id, portfolio_id, stock_page_id)
 
-    def __repr__(self):
-        return f"<Stock(id={self.id}, portfolio_id={self.portfolio_id}, code={self.code}, stock_name={self.stock_name})>"
+    # def __repr__(self):
+    # return f"<Stock(id={self.id}, portfolio_id={self.portfolio_id}, code={self.code}, stock_name={self.stock_name})>"
 
 
 class LotBought(db.Model):
