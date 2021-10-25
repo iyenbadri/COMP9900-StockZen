@@ -20,25 +20,7 @@ import PortfolioPageRow from './PortfolioPageRow';
 import PortfolioPageSummary from './PortfolioPageSummary';
 
 interface RouteRarams {
-  portfolioId?: string | undefined;
-}
-
-// The reponse got from backend (Will change it later to match the actual)
-interface StockListResponse {
-  id: number;
-  code: string;
-  order: number | undefined;
-  stockName: string;
-  price: number;
-  change: number;
-  percChange: number;
-  avgPrice: number;
-  unitsHeld: number;
-  gain: number;
-  percGain: number;
-  value: number;
-  prediction: number;
-  confidence: number;
+  portfolioId: string;
 }
 
 // Define the list of sortable columns
@@ -94,7 +76,7 @@ const PortfolioPage = () => {
 
   // The function to map response from backend to frontend object
   const mapStockList = useCallback(
-    (data: StockListResponse[]): IStock[] => {
+    (data: IStockResponse[]): IStock[] => {
       return data.map((stock) => ({
         stockId: stock.id,
         draggableId: `stock-${stock.id}`,
@@ -257,7 +239,10 @@ const PortfolioPage = () => {
       <hr />
 
       <div className={styles.tableToolbar}>
-        <SearchWidget addStock={handleAddStock}></SearchWidget>
+        <SearchWidget
+          portfolioId={portfolioId}
+          addStock={handleAddStock}
+        ></SearchWidget>
         <Button
           variant='light'
           className='ms-1 text-muted d-flex align-items-center'

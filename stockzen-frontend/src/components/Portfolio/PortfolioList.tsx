@@ -20,20 +20,6 @@ import styles from './PortfolioList.module.css';
 import PortfolioListRow from './PortfolioListRow';
 import PortfolioListSummary from './PortfolioListSummary';
 
-// The response from the backend (This is just a draft, will change
-// later to match what is actually get)
-interface IPortfolioResponse {
-  id: number;
-  order: number;
-  portfolioName: string;
-  stockCount: number;
-  value: number;
-  change: number;
-  percChange: number;
-  gain: number;
-  percGain: number;
-}
-
 // Define posible sort columns
 type PortfolioColumn =
   | 'name'
@@ -266,6 +252,7 @@ const PortfolioList = () => {
           newList[i].ordering = i;
         }
 
+        // Call API to update the portfolio list in backend
         axios.put(
           '/portfolio/list',
           newList.map((x) => ({ id: x.portfolioId, order: x.ordering }))
@@ -318,7 +305,7 @@ const PortfolioList = () => {
 
   return (
     <>
-    {/* Delete portfolio modal */}
+      {/* Delete portfolio modal */}
       <Modal
         show={showDeletePortfolioModal}
         onHide={() => setShowDeletePortfolioModal(false)}
@@ -382,11 +369,9 @@ const PortfolioList = () => {
         </Form>
       </Modal>
 
-
-
       <PortfolioListSummary></PortfolioListSummary>
 
-{/* Toolbar */}
+      {/* Toolbar */}
       <div className={styles.tableToolbar}>
         <h5 className={styles.toolbarText}>My Portfolios</h5>
         <div className={styles.toolbarControls}>
@@ -405,7 +390,7 @@ const PortfolioList = () => {
         </div>
       </div>
 
-{/* Header of the table */}
+      {/* Header of the table */}
       <div className={styles.tableHeader}>
         <div className={styles.rowPortInfo}>
           <div className={styles.rowHandle}></div>
@@ -484,7 +469,7 @@ const PortfolioList = () => {
         <div className={styles.rowDelete}></div>
       </div>
 
-{/* A wrapper to enable/disable hightlight */}
+      {/* A wrapper to enable/disable hightlight */}
       <div
         className={`${isDragging ? styles.dragging : styles.notDragging} ${
           tableOrdering.column !== '' ? styles.tempSort : ''

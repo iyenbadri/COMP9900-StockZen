@@ -2,7 +2,7 @@ import app.utils.crud_utils as util
 from app.utils.enums import Status
 from flask import request
 from flask_login.utils import login_required
-from flask_restx import Namespace, Resource, fields
+from flask_restx import Namespace, Resource, abort, fields
 
 api = Namespace("search", description="Stock search operations")
 
@@ -42,7 +42,7 @@ class StockpageCRUD(Resource):
         stock_list = util.search_stock(stock_query)
 
         if stock_list == Status.FAIL:
-            return {"message": "Search could not be completed"}, 500
+            return abort(500, "Search could not be completed")
         if stock_list == []:
             return stock_list, 404
         return stock_list, 200
