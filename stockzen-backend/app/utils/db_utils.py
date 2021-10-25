@@ -39,7 +39,6 @@ def query_item(table: DatabaseObj, item_id: int, **filters) -> Optional[Database
     """
     try:
         filter_list = [table.id == item_id, table.user_id == current_user.id]
-        print(filter_list)
         for col_type, id in filters.items():
             filter_list.append(getattr(table, f"{col_type}_id") == id)
         item = table.query.filter(*filter_list).one()
