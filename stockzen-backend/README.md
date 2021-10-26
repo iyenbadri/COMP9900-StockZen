@@ -64,3 +64,14 @@ We use `.flaskenv` to keep track of environment variables. Please do the followi
 **Others:**
 
     - python-dotenv (for environment variable access)
+
+## Tests
+
+To run a verbose endpoints integration tests, navigate to `stockzen-backend` and do:
+
+```sh
+    pytest -vv
+```
+
+Please write complete tests for each new endpoint, adding test fixtures within `stockzen-backend/app/tests/conftest.py` as necessary.
+These tests are also automatically run on GitHub Actions, and will block merging if they fail.

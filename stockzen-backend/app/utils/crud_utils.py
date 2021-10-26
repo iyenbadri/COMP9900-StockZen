@@ -3,10 +3,9 @@ from typing import Mapping, Sequence, Union
 from app.models.schema import Portfolio, Stock, StockPage, User
 from app.utils.enums import Status
 from flask_login import current_user
-from sqlalchemy.orm import load_only
 
 from . import api_utils as api
-from . import db_utils
+from . import db_utils, utils
 
 # ==============================================================================
 # Helpers
@@ -148,10 +147,17 @@ def get_stock_list(portfolio_id: int) -> Status:
 
 def add_stock(portfolio_id: int, stock_page_id: int) -> Status:
     """Add a stock to the database, return success status"""
-    new_stock = Stock(
-        user_id=current_user.id, portfolio_id=portfolio_id, stock_page_id=stock_page_id
-    )
     try:
+        # do not allow stock to be added if not in stock_pages
+        # .one() will throw an error
+        StockPage.query.filter_by(id=stock_page_id).one()
+
+        new_stock = Stock(
+            user_id=current_user.id,
+            portfolio_id=portfolio_id,
+            stock_page_id=stock_page_id,
+        )
+
         db_utils.insert_item(new_stock)
         return Status.SUCCESS
     except:
@@ -181,24 +187,10 @@ def delete_stock(stock_id: int) -> Status:
 # ==============================================================================
 
 
-def id_to_code(stock_page_id: int):
-    """Converts a stock page id to stock code using the StockPage table
-    Fails if not exactly one stock is found"""
-    try:
-        return (
-            StockPage.query.options(load_only(StockPage.code))
-            .filter_by(id=stock_page_id)
-            .one()
-            .code
-        )
-    except Exception as e:
-        db_utils.debug_exception(e)
-
-
 def update_stock_page(stock_page_id: int):
     """Update a stock page on the database, return success status"""
     try:
-        sym = id_to_code(stock_page_id)
+        sym = utils.id_to_code(stock_page_id)
         [price, change, change_perc, info] = api.fetch_stock_data(sym)
 
         db_utils.update_item_columns(
