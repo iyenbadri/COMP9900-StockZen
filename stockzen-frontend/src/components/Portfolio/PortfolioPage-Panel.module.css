@@ -1,0 +1,105 @@
+.header {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.actionButtonContainer {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  text-align: right;
+}
+
+.actionButtonContainer button {
+  padding: 0;
+}
+
+.actionButtonContainer button img {
+  margin-right: 5px;
+}
+
+.headerText {
+  font-weight: 700;
+  font-size: 1.2em;
+  text-align: center;
+  letter-spacing: 0.3px;
+  text-decoration: underline;
+}
+
+.rowHeader {
+  text-decoration: underline;
+}
+
+.rowHeader .lotTradeDate,
+.rowHeader .lotPricePerUnit,
+.rowHeader .lotValue,
+.rowHeader .lotChange,
+.rowHeader .lotActions {
+  text-align: center;
+}
+
+.lotRow {
+  display: flex;
+  justify-content: space-around;
+  font-size: 0.9em;
+  min-height: 30px;
+
+  align-items: center;
+}
+
+.lotTradeDate {
+  text-align: center;
+}
+
+.lotTradeDate,
+.lotPricePerUnit,
+.lotValue,
+.lotActions {
+  flex-basis: 80px;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.lotPricePerUnit,
+.lotValue,
+.lotChange {
+  text-align: center;
+}
+
+.lotUnits {
+  flex-basis: 80px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.lotValue,
+.lotChange {
+  flex-basis: 120px;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.lotActions {
+  flex-basis: 80px;
+  text-align: center;
+}
+
+.editButton {
+  min-width: 0 !important;
+  visibility: hidden;
+}
+
+.deleteButton {
+  min-width: 0 !important;
+  visibility: hidden;
+}
+
+.lotRow:hover .deleteButton,
+.lotRow:hover .editButton {
+  visibility: visible;
+}
+
+.lotRow:hover .lotTradeDate {
+  text-decoration: underline;
+}

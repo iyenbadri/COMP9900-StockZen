@@ -34,9 +34,11 @@ $font-family-sans-serif: 'Rubik', system-ui, -apple-system, 'Segoe UI', Roboto,
 @import '~bootstrap/scss/bootstrap-utilities.scss';
 
 .btn-transparent:active,
+.btn-transparent:active:focus,
 .btn-transparent:hover,
 .btn-transparent:focus {
   color: $zen-3;
   background-color: transparent;
   border-color: transparent;
+  box-shadow: none;
 }

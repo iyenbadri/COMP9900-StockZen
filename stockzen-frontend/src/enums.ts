@@ -3,3 +3,9 @@ export enum Ordering {
     Descending = -1,
     Unknown = 0,
 }
+
+
+export enum LotType {
+    Bought = 1,
+    Sold = 2,
+}

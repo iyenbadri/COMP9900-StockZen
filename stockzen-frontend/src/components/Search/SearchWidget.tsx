@@ -1,7 +1,7 @@
 import plusCircle from 'assets/icon-outlines/outline-plus-circle.svg';
 import plusIcon from 'assets/icon-outlines/outline-plus-small.svg';
 import axios, { AxiosResponse } from 'axios';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { AsyncTypeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -34,19 +34,12 @@ const SearchWidget: FC<Prop> = (prop) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [addedStockPageIds, setAddedStockIds] = useState<number[]>([]);
 
-  // Init
-  useEffect(() => {
-    // Call to get the list of current stocks in portfolio
+  // A function to reload the added stock ids
+  const reloadAddedStockIds = useCallback(() => {
     axios
       .get(`/stock/list/${portfolioId}`)
       .then((response: AxiosResponse<IStockResponse[]>) => {
-        // Set the list of stock_page_id as added stocks
-        setAddedStockIds((added) => {
-          return [
-            ...added,
-            ...response.data.map((stock) => stock.stock_page_id),
-          ];
-        });
+        setAddedStockIds(response.data.map((stock) => stock.stockPageId));
       });
   }, [portfolioId, setAddedStockIds]);
 
@@ -59,6 +52,10 @@ const SearchWidget: FC<Prop> = (prop) => {
       <Button
         variant='light'
         onClick={() => {
+          // Load the list when user click search
+          reloadAddedStockIds();
+
+          // Show the search bar
           setShowSearchInput(true);
         }}
         className='d-flex align-items-center'
