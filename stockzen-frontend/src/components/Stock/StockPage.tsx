@@ -40,6 +40,13 @@ const StockPage = () => {
       avgVolume: 1064861,
       marketCap: 1899503288320,
       beta: 1.025925,
+    },
+    profile: {
+      name: 'Alphabet Inc.',
+      industry: 'Internet Content & Information',
+      sector: 'Communication Services',
+      website: 'http://www.abc.xyz',
+      longBusinessSummary: "Alphabet Inc. provides online advertising services in the United States, Europe, the Middle East, Africa, the Asia-Pacific, Canada, and Latin America. The company offers performance and brand advertising services. It operates through Google Services, Google Cloud, and Other Bets segments. The Google Services segment provides products and services, such as ads, Android, Chrome, hardware, Google Maps, Google Play, Search, and YouTube, as well as technical infrastructure; and digital content. The Google Cloud segment offers infrastructure and data analytics platforms, collaboration tools, and other services for enterprise customers. The Other Bets segment sells internet and TV services, as well as licensing and research and development services. The company was founded in 1998 and is headquartered in Mountain View, California.",
     }
   }
 
@@ -118,7 +125,7 @@ const StockPage = () => {
           <StockHistory />
         </TabPanel>
         <TabPanel>
-          <CompanyProfile />
+          <CompanyProfile {...stockData.profile} />
         </TabPanel>
       </Tabs>
     </>
