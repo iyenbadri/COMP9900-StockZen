@@ -3,7 +3,14 @@ import gainArrow from 'assets/icon-outlines/outline-arrow-up-circle-green.svg';
 import { RefreshContext } from 'contexts/RefreshContext';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import moment from 'moment';
-import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
+import React, {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+} from 'react';
 import { Link } from 'react-router-dom';
 import styles from './TopPerformerWidget.module.css';
 
@@ -29,6 +36,17 @@ const TopPerformerWidget: FC = (props) => {
     style: 'currency',
     currency: 'USD',
   });
+
+  // Number formatter
+  const numberFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        style: 'decimal',
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+      }),
+    []
+  );
 
   const [lastUpdateDate, setLastUpdateDate] = useState<Date>();
   const [topPerformers, setTopPerformers] = useState<ITopPerformer[]>([]);
@@ -65,11 +83,11 @@ const TopPerformerWidget: FC = (props) => {
       },
     ]);
     setPortfolioSummary({
-      holding: Math.random(),
-      todayChangePercent: Math.random(),
-      overallChangePercent: Math.random(),
+      holding: Math.random() * 2000,
+      todayChangePercent: Math.random() * 10 - 5,
+      overallChangePercent: Math.random() * 10 - 5,
     });
-  }, []);
+  }, [setLastUpdateDate, setTopPerformers, setPortfolioSummary]);
 
   useEffect(() => {
     reloadData();
@@ -85,7 +103,7 @@ const TopPerformerWidget: FC = (props) => {
     return () => {
       unsubscribe(refresh);
     };
-  }, [subscribe, unsubscribe, reloadData]);
+  }, []);
 
   return (
     <div className={styles.widget}>
@@ -101,12 +119,15 @@ const TopPerformerWidget: FC = (props) => {
           <div className={styles.summaryTitle}>Today</div>
           <div className={`${styles.summaryValue} outerStroke`}>
             {gainLossArrow(portfolioSummary?.todayChangePercent ?? 0)}
-            {portfolioSummary?.todayChangePercent}%
+            {numberFormatter.format(portfolioSummary?.todayChangePercent ?? 0)}%
           </div>
           <div className={styles.summaryTitle}>Overall</div>
           <div className={`${styles.summaryValue} outerStroke`}>
             {gainLossArrow(portfolioSummary?.overallChangePercent ?? 0)}
-            {portfolioSummary?.overallChangePercent}%
+            {numberFormatter.format(
+              portfolioSummary?.overallChangePercent ?? 0
+            )}
+            %
           </div>
           <hr className={styles.separatorLine} />
         </>
@@ -128,7 +149,9 @@ const TopPerformerWidget: FC = (props) => {
                 <td className={styles.price}>
                   {usdFormatter.format(stock.price)}
                 </td>
-                <td className={styles.gain}>+{stock.gain}%</td>
+                <td className={styles.gain}>
+                  +{numberFormatter.format(stock.gain)}%
+                </td>
               </tr>
             );
           })}
