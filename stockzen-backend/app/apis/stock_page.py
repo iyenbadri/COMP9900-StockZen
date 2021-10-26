@@ -27,7 +27,11 @@ stock_page_details_response = api.model(
         "percChange": fields.Float(
             attribute="perc_change", required=True, description="percentage daily change"
         ),
-        "prevClose": fields.Float(required=True, description="previous day close price"),
+        "prevClose": fields.Float(
+            attribute="previousClose",
+            required=True,
+            description="previous day close price",
+        ),
         "open": fields.Float(required=True, description="current day opening price"),
         "bid": fields.Float(required=True, description="bid"),
         "bidSize": fields.Integer(required=True, description="bid size"),
@@ -38,7 +42,9 @@ stock_page_details_response = api.model(
         "fiftyTwoWeekHigh": fields.Float(required=True, description="fiftyTwoWeekHigh"),
         "fiftyTwoWeekLow": fields.Float(required=True, description="fiftyTwoWeekLow"),
         "volume": fields.Float(required=True, description="volume"),
-        "avgVolume": fields.Float(required=True, description="avgVolume"),
+        "avgVolume": fields.Float(
+            attribute="averageVolume", required=True, description="avgVolume"
+        ),
         "marketCap": fields.Float(required=True, description="marketCap"),
         "beta": fields.Float(required=True, description="beta"),
         "longName": fields.String(required=True, description="exchange"),
@@ -70,10 +76,16 @@ class StockPageCRUD(Resource):
     def get(self, stockPageId):
         """Fetch stock page data"""
 
-        if crud.update_stock_page(stockPageId) == Status.FAIL:
-            # Don't abort, just fetch latest data
-            print("Could not fetch latest, attempting to return cached data")
+        # Get latest data from yfinance, if fail don't abort, just return latest (cached) data
+        try:
+            if crud.update_stock_page(stockPageId) == Status.FAIL:
+                raise ConnectionError(
+                    f"Could not fetch latest data for stockPageId: {stockPageId}, attempting to return from cache."
+                )
+        except Exception as e:
+            print(e)
 
+        # return latest data
         stock_page_item = crud.fetch_stock_page(stockPageId)
 
         if stock_page_item == Status.FAIL:
