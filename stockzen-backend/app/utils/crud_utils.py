@@ -28,6 +28,17 @@ def to_dict(object, timestamp=False) -> Union[dict, Status]:
         return Status.FAIL
 
 
+def reorder_rows(
+    table: db_utils.DatabaseObj, new_orders: Sequence[Mapping[str, int]], **filters
+) -> Status:
+    """Update row ordering on the database"""
+    # loop through json dict list and update each row order
+    for item in new_orders:
+        id = item["id"]
+        item = item["order"]
+        db_utils.update_item_columns(table, id, {"order": item}, **filters)
+
+
 # ==============================================================================
 # User Utils
 # ==============================================================================
@@ -67,12 +78,7 @@ def get_portfolio_list() -> Status:
 def reorder_portfolio_list(new_portfolio_orders: Sequence[Mapping[str, int]]) -> Status:
     """Update portfolio list ordering on the database"""
     try:
-        # loop through json dict list and update each row order
-        for portfolio in new_portfolio_orders:
-            portfolio_id = portfolio["id"]
-            order = portfolio["order"]
-            db_utils.update_item_columns(Portfolio, portfolio_id, {"order": order})
-
+        reorder_rows(Portfolio, new_portfolio_orders)
         return Status.SUCCESS
     except:
         return Status.FAIL
@@ -145,6 +151,17 @@ def get_stock_list(portfolio_id: int) -> Status:
             for stock, stock_page in sqla_tuples
         ]
         return dict_list
+    except:
+        return Status.FAIL
+
+
+def reorder_stock_list(
+    portfolio_id: int, new_stock_orders: Sequence[Mapping[str, int]]
+) -> Status:
+    """Update stock list ordering on the database"""
+    try:
+        reorder_rows(Stock, new_stock_orders, **{"portfolio": portfolio_id})
+        return Status.SUCCESS
     except:
         return Status.FAIL
 

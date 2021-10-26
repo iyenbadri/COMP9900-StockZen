@@ -116,7 +116,7 @@ def update_item_columns(
         utils.debug_exception(e)
 
 
-def delete_item(table: DatabaseObj, item_id: int, **filters: int) -> None:
+def delete_item(table: DatabaseObj, item_id: int, **filters) -> None:
     """Delete item from database, throws exception on fail
     **filters is of form **{col_type: id}; e.g. {"portfolio": 1}
     """
