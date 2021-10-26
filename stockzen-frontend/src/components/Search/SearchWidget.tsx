@@ -1,7 +1,7 @@
 import plusCircle from 'assets/icon-outlines/outline-plus-circle.svg';
 import plusIcon from 'assets/icon-outlines/outline-plus-small.svg';
 import axios, { AxiosResponse } from 'axios';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { AsyncTypeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -14,14 +14,17 @@ interface Prop {
 }
 
 const SearchWidget: FC<Prop> = (prop) => {
+  // Extract the portfolioId from properties
   const { portfolioId } = prop;
 
+  // A map function to map the response from backend to frontend object
+  // useCallback is used to cache the function
   const mapOptions = useCallback(
     (x: SearchResponse): TypeaheadOption => ({
       stockPageId: x.id,
       code: x.code,
       description: x.stock_name,
-      market: Math.random().toString(),
+      market: Math.round(Math.random() * 100).toString(),
       searchLabel: `${x.code}` + (x.stock_name ? ` : ${x.stock_name}` : ''),
     }),
     []
@@ -35,8 +38,8 @@ const SearchWidget: FC<Prop> = (prop) => {
   const reloadAddedStockIds = useCallback(() => {
     axios
       .get(`/stock/list/${portfolioId}`)
-      .then((response: AxiosResponse<StockListResponse[]>) => {
-        setAddedStockIds(response.data.map((stock) => stock.stock_page_id));
+      .then((response: AxiosResponse<IStockResponse[]>) => {
+        setAddedStockIds(response.data.map((stock) => stock.stockPageId));
       });
   }, [portfolioId, setAddedStockIds]);
 
@@ -45,6 +48,7 @@ const SearchWidget: FC<Prop> = (prop) => {
 
   return (
     <>
+      {/* Button of search */}
       <Button
         variant='light'
         onClick={() => {
@@ -59,6 +63,7 @@ const SearchWidget: FC<Prop> = (prop) => {
         <img src={plusCircle} alt='plus' className='me-1' /> Add a stock
       </Button>
 
+      {/* The search modal */}
       <Modal
         show={showSearchInput}
         size='lg'
@@ -79,21 +84,24 @@ const SearchWidget: FC<Prop> = (prop) => {
           paginate={false}
           options={options}
           placeholder='Begin typing stock symbol or name'
-          //onInputChange={(query) => setQuery(query)}
           onBlur={() => {
             //setShowSearchInput(false);
           }}
           onSearch={(query) => {
             query = query.toLowerCase();
             setIsLoading(true);
+            setOptions([]);
 
+            // Query the search
             axios.get('/search?query=' + encodeURIComponent(query)).then(
               (response: AxiosResponse<SearchResponse[]>) => {
+                // Map the object and then set it
                 let options = response.data.map(mapOptions);
                 setOptions(options);
                 setIsLoading(false);
               },
               () => {
+                // Set to empty if failed
                 setOptions([]);
                 setIsLoading(false);
               }
@@ -109,6 +117,7 @@ const SearchWidget: FC<Prop> = (prop) => {
                 >
                   <div className={styles.searchOption}>
                     <span className={styles.optionAdd}>
+                      {/* Render the add button if it is not added */}
                       {!addedStockPageIds.includes(option.stockPageId) && (
                         <Button
                           variant='transparent'
@@ -116,7 +125,10 @@ const SearchWidget: FC<Prop> = (prop) => {
                             ev.preventDefault();
                             ev.stopPropagation();
 
+                            // Call add stock
                             prop.addStock(option.code, option.stockPageId);
+
+                            // Add it to the added stocks
                             setAddedStockIds([
                               ...addedStockPageIds,
                               option.stockPageId,
