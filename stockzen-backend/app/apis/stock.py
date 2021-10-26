@@ -12,7 +12,7 @@ api = Namespace("stock", description="Stock related operations")
 #   used to convert to the the frontend representation, i.e. camelCase
 # ==============================================================================
 
-stock_list_response = api.model(
+stock_details_response = api.model(
     "Response: Portfolio stock list",
     {
         "id": fields.Integer(required=True, description="stock id"),
@@ -91,7 +91,7 @@ stock_reorder_request = api.model(
 @api.route("/list/<portfolioId>")
 class StockCRUD(Resource):
     @login_required
-    @api.marshal_list_with(stock_list_response)
+    @api.marshal_list_with(stock_details_response)
     @api.response(200, "Successfully retrieved list")
     def get(self, portfolioId):
         """List all stocks from a portfolio"""
@@ -123,6 +123,7 @@ class StockCRUD(Resource):
 @api.route("/<stockId>")
 class StockCRUD(Resource):
     @login_required
+    @api.marshal_with(stock_details_response)
     @api.response(200, "Successfully retrieved stock row data")
     @api.response(404, "Stock not found")
     def get(self, stockId):

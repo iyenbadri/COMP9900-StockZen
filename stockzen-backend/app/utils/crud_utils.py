@@ -5,7 +5,7 @@ from app.models.schema import Portfolio, Stock, StockPage, User
 from app.utils.enums import Status
 from flask_login import current_user
 
-from . import db_utils
+from . import db_utils, utils
 
 # ==============================================================================
 # Helpers
@@ -147,10 +147,17 @@ def get_stock_list(portfolio_id: int) -> Status:
 
 def add_stock(portfolio_id: int, stock_page_id: int) -> Status:
     """Add a stock to the database, return success status"""
-    new_stock = Stock(
-        user_id=current_user.id, portfolio_id=portfolio_id, stock_page_id=stock_page_id
-    )
     try:
+        # do not allow stock to be added if not in stock_pages
+        # .one() will throw an error
+        StockPage.query.filter_by(id=stock_page_id).one()
+
+        new_stock = Stock(
+            user_id=current_user.id,
+            portfolio_id=portfolio_id,
+            stock_page_id=stock_page_id,
+        )
+
         db_utils.insert_item(new_stock)
         return Status.SUCCESS
     except:
