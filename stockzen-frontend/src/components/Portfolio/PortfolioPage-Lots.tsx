@@ -11,8 +11,7 @@ import { useForm } from 'react-hook-form';
 import styles from './PortfolioPage-Panel.module.css';
 
 const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
-  // const [currentPrice, setCurrentPrice] = useState(12);
-  // const [priceChange, setPriceChange] = useState(1.1);
+  // Deconstruct the properties
   const { stockId, currentPrice, priceChange, onSizeChanged } = props;
 
   const {
@@ -21,14 +20,18 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     formState: { errors },
   } = useForm();
 
+  // States for deleting lot
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletingLotId, setDeletingLotId] = useState<number>();
   const [deletingLotType, setDeletingLotType] = useState<LotType>(
     LotType.Bought
   );
+
+  // State for adding lot
   const [showAddLotBoughtModal, setShowAddLotBoughtModal] = useState(false);
   const [showAddLotSoldModal, setShowAddLotSoldModal] = useState(false);
 
+  // States for editing lot
   const [showEditingLotModal, setShowEditingLotModal] = useState(false);
   const [editingLotType, setEditingLotType] = useState<LotType>(LotType.Bought);
   const [editingLotId, setEditingLotId] = useState<number>();
@@ -37,6 +40,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
   const [editingLotPricePerUnit, setEditingLotPricePerUnit] =
     useState<string>();
 
+  // Bought lots
   const [lotsBought, setLotsBought] = useState<ILotBought[]>([]);
   const [boughtTotal, setBoughtTotal] = useState<ILotTotal>({
     units: 0,
@@ -44,6 +48,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     price: 0,
   });
 
+  // Sold lots
   const [lotsSold, setLotsSold] = useState<ILotSold[]>([]);
   const [soldTotal, setSoldTotal] = useState<ILotTotal>({
     units: 0,
@@ -51,6 +56,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     price: 0,
   });
 
+  // Number formatter
   const numberFormatter = useMemo(
     () =>
       new Intl.NumberFormat('en-US', {
@@ -61,6 +67,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     []
   );
 
+  // Function to sum the lots
   const sumLot = useCallback((lots: ILot[]): ILotTotal => {
     const sum = lots.reduce(
       (total, lot) => ({
@@ -77,16 +84,19 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     };
   }, []);
 
+  // Watch the lotsBought and update the total when it changed
   useEffect(() => {
     setBoughtTotal(sumLot(lotsBought));
     onSizeChanged();
   }, [lotsBought, setBoughtTotal, sumLot, onSizeChanged]);
 
+  // Watch the lotsSold and update the total when it changed
   useEffect(() => {
     setSoldTotal(sumLot(lotsSold));
     onSizeChanged();
   }, [lotsSold, setSoldTotal, sumLot, onSizeChanged]);
 
+  // Set lots to dummy data
   useEffect(() => {
     setLotsBought([
       {
@@ -143,6 +153,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     ]);
   }, [setLotsBought, setLotsSold]);
 
+  // Handler of add lot (both bought and sold)
   const addLot = useCallback(
     async (
       lotType: LotType,
@@ -154,6 +165,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
       switch (lotType) {
         case LotType.Bought:
           {
+            // Payload to call API
             const payload = {
               stockId: stockId,
               tradeDate: tradeDate,
@@ -165,9 +177,13 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
             const response = await Promise.resolve();
 
             // TODO: Reload the whole list instead
+            // Update the lotsBought (with sorted)
             setLotsBought((lots: ILotBought[]) => {
               return [
+                // The old lots
                 ...lots,
+
+                // The newly created lot
                 {
                   lotId: Math.random(),
                   stockId: stockId,
@@ -181,6 +197,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           break;
         case LotType.Sold:
           {
+            // Payload to call API
             const payload = {
               stockId: stockId,
               tradeDate: tradeDate,
@@ -192,9 +209,13 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
             const response = await Promise.resolve();
 
             // TODO: Reload the whole list instead
+            // Set the lots sold
             setLotsSold((lots: ILotSold[]) => {
               return [
+                // The old lots
                 ...lots,
+
+                // The newly created lot
                 {
                   lotId: Math.random(),
                   stockId: stockId,
@@ -211,6 +232,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     []
   );
 
+  // Handler of add bought lot
   const handleAddBoughtLot = async (data: any) => {
     addLot(
       LotType.Bought,
@@ -223,6 +245,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     setShowAddLotBoughtModal(false);
   };
 
+  // Hanlder of add sold lot
   const handleAddSoldLot = async (data: any) => {
     addLot(
       LotType.Sold,
@@ -235,6 +258,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     setShowAddLotSoldModal(false);
   };
 
+  // Handler of delete lot
   const handleDeleteLot = () => {
     switch (deletingLotType) {
       case LotType.Bought:
@@ -244,6 +268,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
         // });
 
         // TODO: Reload the whole list instead
+        // Update the lots list to exclude the deleted lot
         setLotsBought((lots: ILotSold[]) => {
           return lots.filter((x) => x.lotId !== deletingLotId);
         });
@@ -255,6 +280,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
         // });
 
         // TODO: Reload the whole list instead
+        // Update the lots list to exclude the deleted lot
         setLotsSold((lots: ILotSold[]) => {
           return lots.filter((x) => x.lotId !== deletingLotId);
         });
@@ -263,9 +289,11 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     setShowDeleteModal(false);
   };
 
+  // Handler of edit lot
   const handleEditLot = async (data: any) => {
     switch (editingLotType) {
       case LotType.Bought:
+        // Add the edited lot
         await addLot(
           LotType.Bought,
           stockId,
@@ -274,18 +302,21 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           parseFloat(data.pricePerUnit)
         );
 
+        // Delete the old lot
         // TODO: Wire up the API
         // axios.delete('/lot', {lotId: editingLotId}).then(()=>{
 
         // });
 
         // TODO: Reload the whole list instead
+        // Filter out the edited lot ( the old one)
         setLotsBought((lots: ILotSold[]) => {
           return lots.filter((x) => x.lotId !== editingLotId);
         });
 
         break;
       case LotType.Sold:
+        // Add the edited lot
         await addLot(
           LotType.Sold,
           stockId,
@@ -300,6 +331,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
         // });
 
         // TODO: Reload the whole list instead
+        // Filter out the edited lot ( the old one)
         setLotsSold((lots: ILotSold[]) => {
           return lots.filter((x) => x.lotId !== editingLotId);
         });
@@ -311,6 +343,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
   return (
     <>
+      {/* Modal to add the bought lot */}
       {showAddLotBoughtModal && (
         <Modal
           show={showAddLotBoughtModal}
@@ -381,6 +414,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
         </Modal>
       )}
 
+      {/* Modal to add the sold lot */}
       {showAddLotSoldModal && (
         <Modal
           show={showAddLotSoldModal}
@@ -448,6 +482,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
         </Modal>
       )}
 
+      {/* Modal to edit lot */}
       {showEditingLotModal && (
         <Modal
           show={showEditingLotModal}
@@ -530,6 +565,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
         </Modal>
       )}
 
+      {/* Modal to delete lot (confirm) */}
       {showDeleteModal && (
         <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
           <Modal.Header closeButton>
@@ -551,6 +587,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
       )}
 
       <div style={{ margin: '10px 20px' }}>
+        {/* Header of bought lot section */}
         <div className={styles.header}>
           <div className={styles.actionButtonContainer}>
             <Button
@@ -568,6 +605,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           <div className={styles.headerText}>BOUGHT</div>
         </div>
 
+        {/* Header of bought lot table */}
         <div className={`${styles.lotRow} ${styles.rowHeader}`}>
           <div className={styles.lotTradeDate}>Trade Date</div>
           <div className={styles.lotUnits}>Units</div>
@@ -579,6 +617,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
         <hr style={{ marginBottom: '5px', marginTop: '5px' }} />
 
+        {/* List of bought lots */}
         {lotsBought.map((lot) => (
           <div key={`lot-${lot.lotId}`} className={styles.lotRow}>
             <div className={styles.lotTradeDate}>
@@ -596,6 +635,8 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
             <div className={styles.lotChange}>
               {numberFormatter.format(lot.units * priceChange)}
             </div>
+
+            {/* Actions of lot in bought section */}
             <div className={styles.lotActions}>
               <Button
                 variant='transparent'
@@ -629,6 +670,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
         <hr style={{ marginBottom: '5px', marginTop: '5px' }} />
 
+        {/* Summary row of bought lots */}
         <div className={styles.lotRow}>
           <div className={styles.lotTradeDate}>TOTAL</div>
           <div className={styles.lotUnits}>
@@ -646,8 +688,11 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           <div className={styles.lotActions}></div>
         </div>
       </div>
+
       <hr />
+
       <div style={{ margin: '10px 20px' }}>
+        {/* Header of sold lots section */}
         <div className={styles.header}>
           <div className={styles.actionButtonContainer}>
             <Button
@@ -663,6 +708,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           <div className={styles.headerText}>SOLD</div>
         </div>
 
+        {/* Header of sold lots table */}
         <div className={`${styles.lotRow} ${styles.rowHeader}`}>
           <div className={styles.lotTradeDate}>Trade Date</div>
           <div className={styles.lotUnits}>Units</div>
@@ -674,6 +720,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
         <hr style={{ marginBottom: '5px', marginTop: '5px' }} />
 
+        {/* List of sold lots */}
         {lotsSold.map((lot) => (
           <div key={`lot-${lot.lotId}`} className={styles.lotRow}>
             <div className={styles.lotTradeDate}>
@@ -693,6 +740,8 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 lot.units * (lot.pricePerUnit - boughtTotal.pricePerUnit)
               )}
             </div>
+
+            {/* Action of lot in sold section */}
             <div className={styles.lotActions}>
               <Button
                 variant='transparent'
@@ -726,6 +775,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
         <hr style={{ marginBottom: '5px', marginTop: '5px' }} />
 
+        {/* Summary row of sold lots */}
         <div className={styles.lotRow}>
           <div className={styles.lotTradeDate}>TOTAL</div>
           <div className={styles.lotUnits}>
