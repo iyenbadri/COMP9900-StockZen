@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from random import randrange, uniform
 from typing import Tuple
 
@@ -111,6 +112,9 @@ def populate_symbols(engine):
         df_symbols = pd.read_csv(filepath)
 
         df_symbols = df_symbols[["code", "stock_name", "exchange"]]
+        df_symbols["last_updated"] = datetime.now()  # use current time as timestamp
+        df_symbols["info"] = "{}"  # fill with empty json string
+
         df_symbols.to_sql("stock_pages", engine, if_exists="append", index=False)
 
         print("Stock symbols loaded")

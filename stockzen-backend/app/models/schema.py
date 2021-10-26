@@ -177,7 +177,7 @@ class StockPage(db.Model):
     prediction = Column(Integer)  # -1 for down, 0 no change, 1 for up
     confidence = Column(Float)
     last_updated = Column(DateTime, default=datetime.now())
-    info = Column(String)  # JSON-string of all company info
+    info = Column(String, default="{}")  # JSON-string of all company info
 
     # Relationships
     # one-to-many stock_pages:stocks
