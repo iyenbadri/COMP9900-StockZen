@@ -1,18 +1,3 @@
-# Mock data & Helpers
-
-
-# ==============================================================================
-# HELPER FUNCTIONS
-# ==============================================================================
-
-
-def ordering(*id_order_tuples):
-    order_list = []
-    for id, order in id_order_tuples:
-        order_list.append({"id": id, "order": order})
-    return order_list
-
-
 # ==============================================================================
 # MOCK DATA
 # ==============================================================================
@@ -70,7 +55,7 @@ new_stock_2 = {
     "stockName": "Tesla, Inc.",
 }
 
-# TODO: make stock_page mocks first
+
 def stock_details(id, stock, order=0):
     stock_details = {
         "id": id,
@@ -90,3 +75,41 @@ def stock_details(id, stock, order=0):
         "order": order,
     }
     return stock_details
+
+
+# ------------------------------------------------------------------------------
+# Stock Page
+# ------------------------------------------------------------------------------
+new_stock_page_1 = {
+    "id": 1,
+    "code": "A",
+    "stockName": "Agilent Technologies, Inc.",
+    "exchange": "NYQ",
+}
+uncached_stock_page = {
+    **new_stock_page_1,
+    "price": None,
+    "change": None,
+    "percChange": None,
+    "prevClose": None,
+    "open": None,
+    "bid": None,
+    "bidSize": None,
+    "ask": None,
+    "askSize": None,
+    "dayHigh": None,
+    "dayLow": None,
+    "fiftyTwoWeekHigh": None,
+    "fiftyTwoWeekLow": None,
+    "volume": None,
+    "avgVolume": None,
+    "marketCap": None,
+    "beta": None,
+    "longName": None,
+    "industry": None,
+    "sector": None,
+    "website": None,
+    "longBusinessSummary": None,
+    "prediction": None,
+    "confidence": None,
+}

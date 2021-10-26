@@ -1,4 +1,5 @@
 import app.tests.mocks as mock
+import app.tests.utils as utils
 from app.tests.conftest import auth_client
 
 
@@ -52,12 +53,12 @@ def test_stock_endpoints(auth_client):
     # --------------------------------------------------------------------------
     # Stock Ordering
     # --------------------------------------------------------------------------
-    response = client.put("/stock/list/1", json=mock.ordering((1, 1), (2, 1)))
+    response = client.put("/stock/list/1", json=utils.ordering((1, 1), (2, 1)))
     # Fail: non unique order
     assert response.status_code == 409
 
     # Swap stocks 1 and 2 around
-    response = client.put("/stock/list/1", json=mock.ordering((1, 2), (2, 1)))
+    response = client.put("/stock/list/1", json=utils.ordering((1, 2), (2, 1)))
     # Success: successfully reorder
     assert response.status_code == 200
     # Check new order is correct
