@@ -63,7 +63,9 @@ def test_stock_endpoints(auth_client):
     # Check new order is correct
     response = client.get("/stock/list/1")
     stock_list = response.json
-    assert stock_list[0] == mock.stock_details(id=1, stock=mock.new_stock_1, order=2)
+
+    first_stock = mock.stock_details(id=1, stock=mock.new_stock_1, order=2)
+    assert stock_list[0] == first_stock
     assert stock_list[1] == mock.stock_details(id=2, stock=mock.new_stock_2, order=1)
 
     # --------------------------------------------------------------------------
@@ -75,21 +77,21 @@ def test_stock_endpoints(auth_client):
 
     response = client.get("/stock/1")
     # Check stock details is correct
-    assert response.json == mock.new_stock_1
+    assert response.json == first_stock
 
-    # # --------------------------------------------------------------------------
-    # # Stock Delete
-    # # --------------------------------------------------------------------------
-    # response = client.delete("/stock/999")
-    # # Operation on non-existing should fail
-    # assert response.status_code == 500
+    # --------------------------------------------------------------------------
+    # Stock Delete
+    # --------------------------------------------------------------------------
+    response = client.delete("/stock/999")
+    # Operation on non-existing should fail
+    assert response.status_code == 500
 
-    # response = client.delete("/stock/1")
-    # # Check delete success
-    # assert response.status_code == 200
+    response = client.delete("/stock/2")
+    # Check delete success
+    assert response.status_code == 200
 
-    # # Check correct entities
-    # response = client.get("/stock/list")
-    # stock_list = response.json
-    # assert len(stock_list) == 1
-    # assert stock_list[0] == mock.stock_details(id=2, order=1)
+    # Check correct entities
+    response = client.get("/stock/list/1")
+    stock_list = response.json
+    assert len(stock_list) == 1
+    assert stock_list[0] == first_stock

@@ -132,7 +132,6 @@ class StockCRUD(Resource):
         """Create a new stock row"""
 
         json = marshal(request.json, stock_add_request)
-
         stock_page_id = json["stockPageId"]
 
         if util.add_stock(portfolioId, stock_page_id) == Status.SUCCESS:

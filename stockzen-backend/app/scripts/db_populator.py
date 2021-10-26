@@ -1,3 +1,4 @@
+import os
 from random import randrange, uniform
 from typing import Tuple
 
@@ -106,11 +107,12 @@ def generate_dummy_data(n_users=2, n_portfolios_max=20):
 def populate_symbols(engine):
     """Populates Stock Page with all USA stock codes, names, and exchange names"""
     try:
-        # throw error if table already has rows
+        filepath = os.path.join(os.path.dirname(__file__), "stock_symbols.csv")
+        df_symbols = pd.read_csv(filepath)
 
-        df_symbols = pd.read_csv("app/scripts/stock_symbols.csv")
         df_symbols = df_symbols[["code", "stock_name", "exchange"]]
         df_symbols.to_sql("stock_pages", engine, if_exists="append", index=False)
+
         print("Stock symbols loaded")
     except Exception as e:
         print(e)
