@@ -1,49 +1,47 @@
 import yfinance as yf
+from pandas.core.frame import DataFrame
 
-# connect to database
-
-
-# ==============================================================================
-# Importing data from Yfinance
-# ==============================================================================
-def check_symbol(stock):
-    if stock.info["regularMarketPrice"] == None:
-        return False
-    else:
-        return True
-
+from utils.db_utils import debug_exception
+from utils.enums import Status
 
 # ==============================================================================
-# Importing Time Series Data
+# Helper
 # ==============================================================================
 
 
-def stock_time_series(sym, time: bool):
-    "Fetch Time Series for symbol asked"
-    if time:
-        period = "max"
-    else:
-        period = "2d"
+def has_price(stock):
+    """Checks if Price exists on stock data"""
+    return stock.info["regularMarketPrice"] != None
+
+
+# ==============================================================================
+# Importing Data from yfinance
+# ==============================================================================
+
+
+def fetch_time_series(sym: str, period: str = "max") -> DataFrame:
+    """Fetch Time Series for symbol asked"""
+
     stock = yf.Ticker(sym)
-    history = stock.history(period)
-    return history
+    return stock.history(period)
 
 
-# ==============================================================================
-# Importing Company Overview Data
-# ==============================================================================
+def fetch_stock_overview(sym):
+    """Fetches Information and calculations for Stock Page,
+    returns a dict of filtered company data
+    """
+    try:
+        stock = yf.Ticker(sym)
 
+        if not has_price(stock):
+            raise KeyError("Stock has no regularMarketPrice")
 
-def stock_overview(sym):
-    "Fetches Information for Stock Page also contains calculations, returns a dictionary"
-    stock = yf.Ticker(sym)
-    if check_symbol(stock):
-        price, stock_change, change_perc = change(sym)
+        price, change, change_perc = calc_stock_price(sym)
         info = stock.info
         info["price"] = price
-        info["change"] = stock_change
+        info["change"] = change
         info["change_perc"] = change_perc
-        keys = [
+        keep = [
             "zip",
             "sector",
             "fullTimeEmployees",
@@ -94,21 +92,29 @@ def stock_overview(sym):
             "change",
             "change_perc",
         ]
-        inf = {x: info[x] for x in keys}
-        return inf
-    else:
-        return {"message: stock unavailable"}
+        filtered_info = {col: info[col] for col in keep}
+        return filtered_info
+
+    except:
+        return Status.FAIL
 
 
 # ==============================================================================
-# Calculations for Portofolio
+# Calculations for Portfolio
 # ==============================================================================
 
 
-def change(sym):
+def calc_stock_price(sym: str):
     """Returns current price, change and change percentage"""
-    price = stock_time_series(sym)
-    price = price["Close"].tail(2)
-    diff = price[1] - price[0]
-    change_perc = price.pct_change()[1]
-    return price[1], diff, change_perc
+    try:
+        df_price = fetch_time_series(sym, period="2d")
+        df_price = df_price["Close"]
+
+        current_price = df_price[1]
+        change = current_price - df_price[0]
+        change_perc = df_price.pct_change()[1]
+
+        return current_price, change, change_perc
+
+    except Exception as e:
+        debug_exception(e)

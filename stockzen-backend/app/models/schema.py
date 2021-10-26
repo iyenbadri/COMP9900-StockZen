@@ -134,9 +134,6 @@ class Stock(db.Model):
     # Unique Constraints (multiple column)
     UniqueConstraint(user_id, portfolio_id, stock_page_id)
 
-    # def __repr__(self):
-    # return f"<Stock(id={self.id}, portfolio_id={self.portfolio_id}, code={self.code}, stock_name={self.stock_name})>"
-
 
 class LotBought(db.Model):
     __tablename__ = "lots_bought"
@@ -170,7 +167,7 @@ class StockPage(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     code = Column(String(6), unique=True)
     stock_name = Column(String(40))
-    exchange = Column(String(10))
+    exchange = Column(String(20))
     price = Column(Float)
     change = Column(Float)
     change_perc = Column(Float)
@@ -224,7 +221,6 @@ class StockPage(db.Model):
 
     prediction = Column(Integer)  # -1 for down, 0 no change, 1 for up
     confidence = Column(Float)
-    # TODO: Populate remaining columns
 
     # Relationships
     # one-to-many stock_pages:stocks
