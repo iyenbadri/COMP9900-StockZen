@@ -3,4 +3,5 @@
 
 DELETE FROM users;
 DELETE FROM portfolios;
+DELETE FROM stocks;
 DELETE FROM stock_pages;

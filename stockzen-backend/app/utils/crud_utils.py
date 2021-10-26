@@ -1,10 +1,12 @@
-from typing import Mapping, Sequence, Union
+import json
+from datetime import datetime
+from typing import Dict, Mapping, Sequence, Union
 
-from app import db
 from app.models.schema import Portfolio, Stock, StockPage, User
 from app.utils.enums import Status
 from flask_login import current_user
 
+from . import api_utils as api
 from . import db_utils, utils
 
 # ==============================================================================
@@ -102,7 +104,9 @@ def update_portfolio_name(portfolio_id: int, new_name: str) -> Status:
     """Update existing portfolio name, return success status"""
     try:
         db_utils.update_item_columns(
-            Portfolio, portfolio_id, {"portfolio_name": new_name}
+            Portfolio,
+            portfolio_id,
+            {"portfolio_name": new_name, "last_updated": datetime.now()},
         )
         return Status.SUCCESS
     except:
@@ -186,13 +190,43 @@ def delete_stock(stock_id: int) -> Status:
 # Stock Page Utils
 # ==============================================================================
 
-# TODO: rudimentary function for db population, needs updating
-def add_stock_page(code: str, stock_name: str) -> Status:
-    """Add a stock page to the database, return success status"""
-    new_stock_page = StockPage(code=code, stock_name=stock_name)
+
+def update_stock_page(stock_page_id: int) -> Status:
+    """Update a stock page on the database, return success status"""
     try:
-        db_utils.insert_item(new_stock_page)
+        sym = utils.id_to_code(stock_page_id)
+        price, change, perc_change, prev_close, info = api.fetch_stock_data(sym)
+        info_json = json.dumps(info)
+
+        db_utils.update_item_columns(
+            StockPage,
+            stock_page_id,
+            {
+                "price": price,
+                "change": change,
+                "perc_change": perc_change,
+                "prev_close": prev_close,
+                "info": info_json,
+                "last_updated": datetime.now(),
+            },
+        )
         return Status.SUCCESS
+    except:
+        return Status.FAIL
+
+
+def fetch_stock_page(stock_page_id: int) -> Union[Dict, Status]:
+    """Get a stock page from the database, return item dict or fail status"""
+    try:
+        sqla_item = db_utils.query_item(StockPage, stock_page_id)
+        item = to_dict(sqla_item)
+
+        # need to deserialise info json and return combined dict
+        info_json = item.pop("info")
+        info = json.loads(info_json)
+
+        return {**item, **info}
+
     except:
         return Status.FAIL
 

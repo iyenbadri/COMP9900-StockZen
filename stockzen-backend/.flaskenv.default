@@ -4,6 +4,6 @@
 #   Sign up for your own Alpha Vantage API Key 
 FLASK_APP=stockzen.py
 FLASK_ENV=development
-CREATE_NEW_DB=False
+POPULATE_NEW_DB=False
 SESSION_KEY=
 AV_API_KEY=
