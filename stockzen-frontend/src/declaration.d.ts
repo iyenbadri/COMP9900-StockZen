@@ -87,7 +87,7 @@ interface IStockSummary {
 
 // Company profile response (draft)
 interface IStockProfile {
-    longName: string;
+    name: string;
     industry: string | null;
     sector: string | null;
     website: string | null;
