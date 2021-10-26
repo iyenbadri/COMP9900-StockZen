@@ -10,9 +10,9 @@ const CompanyProfile: FC<IStockProfile> = (prop) => {
         <div>
           <div className={styles.companyName}>{prop.name}</div>
           <a
-            className={styles.link}
             href={prop.website === null ? '-' : prop.website}
-            target='_blank'>
+            target='_blank'
+            rel='noreferrer'>
             <img className={styles.linkImg} src={linkIcon} alt='website link'></img>
           </a>
         </div>
