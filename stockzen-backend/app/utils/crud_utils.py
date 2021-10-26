@@ -1,11 +1,11 @@
 from typing import Mapping, Sequence, Union
 
-from app import db
 from app.models.schema import Portfolio, Stock, StockPage, User
 from app.utils.enums import Status
 from flask_login import current_user
 
-from . import db_utils
+from . import api_utils as api
+from . import db_utils, utils
 
 # ==============================================================================
 # Helpers
@@ -147,10 +147,17 @@ def get_stock_list(portfolio_id: int) -> Status:
 
 def add_stock(portfolio_id: int, stock_page_id: int) -> Status:
     """Add a stock to the database, return success status"""
-    new_stock = Stock(
-        user_id=current_user.id, portfolio_id=portfolio_id, stock_page_id=stock_page_id
-    )
     try:
+        # do not allow stock to be added if not in stock_pages
+        # .one() will throw an error
+        StockPage.query.filter_by(id=stock_page_id).one()
+
+        new_stock = Stock(
+            user_id=current_user.id,
+            portfolio_id=portfolio_id,
+            stock_page_id=stock_page_id,
+        )
+
         db_utils.insert_item(new_stock)
         return Status.SUCCESS
     except:
@@ -179,12 +186,18 @@ def delete_stock(stock_id: int) -> Status:
 # Stock Page Utils
 # ==============================================================================
 
-# TODO: rudimentary function for db population, needs updating
-def add_stock_page(code: str, stock_name: str) -> Status:
-    """Add a stock page to the database, return success status"""
-    new_stock_page = StockPage(code=code, stock_name=stock_name)
+
+def update_stock_page(stock_page_id: int):
+    """Update a stock page on the database, return success status"""
     try:
-        db_utils.insert_item(new_stock_page)
+        sym = utils.id_to_code(stock_page_id)
+        [price, change, change_perc, info] = api.fetch_stock_data(sym)
+
+        db_utils.update_item_columns(
+            StockPage,
+            stock_page_id,
+            {price: price, change: change, change_perc: change_perc, info: info},
+        )
         return Status.SUCCESS
     except:
         return Status.FAIL

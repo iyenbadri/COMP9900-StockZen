@@ -5,6 +5,7 @@ import TopPerformerProvider from 'contexts/TopPerformerContext';
 import UserProvider, { UserContext } from 'contexts/UserContext';
 import Landing from 'pages/Landing';
 import Portfolio from 'pages/Portfolio';
+import Stock from 'pages/Stock';
 import User from 'pages/User';
 import React, { useContext } from 'react';
 import { Container } from 'react-bootstrap';
@@ -23,12 +24,13 @@ function App() {
           fluid
           className={`${styles.appContent} ${
             !isAuthenticated ? styles.hero : ''
-          }`}
+            }`}
         >
           <Switch>
             <GuestRoute exact path={'/'} component={Landing} />
             <Route path={'/user'} component={User} />
             <Route path={'/portfolio'} component={Portfolio} />
+            <Route path={'/stock/:stockPageId'} component={Stock} />
           </Switch>
         </Container>
         <Footer></Footer>

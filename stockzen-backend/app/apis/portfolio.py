@@ -13,8 +13,8 @@ api = Namespace("portfolio", description="Portfolio related operations")
 #   used to convert to the the frontend representation, i.e. camelCase
 # ==============================================================================
 
-portfolio_list_response = api.model(
-    "Response: User portfolio list",
+portfolio_details_response = api.model(
+    "Response: User portfolio details (/list is in [] form)",
     {
         "id": fields.Integer(required=True, description="portfolio id"),
         "portfolioName": fields.String(
@@ -74,7 +74,7 @@ portfolio_reorder_request = api.model(
 @api.route("/list")
 class PortfolioCRUD(Resource):
     @login_required
-    @api.marshal_list_with(portfolio_list_response)
+    @api.marshal_list_with(portfolio_details_response)
     @api.response(200, "Successfully retrieved list")
     def get(self):
         """List all portfolios from a user"""
@@ -128,6 +128,7 @@ class PortfolioCRUD(Resource):
 @api.route("/<portfolioId>")
 class PortfolioCRUD(Resource):
     @login_required
+    @api.marshal_with(portfolio_details_response)
     @api.response(200, "Successfully retrieved portfolio data")
     @api.response(404, "Portfolio not found")
     def get(self, portfolioId):
