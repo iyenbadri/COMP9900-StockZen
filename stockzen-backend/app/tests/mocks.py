@@ -29,10 +29,10 @@ def portfolio_details(id, name="Test Portfolio", order=0):
         "portfolioName": name,
         "stockCount": 0,
         "value": 0,
-        "change": 0,
-        "percChange": 0,
-        "gain": 0,
-        "percGain": 0,
+        "change": None,
+        "percChange": None,
+        "gain": None,
+        "percGain": None,
         "order": order,
     }
     return portfolio_details

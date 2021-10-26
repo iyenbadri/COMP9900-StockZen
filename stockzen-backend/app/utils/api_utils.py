@@ -1,5 +1,5 @@
+import app.utils.utils as util
 import yfinance as yf
-from app.utils.db_utils import debug_exception
 from app.utils.enums import Status
 from pandas.core.frame import DataFrame
 
@@ -28,8 +28,8 @@ def fetch_stock_data(sym):
         return info["currentPrice"], change, change_perc, info
 
     except Exception as e:
-        debug_exception(e)
-        # return Status.FAIL
+        util.debug_exception(e, True)
+        return Status.FAIL
 
 
 # ==============================================================================
@@ -49,7 +49,5 @@ def calc_change(sym: str):
         return change, change_perc
 
     except Exception as e:
-        debug_exception(e)
-
-
-print(fetch_stock_data("AAPL"))
+        util.debug_exception(e, True)
+        return Status.FAIL

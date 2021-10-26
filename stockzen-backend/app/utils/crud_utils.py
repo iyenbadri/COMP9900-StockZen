@@ -203,17 +203,6 @@ def update_stock_page(stock_page_id: int):
         return Status.FAIL
 
 
-# TODO: rudimentary function for initial db population, needs updating
-def add_stock_page(code: str, stock_name: str, exchange: str) -> Status:
-    """Add a stock page to the database, return success status"""
-    new_stock_page = StockPage(code=code, stock_name=stock_name, exchange=exchange)
-    try:
-        db_utils.insert_item(new_stock_page)
-        return Status.SUCCESS
-    except:
-        return Status.FAIL
-
-
 # ==============================================================================
 # Lot Utils
 # ==============================================================================

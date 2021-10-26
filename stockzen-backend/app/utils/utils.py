@@ -1,6 +1,6 @@
 import os
 
-from models.schema import StockPage
+from app.models.schema import StockPage
 from sqlalchemy.orm import load_only
 
 # ==============================================================================
@@ -8,12 +8,13 @@ from sqlalchemy.orm import load_only
 # ==============================================================================
 
 # Nice error debug message printing
-def debug_exception(error):
+def debug_exception(error, suppress=False):
     if os.environ.get("FLASK_ENV") == "development":
         print(
             f"{type(error).__name__} at line {error.__traceback__.tb_lineno} of {__file__}: {error}"
         )
-    raise error
+    if not suppress:
+        raise error
 
 
 # Convert stock_page_id to code/symbol

@@ -4,7 +4,7 @@ from app import db
 from flask_login import UserMixin
 from sqlalchemy import Column, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import backref, relationship
-from sqlalchemy.sql.sqltypes import Boolean, DateTime, Float, Numeric
+from sqlalchemy.sql.sqltypes import Boolean, DateTime, Float
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # https://docs.sqlalchemy.org/en/14/orm/basic_relationships.html
@@ -70,8 +70,8 @@ class Portfolio(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     portfolio_name = Column(String(50), nullable=False)
-    stock_count = Column(Integer)  # count(stocks)
-    value = Column(Float)  # sum(stocks.value)
+    stock_count = Column(Integer, default=0)  # count(stocks)
+    value = Column(Float, default=0)  # sum(stocks.value)
     change = Column(Float)  # sum(stocks.change)
     perc_change = Column(Float)  # portfolios.change / portfolios.value
     gain = Column(Float)  # sum(stocks.gain)
@@ -171,55 +171,7 @@ class StockPage(db.Model):
     price = Column(Float)
     change = Column(Float)
     change_perc = Column(Float)
-    info = Column(String)
-    # zip = Column(String(6))
-    # sector = Column(String(6))
-    # fullTimeEmployees = Column(Integer)
-    # longBusinessSummary = Column(String(2000))
-    # city = Column(String(50))
-    # phone = Column(String(50))
-    # state = Column(String(50))
-    # country = Column(String(50))
-    # companyOfficers = Column(Float)
-    # website = Column(String(50))
-    # maxAge = Column(Integer)
-    # address1 = Column(String(200))
-    # industry = Column(String(50))
-    # ebitdaMargins = Column(Float)
-    # profitMargins = Column(Float)
-    # grossMargins = Column(Float)
-    # operatingCashflow = Column(Integer)
-    # revenueGrowth = Column(Float)
-    # operatingMargins = Column(Float)
-    # ebitda = Column(Integer)
-    # targetLowPrice = Column(Integer)
-    # recommendationKey = Column(String(20))
-    # grossProfits = Column(Integer)
-    # freeCashflow = Column(Integer)
-    # targetMedianPrice = Column(Integer)
-    # currentPrice = Column(Float)
-    # earningsGrowth = Column(Integer)
-    # currentRatio = Column(Float)
-    # returnOnAssets = Column(Float)
-    # numberOfAnalystOpinions = Column(Integer)
-    # targetMeanPrice = Column(Float)
-    # debtToEquity = Column(Float)
-    # returnOnEquity = Column(Float)
-    # targetHighPrice = Column(Float)
-    # totalCash = Column(Float)
-    # totalDebt = Column(Float)
-    # totalRevenue = Column(Float)
-    # totalCashPerShare = Column(Float)
-    # financialCurrency = Column(String(10))
-    # revenuePerShare = Column(Float)
-    # quickRatio = Column(Float)
-    # recommendationMean = Column(Float)
-    # exchange = Column(String(10))
-    # shortName = Column(String(100))
-    # longName = Column(String(200))
-    # regularMarketPrice = Column(Float)
-    # logo_url = Column(String(100))
-
+    info = Column(String)  # JSON-string of all company info
     prediction = Column(Integer)  # -1 for down, 0 no change, 1 for up
     confidence = Column(Float)
 
