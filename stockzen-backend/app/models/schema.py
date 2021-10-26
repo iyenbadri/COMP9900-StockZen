@@ -115,7 +115,7 @@ class Stock(db.Model):
     gain = Column(Float)  # (stocks.price - bought.avg_price) * stocks.units_held
     perc_gain = Column(Float)  # stocks.gain / (stocks.units_held * bought.avg_price)
     value = Column(Float)  # sum(bought.value)
-    order = Column(Integer, nullable=False, default=0)  # track row order, default to top
+    order = Column(Integer, nullable=False)  # track row order, default to top
     last_updated = Column(DateTime, default=datetime.now())
 
     # Relationships

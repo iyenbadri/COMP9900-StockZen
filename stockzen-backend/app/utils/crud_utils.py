@@ -217,7 +217,7 @@ def update_stock_page(stock_page_id: int) -> Status:
     try:
         sym = utils.id_to_code(stock_page_id)
         price, change, perc_change, prev_close, info = api.fetch_stock_data(sym)
-        info_json = json.dumps(info)
+        info_json = json.dumps(info)  # store info as serialised json string
 
         db_utils.update_item_columns(
             StockPage,
@@ -228,7 +228,7 @@ def update_stock_page(stock_page_id: int) -> Status:
                 "perc_change": perc_change,
                 "prev_close": prev_close,
                 "info": info_json,
-                "last_updated": datetime.now(),
+                "last_updated": datetime.now(),  # update with current timestamp
             },
         )
         return Status.SUCCESS
