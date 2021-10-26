@@ -1,8 +1,10 @@
 import os
+from sqlite3 import Connection as SQLite3Connection
 
 from flask import Flask
 from flask_login import LoginManager
-from flask_sqlalchemy import SQLAlchemy, event
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import event
 from sqlalchemy.engine import Engine
 
 db = SQLAlchemy()
@@ -23,22 +25,13 @@ def create_app(test_config=None):
     # ==============================================================================
     db.init_app(app)
 
-    # Set the following flag in .flaskenv to create a new database at APP_DB_PATH
-    # Should only be done for the first run in production
-    CREATE_NEW_DB = os.environ.get("CREATE_NEW_DB")
-    if CREATE_NEW_DB == "True":
-        with app.app_context():
-            db.create_all()
-
-    # HACK: FK temporarily unenforced until StockPage populating script can be built,
-    #           otherwise Stocks cannot be added due to FK integrity issue
     # Turn on PRAGMA for foreign keys integrity
-    # @event.listens_for(Engine, "connect")
-    # def _set_sqlite_pragma(dbapi_connection, connection_record):
-    #     if isinstance(dbapi_connection, SQLite3Connection):
-    #         cursor = dbapi_connection.cursor()
-    #         cursor.execute("PRAGMA foreign_keys=ON;")
-    #         cursor.close()
+    @event.listens_for(Engine, "connect")
+    def _set_sqlite_pragma(dbapi_connection, connection_record):
+        if isinstance(dbapi_connection, SQLite3Connection):
+            cursor = dbapi_connection.cursor()
+            cursor.execute("PRAGMA foreign_keys=ON;")
+            cursor.close()
 
     # ==============================================================================
     # Login Manager

@@ -4,7 +4,7 @@ from app import db
 from flask_login import UserMixin
 from sqlalchemy import Column, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import backref, relationship
-from sqlalchemy.sql.sqltypes import Boolean, DateTime, Float, Numeric
+from sqlalchemy.sql.sqltypes import Boolean, DateTime, Float
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # https://docs.sqlalchemy.org/en/14/orm/basic_relationships.html
@@ -72,10 +72,10 @@ class Portfolio(db.Model):
     portfolio_name = Column(String(50), nullable=False)
     stock_count = Column(Integer, default=0)  # count(stocks)
     value = Column(Float, default=0)  # sum(stocks.value)
-    change = Column(Float, default=0)  # sum(stocks.change)
-    perc_change = Column(Float, default=0)  # portfolios.change / portfolios.value
-    gain = Column(Float, default=0)  # sum(stocks.gain)
-    perc_gain = Column(Float, default=0)  # portfolios.gain / portfolios.value
+    change = Column(Float)  # sum(stocks.change)
+    perc_change = Column(Float)  # portfolios.change / portfolios.value
+    gain = Column(Float)  # sum(stocks.gain)
+    perc_gain = Column(Float)  # portfolios.gain / portfolios.value
     order = Column(Integer, nullable=False, default=0)  # track row order, default to top
     last_updated = Column(DateTime, default=datetime.now())
 
@@ -113,7 +113,7 @@ class Stock(db.Model):
     gain = Column(Float)  # (stocks.price - bought.avg_price) * stocks.units_held
     perc_gain = Column(Float)  # stocks.gain / (stocks.units_held * bought.avg_price)
     value = Column(Float)  # sum(bought.value)
-    order = Column(Integer, nullable=False, default=0)  # track row order, default to top
+    order = Column(Integer, nullable=False)  # track row order, default to top
     last_updated = Column(DateTime, default=datetime.now())
 
     # Relationships
@@ -133,9 +133,6 @@ class Stock(db.Model):
 
     # Unique Constraints (multiple column)
     UniqueConstraint(user_id, portfolio_id, stock_page_id)
-
-    # def __repr__(self):
-    # return f"<Stock(id={self.id}, portfolio_id={self.portfolio_id}, code={self.code}, stock_name={self.stock_name})>"
 
 
 class LotBought(db.Model):
@@ -170,9 +167,13 @@ class StockPage(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     code = Column(String(6), unique=True)
     stock_name = Column(String(40))
-    prediction = Column(Integer, default=0)  # -1 for down, 0 no change, 1 for up
-    confidence = Column(Float, default=0)
-    # TODO: Populate remaining columns
+    exchange = Column(String(20))
+    price = Column(Float)
+    change = Column(Float)
+    change_perc = Column(Float)
+    info = Column(String)  # JSON-string of all company info
+    prediction = Column(Integer)  # -1 for down, 0 no change, 1 for up
+    confidence = Column(Float)
 
     # Relationships
     # one-to-many stock_pages:stocks

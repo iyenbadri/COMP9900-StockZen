@@ -1,10 +1,10 @@
 from typing import Mapping, Sequence, Union
 
-from app import db
 from app.models.schema import Portfolio, Stock, StockPage, User
 from app.utils.enums import Status
 from flask_login import current_user
 
+from . import api_utils as api
 from . import db_utils, utils
 
 # ==============================================================================
@@ -190,12 +190,18 @@ def delete_stock(stock_id: int) -> Status:
 # Stock Page Utils
 # ==============================================================================
 
-# TODO: rudimentary function for db population, needs updating
-def add_stock_page(code: str, stock_name: str) -> Status:
-    """Add a stock page to the database, return success status"""
-    new_stock_page = StockPage(code=code, stock_name=stock_name)
+
+def update_stock_page(stock_page_id: int):
+    """Update a stock page on the database, return success status"""
     try:
-        db_utils.insert_item(new_stock_page)
+        sym = utils.id_to_code(stock_page_id)
+        [price, change, change_perc, info] = api.fetch_stock_data(sym)
+
+        db_utils.update_item_columns(
+            StockPage,
+            stock_page_id,
+            {price: price, change: change, change_perc: change_perc, info: info},
+        )
         return Status.SUCCESS
     except:
         return Status.FAIL
