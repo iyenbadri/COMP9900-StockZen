@@ -58,6 +58,7 @@ interface IStockInfo {
     profitPercent: number;
     value: number;
     summary: IStockSummary;
+    profile: IStockProfile;
 }
 
 // Stock summary response (draft)
@@ -82,6 +83,15 @@ interface IStockSummary {
     // forwardDividendNYield: string;
     // exDividendDate: string;
     // targetEst: string;
+}
+
+// Company profile response (draft)
+interface IStockProfile {
+    name: string;
+    industry: string | null;
+    sector: string | null;
+    website: string | null;
+    longBusinessSummary: string | null;
 }
 
 // The reponse got from backend (Will change it later to match the actual)
