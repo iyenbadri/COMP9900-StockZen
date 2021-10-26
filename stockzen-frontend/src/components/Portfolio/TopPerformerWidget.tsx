@@ -1,8 +1,9 @@
 import lossArrow from 'assets/icon-outlines/outline-arrow-down-circle-red.svg';
 import gainArrow from 'assets/icon-outlines/outline-arrow-up-circle-green.svg';
+import { RefreshContext } from 'contexts/RefreshContext';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import moment from 'moment';
-import React, { FC, useContext } from 'react';
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './TopPerformerWidget.module.css';
 
@@ -15,73 +16,97 @@ import styles from './TopPerformerWidget.module.css';
 const gainLossArrow = (change: number) => {
   if (change > 0)
     return <img src={gainArrow} alt='up green arrow' width={30} height={30} />;
-  if (change < 0)
+  else if (change < 0)
     return <img src={lossArrow} alt='down red arrow' width={30} height={30} />;
+  else return <></>;
 };
 
 const TopPerformerWidget: FC = (props) => {
+  const { subscribe, unsubscribe } = useContext(RefreshContext);
+  const { showPortfolioSummary } = useContext(TopPerformerContext);
+
   const usdFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
   });
 
-  let topPerformersLastUpdate = new Date();
-  let topPerformers = [
-    {
-      symbol: 'GOOG',
-      price: 2853.35,
-      gain: 17.63,
-    },
-    {
-      symbol: 'TSLA',
-      price: 753.64,
-      gain: 0.23,
-    },
-    {
-      symbol: 'APPL',
-      price: 145.83,
-      gain: 0.98,
-    },
-    {
-      symbol: 'ARTAW',
-      price: 0.53,
-      gain: 1.28,
-    },
-    {
-      symbol: 'DIS',
-      price: 176,
-      gain: 0.06,
-    },
-  ];
+  const [lastUpdateDate, setLastUpdateDate] = useState<Date>();
+  const [topPerformers, setTopPerformers] = useState<ITopPerformer[]>([]);
+  const [portfolioSummary, setPortfolioSummary] =
+    useState<IPortfolioPerformance>();
 
-  let portfolioSummary = {
-    holding: 50210.4,
-    todayChangePercent: 0.82,
-    overallChangePercent: -10.76,
-  };
+  const reloadData = useCallback(() => {
+    setLastUpdateDate(new Date());
+    setTopPerformers([
+      {
+        symbol: 'GOOG',
+        price: Math.random() * 1000,
+        gain: Math.random(),
+      },
+      {
+        symbol: 'TSLA',
+        price: Math.random() * 1000,
+        gain: Math.random(),
+      },
+      {
+        symbol: 'APPL',
+        price: Math.random() * 1000,
+        gain: Math.random(),
+      },
+      {
+        symbol: 'ARTAW',
+        price: Math.random() * 1000,
+        gain: Math.random(),
+      },
+      {
+        symbol: 'DIS',
+        price: Math.random() * 1000,
+        gain: Math.random(),
+      },
+    ]);
+    setPortfolioSummary({
+      holding: Math.random(),
+      todayChangePercent: Math.random(),
+      overallChangePercent: Math.random(),
+    });
+  }, []);
 
-  const { showPortfolioSummary } = useContext(TopPerformerContext);
+  useEffect(() => {
+    reloadData();
+  }, [reloadData]);
+
+  useEffect(() => {
+    const refresh = () => {
+      reloadData();
+    };
+
+    subscribe(refresh);
+
+    return () => {
+      unsubscribe(refresh);
+    };
+  }, [subscribe, unsubscribe, reloadData]);
 
   return (
     <div className={styles.widget}>
       <div className={styles.date}>
-        {moment(topPerformersLastUpdate).format('dddd Do MMMM h:mma')}
+        {moment(lastUpdateDate).format('dddd Do MMMM h:mma')}
       </div>
       {showPortfolioSummary && (
         <>
           <div className={styles.summaryTitle}>My Holdings</div>
           <div className={`${styles.summaryValue} outerStroke`}>
-            {usdFormatter.format(portfolioSummary.holding)}
+            {usdFormatter.format(portfolioSummary?.holding ?? 0)}
           </div>
           <div className={styles.summaryTitle}>Today</div>
           <div className={`${styles.summaryValue} outerStroke`}>
-            {gainLossArrow(portfolioSummary.todayChangePercent)}
-            {portfolioSummary.todayChangePercent}%
+            {gainLossArrow(portfolioSummary?.todayChangePercent ?? 0)}
+            {portfolioSummary?.todayChangePercent}%
           </div>
           <div className={styles.summaryTitle}>Overall</div>
           <div className={`${styles.summaryValue} outerStroke`}>
-            {gainLossArrow(portfolioSummary.overallChangePercent)}
-            {portfolioSummary.overallChangePercent}%
+            {gainLossArrow(portfolioSummary?.overallChangePercent ?? 0)}
+            {portfolioSummary?.overallChangePercent}%
           </div>
           <hr className={styles.separatorLine} />
         </>
@@ -116,5 +141,17 @@ const TopPerformerWidget: FC = (props) => {
     </div>
   );
 };
+
+interface ITopPerformer {
+  symbol: string;
+  price: number;
+  gain: number;
+}
+
+interface IPortfolioPerformance {
+  holding: number;
+  todayChangePercent: number;
+  overallChangePercent: number;
+}
 
 export default TopPerformerWidget;
