@@ -43,56 +43,6 @@ interface IStock {
     confidence: number;
 }
 
-// Stock data for StockPage
-// This is just a draft reseponse from the backend,
-// will change later to match what is actually retrieved
-interface IStockInfo {
-    stockId: number;
-    symbol: string;
-    name: string;
-    price: number;
-    change: number;
-    changePercent: number;
-    avgPrice: number;
-    profit: number;
-    profitPercent: number;
-    value: number;
-    summary: IStockSummary;
-    profile: IStockProfile;
-}
-
-// Stock summary response (draft)
-interface IStockSummary {
-    prevClose: number | null;        // previousClose
-    open: number | null;             // open
-    bid: number | null;              // bid
-    bidSize: number | null;          // bidSize
-    ask: number | null;              // ask
-    askSize: number | null;          // askSize
-    dayHigh: number | null;          // dayHigh
-    dayLow: number | null;           // dahLow
-    fiftyTwoWeekHigh: number | null; // fiftyTwoWeekHigh
-    fiftyTwoWeekLow: number | null;  // fiftyTwoWeekLow
-    volume: number | null;           // volume24Hr
-    avgVolume: number | null;        // averageVolume
-    marketCap: number | null;        // marketCap
-    beta: number | null;             // beta
-    // PERatio: number;
-    // EPS: number;
-    // earningDate: string;
-    // forwardDividendNYield: string;
-    // exDividendDate: string;
-    // targetEst: string;
-}
-
-// Company profile response (draft)
-interface IStockProfile {
-    longName: string;
-    industry: string | null;
-    sector: string | null;
-    website: string | null;
-    longBusinessSummary: string | null;
-}
 
 // The reponse got from backend (Will change it later to match the actual)
 interface IStockResponse {
