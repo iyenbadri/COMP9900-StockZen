@@ -3,14 +3,13 @@ import os
 from random import randrange, uniform
 from typing import Tuple
 
-from app import app
-from app import db as DB
+import pandas as pd
+from app import app, db
 from app.models.schema import Portfolio, StockPage, User
-from app.utils import db_utils as db
-from app.utils.crud_utils import add_stock_page, add_user
+from app.utils import db_utils
+from app.utils.crud_utils import add_user
 from app.utils.enums import Status
 from faker import Faker
-from sqlalchemy import func
 
 # ==============================================================================
 # Dummy User Populator
@@ -70,7 +69,7 @@ def generate_dummy_portfolios(n_portfolios: int, user_id_range: Tuple[int, int])
             # order=last_id,
         )
         try:
-            db.insert_item(new_portfolio)
+            db_utils.insert_item(new_portfolio)
             print("Dummy portfolio added")
             return Status.SUCCESS
         except:
@@ -82,7 +81,7 @@ def generate_dummy_portfolios(n_portfolios: int, user_id_range: Tuple[int, int])
 
 def generate_dummy_stock_pages():
     """
-    Generates dummy stock page data
+    Generates dummy stock page data (DEPRECATED)
     """
 
     # Read the file and parse it.
@@ -93,15 +92,15 @@ def generate_dummy_stock_pages():
         try:
             # Check if code is already or not
             q = (
-                DB.session.query(StockPage)
+                db.session.query(StockPage)
                 .filter(StockPage.code == stock["symbol"])
                 .exists()
             )
-            if DB.session.query(q).scalar():
+            if db.session.query(q).scalar():
                 continue
 
             # Create and add it to database
-            DB.session.add(
+            db.session.add(
                 StockPage(code=stock["symbol"], stock_name=stock["description"])
             )
 
@@ -110,11 +109,11 @@ def generate_dummy_stock_pages():
             break
         except Exception as ex:
             print(ex)
-            DB.session.rollback()
+            db.session.rollback()
             break
 
     # Commit to database
-    DB.session.commit()
+    db.session.commit()
 
 
 def generate_dummy_data(n_users=10, n_portfolios_max=30, n_stock_pages=100):
@@ -140,7 +139,23 @@ def generate_dummy_data(n_users=10, n_portfolios_max=30, n_stock_pages=100):
     generate_dummy_stock_pages()
 
 
+def populate_symbols(engine):
+    """Populates Stock Page with all USA stock codes, names, and exchange names"""
+    try:
+        # throw error if table already has rows
+
+        df_symbols = pd.read_csv("app/scripts/stock_symbols.csv")
+        df_symbols = df_symbols[["code", "stock_name", "exchange"]]
+        df_symbols.to_sql("stock_pages", engine, if_exists="append", index=False)
+        db.session.commit()
+    except Exception as e:
+        debug_exception
+        db.session.rollback()
+
+
 if __name__ == "__main__":
     with app.app_context():
-        generate_dummy_data()
-        generate_dummy_stock_pages()
+        engine = db.engine
+        populate_symbols(engine)
+        # generate_dummy_data()
+        # generate_dummy_stock_pages()

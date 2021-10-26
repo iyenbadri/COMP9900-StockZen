@@ -1,8 +1,5 @@
 from typing import Mapping, Sequence, Union
 
-import numpy as np
-import pandas as pd
-from app import db
 from app.models.schema import Portfolio, Stock, StockPage, User
 from app.utils.enums import Status
 from flask_login import current_user
@@ -182,31 +179,42 @@ def delete_stock(stock_id: int) -> Status:
 # ==============================================================================
 # Stock Page Utils
 # ==============================================================================
-def symbol(conn):
-    file = "symbol.csv"
-    symbol = pd.read_csv(file)
-    symbols = symbol[["code", "stock_name", "exchange"]]
-    symbols.to_sql("stock_pages", conn, if_exists="fail", index=False)
-    conn.commit()
 
 
-def update_stock_page(stock_id: int):
-    stock = (
-        StockPage.query.options(load_only(StockPage.code)).filter_by(id=stock_id).one()
-    )
-    sym = stock.code
-    print(sym)
+def id_to_code(stock_page_id: int):
+    """Converts a stock page id to stock code using the StockPage table
+    Fails if not exactly one stock is found"""
     try:
-        db_utils.update_item_columns(StockPage, stock_id, api.stockOverview(sym))
+        return (
+            StockPage.query.options(load_only(StockPage.code))
+            .filter_by(id=stock_page_id)
+            .one()
+            .code
+        )
+    except Exception as e:
+        db_utils.debug_exception(e)
+
+
+def update_stock_page(stock_page_id: int):
+    """Update a stock page on the database, return success status"""
+    try:
+        sym = id_to_code(stock_page_id)
+        [price, change, change_perc, info] = api.fetch_stock_data(sym)
+
+        db_utils.update_item_columns(
+            StockPage,
+            stock_page_id,
+            {price: price, change: change, change_perc: change_perc, info: info},
+        )
         return Status.SUCCESS
     except:
         return Status.FAIL
 
 
-# TODO: rudimentary function for db population, needs updating
-def add_stock_page(code: str, stock_name: str) -> Status:
+# TODO: rudimentary function for initial db population, needs updating
+def add_stock_page(code: str, stock_name: str, exchange: str) -> Status:
     """Add a stock page to the database, return success status"""
-    new_stock_page = StockPage(code=code, stock_name=stock_name)
+    new_stock_page = StockPage(code=code, stock_name=stock_name, exchange=exchange)
     try:
         db_utils.insert_item(new_stock_page)
         return Status.SUCCESS

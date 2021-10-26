@@ -8,7 +8,7 @@ conn = sqlite3.connect("database/app.sqlite")
 
 def get_company_overview(sym):
     "Can be used for ML to store multiple stock data"
-    overview = api.fetch_stock_overview(sym)
+    overview = api.fetch_stock_data(sym)
     frame = pd.DataFrame.from_dict([overview])
     frame = frame.applymap(str)
     # overview.to_csv("Overview.csv", mode="a", index=False)

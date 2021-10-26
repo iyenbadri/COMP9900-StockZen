@@ -1,18 +1,7 @@
 import yfinance as yf
+from app.utils.db_utils import debug_exception
+from app.utils.enums import Status
 from pandas.core.frame import DataFrame
-
-from utils.db_utils import debug_exception
-from utils.enums import Status
-
-# ==============================================================================
-# Helper
-# ==============================================================================
-
-
-def has_price(stock):
-    """Checks if Price exists on stock data"""
-    return stock.info["regularMarketPrice"] != None
-
 
 # ==============================================================================
 # Importing Data from yfinance
@@ -26,77 +15,21 @@ def fetch_time_series(sym: str, period: str = "max") -> DataFrame:
     return stock.history(period)
 
 
-def fetch_stock_overview(sym):
+def fetch_stock_data(sym):
     """Fetches Information and calculations for Stock Page,
-    returns a dict of filtered company data
+    returns price, change, change_perc, and an info dict
     """
     try:
         stock = yf.Ticker(sym)
 
-        if not has_price(stock):
-            raise KeyError("Stock has no regularMarketPrice")
-
-        price, change, change_perc = calc_stock_price(sym)
+        change, change_perc = calc_change(sym)
         info = stock.info
-        info["price"] = price
-        info["change"] = change
-        info["change_perc"] = change_perc
-        keep = [
-            "zip",
-            "sector",
-            "fullTimeEmployees",
-            "longBusinessSummary",
-            "city",
-            "phone",
-            "state",
-            "country",
-            "companyOfficers",
-            "website",
-            "maxAge",
-            "address1",
-            "industry",
-            "ebitdaMargins",
-            "profitMargins",
-            "grossMargins",
-            "operatingCashflow",
-            "revenueGrowth",
-            "operatingMargins",
-            "ebitda",
-            "targetLowPrice",
-            "recommendationKey",
-            "grossProfits",
-            "freeCashflow",
-            "targetMedianPrice",
-            "currentPrice",
-            "earningsGrowth",
-            "currentRatio",
-            "returnOnAssets",
-            "numberOfAnalystOpinions",
-            "targetMeanPrice",
-            "debtToEquity",
-            "returnOnEquity",
-            "targetHighPrice",
-            "totalCash",
-            "totalDebt",
-            "totalRevenue",
-            "totalCashPerShare",
-            "financialCurrency",
-            "revenuePerShare",
-            "quickRatio",
-            "recommendationMean",
-            "shortName",
-            "longName",
-            "regularMarketPrice",
-            "logo_url",
-            "price",
-            "change",
-            "change_perc",
-        ]
-        filtered_info = {col: info[col] for col in keep}
-        return filtered_info
 
-    except:
-        return Status.FAIL
+        return info["currentPrice"], change, change_perc, info
+
+    except Exception as e:
+        debug_exception(e)
+        # return Status.FAIL
 
 
 # ==============================================================================
@@ -104,17 +37,19 @@ def fetch_stock_overview(sym):
 # ==============================================================================
 
 
-def calc_stock_price(sym: str):
+def calc_change(sym: str):
     """Returns current price, change and change percentage"""
     try:
         df_price = fetch_time_series(sym, period="2d")
         df_price = df_price["Close"]
 
-        current_price = df_price[1]
-        change = current_price - df_price[0]
+        change = df_price[1] - df_price[0]
         change_perc = df_price.pct_change()[1]
 
-        return current_price, change, change_perc
+        return change, change_perc
 
     except Exception as e:
         debug_exception(e)
+
+
+print(fetch_stock_data("AAPL"))
