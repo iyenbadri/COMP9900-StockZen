@@ -43,26 +43,6 @@ interface IStock {
     confidence: number;
 }
 
-
-// The reponse got from backend (Will change it later to match the actual)
-interface IStockResponse {
-    id: number;
-    code: string;
-    stock_page_id: number;
-    stockName: string;
-    price: number;
-    change: number;
-    percChange: number;
-    avgPrice: number;
-    unitsHeld: number;
-    gain: number;
-    percGain: number;
-    value: number;
-    order: number;
-    prediction: number;
-    confidence: number;
-}
-
 // The reponse got from backend (Will change it later to match the actual)
 interface IStockResponse {
     id: number;
