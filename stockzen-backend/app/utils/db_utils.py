@@ -1,31 +1,20 @@
-import os
 from typing import Any, List, Mapping, NewType, Optional, Sequence, TypeVar, Union
 
 from app import db
+from app.config import SEARCH_LIMIT
 from app.models.schema import LotBought, LotSold, Portfolio, Stock, StockPage, User
-from config import SEARCH_LIMIT
 from flask_login import current_user
 from sqlalchemy import func, or_
 from sqlalchemy.orm import load_only
 from sqlalchemy.sql.operators import collate
+
+from . import utils
 
 DatabaseObj = TypeVar(
     "DatabaseObj", Portfolio, Stock, User, LotBought, LotSold, StockPage
 )
 ColumnName = NewType("ColumnName", str)
 ColumnVal = TypeVar("ColumnVal", int, str, float)
-
-# ==============================================================================
-# Helpers
-# ==============================================================================
-
-
-def debug_exception(error):
-    if os.environ.get("FLASK_ENV") == "development":
-        print(
-            f"{type(error).__name__} at line {error.__traceback__.tb_lineno} of {__file__}: {error}"
-        )
-    raise error
 
 
 # ==============================================================================
@@ -45,7 +34,7 @@ def query_item(table: DatabaseObj, item_id: int, **filters) -> Optional[Database
         item = table.query.filter(*filter_list).one()
         return item
     except Exception as e:
-        debug_exception(e)
+        utils.debug_exception(e)
 
 
 def query_all(table: DatabaseObj, **filters) -> Optional[List[DatabaseObj]]:
@@ -59,7 +48,7 @@ def query_all(table: DatabaseObj, **filters) -> Optional[List[DatabaseObj]]:
         item_list = table.query.filter(*filter_list).all()
         return item_list
     except Exception as e:
-        debug_exception(e)
+        utils.debug_exception(e)
 
 
 def query_all_with_join(
@@ -86,7 +75,7 @@ def query_all_with_join(
 
         return item_list
     except Exception as e:
-        debug_exception(e)
+        utils.debug_exception(e)
 
 
 def insert_item(new_row: DatabaseObj) -> None:
@@ -96,7 +85,7 @@ def insert_item(new_row: DatabaseObj) -> None:
         db.session.commit()
     except Exception as e:
         db.session.rollback()
-        debug_exception(e)
+        utils.debug_exception(e)
 
 
 def update_item_columns(
@@ -105,7 +94,7 @@ def update_item_columns(
     col_val_pairs: Mapping[ColumnName, ColumnVal],
     **filters: int,
 ) -> None:
-    """Update table column, throws exception on fail
+    """Update table columns, throws exception on fail
     :param col_val_pairs is a dict of column names:values to be updated"""
     try:
         item = query_item(table, item_id, **filters)
@@ -114,7 +103,7 @@ def update_item_columns(
         db.session.commit()
     except Exception as e:
         db.session.rollback()
-        debug_exception(e)
+        utils.debug_exception(e)
 
 
 def delete_item(table: DatabaseObj, item_id: int, **filters: int) -> None:
@@ -127,7 +116,7 @@ def delete_item(table: DatabaseObj, item_id: int, **filters: int) -> None:
         db.session.commit()
     except Exception as e:
         db.session.rollback()
-        debug_exception(e)
+        utils.debug_exception(e)
 
 
 # ==============================================================================
@@ -143,7 +132,7 @@ def query_user(email: str) -> Optional[User]:
         user = User.query.filter(func.lower(User.email) == func.lower(email)).one()
         return user
     except Exception as e:
-        debug_exception(e)
+        utils.debug_exception(e)
 
 
 # ==============================================================================
@@ -175,4 +164,4 @@ def search_query(search_string: str):
         )
         return results_list
     except Exception as e:
-        debug_exception(e)
+        utils.debug_exception(e)
