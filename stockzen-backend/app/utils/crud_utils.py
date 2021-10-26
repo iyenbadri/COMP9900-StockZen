@@ -143,11 +143,9 @@ def get_stock_list(portfolio_id: int) -> Status:
             **{"portfolio": portfolio_id},
         )
         dict_list = [
-            {
-                **to_dict(stock),
-                "code": stock_page.code,
-                "stock_name": stock_page.stock_name,
-            }
+            # the order of dicts is important: we want stock to override same-named
+            # columns from stock_page, e.g. id
+            {**to_dict(stock_page), **to_dict(stock)}
             for stock, stock_page in sqla_tuples
         ]
         return dict_list
@@ -188,8 +186,14 @@ def add_stock(portfolio_id: int, stock_page_id: int) -> Status:
 def fetch_stock(stock_id: int) -> Union[Stock, Status]:
     """Get existing stock by id, return item or success status"""
     try:
-        sqla_item = db_utils.query_item(Stock, stock_id)
-        return to_dict(sqla_item)
+        sqla_tuple = db_utils.query_with_join(
+            Stock, stock_id, [StockPage], [Stock, StockPage]
+        )
+        stock_dict, stock_page_dict = map(to_dict, sqla_tuple)
+
+        # the order of dicts is important: we want stock to override same-named
+        # columns from stock_page, e.g. id
+        return {**stock_page_dict, **stock_dict}
     except:
         return Status.FAIL
 

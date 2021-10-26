@@ -41,6 +41,37 @@ def query_item(table: DatabaseObj, item_id: int, **filters) -> Optional[Database
         utils.debug_exception(e)
 
 
+def query_with_join(
+    main_table: DatabaseObj,
+    item_id: int,
+    join_tables: Sequence[DatabaseObj],
+    columns: Sequence[Any],  # SQLA object or column
+    **filters,
+) -> Optional[List[DatabaseObj]]:
+    """Query database tables with join, returns a single query item or throws exception
+    *columns are the required columns in the output
+    **filters is of form **{col_type: id}; e.g. {"portfolio": 1}
+    """
+    try:
+        filter_list = [main_table.id == item_id]
+        if "user_id" in main_table.__table__.columns:
+            filter_list.append(main_table.user_id == current_user.id)
+
+        for col_type, id in filters.items():
+            id_col = getattr(main_table, f"{col_type}_id")
+            filter_list.append(id_col == id)
+
+        item = (
+            main_table.query.with_entities(*columns)
+            .join(*join_tables, isouter=True)
+            .filter(*filter_list)
+            .one()
+        )
+        return item
+    except Exception as e:
+        utils.debug_exception(e)
+
+
 def query_all(table: DatabaseObj, **filters) -> Optional[List[DatabaseObj]]:
     """Query a database table using item parent, returns list of query items or None
     **filters is of form **{col_type: id}; e.g. {"portfolio": 1}
@@ -74,15 +105,15 @@ def query_all_with_join(
             filter_list.append(main_table.user_id == current_user.id)
 
         for col_type, id in filters.items():
-            filter_list.append(getattr(main_table, f"{col_type}_id") == id)
+            id_col = getattr(main_table, f"{col_type}_id")
+            filter_list.append(id_col == id)
 
         item_list = (
-            main_table.query.join(*join_tables)
-            .with_entities(*columns)
+            main_table.query.with_entities(*columns)
+            .join(*join_tables, isouter=True)
             .filter(*filter_list)
             .all()
         )
-
         return item_list
     except Exception as e:
         utils.debug_exception(e)
