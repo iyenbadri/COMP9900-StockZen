@@ -1,11 +1,8 @@
-import app.utils.crud_utils as util
+import app.utils.crud_utils as crud
 from app.models.schema import StockPage
-from app.utils.api_utils import stockOverview
 from app.utils.enums import Status
-from flask import request
 from flask_login.utils import login_required
-from flask_restx import Namespace, Resource, fields, marshal
-from sqlalchemy.orm import load_only
+from flask_restx import Namespace, Resource, abort, fields, marshal
 
 # Route work separation using hyphen to follow REST API best practises
 api = Namespace("stock-page", description="Stock page related operations")
@@ -16,32 +13,70 @@ api = Namespace("stock-page", description="Stock page related operations")
 #   used to convert to the the frontend representation, i.e. camelCase
 # ==============================================================================
 
-stock_page_details_response = api.model("Response: Stock page data", {})
+stock_page_details_response = api.model(
+    "Response: Stock page data",
+    {
+        "id": fields.Integer(required=True, description="stock page id"),
+        "code": fields.String(required=True, description="stock symbol code"),
+        "stockName": fields.String(
+            attribute="stock_name", required=True, description="stock name"
+        ),
+        "exchange": fields.String(required=True, description="exchange"),
+        "price": fields.Float(required=True, description="latest price"),
+        "change": fields.Float(required=True, description="daily change"),
+        "percChange": fields.Float(
+            attribute="perc_change", required=True, description="percentage daily change"
+        ),
+        "prevClose": fields.Float(required=True, description="previous day close price"),
+        "open": fields.Float(required=True, description="current day opening price"),
+        "bid": fields.Float(required=True, description="bid"),
+        "bidSize": fields.Integer(required=True, description="bid size"),
+        "ask": fields.Float(required=True, description="ask"),
+        "askSize": fields.Integer(required=True, description="askSize"),
+        "dayHigh": fields.Float(required=True, description="dayHigh"),
+        "dayLow": fields.Float(required=True, description="dayLow"),
+        "fiftyTwoWeekHigh": fields.Float(required=True, description="fiftyTwoWeekHigh"),
+        "fiftyTwoWeekLow": fields.Float(required=True, description="fiftyTwoWeekLow"),
+        "volume": fields.Float(required=True, description="volume"),
+        "avgVolume": fields.Float(required=True, description="avgVolume"),
+        "marketCap": fields.Float(required=True, description="marketCap"),
+        "beta": fields.Float(required=True, description="beta"),
+        "longName": fields.String(required=True, description="exchange"),
+        "industry": fields.String(required=True, description="exchange"),
+        "sector": fields.String(required=True, description="sector"),
+        "website": fields.String(required=True, description="website"),
+        "longBusinessSummary": fields.String(
+            required=True, description="longBusinessSummary"
+        ),
+        "prediction": fields.Integer(
+            required=True, description="ML classifier prediction"
+        ),
+        "confidence": fields.Float(required=True, description="ML classifier confidence"),
+    },
+)
 
 
 # ==============================================================================
 # API Routes/Endpoints
 # ==============================================================================
 
-import yfinance as yf
-
-
-def get_stock_code(stock_page_id):
-    stock = StockPage.query.filter(StockPage.id == stock_page_id).one()
-    return stock.code
-
 
 @api.route("/<stockPageId>")
 class StockPageCRUD(Resource):
     @login_required
-    # @api.marshal_with(stock_list_response)
+    @api.marshal_with(stock_page_details_response)
     @api.response(200, "Successfully retrieved details")
+    @api.response(404, "Stock page not found")
     def get(self, stockPageId):
         """Fetch stock page data"""
 
-        # stock_code = get_stock_code(stockPageId) # integrate into crud_utils
+        if crud.update_stock_page(stockPageId) == Status.FAIL:
+            # Don't abort, just fetch latest data
+            print("Could not fetch latest, attempting to return cached data")
 
-        stock = yf.Ticker(stockPageId)
-        # print(vars(stock))
-        # print(stock.info)
-        # print(stockOverview("AAPL"))
+        stock_page_item = crud.fetch_stock_page(stockPageId)
+
+        if stock_page_item == Status.FAIL:
+            return abort(404, "Stock page could not be found")
+
+        return stock_page_item
