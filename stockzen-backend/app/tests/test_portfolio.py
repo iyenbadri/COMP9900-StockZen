@@ -1,7 +1,9 @@
 import app.tests.mocks as mock
+from app.tests.conftest import auth_client_no_db
 
 
-def test_portfolio_endpoints(client):
+def test_portfolio_endpoints(auth_client_no_db):
+    client = auth_client_no_db
     # --------------------------------------------------------------------------
     # Portfolio Creation & Listing
     # --------------------------------------------------------------------------
@@ -29,12 +31,12 @@ def test_portfolio_endpoints(client):
     # --------------------------------------------------------------------------
     # Portfolio Ordering
     # --------------------------------------------------------------------------
-    response = client.put("/portfolio/list", json=mock.portfolio_order((1, 1), (2, 1)))
+    response = client.put("/portfolio/list", json=mock.ordering((1, 1), (2, 1)))
     # Fail: non unique order
     assert response.status_code == 409
 
     # Swap portfolios 1 and 2 around
-    response = client.put("/portfolio/list", json=mock.portfolio_order((1, 2), (2, 1)))
+    response = client.put("/portfolio/list", json=mock.ordering((1, 2), (2, 1)))
     # Success: successfully reorder
     assert response.status_code == 200
     # Check new order is correct
