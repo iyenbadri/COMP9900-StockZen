@@ -92,16 +92,16 @@ class PortfolioCRUD(Resource):
     def put(self):
         """Update portfolio list row ordering"""
 
-        json_array = marshal(
+        reorder_request = marshal(
             request.json, portfolio_reorder_request
         )  # array of json objects
 
         # return error if any order is non-unique
-        orderList = [json["order"] for json in json_array]
+        orderList = [json["order"] for json in reorder_request]
         if len(orderList) > len(set(orderList)):
             return abort(409, "Failed because non-unique order numbers were provided")
 
-        if util.reorder_portfolio_list(json_array) == Status.SUCCESS:
+        if util.reorder_portfolio_list(reorder_request) == Status.SUCCESS:
             return {"message": "Portfolio list successfully reordered"}, 200
 
         return abort(500, "Portfolio list could not be reordered")
