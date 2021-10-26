@@ -129,7 +129,9 @@ const SearchWidget: FC<Prop> = (prop) => {
                     </span>
                     <span className={styles.optionSymbol}>
                       {/* TODO: Will fix the nested `a` tag bug later. Have to find a way to fix it first */}
-                      <Link to={'/stock/' + option.code}>{option.code}</Link>
+                      <Link to={'/stock/' + option.stockPageId}>
+                        {option.code}
+                      </Link>
                     </span>
                     <span className={styles.optionDescription}>
                       <div>{option.description}</div>

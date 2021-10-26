@@ -14,6 +14,7 @@ interface IPortfolio {
 interface IStock {
     ordering: number;
     stockId: number;
+    stockPageId: number;
     draggableId: string;
     symbol: string;
     name: string;
