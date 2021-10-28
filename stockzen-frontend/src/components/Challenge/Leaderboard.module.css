@@ -1,0 +1,16 @@
+@import 'variables';
+
+.challengeDate {
+  font-weight: 800;
+}
+
+.submitPortfolio {
+  color: var(--zen-4);
+
+  font-weight: 700;
+  padding: 0 !important;
+}
+
+.contentPadder {
+  margin: 0 70px;
+}
