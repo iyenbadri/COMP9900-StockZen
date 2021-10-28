@@ -122,8 +122,8 @@ const Leaderboard = () => {
           className={`${styles.challengeDateMessage} ${styles.nextChallengeMessage}`}
         >
           Next challenge: 00:00{' '}
-          <span className={styles.challengeDate}>05/09/2021</span>- 23:59{' '}
-          <span className={styles.challengeDate}>18/09/2021</span>
+          <span className={styles.challengeDate}>19/09/2021</span> - 23:59{' '}
+          <span className={styles.challengeDate}>02/10/2021</span>
         </div>
 
         <div>
