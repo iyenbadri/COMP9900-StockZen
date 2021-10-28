@@ -24,7 +24,7 @@ const SearchWidget: FC<Prop> = (prop) => {
       stockPageId: x.id,
       code: x.code,
       description: x.stock_name,
-      market: Math.round(Math.random() * 100).toString(),
+      market: x.exchange,
       searchLabel: `${x.code}` + (x.stock_name ? ` : ${x.stock_name}` : ''),
     }),
     []
@@ -175,6 +175,7 @@ interface SearchResponse {
   id: number;
   code: string;
   stock_name: string;
+  exchange: string;
 }
 
 export default SearchWidget;
