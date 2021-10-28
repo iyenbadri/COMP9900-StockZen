@@ -74,20 +74,56 @@ Week 5
 Week 6 
 
 • Planned  : Stock page (except for API wire up)
-• Achieved : In progress
+• Achieved : 30% done
+  (*Could not achieve 100% as I had to spend much time learning and rewriting the codes
+  through trial and error )
 
 - Did PR reviews for:
   · PR#53_Bugfix for Portfolio API wire up (Rittisak)
   · PR#54_Bugfix for top performer widget (Rittisak)
-  · PR#57_Bugfix for login page
-  · 
-- Wrote codes and created PR for:
-  · frontend stock page layout
-  · 
+  · PR#57_Bugfix for login page (Rittisak)
+  · PR#58_Portfolio list sort wire up (Rittisak)
+  · #64_Search API wire up (Rittisak)
+- Wrote codes and created PR for frontend's:
+  · stock page layout
+  · stock summary tab and table
+  · company profile tab and table
 - Had discussion with Rittisak to discuss get feedback on code style and 
   structure of stock page
-- 
+- Did research on:
+  · yfinance documents to come up with appropriate schema of stock page data and
+    create mock data
+  · React's packages and libraries (e.g., react-tabs, react-table, etc.) for 
+    implementing tabs and tables in stock page 
 
 ========================================================================================
 
 Week 7
+
+• Planned  : Complete stock page including API wire up
+• Achieved : (Guess I would be able to complete this +next tasks as well) 
+
+- Did PR reviews for:
+  ·
+- Wrote codes for:
+  · stock page search widget
+  · stock page API wire up
+  · stock page historical data tab and tables
+  · 
+- Refined the codes based on the feedbacks I got from PR 
+- Did test for stock page endpoints (partially reviewing Khai's code)
+
+========================================================================================
+
+Week 8
+
+========================================================================================
+
+Week 9
+
+========================================================================================
+
+Week 10
+
+========================================================================================
+
