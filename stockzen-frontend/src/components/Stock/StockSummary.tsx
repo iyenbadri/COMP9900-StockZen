@@ -2,50 +2,48 @@ import questionIcon from 'assets/icon-outlines/outline-question-circle.svg';
 import React, { FC } from 'react';
 import styles from './StockSummary.module.css';
 
-// TO DO: API WIRE UP
-
-const StockSummary: FC<IStockSummary> = (prop) => {
+const StockSummary: FC<IStockPageResponse> = (props) => {
   return (
     <>
       <div className={styles.wrapper}>
         <table className={styles.stockTable}>
           <tr>
             <th>Previous Close</th>
-            <td>{prop.prevClose}</td>
+            <td>{props.prevClose}</td>
           </tr>
           <tr>
             <th>Open</th>
-            <td>{prop.open}</td>
+            <td>{props.open}</td>
           </tr>
           <tr>
             <th>Bid</th>
-            <td>{prop.bid} x {prop.bidSize}</td>
+            <td>{props.bid} x {props.bidSize}</td>
           </tr>
           <tr>
             <th>Ask</th>
-            <td>{prop.ask} x {prop.askSize}</td>
+            <td>{props.ask} x {props.askSize}</td>
           </tr>
           <tr>
             <th>Day's Range</th>
-            <td>{prop.dayLow} - {prop.dayHigh}</td>
+            <td>{props.dayLow} - {props.dayHigh}</td>
           </tr>
         </table>
         <table className={styles.stockTable}>
           <tr>
             <th>52 Week Range</th>
-            <td>{prop.fiftyTwoWeekLow} - {prop.fiftyTwoWeekHigh}</td>
+            <td>{props.fiftyTwoWeekLow} - {props.fiftyTwoWeekHigh}</td>
           </tr>
           <tr>
             <th>Volume</th>
-            <td>{prop.volume}</td>
+            <td>{props.volume}</td>
           </tr>
           <tr>
             <th>Avg. Volume</th>
-            <td>{prop.avgVolume}</td>
+            <td>{props.avgVolume}</td>
           </tr>
           <tr>
             <th>Market Cap</th>
-            <td>{prop.marketCap}</td>
+            <td>{props.marketCap}</td>
           </tr>
           <tr>
             <th>Beta (5Y Monthly)</th>
@@ -60,7 +58,7 @@ const StockSummary: FC<IStockSummary> = (prop) => {
                 Stock's volatility in relation to the overall market
               </div>
             </div>
-            <td>{prop.beta}</td>
+            <td>{props.beta}</td>
           </tr>
         </table>
       </div>
