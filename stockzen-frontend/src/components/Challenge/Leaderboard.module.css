@@ -1,7 +1,126 @@
 @import 'variables';
 
-.challengeDate {
+:root {
+  --content-padding: 70px;
+}
+
+.pageHeader {
   font-weight: 800;
+  margin-top: 40px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.leaderboardTitle {
+  font-size: 1.5em;
+  font-weight: 500;
+}
+
+.challengeDateMessage {
+  font-weight: 500;
+}
+
+.challengeDate {
+  font-weight: 900;
+}
+
+.contentPadder {
+  margin: 0 var(--content-padding);
+}
+
+.leaderboardTable {
+  margin-top: 10px;
+}
+
+.leaderboardTableHeader {
+  display: flex;
+  margin-left: calc(-1 * var(--content-padding));
+  margin-bottom: 5px;
+}
+
+.leaderboardTableRow {
+  display: flex;
+  margin: 0px 0px 10px calc(-1 * var(--content-padding));
+  align-items: center;
+}
+
+.rowInfo {
+  background-color: rgba(var(--row-gray-rgb), 0.7);
+  min-height: 45px;
+  border: transparent;
+  border-radius: 5px;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+.rowInfo.rank1 {
+  background-image: linear-gradient(
+    to right,
+    #ffd70080,
+    #ecc700ff,
+    #ffb800ff,
+    #ffd700ff,
+    #ffd700bf
+  );
+}
+
+.rowInfo.rank2 {
+  background-image: linear-gradient(to right, #ffffffbb, #cccccc66, #ffffffbb);
+}
+
+.rowInfo.rank3 {
+  background-image: linear-gradient(to right, #cd7f32bb, #ff800080, #cd7f32bb);
+}
+
+.leaderboardTableRow:hover .rowInfo {
+  outline: 1px solid var(--zen-4);
+  /* background-color: var(--zen-5); */
+}
+
+.rowYou {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: var(--content-padding);
+  text-align: center;
+  font-weight: 700;
+}
+
+.rowRank {
+  flex-basis: 120px;
+  text-align: center;
+}
+
+.leaderboardTableRow .rowRank {
+  font-weight: 800;
+}
+
+.rowUser {
+  flex-basis: 120px;
+  flex-grow: 1;
+}
+
+.rowGain {
+  flex-basis: 150px;
+  text-align: center;
+}
+
+.leaderboardTableRow .rowGain {
+  font-weight: 800;
+}
+
+.rowTopStock {
+  flex-basis: 150px;
+  text-align: center;
+}
+
+.leaderboardTableRow .rowTopStock {
+  font-weight: 600;
+}
+
+.rowMore {
+  text-align: center;
+  flex-grow: 1;
 }
 
 .submitPortfolio {
@@ -11,6 +130,6 @@
   padding: 0 !important;
 }
 
-.contentPadder {
-  margin: 0 70px;
+.nextChallengeMessage {
+  margin: 20px 0px 10px;
 }
