@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 from typing import Dict, Mapping, Sequence, Union
 
-from app.models.schema import Portfolio, Stock, StockPage, User
+from app.models.schema import History, Portfolio, Stock, StockPage, User
 from app.utils.enums import Status
 from flask_login import current_user
 
@@ -248,6 +248,36 @@ def fetch_stock_page(stock_page_id: int) -> Union[Dict, Status]:
 
         return {**item, **info}
 
+    except:
+        return Status.FAIL
+
+
+def fetch_stock_history(stock_page_id: int, period: str = "1y") -> Union[Dict, Status]:
+    """Get stock history from the database, return item dict or fail status"""
+    try:
+        # use stock symbol to query yfinance api
+        sym = utils.id_to_code(stock_page_id)
+        history_dicts = api.fetch_historical_data(sym, period)
+
+        # Get data from cache if failed to fetch, otherwise save fresh data and return
+        if history_dicts == Status.FAIL:
+            sqla_items = db_utils.query_all(History, **{"stock_page": stock_page_id})
+            if len(sqla_items) == 0:
+                raise LookupError("No history data found in cache")
+            history_dicts = [json.loads(sqla_item.history) for sqla_item in sqla_items]
+        else:
+            # delete old cache and insert new items
+            # TODO: currently not optimised - will need to revisit
+            db_utils.delete_items(History, **{"stock_page": stock_page_id})
+            for dict in history_dicts:
+                history = History(stock_page_id=stock_page_id, history=json.dumps(dict))
+                db_utils.insert_item(history)
+
+        # add stock_page_id to each dict then return
+        history_dicts = [
+            {"stock_page_id": stock_page_id, **dict} for dict in history_dicts
+        ]
+        return history_dicts
     except:
         return Status.FAIL
 

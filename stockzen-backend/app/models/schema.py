@@ -187,3 +187,19 @@ class StockPage(db.Model):
         lazy="select",
         cascade="all, delete, delete-orphan",
     )
+
+    # one-to-many stock_pages:history
+    history = relationship(
+        "History",
+        backref=backref("stock_pages", lazy="select"),
+        lazy="select",
+        cascade="all, delete, delete-orphan",
+    )
+
+
+class History(db.Model):
+    # 1-yr historical data for each stock
+    __tablename__ = "history"
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    stock_page_id = Column(Integer, ForeignKey("stock_pages.id"), nullable=False)
+    history = Column(String, nullable=False)

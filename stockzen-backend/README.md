@@ -41,9 +41,7 @@ Please remember to do this after you install any additional `pip` dependencies, 
 We use `.flaskenv` to keep track of environment variables. Please do the following:
 
 1. Add your Alpha Vantage API key as `AV_API_KEY=<your-key>`
-2. ⚠️ On the very FIRST run of the backend, add `CREATE_NEW_DB=True` to get the backend to create a new SQLite database.
-
-   - Once you have confirmed that the file has been created in `stockzen-backend/app/database/app.sqlite`, **change this flag to `CREATE_NEW_DB=False` so that your database doesn't get overwritten every time the app compiles**.
+2. `POPULATE_NEW_DB=True` flag will populate your db with dummy data to get you up and running. You can change this to `False` to keep the db tables completely empty. Please delete db and rerun the backend whenever any changes are made to the db tables to ensure the schema is always consistent.
 
 ### How it runs:
 

@@ -38,3 +38,30 @@ def test_stock_page_endpoints(auth_client):
     assert response.status_code == 200
     assert response.json == cached_response
     utils.net_blocker(block=False)
+
+
+def test_stock_history_endpoints(auth_client):
+    client = auth_client
+    # --------------------------------------------------------------------------
+    # Stock History endpoint
+    # --------------------------------------------------------------------------
+    utils.net_blocker(block=True)
+    response = client.get("/stock-page/45/history")
+    # Fail to retrieve if no network and no cached data
+    assert response.status_code == 500
+    utils.net_blocker(block=False)
+
+    response = client.get("/stock-page/45/history")
+    # should retrieve from yfinance (and then cache the data)
+    assert response.status_code == 200
+    history = response.json
+    assert len(history) > 250  # should have > 250 && < 260 trade days
+    assert len(history) < 260
+    assert history[0]["date"] != None  # date is provided
+
+    utils.net_blocker(block=True)
+    response = client.get("/stock-page/45/history")
+    # no network, should retrieve from cache
+    assert response.status_code == 200
+    assert response.json == history  # cached data should be the same
+    utils.net_blocker(block=False)
