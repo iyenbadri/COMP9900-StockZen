@@ -22,15 +22,14 @@ function App() {
         <Header></Header>
         <Container
           fluid
-          className={`${styles.appContent} ${
-            !isAuthenticated ? styles.hero : ''
+          className={`${styles.appContent} ${!isAuthenticated ? styles.hero : ''
             }`}
         >
           <Switch>
             <GuestRoute exact path={'/'} component={Landing} />
             <Route path={'/user'} component={User} />
             <Route path={'/portfolio'} component={Portfolio} />
-            <Route path={'/stock/:stockPageId'} component={Stock} />
+            <Route path={'/stock-page'} component={Stock} />
           </Switch>
         </Container>
         <Footer></Footer>
