@@ -89,7 +89,7 @@ const PortfolioPage = () => {
         const symbol = stocksListing[randomIndex];
         return {
           stockId: stock.id,
-          stockPageId: stock.stock_page_id ?? Math.random(),
+          stockPageId: stock.stockPageId ?? Math.random(),
           draggableId: `stock-${stock.id}`,
           ordering: stock.order ?? Math.random(), // TODO: map the backend data
           symbol: stock.code ?? symbol.symbol,
