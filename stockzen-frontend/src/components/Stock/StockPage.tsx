@@ -13,6 +13,12 @@ const StockPage = () => {
     window.location.reload();
   }
 
+  const numberFomatter = new Intl.NumberFormat('en-US', {
+    style: 'decimal',
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2,
+  })
+
   // TO DO: API wire up
   const stockData: IStockPageResponse = {
     id: 0,
@@ -63,16 +69,16 @@ const StockPage = () => {
         <div className={styles.stockCode}>({stockData.code})</div>
       </div>
       <div className={styles.stockSummmary}>
-        <div className={`${styles.stockPrice} outerStroke`}>{stockData.price}</div>
+        <div className={`${styles.stockPrice} outerStroke`}>{numberFomatter.format(stockData.price)}</div>
         <div
           className={`${styles.stockChange} ${gainLossClass(stockData.change)}`}
         >
-          {stockData.change}
+          {numberFomatter.format(stockData.change)}
         </div>
         <div
           className={`${styles.stockPercChange} ${gainLossClass(stockData.change)}`}
         >
-          ({stockData.percChange})
+          ({numberFomatter.format(stockData.percChange)})
         </div>
         <div className={styles.update}>
           <Button

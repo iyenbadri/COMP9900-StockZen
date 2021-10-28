@@ -4,48 +4,54 @@ import styles from './StockSummary.module.css';
 
 // TO DO: API WIRE UP
 
-const StockSummary: FC<IStockSummary> = (prop) => {
+const StockSummary: FC<IStockPageResponse> = (prop) => {
+  const numberFomatter = new Intl.NumberFormat('en-US', {
+    style: 'decimal',
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2,
+  })
+
   return (
     <>
       <div className={styles.wrapper}>
         <table className={styles.stockTable}>
           <tr>
             <th>Previous Close</th>
-            <td>{prop.prevClose}</td>
+            <td>{numberFomatter.format(prop.prevClose)}</td>
           </tr>
           <tr>
             <th>Open</th>
-            <td>{prop.open}</td>
+            <td>{numberFomatter.format(prop.open)}</td>
           </tr>
           <tr>
             <th>Bid</th>
-            <td>{prop.bid} x {prop.bidSize}</td>
+            <td>{numberFomatter.format(prop.bid)} x {numberFomatter.format(prop.bidSize)}</td>
           </tr>
           <tr>
             <th>Ask</th>
-            <td>{prop.ask} x {prop.askSize}</td>
+            <td>{numberFomatter.format(prop.ask)} x {numberFomatter.format(prop.askSize)}</td>
           </tr>
           <tr>
             <th>Day's Range</th>
-            <td>{prop.dayLow} - {prop.dayHigh}</td>
+            <td>{numberFomatter.format(prop.dayLow)} - {numberFomatter.format(prop.dayHigh)}</td>
           </tr>
         </table>
         <table className={styles.stockTable}>
           <tr>
             <th>52 Week Range</th>
-            <td>{prop.fiftyTwoWeekLow} - {prop.fiftyTwoWeekHigh}</td>
+            <td>{numberFomatter.format(prop.fiftyTwoWeekLow)} - {numberFomatter.format(prop.fiftyTwoWeekHigh)}</td>
           </tr>
           <tr>
             <th>Volume</th>
-            <td>{prop.volume}</td>
+            <td>{numberFomatter.format(prop.volume)}</td>
           </tr>
           <tr>
             <th>Avg. Volume</th>
-            <td>{prop.avgVolume}</td>
+            <td>{numberFomatter.format(prop.avgVolume)}</td>
           </tr>
           <tr>
             <th>Market Cap</th>
-            <td>{prop.marketCap}</td>
+            <td>{numberFomatter.format(prop.marketCap)}</td>
           </tr>
           <tr>
             <th>Beta (5Y Monthly)</th>
@@ -60,7 +66,7 @@ const StockSummary: FC<IStockSummary> = (prop) => {
                 Stock's volatility in relation to the overall market
               </div>
             </div>
-            <td>{prop.beta}</td>
+            <td>{typeof prop.beta === 'number' ? numberFomatter.format(prop.beta) : ''}</td>
           </tr>
         </table>
       </div>
