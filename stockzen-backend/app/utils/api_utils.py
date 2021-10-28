@@ -17,15 +17,17 @@ def fetch_time_series(sym: str, period: str = "max") -> DataFrame:
 
 def fetch_stock_data(sym):
     """Fetches Information and calculations for Stock Page,
-    returns price, change, change_perc, and an info dict
+    returns price, change, perc_change, and an info dict
     """
     try:
         stock = yf.Ticker(sym)
-
-        change, change_perc = calc_change(sym)
         info = stock.info
+        if not has_data(stock):
+            raise KeyError("Stock is not valid")
 
-        return info["currentPrice"], change, change_perc, info
+        change, perc_change, price, prev_close = calc_change(sym, info)
+
+        return price, change, perc_change, prev_close, info
 
     except Exception as e:
         util.debug_exception(e, True)
@@ -37,17 +39,33 @@ def fetch_stock_data(sym):
 # ==============================================================================
 
 
-def calc_change(sym: str):
+def calc_change(sym: str, info: dict):
     """Returns current price, change and change percentage"""
     try:
-        df_price = fetch_time_series(sym, period="2d")
-        df_price = df_price["Close"]
+        try:
+            price = info["regularMarketPrice"]
+            prev_close = info["previousClose"]
+        except:
+            print(".info not available, fetching time series...")
+            df_price = fetch_time_series(sym, period="2d")["Close"]
+            df_price = df_price
+            price = df_price[1]
+            prev_close = df_price[0]  # TODO: THIS MIGHT NOT BE PREV DAY CLOSE
+        finally:
+            change = price - prev_close
+            perc_change = change / prev_close * 100
 
-        change = df_price[1] - df_price[0]
-        change_perc = df_price.pct_change()[1]
-
-        return change, change_perc
+            return change, perc_change, price, prev_close
 
     except Exception as e:
         util.debug_exception(e, True)
         return Status.FAIL
+
+
+# ==============================================================================
+# Helper
+# ==============================================================================
+
+
+def has_data(stock):
+    return stock.info["regularMarketPrice"] is not None

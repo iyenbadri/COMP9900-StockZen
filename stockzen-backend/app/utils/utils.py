@@ -1,3 +1,4 @@
+import inspect
 import os
 
 from app.models.schema import StockPage
@@ -11,7 +12,7 @@ from sqlalchemy.orm import load_only
 def debug_exception(error, suppress=False):
     if os.environ.get("FLASK_ENV") == "development":
         print(
-            f"{type(error).__name__} at line {error.__traceback__.tb_lineno} of {__file__}: {error}"
+            f"{type(error).__name__} at line {error.__traceback__.tb_lineno} of {inspect.stack()[1].filename }: {error}"
         )
     if not suppress:
         raise error

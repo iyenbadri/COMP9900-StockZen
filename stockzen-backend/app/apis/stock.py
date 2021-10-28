@@ -102,6 +102,27 @@ class StockCRUD(Resource):
 
         return stock_list
 
+    @login_required
+    @api.expect([stock_reorder_request])
+    @api.response(200, "Successfully updated list order")
+    @api.response(409, "Error: Non-unique order numbers")
+    def put(self, portfolioId):
+        """Update stock list row ordering"""
+
+        reorder_request = marshal(
+            request.json, stock_reorder_request
+        )  # array of json objects
+
+        # return error if any order is non-unique
+        orderList = [json["order"] for json in reorder_request]
+        if len(orderList) > len(set(orderList)):
+            return abort(409, "Failed because non-unique order numbers were provided")
+
+        if util.reorder_stock_list(portfolioId, reorder_request) == Status.SUCCESS:
+            return {"message": "Stock list successfully reordered"}, 200
+
+        return abort(500, "Stock list could not be reordered")
+
 
 @api.route("/<portfolioId>")
 class StockCRUD(Resource):
@@ -111,7 +132,6 @@ class StockCRUD(Resource):
         """Create a new stock row"""
 
         json = marshal(request.json, stock_add_request)
-
         stock_page_id = json["stockPageId"]
 
         if util.add_stock(portfolioId, stock_page_id) == Status.SUCCESS:

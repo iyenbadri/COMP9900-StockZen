@@ -1,4 +1,6 @@
-from typing import Mapping, Sequence, Union
+import json
+from datetime import datetime
+from typing import Dict, Mapping, Sequence, Union
 
 from app.models.schema import Portfolio, Stock, StockPage, User
 from app.utils.enums import Status
@@ -24,6 +26,17 @@ def to_dict(object, timestamp=False) -> Union[dict, Status]:
         return tmp_dict
     except:
         return Status.FAIL
+
+
+def reorder_rows(
+    table: db_utils.DatabaseObj, new_orders: Sequence[Mapping[str, int]], **filters
+):
+    """Update row ordering on the database"""
+    # loop through json dict list and update each row order
+    for item in new_orders:
+        id = item["id"]
+        item = item["order"]
+        db_utils.update_item_columns(table, id, {"order": item}, **filters)
 
 
 # ==============================================================================
@@ -65,12 +78,7 @@ def get_portfolio_list() -> Status:
 def reorder_portfolio_list(new_portfolio_orders: Sequence[Mapping[str, int]]) -> Status:
     """Update portfolio list ordering on the database"""
     try:
-        # loop through json dict list and update each row order
-        for portfolio in new_portfolio_orders:
-            portfolio_id = portfolio["id"]
-            order = portfolio["order"]
-            db_utils.update_item_columns(Portfolio, portfolio_id, {"order": order})
-
+        reorder_rows(Portfolio, new_portfolio_orders)
         return Status.SUCCESS
     except:
         return Status.FAIL
@@ -102,7 +110,9 @@ def update_portfolio_name(portfolio_id: int, new_name: str) -> Status:
     """Update existing portfolio name, return success status"""
     try:
         db_utils.update_item_columns(
-            Portfolio, portfolio_id, {"portfolio_name": new_name}
+            Portfolio,
+            portfolio_id,
+            {"portfolio_name": new_name, "last_updated": datetime.now()},
         )
         return Status.SUCCESS
     except:
@@ -139,6 +149,17 @@ def get_stock_list(portfolio_id: int) -> Status:
             for stock, stock_page in sqla_tuples
         ]
         return dict_list
+    except:
+        return Status.FAIL
+
+
+def reorder_stock_list(
+    portfolio_id: int, new_stock_orders: Sequence[Mapping[str, int]]
+) -> Status:
+    """Update stock list ordering on the database"""
+    try:
+        reorder_rows(Stock, new_stock_orders, **{"portfolio": portfolio_id})
+        return Status.SUCCESS
     except:
         return Status.FAIL
 
@@ -191,18 +212,42 @@ def delete_stock(stock_id: int) -> Status:
 # ==============================================================================
 
 
-def update_stock_page(stock_page_id: int):
+def update_stock_page(stock_page_id: int) -> Status:
     """Update a stock page on the database, return success status"""
     try:
         sym = utils.id_to_code(stock_page_id)
-        [price, change, change_perc, info] = api.fetch_stock_data(sym)
+        price, change, perc_change, prev_close, info = api.fetch_stock_data(sym)
+        info_json = json.dumps(info)  # store info as serialised json string
 
         db_utils.update_item_columns(
             StockPage,
             stock_page_id,
-            {price: price, change: change, change_perc: change_perc, info: info},
+            {
+                "price": price,
+                "change": change,
+                "perc_change": perc_change,
+                "prev_close": prev_close,
+                "info": info_json,
+                "last_updated": datetime.now(),  # update with current timestamp
+            },
         )
         return Status.SUCCESS
+    except:
+        return Status.FAIL
+
+
+def fetch_stock_page(stock_page_id: int) -> Union[Dict, Status]:
+    """Get a stock page from the database, return item dict or fail status"""
+    try:
+        sqla_item = db_utils.query_item(StockPage, stock_page_id)
+        item = to_dict(sqla_item)
+
+        # need to deserialise info json and return combined dict
+        info_json = item.pop("info")
+        info = json.loads(info_json)
+
+        return {**item, **info}
+
     except:
         return Status.FAIL
 

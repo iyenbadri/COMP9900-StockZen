@@ -27,10 +27,15 @@ def query_item(table: DatabaseObj, item_id: int, **filters) -> Optional[Database
     **filters is of form **{col_type: id}; e.g. {"portfolio": 1}
     """
     try:
-        filter_list = [table.id == item_id, table.user_id == current_user.id]
+        filter_list = [table.id == item_id]
+        if "user_id" in table.__table__.columns:
+            filter_list.append(table.user_id == current_user.id)
+
         for col_type, id in filters.items():
             filter_list.append(getattr(table, f"{col_type}_id") == id)
+
         item = table.query.filter(*filter_list).one()
+
         return item
     except Exception as e:
         utils.debug_exception(e)
@@ -48,7 +53,10 @@ def query_with_join(
     **filters is of form **{col_type: id}; e.g. {"portfolio": 1}
     """
     try:
-        filter_list = [main_table.user_id == current_user.id, main_table.id == item_id]
+        filter_list = [main_table.id == item_id]
+        if "user_id" in main_table.__table__.columns:
+            filter_list.append(main_table.user_id == current_user.id)
+
         for col_type, id in filters.items():
             id_col = getattr(main_table, f"{col_type}_id")
             filter_list.append(id_col == id)
@@ -64,13 +72,15 @@ def query_with_join(
         utils.debug_exception(e)
 
 
-
 def query_all(table: DatabaseObj, **filters) -> Optional[List[DatabaseObj]]:
     """Query a database table using item parent, returns list of query items or None
     **filters is of form **{col_type: id}; e.g. {"portfolio": 1}
     """
     try:
-        filter_list = [table.user_id == current_user.id]
+        filter_list = []
+        if "user_id" in table.__table__.columns:
+            filter_list.append(table.user_id == current_user.id)
+
         for col_type, id in filters.items():
             filter_list.append(getattr(table, f"{col_type}_id") == id)
         item_list = table.query.filter(*filter_list).all()
@@ -90,7 +100,10 @@ def query_all_with_join(
     **filters is of form **{col_type: id}; e.g. {"portfolio": 1}
     """
     try:
-        filter_list = [main_table.user_id == current_user.id]
+        filter_list = []
+        if "user_id" in main_table.__table__.columns:
+            filter_list.append(main_table.user_id == current_user.id)
+
         for col_type, id in filters.items():
             id_col = getattr(main_table, f"{col_type}_id")
             filter_list.append(id_col == id)
@@ -134,7 +147,7 @@ def update_item_columns(
         utils.debug_exception(e)
 
 
-def delete_item(table: DatabaseObj, item_id: int, **filters: int) -> None:
+def delete_item(table: DatabaseObj, item_id: int, **filters) -> None:
     """Delete item from database, throws exception on fail
     **filters is of form **{col_type: id}; e.g. {"portfolio": 1}
     """

@@ -109,11 +109,13 @@ class Stock(db.Model):
         Integer, ForeignKey("stock_pages.id"), nullable=False
     )  # to get current price, change, percent_change, prediction, confidence
     avg_price = Column(Float)  # = bought.avg_price
-    units_held = Column(Integer)  # sum(bought.units) - sum(sold.units)  -> not displayed
+    units_held = Column(
+        Integer, default=0
+    )  # sum(bought.units) - sum(sold.units)  -> not displayed
     gain = Column(Float)  # (stocks.price - bought.avg_price) * stocks.units_held
     perc_gain = Column(Float)  # stocks.gain / (stocks.units_held * bought.avg_price)
     value = Column(Float)  # sum(bought.value)
-    order = Column(Integer, nullable=False)  # track row order, default to top
+    order = Column(Integer, nullable=False, default=0)  # track row order, default to top
     last_updated = Column(DateTime, default=datetime.now())
 
     # Relationships
@@ -170,10 +172,12 @@ class StockPage(db.Model):
     exchange = Column(String(20))
     price = Column(Float)
     change = Column(Float)
-    change_perc = Column(Float)
-    info = Column(String)  # JSON-string of all company info
+    perc_change = Column(Float)
+    prev_close = Column(Float)
     prediction = Column(Integer)  # -1 for down, 0 no change, 1 for up
     confidence = Column(Float)
+    last_updated = Column(DateTime, default=datetime.now())
+    info = Column(String, default="{}")  # JSON-string of all company info
 
     # Relationships
     # one-to-many stock_pages:stocks
