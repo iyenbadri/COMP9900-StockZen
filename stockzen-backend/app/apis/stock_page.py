@@ -1,5 +1,4 @@
 import app.utils.crud_utils as crud
-from app.models.schema import StockPage
 from app.utils.enums import Status
 from flask_login.utils import login_required
 from flask_restx import Namespace, Resource, abort, fields, marshal
@@ -62,6 +61,22 @@ stock_page_details_response = api.model(
 )
 
 
+stock_page_history_response = api.model(
+    "Response: Stock page 1-yr historical data",
+    {
+        "stockPageId": fields.Integer(
+            attribute="stock_page_id", required=True, description="stock page id"
+        ),
+        "date": fields.String(required=True, description="row date"),
+        "open": fields.Float(required=True, description="open price"),
+        "high": fields.Float(required=True, description="high price"),
+        "low": fields.Float(required=True, description="low price"),
+        "close": fields.Float(required=True, description="close price"),
+        "volume": fields.Integer(required=True, description="stock volume"),
+    },
+)
+
+
 # ==============================================================================
 # API Routes/Endpoints
 # ==============================================================================
@@ -91,4 +106,19 @@ class StockPageCRUD(Resource):
         if stock_page_item == Status.FAIL:
             return abort(404, "Stock page could not be found")
 
-        return stock_page_item
+        return stock_page_item, 200
+
+
+@api.route("/<stockPageId>/history")
+class StockPageCRUD(Resource):
+    @login_required
+    @api.marshal_list_with(stock_page_history_response)
+    @api.response(200, "Successfully retrieved history")
+    @api.response(500, "Stock history not retrieved")
+    def get(self, stockPageId):
+        """Fetch stock page historical data"""
+        stock_history = crud.fetch_stock_history(stockPageId)
+        if stock_history == Status.FAIL:
+            return abort(500, "Stock page history could not be retrieved")
+
+        return stock_history, 200
