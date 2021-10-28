@@ -148,10 +148,39 @@ Bugfixes from PR review, merged portfolio reordering endpoint
 Made changes to abort calls, modify backend schema to somewhat normalise the db
 Modified stock list logic to return relevant datapoints
 Research into pytest for backend, looking at refactoring entry point into factory function to enable instanced tests
+Write tests for Portfolio, Stock, User
+Meeting with Badri to discuss ML feature approach
+Review Gunjan's PR
 
 ===========================================================================
 Week 7
 ===========================================================================
+Write up Test suite PR for stocks and implement github actions script for automated tests on push
+Review options for database initialisation with symbols list
+Meeting with Gunjan to discuss changes to api utils
+Implemented auto db population script
+Submit PR for changes to api/crud utils 
+Implement stock page endpoint
+Bugfix for Stock getting single details
+Refactor row reordering backend logic
+Fix up stock symbols table
+Complete all Stock test suites
+Complete all Stock Page test suites including no-network checks
+Set up a PR for Stock page endpoints
+Merged PR for Stock page endpoints
+Implement Stock reordering endpoint
+Implemented Stock History endpoints
+Complete Stock History test suite
+Set up a PR for Stock History endpoints and Stock row reordering
+Merged PR for Stock History / Stock row reordering endpoints
+Implemented Buy Lots endpoints
+Implemented Sell Lots endpoints
+Set up a draft PR for Buy and Sell Lots endpoints
+Complete some of Buy Lot tests
+Begin reviewing frontend Lots PR
+
+Planned work: Finish as many endpoints as possible to unblock frontend work
+Achieved: Bit behind on calculations and lots, but we can catch up this weekend
 
 ===========================================================================
 Week 8
