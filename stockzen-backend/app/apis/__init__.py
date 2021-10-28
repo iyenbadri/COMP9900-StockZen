@@ -16,7 +16,8 @@ from .lot import api_sold as ns2
 from .portfolio import api as ns3
 from .search import api as ns4
 from .stock import api as ns5
-from .user import api as ns6
+from .stock_page import api as ns6
+from .user import api as ns7
 
-for ns in [ns1, ns2, ns3, ns4, ns5, ns6]:
+for ns in [ns1, ns2, ns3, ns4, ns5, ns6, ns7]:
     all_apis.add_namespace(ns)
