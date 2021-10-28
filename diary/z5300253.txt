@@ -56,3 +56,22 @@ Meeting with Khai and Rittisak For implementing the stock search endpoint and de
 
 Time spent: ~>10 hours
 - 14/10/2021
+
+Week 05:
+
+Stock search endpoint PR had some fixes necessary to be made due to which I had fix them up and implement changes to it- Successfully merged into the main branch.
+
+Meeting with Backend team; Khai and Gunjan for catching up on progress and the way ahead- better understanding of the situation we have at the backend.
+Skipped meeting with General for personal reasons, provided with updates on slack channel- Tuesday standup.
+
+Backend team; currently blocking a lot of progress at the frontend- need to prioritise the clean up of the tasks at the backlog ion order to allow for frontend to work seamlessly.
+
+Tasks for the week:
+Research on Machine Learning models for using in our stock prediction algorithm.
+Checking implementation of these models based on available data ion order to avoid pings to the Yfinance API.Self study on LSTM models as traditional ML models won’t solve the problem. 
+Time spent: ~5 hours
+
+Tasks ahead:
+Implementation and demo of the ML prediction also to be merged in to the main.
+
+- 22/10/2021
