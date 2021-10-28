@@ -162,15 +162,44 @@ G 0.3
 Week 6
 
 # Planned:      Implement the sorting of portfolio list/portfolio page
-# Finished:     Fix a bug in the top performer widget.
-# Issue:        -
-# Unfinished:   -
-# Next:         -
+# Finished:     Fix a bug in the top performer widget. Implement the Add/remove/edit of the lots.
+                (This doesn't include API calling as the endpoints are not available yet.) Wire up
+                the search to use API. I setup the GitHub workflow to make it run frontend tests.
+# Issue:        The searhc API didn't return the market value.
+# Unfinished:   Wire up the UI to the endpoints as the endpoints are not available.
+# Next:         Implement the search functionality and wire up some of the endpoint.
 
 I implemented the drag/drop and the temporary sort functionality of the portfolio page.
 We did the retrospective this week.
 
+I set up the test script to make GitHub run tests for frontend part and Khai set up the script
+for backend part.
+
+Jeehyun was working on the Stock page. She finished layouting the page (no data shown yet).
+
 K 1
+J 1
+G (TODO)
+B (TODO)
+
+
+============================================
+Week 7
+
+# Planned:      Implement the refresh functionality. Mock up the challenge page.
+# Finished:     Fix a bug in the top performer widget. Implement the refresh functionality to
+                some of the components.
+# Issue:        (I have my second dose of vaccination on Monday so I felt sick from Monday till
+                Wednesday.)
+# Unfinished:   Wire up the UI to the endpoints as the endpoints are not available.
+# Next:         -
+
+
+K 1
+J 1
+G (TODO)
+B (TODO)
+
 
 -----------------------------------------------------------------------------------------
 You should also include in this diary the following information (if applicable) about the
