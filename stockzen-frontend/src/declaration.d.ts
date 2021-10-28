@@ -65,6 +65,38 @@ interface IStockResponse {
 }
 
 
+// Backend response used for stock-page
+interface IStockPageResponse {
+    id: number;
+    code: string;
+    stockName: string;
+    exchange: string;
+    price: number;
+    change: number;
+    percChange: number;
+    prevClose: number;
+    open: number;
+    bid: number;
+    bidSize: number;
+    ask: number;
+    askSize: number;
+    dayHigh: number;
+    dayLow: number;
+    fiftyTwoWeekHigh: number;
+    fiftyTwoWeekLow: number;
+    volume: number;
+    avgVolume: number;
+    marketCap: number;
+    beta: number | null;
+    longName: string;
+    industry: string;
+    sector: string;
+    website: string;
+    longBusinessSummary: string;
+    prediction: number;
+    confidence: number;
+}
+
 
 // Temp sort parameters
 interface TableOrdering<T extends string> {
