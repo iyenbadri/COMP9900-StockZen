@@ -160,6 +160,19 @@ def delete_item(table: DatabaseObj, item_id: int, **filters) -> None:
         utils.debug_exception(e)
 
 
+def delete_items(table: DatabaseObj, **filters) -> None:
+    """Delete multiple items from database, throws exception on fail
+    **filters is of form **{col_type: id}; e.g. {"portfolio": 1}
+    """
+    try:
+        items = query_all(table, **filters)
+        map(db.session.delete, items)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        utils.debug_exception(e)
+
+
 # ==============================================================================
 # User DB Utils
 # ==============================================================================

@@ -8,11 +8,11 @@ from pandas.core.frame import DataFrame
 # ==============================================================================
 
 
-def fetch_time_series(sym: str, period: str = "max") -> DataFrame:
+def fetch_time_series(sym: str, period: str = "max", actions=False) -> DataFrame:
     """Fetch Time Series for symbol asked"""
 
     stock = yf.Ticker(sym)
-    return stock.history(period)
+    return stock.history(period=period, actions=actions)
 
 
 def fetch_stock_data(sym):
@@ -23,14 +23,35 @@ def fetch_stock_data(sym):
         stock = yf.Ticker(sym)
         info = stock.info
         if not has_data(stock):
-            raise KeyError("Stock is not valid")
+            raise RuntimeError("Stock details could not be fetched")
 
         change, perc_change, price, prev_close = calc_change(sym, info)
 
         return price, change, perc_change, prev_close, info
 
     except Exception as e:
-        util.debug_exception(e, True)
+        util.debug_exception(e, suppress=True)
+        return Status.FAIL
+
+
+def fetch_historical_data(sym, period):
+    """Fetches historical data for Stock Page"""
+    try:
+        # get df of historical data from yfinance
+        df = fetch_time_series(sym, period=period, actions=False)
+        if len(df) == 0:
+            raise RuntimeError("Stock history could not be fetched")
+
+        df = df.reset_index(level=0)  # turn date index into real column
+        df.columns = df.columns.str.lower()  # column names to lowercase
+        df["date"] = df["date"].astype(str)  # convert timestamp to str for jsonificaiton
+
+        # convert to dict list of daily records
+        history_dicts = df.to_dict(orient="records")
+        return history_dicts
+
+    except Exception as e:
+        util.debug_exception(e, suppress=True)
         return Status.FAIL
 
 
