@@ -13,7 +13,7 @@
   margin: 0px 5px;
 }
 
-.stockTable tr {
+.infoRow {
   display: flex;
   width: 100%;
   justify-content: flex-start;
@@ -21,12 +21,13 @@
   border-bottom: 1px solid var(--zen-5);
 }
 
-.stockTable th {
+.infoTitle {
   flex: 0 0 auto;
   padding: 4px 0px;
+  font-weight: bold;
 }
 
-.stockTable td {
+.infoValue {
   margin-left: auto;
   flex: 0 0 auto;
   padding: 4px 0px;
@@ -47,11 +48,12 @@
   background-color: white;
   font-size: x-small;
   font-weight: bold;
-  transition: all .7s;
+  transition: all .35s;
 }
 
 .indexInfo:hover .indexInfoVal {
-  top: -7%;
+  width: 70%;
+  top: 0%;
   left: 10%;
   cursor: default;
 }
