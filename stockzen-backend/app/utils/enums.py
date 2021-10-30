@@ -7,3 +7,8 @@ class Status(Enum):
     INCORRECT_PASSWORD = 2
     SUCCESS = 3
     FAIL = 4
+
+
+class LotType(Enum):
+    BUY = 0
+    SELL = 1
