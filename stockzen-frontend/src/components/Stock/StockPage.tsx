@@ -5,11 +5,13 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
-import { numberFomatter } from 'utils/Utilities';
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { intFormatter, numberFomatter } from 'utils/Utilities';
 import CompanyProfile from './CompanyProfile';
 import StockHistory from './StockHistory';
 import styles from './StockPage.module.css';
 import StockSummary from './StockSummary';
+
 
 interface RouteParams {
   stockPageId: string;
@@ -26,6 +28,7 @@ const StockPage = () => {
   const { setShowPortfolioSummary } = useContext(TopPerformerContext);
 
   const [stockData, setStockData] = useState<IStockPageResponse>();
+  const [chartData, setChartData] = useState<IStockHistoryResponse[]>([]);
   const [historyData, setHistoryData] = useState<IStockHistoryResponse[]>([]);
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -40,15 +43,17 @@ const StockPage = () => {
     try {
       let stock = await axios.get(`/stock-page/${stockPageId}`);
       let history = await axios.get(`/stock-page/${stockPageId}/history`)
-      if (stock.status === 200 && history.status) {
+      if (stock.status === 200 && history.status === 200) {
         setStockData(stock.data);
-        setHistoryData(history.data.reverse());
+        setChartData(history.data);
+        const data = [...history.data].reverse();
+        setHistoryData(data);
         setLoading(false);
       }
     } catch (e: any) {
       setFetchError(true);
     }
-  }, [setStockData, setHistoryData]
+  }, [setStockData, setChartData, setHistoryData]
   );
 
   useEffect(
@@ -65,6 +70,45 @@ const StockPage = () => {
       return styles.moneyLoss;
     }
   }
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active) {
+      return (
+        <div className={styles.tooltip}>
+          <div className='text-center'>
+            <div><b>{label}</b></div>
+          </div>
+          <div className={styles.index}>
+            <div className={styles.indexTitle}>Open</div>
+            <div className={styles.sep}>:</div>
+            <div className={styles.indexValue}>{numberFomatter.format(payload[1].value)}</div>
+          </div>
+          <div className={styles.index}>
+            <div className={styles.indexTitle}>Close</div>
+            <div className={styles.sep}>:</div>
+            <div className={styles.indexValue}>{numberFomatter.format(payload[0].value)}</div>
+          </div>
+          <div className={styles.index}>
+            <div className={styles.indexTitle}>High</div>
+            <div className={styles.sep}>:</div>
+            <div className={styles.indexValue}>{numberFomatter.format(payload[2].value)}</div>
+          </div>
+          <div className={styles.index}>
+            <div className={styles.indexTitle}>Low</div>
+            <div className={styles.sep}>:</div>
+            <div className={styles.indexValue}>{numberFomatter.format(payload[3].value)}</div>
+          </div>
+          <div className={styles.index}>
+            <div className={styles.indexTitle}>Volume</div>
+            <div className={styles.sep}>:</div>
+            <div className={styles.indexValue}>{intFormatter.format(payload[4].value)}</div>
+          </div>
+        </div>
+      );
+    } else {
+      return null;
+    }
+  };
 
   if (loading && !(fetchError)) {
     return (
@@ -98,7 +142,7 @@ const StockPage = () => {
           <div
             className={`${styles.stockPercChange} ${stockData?.change ? gainLossClass(stockData?.change) : ''}`}
           >
-            ({stockData?.percChange ? numberFomatter.format(stockData.percChange) : ''}%)
+            {stockData?.percChange ? `(${numberFomatter.format(stockData.percChange)}%)` : ''}
           </div>
           <div className={styles.update}>
             <Button
@@ -116,7 +160,27 @@ const StockPage = () => {
           </div>
         </div>
         <div className={styles.chartPlaceholder}>
-          <h3>Chart Placeholder</h3>
+          <ResponsiveContainer width='100%' height={250} aspect={3}>
+            <LineChart
+              data={chartData}
+              margin={{
+                top: 5,
+                right: 50,
+                left: 0,
+                bottom: 25,
+              }}
+            >
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis dataKey='date' tick={{ fontSize: 12 }} />
+              <YAxis dataKey='close' tick={{ fontSize: 12 }} />
+              <Tooltip content={<CustomTooltip />} />
+              <Line type='monotone' dataKey='close' stroke={'#5bc0be'} dot={false} />
+              <Line type='monotone' dataKey='open' strokeWidth={0} dot={false} />
+              <Line type='monotone' dataKey='high' strokeWidth={0} dot={false} />
+              <Line type='monotone' dataKey='low' strokeWidth={0} dot={false} />
+              <Line type='monotone' dataKey='volume' strokeWidth={0} dot={false} />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
         <Tabs
           selectedIndex={activeTab}
