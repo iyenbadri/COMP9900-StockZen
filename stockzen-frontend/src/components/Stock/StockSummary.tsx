@@ -1,6 +1,6 @@
 import questionIcon from 'assets/icon-outlines/outline-question-circle.svg';
 import React, { FC } from 'react';
-import { numberFomatter } from 'utils/Utilities';
+import { intFormatter, numberFomatter } from 'utils/Utilities';
 import styles from './StockSummary.module.css';
 
 const StockSummary: FC<IStockPageResponse> = (prop) => {
@@ -28,7 +28,7 @@ const StockSummary: FC<IStockPageResponse> = (prop) => {
             <div className={styles.infoTitle}>
               Bid
             </div>
-            <div className={styles.infoValue}>{numberFomatter.format(prop.bid)} x {numberFomatter.format(prop.bidSize)}
+            <div className={styles.infoValue}>{numberFomatter.format(prop.bid)} x {intFormatter.format(prop.bidSize)}
             </div>
           </div>
           <div className={styles.infoRow}>
@@ -36,7 +36,7 @@ const StockSummary: FC<IStockPageResponse> = (prop) => {
               Ask
             </div>
             <div className={styles.infoValue}>
-              {numberFomatter.format(prop.ask)} x {numberFomatter.format(prop.askSize)}
+              {numberFomatter.format(prop.ask)} x {intFormatter.format(prop.askSize)}
             </div>
           </div>
           <div className={styles.infoRow}>
@@ -62,7 +62,7 @@ const StockSummary: FC<IStockPageResponse> = (prop) => {
               Volume
             </div>
             <div className={styles.infoValue}>
-              {numberFomatter.format(prop.volume)}
+              {intFormatter.format(prop.volume)}
             </div>
           </div>
           <div className={styles.infoRow}>

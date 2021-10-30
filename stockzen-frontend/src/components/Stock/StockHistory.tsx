@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-import { numberFomatter } from 'utils/Utilities';
+import { intFormatter, numberFomatter } from 'utils/Utilities';
 import styles from './StockHistory.module.css';
 
-interface history {
+interface History {
   date?: string;
   open?: number;
   high?: number;
@@ -11,7 +11,7 @@ interface history {
   volume?: number;
 }
 
-const StockHistory: FC<history> = (prop) => {
+const StockHistory: FC<History> = (prop) => {
   return (
     <>
       <div className={styles.historyRow}>
@@ -31,7 +31,7 @@ const StockHistory: FC<history> = (prop) => {
           {typeof prop.close === 'number' ? numberFomatter.format(prop.close) : ''}
         </div>
         <div className={styles.history}>
-          {typeof prop.volume === 'number' ? numberFomatter.format(prop.volume) : ''}
+          {typeof prop.volume === 'number' ? intFormatter.format(prop.volume) : ''}
         </div>
       </div>
     </>
