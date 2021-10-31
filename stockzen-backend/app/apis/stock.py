@@ -13,7 +13,7 @@ api = Namespace("stock", description="Stock related operations")
 # ==============================================================================
 
 stock_details_response = api.model(
-    "Response: Portfolio stock list",
+    "Response: Portfolio stock list (/list is in [] form)",
     {
         "id": fields.Integer(required=True, description="stock id"),
         "stockPageId": fields.Integer(
@@ -88,7 +88,7 @@ stock_reorder_request = api.model(
 # ==============================================================================
 
 
-@api.route("/list/<portfolioId>")
+@api.route("/list/<int:portfolioId>")
 class StockCRUD(Resource):
     @login_required
     @api.marshal_list_with(stock_details_response)
@@ -124,7 +124,7 @@ class StockCRUD(Resource):
         return abort(500, "Stock list could not be reordered")
 
 
-@api.route("/<portfolioId>")
+@api.route("/<int:portfolioId>")
 class StockCRUD(Resource):
     @login_required
     @api.expect(stock_add_request)
@@ -140,7 +140,7 @@ class StockCRUD(Resource):
         return abort(500, "Could not add stock")
 
 
-@api.route("/<stockId>")
+@api.route("/<int:stockId>")
 class StockCRUD(Resource):
     @login_required
     @api.marshal_with(stock_details_response)
