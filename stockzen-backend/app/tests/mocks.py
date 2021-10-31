@@ -121,20 +121,16 @@ uncached_stock_page = {
 # ------------------------------------------------------------------------------
 # Lots
 # ------------------------------------------------------------------------------
-new_lot_1 = {"tradeDate": "2021-01-10", "units": 10, "unitPrice": 123.45}
+units = 10
+unit_price = 123.45
+new_lot_1 = {"tradeDate": "2021-01-10", "units": units, "unitPrice": unit_price}
 
 
 def lot_details(type, id, lot):
     if type == LotType.BUY:
-        lot_details = {
-            "id": id,
-            **lot,
-            "value": None,
-            "change": None,
-            "avgPrice": None,
-        }
+        lot_details = {"id": id, **lot, "value": None, "change": None}
     elif type == LotType.SELL:
-        lot_details = {"id": id, **lot, "amount": None, "realised": None}
+        lot_details = {"id": id, **lot, "amount": units * unit_price, "realised": None}
     else:
         raise ValueError("Incorrect type provided")
 
