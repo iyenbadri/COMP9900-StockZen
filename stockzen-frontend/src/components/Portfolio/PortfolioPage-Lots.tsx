@@ -492,7 +492,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
             <Form autoComplete='off' onSubmit={handleSubmit(handleEditLot)}>
               <h5>
                 Edit new lot:
-                {editingLotType === LotType.Bought ? 'BOUGHT' : 'SOLD'}
+                {editingLotType === LotType.Bought ? 'Bought' : 'Sold'}
               </h5>
 
               <Form.Group>
