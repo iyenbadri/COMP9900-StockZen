@@ -2,8 +2,16 @@ import json
 from datetime import datetime
 from typing import Dict, Mapping, Sequence, Union
 
-from app.models.schema import History, Portfolio, Stock, StockPage, User
-from app.utils.enums import Status
+from app.models.schema import (
+    History,
+    LotBought,
+    LotSold,
+    Portfolio,
+    Stock,
+    StockPage,
+    User,
+)
+from app.utils.enums import LotType, Status
 from flask_login import current_user
 
 from . import api_utils as api
@@ -22,10 +30,19 @@ def to_dict(object, timestamp=False) -> Union[dict, Status]:
         tmp_dict = {}
         for key in object.__mapper__.c.keys():
             if key != "last_updated" or timestamp:
-                tmp_dict[key] = getattr(object, key)
+                value = getattr(object, key)
+                if type(value) == datetime:
+                    value = parse_date_str(value)
+                tmp_dict[key] = value
+
         return tmp_dict
-    except:
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
         return Status.FAIL
+
+
+def parse_date_str(date: datetime) -> str:
+    return date.date()
 
 
 def reorder_rows(
@@ -56,7 +73,8 @@ def add_user(email: str, first_name: str, last_name: str, plain_password: str) -
     try:
         db_utils.insert_item(new_user)
         return Status.SUCCESS
-    except:
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
 
@@ -71,7 +89,8 @@ def get_portfolio_list() -> Status:
         sqla_list = db_utils.query_all(Portfolio)
         dict_list = [to_dict(obj) for obj in sqla_list]
         return dict_list
-    except:
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
 
@@ -80,7 +99,8 @@ def reorder_portfolio_list(new_portfolio_orders: Sequence[Mapping[str, int]]) ->
     try:
         reorder_rows(Portfolio, new_portfolio_orders)
         return Status.SUCCESS
-    except:
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
 
@@ -93,7 +113,8 @@ def add_portfolio(portfolio_name: str) -> Status:
     try:
         db_utils.insert_item(new_portfolio)
         return Status.SUCCESS
-    except:
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
 
@@ -102,7 +123,8 @@ def fetch_portfolio(portfolio_id: int) -> Union[Portfolio, Status]:
     try:
         sqla_item = db_utils.query_item(Portfolio, portfolio_id)
         return to_dict(sqla_item)
-    except:
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
 
@@ -115,7 +137,8 @@ def update_portfolio_name(portfolio_id: int, new_name: str) -> Status:
             {"portfolio_name": new_name, "last_updated": datetime.now()},
         )
         return Status.SUCCESS
-    except:
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
 
@@ -124,7 +147,8 @@ def delete_portfolio(portfolio_id: int) -> Status:
     try:
         db_utils.delete_item(Portfolio, portfolio_id)
         return Status.SUCCESS
-    except:
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
 
@@ -149,7 +173,8 @@ def get_stock_list(portfolio_id: int) -> Status:
             for stock, stock_page in sqla_tuples
         ]
         return dict_list
-    except:
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
 
@@ -160,7 +185,8 @@ def reorder_stock_list(
     try:
         reorder_rows(Stock, new_stock_orders, **{"portfolio": portfolio_id})
         return Status.SUCCESS
-    except:
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
 
@@ -179,7 +205,8 @@ def add_stock(portfolio_id: int, stock_page_id: int) -> Status:
 
         db_utils.insert_item(new_stock)
         return Status.SUCCESS
-    except:
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
 
@@ -194,7 +221,8 @@ def fetch_stock(stock_id: int) -> Union[Stock, Status]:
         # the order of dicts is important: we want stock to override same-named
         # columns from stock_page, e.g. id
         return {**stock_page_dict, **stock_dict}
-    except:
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
 
@@ -203,7 +231,8 @@ def delete_stock(stock_id: int) -> Status:
     try:
         db_utils.delete_item(Stock, stock_id)
         return Status.SUCCESS
-    except:
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
 
@@ -232,7 +261,8 @@ def update_stock_page(stock_page_id: int) -> Status:
             },
         )
         return Status.SUCCESS
-    except:
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
 
@@ -248,7 +278,8 @@ def fetch_stock_page(stock_page_id: int) -> Union[Dict, Status]:
 
         return {**item, **info}
 
-    except:
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
 
@@ -278,14 +309,85 @@ def fetch_stock_history(stock_page_id: int, period: str = "1y") -> Union[Dict, S
             {"stock_page_id": stock_page_id, **dict} for dict in history_dicts
         ]
         return history_dicts
-    except:
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
 
 # ==============================================================================
 # Lot Utils
 # ==============================================================================
-# TODO
+def get_lot_list(type: LotType, stock_id: int) -> Union[Dict, Status]:
+    """Get stock lots from database, return success status"""
+    try:
+        # assign table var according to type of buy/sell
+        table = LotBought if type == LotType.BUY else LotSold
+
+        sqla_list = db_utils.query_all(table, **{"stock": stock_id})
+        dict_list = [to_dict(obj) for obj in sqla_list]
+        return dict_list
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+        return Status.FAIL
+
+
+def add_lot(
+    type: LotType, stock_id: int, trade_date: datetime, units: int, unit_price: float
+) -> Status:
+    """Add a Lot to the database, return success status
+    :param type: is either "buy" or "sell"
+    """
+    try:
+        if type == LotType.BUY:
+            lot = LotBought(
+                user_id=current_user.id,
+                stock_id=stock_id,
+                trade_date=trade_date,
+                units=units,
+                unit_price=unit_price,
+            )
+        elif type == LotType.SELL:
+            lot = LotSold(
+                user_id=current_user.id,
+                stock_id=stock_id,
+                trade_date=trade_date,
+                units=units,
+                unit_price=unit_price,
+            )
+        else:
+            raise ValueError("Incorrect type provided")
+
+        db_utils.insert_item(lot)
+        return Status.SUCCESS
+
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+        return Status.FAIL
+
+
+def delete_lot(type: LotType, lot_id: int) -> Status:
+    """Delete existing lot by id, return success status"""
+    try:
+        table = LotBought if type == LotType.BUY else LotSold
+
+        db_utils.delete_item(table, lot_id)
+        return Status.SUCCESS
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+        return Status.FAIL
+
+
+def fetch_lot(type: LotType, lot_id: int) -> Union[Stock, Status]:
+    """Get existing lot by id, return item or success status"""
+    try:
+        table = LotBought if type == LotType.BUY else LotSold
+
+        sqla_item = db_utils.query_item(table, lot_id)
+        return to_dict(sqla_item)
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+        return Status.FAIL
+
 
 # ==============================================================================
 # Search Utils
@@ -297,5 +399,6 @@ def search_stock(stock_query: str) -> Status:
     try:
         stock_list = db_utils.search_query(stock_query)
         return stock_list
-    except:
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
         return Status.FAIL

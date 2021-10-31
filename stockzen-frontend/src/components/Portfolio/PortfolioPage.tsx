@@ -215,7 +215,11 @@ const PortfolioPage = () => {
           newList[i].ordering = i;
         }
 
-        // TODO: Call API to reorder the list in the backend.
+        // Call API to reorder the list in the backend.
+        axios.put(
+          `/stock/list/${portfolioId}`,
+          newList.map((x) => ({ id: x.stockId, order: x.ordering }))
+        );
 
         return newList;
       });
