@@ -3,7 +3,7 @@ import orderDown from 'assets/icon-outlines/outline-chevron-down-small.svg';
 import orderUp from 'assets/icon-outlines/outline-chevron-up-small.svg';
 import refresh from 'assets/icon-outlines/outline-refresh-small.svg';
 import axios from 'axios';
-import SearchWidget from 'components/Search/SearchWidget';
+import AddStock from 'components/Portfolio/AddStock';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import { Ordering } from 'enums';
 import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
@@ -11,7 +11,7 @@ import {
   DragDropContext,
   Droppable,
   DropResult,
-  ResponderProvided,
+  ResponderProvided
 } from 'react-beautiful-dnd';
 import Button from 'react-bootstrap/Button';
 import { useParams } from 'react-router-dom';
@@ -239,10 +239,10 @@ const PortfolioPage = () => {
       <hr />
 
       <div className={styles.tableToolbar}>
-        <SearchWidget
+        <AddStock
           portfolioId={portfolioId}
           addStock={handleAddStock}
-        ></SearchWidget>
+        ></AddStock>
         <Button
           variant='light'
           className='ms-1 text-muted d-flex align-items-center'
@@ -370,9 +370,8 @@ const PortfolioPage = () => {
 
           {/* Wrapper to enable/disable hightlight when dragging */}
           <div
-            className={`${isDragging ? styles.dragging : styles.notDragging} ${
-              tableOrdering.column !== '' ? styles.tempSort : ''
-            }`}
+            className={`${isDragging ? styles.dragging : styles.notDragging} ${tableOrdering.column !== '' ? styles.tempSort : ''
+              }`}
           >
             <DragDropContext
               onDragEnd={handleDragEnd}
@@ -387,7 +386,7 @@ const PortfolioPage = () => {
                           key={stock.stockId}
                           index={index}
                           stock={stock}
-                          showDeleteModal={() => {}}
+                          showDeleteModal={() => { }}
                         ></PortfolioPageRow>
                       );
                     })}

@@ -1,5 +1,6 @@
 import logo_dark from 'assets/stockzen_dark_cropped.png';
 import logo_light from 'assets/stockzen_light_cropped.png';
+import SearchWidgetHeader from 'components/Search/SearchWidgetHeader';
 import { UserContext } from 'contexts/UserContext';
 import React, { useContext } from 'react';
 import Button from 'react-bootstrap/Button';
@@ -23,21 +24,26 @@ const Header = () => {
             </Link>
           </Col>
           {isAuthenticated && (
-            <Col xs={6}>
+            <Col lg={10} xs={10} className={styles.tabs}>
               <Link to="/portfolio">
                 <Button
-                  variant={'transparent'}
-                  className={styles.tabs}
+                  variant='trnasparent'
+                  className={styles.tab}
                 >
                   My Portfolios
                 </Button>
               </Link>
-              <Button
-                variant={'transparent'}
-                className={styles.tabs}
-              >
-                Challenge
-              </Button>
+              <Link to="/portfolio">
+                <Button
+                  variant='trnasparent'
+                  className={styles.tab}
+                >
+                  Challenge
+                </Button>
+              </Link>
+              <div className={styles.searchWidget}>
+                <SearchWidgetHeader />
+              </div>
             </Col>
           )}
           <Col className='text-end'>

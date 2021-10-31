@@ -26,9 +26,41 @@ header.userAuthenticated {
 }
 
 .tabs {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+  margin-left: 5%;
+}
+
+.tabs:nth-child(1) {
+  width: 20%;
+  flex: 0 1 auto;
+  font-weight: bold;
+}
+
+.tabs:nth-child(2) {
+  width: 20%;
+  flex: 1 1 auto;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+.tabs:nth-child(3) {
+  width: 60%;
+  flex: 1 1 auto;
+  padding-right: 0;
+  margin-right: 0;
+}
+
+.tab {
   size: large;
   outline: none;
   font-weight: bold;
   color: var(--zen-2);
-  margin-right: 5%;
+  margin-right: 15px;
+}
+
+.searchWidget {
+  margin-left: auto;
 }

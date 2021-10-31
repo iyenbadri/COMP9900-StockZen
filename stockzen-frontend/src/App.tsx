@@ -23,7 +23,8 @@ function App() {
         <Header></Header>
         <Container
           fluid
-          className={`${styles.appContent} ${!isAuthenticated ? styles.hero : ''
+          className={`${styles.appContent} ${
+            !isAuthenticated ? styles.hero : ''
             }`}
         >
           <Switch>

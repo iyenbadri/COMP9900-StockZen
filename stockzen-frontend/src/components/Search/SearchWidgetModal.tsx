@@ -1,12 +1,12 @@
 import plusIcon from 'assets/icon-outlines/outline-plus-small.svg';
 import axios, { AxiosResponse } from 'axios';
+import { Prop } from "components/Portfolio/AddStock";
 import { SearchContext } from 'contexts/SearchContext';
 import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { AsyncTypeahead, Menu, MenuItem } from "react-bootstrap-typeahead";
 import { Link } from 'react-router-dom';
-import { Prop } from "./SearchWidget";
-import styles from './SearchWidget.module.css';
+import styles from './SearchWidgetModal.module.css';
 
 interface TypeaheadOption {
   stockPageId: number;
@@ -24,7 +24,7 @@ interface SearchResponse {
 
 const SearchWidgetModal: FC<Prop> = (prop) => {
   const { portfolioId, addStock } = prop;
-  const { showSearchInput, endSearch } = useContext(SearchContext);
+  const { showSearchInput, searchAtHeader, endSearch } = useContext(SearchContext);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [options, setOptions] = useState<TypeaheadOption[]>([]);
 
@@ -112,10 +112,11 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
                 position={index}
               >
                 <div className={styles.searchOption}>
-                  {(portfolioId !== null) && (
-                    <span className={styles.optionAdd}>
-                      {/* Render the add button if it is not added */}
-                      {!addedStockPageIds.includes(option.stockPageId) && (
+                  <span className={styles.optionAdd}>
+                    {/* Render the add button if it is not added */}
+                    {(!addedStockPageIds.includes(option.stockPageId)
+                      && (!searchAtHeader)
+                    ) && (
                         <Button
                           variant='transparent'
                           onClick={(ev) => {
@@ -135,11 +136,13 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
                           <img src={plusIcon} alt='add' />
                         </Button>
                       )}
-                    </span>
-                  )}
+                  </span>
                   <span className={styles.optionSymbol}>
                     {/* TODO: Will fix the nested `a` tag bug later. Have to find a way to fix it first */}
-                    <Link to={'/stock/' + option.stockPageId}>
+                    <Link
+                      to={'/stock-page/' + option.stockPageId}
+                      onClick={() => endSearch()}
+                    >
                       {option.code}
                     </Link>
                   </span>
@@ -151,9 +154,10 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
               </MenuItem>
             ))}
           </Menu>
-        )}
-      ></AsyncTypeahead>
-    </Modal>
+        )
+        }
+      ></AsyncTypeahead >
+    </Modal >
   )
 }
 

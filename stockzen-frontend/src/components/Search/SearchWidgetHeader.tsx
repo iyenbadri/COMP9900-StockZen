@@ -1,8 +1,8 @@
 import searchIcon from 'assets/icon-outlines/outline-search.svg';
+import { Prop } from 'components/Portfolio/AddStock';
 import { SearchContext } from 'contexts/SearchContext';
 import React, { FC, useContext } from 'react';
 import { Form } from 'react-bootstrap';
-import { Prop } from './SearchWidget';
 import styles from './SearchWidgetHeader.module.css';
 import SearchWidgetModal from './SearchWidgetModal';
 
