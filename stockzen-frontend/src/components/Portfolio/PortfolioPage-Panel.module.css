@@ -31,7 +31,7 @@
 }
 
 .rowHeader .lotTradeDate,
-.rowHeader .lotPricePerUnit,
+.rowHeader .lotUnitPrice,
 .rowHeader .lotValue,
 .rowHeader .lotChange,
 .rowHeader .lotActions {
@@ -52,7 +52,7 @@
 }
 
 .lotTradeDate,
-.lotPricePerUnit,
+.lotUnitPrice,
 .lotValue,
 .lotActions {
   flex-basis: 80px;
@@ -60,7 +60,7 @@
   flex-shrink: 0;
 }
 
-.lotPricePerUnit,
+.lotUnitPrice,
 .lotValue,
 .lotChange {
   text-align: center;

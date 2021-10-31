@@ -37,14 +37,13 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
   const [editingLotId, setEditingLotId] = useState<number>();
   const [editingLotTradeDate, setEditingLotTradeDate] = useState<string>();
   const [editingLotUnits, setEditingLotUnits] = useState<string>();
-  const [editingLotPricePerUnit, setEditingLotPricePerUnit] =
-    useState<string>();
+  const [editingLotUnitPrice, setEditingLotUnitPrice] = useState<string>();
 
   // Bought lots
   const [lotsBought, setLotsBought] = useState<ILotBought[]>([]);
   const [boughtTotal, setBoughtTotal] = useState<ILotTotal>({
     units: 0,
-    pricePerUnit: 0,
+    unitPrice: 0,
     price: 0,
   });
 
@@ -52,7 +51,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
   const [lotsSold, setLotsSold] = useState<ILotSold[]>([]);
   const [soldTotal, setSoldTotal] = useState<ILotTotal>({
     units: 0,
-    pricePerUnit: 0,
+    unitPrice: 0,
     price: 0,
   });
 
@@ -72,14 +71,14 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     const sum = lots.reduce(
       (total, lot) => ({
         units: total.units + lot.units,
-        price: total.price + lot.units * lot.pricePerUnit,
+        price: total.price + lot.units * lot.unitPrice,
       }),
       { units: 0, price: 0 }
     );
 
     return {
       units: sum.units,
-      pricePerUnit: sum.units === 0 ? 0 : sum.price / sum.units,
+      unitPrice: sum.units === 0 ? 0 : sum.price / sum.units,
       price: sum.price,
     };
   }, []);
@@ -103,31 +102,31 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
         lotId: Math.random(),
         tradeDate: moment(new Date(2021, 3, 12)),
         units: 10,
-        pricePerUnit: 2,
+        unitPrice: 2,
       },
       {
         lotId: Math.random(),
         tradeDate: moment(new Date(2021, 4, 1)),
         units: 5,
-        pricePerUnit: 15,
+        unitPrice: 15,
       },
       {
         lotId: Math.random(),
         tradeDate: moment(new Date(2021, 4, 14)),
         units: 5,
-        pricePerUnit: 17,
+        unitPrice: 17,
       },
       {
         lotId: Math.random(),
         tradeDate: moment(new Date(2021, 4, 14)),
         units: Math.random() * 10000,
-        pricePerUnit: Math.random() * 100,
+        unitPrice: Math.random() * 100,
       },
       {
         lotId: Math.random(),
         tradeDate: moment(new Date(2021, 4, 14)),
         units: Math.random() * 10000,
-        pricePerUnit: Math.random() * 100,
+        unitPrice: Math.random() * 100,
       },
     ]);
 
@@ -136,19 +135,19 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
         lotId: Math.random(),
         tradeDate: moment(new Date(2021, 10, 12)),
         units: 10,
-        pricePerUnit: 2,
+        unitPrice: 2,
       },
       {
         lotId: Math.random(),
         tradeDate: moment(new Date(2021, 11, 12)),
         units: Math.random() * 10000,
-        pricePerUnit: Math.random() * 100,
+        unitPrice: Math.random() * 100,
       },
       {
         lotId: Math.random(),
         tradeDate: moment(new Date(2021, 11, 15)),
         units: Math.random() * 10000,
-        pricePerUnit: Math.random() * 100,
+        unitPrice: Math.random() * 100,
       },
     ]);
   }, [setLotsBought, setLotsSold]);
@@ -160,7 +159,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
       stockId: number,
       tradeDate: Moment,
       units: number,
-      pricePerUnit: number
+      unitPrice: number
     ) => {
       switch (lotType) {
         case LotType.Bought:
@@ -170,7 +169,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
               stockId: stockId,
               tradeDate: tradeDate,
               units: units,
-              pricePerUnit: pricePerUnit,
+              unitPrice: unitPrice,
             };
 
             // TODO: Wire up the API
@@ -189,7 +188,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                   stockId: stockId,
                   tradeDate: tradeDate,
                   units: units,
-                  pricePerUnit: pricePerUnit,
+                  unitPrice: unitPrice,
                 },
               ].sort((a, b) => a.tradeDate.unix() - b.tradeDate.unix());
             });
@@ -202,7 +201,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
               stockId: stockId,
               tradeDate: tradeDate,
               units: units,
-              pricePerUnit: pricePerUnit,
+              unitPrice: unitPrice,
             };
 
             // TODO: Wire up the API
@@ -221,7 +220,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                   stockId: stockId,
                   tradeDate: tradeDate,
                   units: units,
-                  pricePerUnit: pricePerUnit,
+                  unitPrice: unitPrice,
                 },
               ].sort((a, b) => a.tradeDate.unix() - b.tradeDate.unix());
             });
@@ -239,7 +238,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
       stockId,
       moment(data.tradeDate),
       parseFloat(data.units),
-      parseFloat(data.pricePerUnit)
+      parseFloat(data.unitPrice)
     );
 
     setShowAddLotBoughtModal(false);
@@ -252,7 +251,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
       stockId,
       moment(data.tradeDate),
       parseFloat(data.units),
-      parseFloat(data.pricePerUnit)
+      parseFloat(data.unitPrice)
     );
 
     setShowAddLotSoldModal(false);
@@ -299,7 +298,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           stockId,
           moment(data.tradeDate),
           parseFloat(data.units),
-          parseFloat(data.pricePerUnit)
+          parseFloat(data.unitPrice)
         );
 
         // Delete the old lot
@@ -322,7 +321,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           stockId,
           moment(data.tradeDate),
           parseFloat(data.units),
-          parseFloat(data.pricePerUnit)
+          parseFloat(data.unitPrice)
         );
 
         // TODO: Wire up the API
@@ -355,7 +354,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
               autoComplete='off'
               onSubmit={handleSubmit(handleAddBoughtLot)}
             >
-              <h5>Add new lot:Bought</h5>
+              <h5>Add new lot: Bought</h5>
 
               <Form.Group>
                 <Form.Label>Trade Date</Form.Label>
@@ -377,7 +376,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 <Form.Control
                   type='number'
                   min='0'
-                  step='0.0001'
+                  step='0.01'
                   {...register('units', {
                     required: true,
                   })}
@@ -392,14 +391,14 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 <Form.Label>Price/unit</Form.Label>
                 <Form.Control
                   type='number'
-                  step='0.0001'
-                  {...register('pricePerUnit', {
+                  step='0.01'
+                  {...register('unitPrice', {
                     required: true,
                   })}
                 ></Form.Control>
 
                 <Form.Text className={styles.errorMessage}>
-                  {errors.pricePerUnit?.type === 'required' &&
+                  {errors.unitPrice?.type === 'required' &&
                     'Price/unit is required'}
                 </Form.Text>
               </Form.Group>
@@ -423,7 +422,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
         >
           <Modal.Body>
             <Form autoComplete='off' onSubmit={handleSubmit(handleAddSoldLot)}>
-              <h5>Add new lot:Sold</h5>
+              <h5>Add new lot: Sold</h5>
 
               <Form.Group>
                 <Form.Label>Trade Date</Form.Label>
@@ -445,7 +444,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 <Form.Control
                   type='number'
                   min='0'
-                  step='0.0001'
+                  step='0.01'
                   {...register('units', {
                     required: true,
                   })}
@@ -460,14 +459,14 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 <Form.Label>Price/unit</Form.Label>
                 <Form.Control
                   type='number'
-                  step='0.0001'
-                  {...register('pricePerUnit', {
+                  step='0.01'
+                  {...register('unitPrice', {
                     required: true,
                   })}
                 ></Form.Control>
 
                 <Form.Text className={styles.errorMessage}>
-                  {errors.pricePerUnit?.type === 'required' &&
+                  {errors.unitPrice?.type === 'required' &&
                     'Price/unit is required'}
                 </Form.Text>
               </Form.Group>
@@ -520,7 +519,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 <Form.Control
                   type='number'
                   min='0'
-                  step='0.0001'
+                  step='0.01'
                   {...register('units', {
                     required: true,
                     value: editingLotUnits,
@@ -539,18 +538,18 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 <Form.Label>Price/unit</Form.Label>
                 <Form.Control
                   type='number'
-                  step='0.0001'
-                  {...register('pricePerUnit', {
+                  step='0.01'
+                  {...register('unitPrice', {
                     required: true,
-                    value: editingLotPricePerUnit,
+                    value: editingLotUnitPrice,
                   })}
                   onChange={(ev) => {
-                    setEditingLotPricePerUnit(ev.target.value);
+                    setEditingLotUnitPrice(ev.target.value);
                   }}
                 ></Form.Control>
 
                 <Form.Text className={styles.errorMessage}>
-                  {errors.pricePerUnit?.type === 'required' &&
+                  {errors.unitPrice?.type === 'required' &&
                     'Price/unit is required'}
                 </Form.Text>
               </Form.Group>
@@ -569,9 +568,9 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
       {showDeleteModal && (
         <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
           <Modal.Header closeButton>
-            <Modal.Title>Delete lot</Modal.Title>
+            <Modal.Title>Delete Lot</Modal.Title>
           </Modal.Header>
-          <Modal.Body>Do you want to this list?</Modal.Body>
+          <Modal.Body>Do you want to delete this list?</Modal.Body>
           <Modal.Footer>
             <Button variant={'danger'} onClick={handleDeleteLot}>
               Yes
@@ -609,7 +608,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
         <div className={`${styles.lotRow} ${styles.rowHeader}`}>
           <div className={styles.lotTradeDate}>Trade Date</div>
           <div className={styles.lotUnits}>Units</div>
-          <div className={styles.lotPricePerUnit}>Price/unit</div>
+          <div className={styles.lotUnitPrice}>Price/unit</div>
           <div className={styles.lotValue}>Value</div>
           <div className={styles.lotChange}>Change</div>
           <div className={styles.lotActions}></div>
@@ -626,8 +625,8 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
             <div className={styles.lotUnits}>
               {numberFormatter.format(lot.units)}
             </div>
-            <div className={styles.lotPricePerUnit}>
-              {numberFormatter.format(lot.pricePerUnit)}
+            <div className={styles.lotUnitPrice}>
+              {numberFormatter.format(lot.unitPrice)}
             </div>
             <div className={styles.lotValue}>
               {numberFormatter.format(lot.units * currentPrice)}
@@ -646,11 +645,11 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                   setEditingLotId(lot.lotId);
                   setEditingLotTradeDate(lot.tradeDate.format('YYYY-MM-DD'));
                   setEditingLotUnits(lot.units.toString());
-                  setEditingLotPricePerUnit(lot.pricePerUnit.toString());
+                  setEditingLotUnitPrice(lot.unitPrice.toString());
                   setShowEditingLotModal(true);
                 }}
               >
-                <img src={editIcon} alt='edit' />
+                <img src={editIcon} alt='edit this row of bought lots' />
               </Button>
 
               <Button
@@ -676,8 +675,8 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           <div className={styles.lotUnits}>
             {numberFormatter.format(boughtTotal.units)}
           </div>
-          <div className={styles.lotPricePerUnit}>
-            {numberFormatter.format(boughtTotal.pricePerUnit)}
+          <div className={styles.lotUnitPrice}>
+            {numberFormatter.format(boughtTotal.unitPrice)}
           </div>
           <div className={styles.lotValue}>
             {numberFormatter.format(boughtTotal.units * currentPrice)}
@@ -712,7 +711,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
         <div className={`${styles.lotRow} ${styles.rowHeader}`}>
           <div className={styles.lotTradeDate}>Trade Date</div>
           <div className={styles.lotUnits}>Units</div>
-          <div className={styles.lotPricePerUnit}>Price/unit</div>
+          <div className={styles.lotUnitPrice}>Price/unit</div>
           <div className={styles.lotValue}>Amount</div>
           <div className={styles.lotChange}>Realised</div>
           <div className={styles.lotActions}></div>
@@ -729,15 +728,15 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
             <div className={styles.lotUnits}>
               {numberFormatter.format(lot.units)}
             </div>
-            <div className={styles.lotPricePerUnit}>
-              {numberFormatter.format(lot.pricePerUnit)}
+            <div className={styles.lotUnitPrice}>
+              {numberFormatter.format(lot.unitPrice)}
             </div>
             <div className={styles.lotValue}>
-              {numberFormatter.format(lot.units * lot.pricePerUnit)}
+              {numberFormatter.format(lot.units * lot.unitPrice)}
             </div>
             <div className={styles.lotChange}>
               {numberFormatter.format(
-                lot.units * (lot.pricePerUnit - boughtTotal.pricePerUnit)
+                lot.units * (lot.unitPrice - boughtTotal.unitPrice)
               )}
             </div>
 
@@ -751,11 +750,11 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                   setEditingLotId(lot.lotId);
                   setEditingLotTradeDate(lot.tradeDate.format('YYYY-MM-DD'));
                   setEditingLotUnits(lot.units.toString());
-                  setEditingLotPricePerUnit(lot.pricePerUnit.toString());
+                  setEditingLotUnitPrice(lot.unitPrice.toString());
                   setShowEditingLotModal(true);
                 }}
               >
-                <img src={editIcon} alt='edit' />
+                <img src={editIcon} alt='edit this row of sold lots' />
               </Button>
 
               <Button
@@ -781,15 +780,15 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           <div className={styles.lotUnits}>
             {numberFormatter.format(soldTotal.units)}
           </div>
-          <div className={styles.lotPricePerUnit}>
-            {numberFormatter.format(soldTotal.pricePerUnit)}
+          <div className={styles.lotUnitPrice}>
+            {numberFormatter.format(soldTotal.unitPrice)}
           </div>
           <div className={styles.lotValue}>
             {numberFormatter.format(soldTotal.price)}
           </div>
           <div className={styles.lotChange}>
             {numberFormatter.format(
-              soldTotal.price - boughtTotal.pricePerUnit * soldTotal.units
+              soldTotal.price - boughtTotal.unitPrice * soldTotal.units
             )}
           </div>
           <div className={styles.lotActions}></div>
@@ -801,12 +800,12 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
 interface ILot {
   units: number;
-  pricePerUnit: number;
+  unitPrice: number;
 }
 
 interface ILotTotal {
   units: number;
-  pricePerUnit: number;
+  unitPrice: number;
   price: number;
 }
 
@@ -814,14 +813,14 @@ interface ILotBought extends ILot {
   lotId: number;
   tradeDate: Moment;
   units: number;
-  pricePerUnit: number;
+  unitPrice: number;
 }
 
 interface ILotSold extends ILot {
   lotId: number;
   tradeDate: Moment;
   units: number;
-  pricePerUnit: number;
+  unitPrice: number;
 }
 
 interface IPortfolioPageLotProp {
