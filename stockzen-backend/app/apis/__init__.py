@@ -11,8 +11,8 @@ all_apis = Api(
 )
 
 # add each namespace api to the aggregated apis
-from .lot import api_bought as ns1
-from .lot import api_sold as ns2
+from .lot_buy import api as ns1
+from .lot_sell import api as ns2
 from .portfolio import api as ns3
 from .search import api as ns4
 from .stock import api as ns5

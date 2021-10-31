@@ -82,7 +82,7 @@ stock_page_history_response = api.model(
 # ==============================================================================
 
 
-@api.route("/<stockPageId>")
+@api.route("/<int:stockPageId>")
 class StockPageCRUD(Resource):
     @login_required
     @api.marshal_with(stock_page_details_response)
@@ -109,7 +109,7 @@ class StockPageCRUD(Resource):
         return stock_page_item, 200
 
 
-@api.route("/<stockPageId>/history")
+@api.route("/<int:stockPageId>/history")
 class StockPageCRUD(Resource):
     @login_required
     @api.marshal_list_with(stock_page_history_response)

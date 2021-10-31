@@ -1,7 +1,6 @@
 import app.utils.crud_utils as util
 from app.utils.enums import Status
 from flask import request
-from flask_login import current_user
 from flask_login.utils import login_required
 from flask_restx import Namespace, Resource, abort, fields, marshal
 
@@ -125,7 +124,7 @@ class PortfolioCRUD(Resource):
         return abort(500, "Portfolio could not be created")
 
 
-@api.route("/<portfolioId>")
+@api.route("/<int:portfolioId>")
 class PortfolioCRUD(Resource):
     @login_required
     @api.marshal_with(portfolio_details_response)

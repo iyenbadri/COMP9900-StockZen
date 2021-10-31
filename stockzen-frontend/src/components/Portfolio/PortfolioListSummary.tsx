@@ -3,6 +3,7 @@ import gainArrow from 'assets/icon-outlines/outline-arrow-up-circle-green.svg';
 import React from 'react';
 import { usdFormatter } from 'utils/Utilities';
 import styles from './PortfolioListSummary.module.css';
+
 const PortfolioListSummary = () => {
   const summaryData = {
     holdings: 7248.1,
