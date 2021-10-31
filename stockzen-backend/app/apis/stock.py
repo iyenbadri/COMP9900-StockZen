@@ -12,7 +12,7 @@ api = Namespace("stock", description="Stock related operations")
 #   used to convert to the the frontend representation, i.e. camelCase
 # ==============================================================================
 
-stock_list_response = api.model(
+stock_details_response = api.model(
     "Response: Portfolio stock list",
     {
         "id": fields.Integer(required=True, description="stock id"),
@@ -91,7 +91,7 @@ stock_reorder_request = api.model(
 @api.route("/list/<portfolioId>")
 class StockCRUD(Resource):
     @login_required
-    @api.marshal_list_with(stock_list_response)
+    @api.marshal_list_with(stock_details_response)
     @api.response(200, "Successfully retrieved list")
     def get(self, portfolioId):
         """List all stocks from a portfolio"""
@@ -102,6 +102,27 @@ class StockCRUD(Resource):
 
         return stock_list
 
+    @login_required
+    @api.expect([stock_reorder_request])
+    @api.response(200, "Successfully updated list order")
+    @api.response(409, "Error: Non-unique order numbers")
+    def put(self, portfolioId):
+        """Update stock list row ordering"""
+
+        reorder_request = marshal(
+            request.json, stock_reorder_request
+        )  # array of json objects
+
+        # return error if any order is non-unique
+        orderList = [json["order"] for json in reorder_request]
+        if len(orderList) > len(set(orderList)):
+            return abort(409, "Failed because non-unique order numbers were provided")
+
+        if util.reorder_stock_list(portfolioId, reorder_request) == Status.SUCCESS:
+            return {"message": "Stock list successfully reordered"}, 200
+
+        return abort(500, "Stock list could not be reordered")
+
 
 @api.route("/<portfolioId>")
 class StockCRUD(Resource):
@@ -111,7 +132,6 @@ class StockCRUD(Resource):
         """Create a new stock row"""
 
         json = marshal(request.json, stock_add_request)
-
         stock_page_id = json["stockPageId"]
 
         if util.add_stock(portfolioId, stock_page_id) == Status.SUCCESS:
@@ -123,6 +143,7 @@ class StockCRUD(Resource):
 @api.route("/<stockId>")
 class StockCRUD(Resource):
     @login_required
+    @api.marshal_with(stock_details_response)
     @api.response(200, "Successfully retrieved stock row data")
     @api.response(404, "Stock not found")
     def get(self, stockId):

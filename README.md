@@ -1,6 +1,9 @@
 # stockzen
 
+
+[![Backend Test](https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent/actions/workflows/backend-test.yml/badge.svg)](https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent/actions/workflows/backend-test.yml)
 [![Frontend Test](https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent/actions/workflows/frontend-test.yml/badge.svg)](https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent/actions/workflows/frontend-test.yml)
+
 
 _A stock portfolio management webapp_
 

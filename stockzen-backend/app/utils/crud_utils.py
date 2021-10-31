@@ -1,11 +1,13 @@
-from typing import Mapping, Sequence, Union
+import json
+from datetime import datetime
+from typing import Dict, Mapping, Sequence, Union
 
-from app import db
-from app.models.schema import Portfolio, Stock, StockPage, User
+from app.models.schema import History, Portfolio, Stock, StockPage, User
 from app.utils.enums import Status
 from flask_login import current_user
 
-from . import db_utils
+from . import api_utils as api
+from . import db_utils, utils
 
 # ==============================================================================
 # Helpers
@@ -24,6 +26,17 @@ def to_dict(object, timestamp=False) -> Union[dict, Status]:
         return tmp_dict
     except:
         return Status.FAIL
+
+
+def reorder_rows(
+    table: db_utils.DatabaseObj, new_orders: Sequence[Mapping[str, int]], **filters
+):
+    """Update row ordering on the database"""
+    # loop through json dict list and update each row order
+    for item in new_orders:
+        id = item["id"]
+        item = item["order"]
+        db_utils.update_item_columns(table, id, {"order": item}, **filters)
 
 
 # ==============================================================================
@@ -65,12 +78,7 @@ def get_portfolio_list() -> Status:
 def reorder_portfolio_list(new_portfolio_orders: Sequence[Mapping[str, int]]) -> Status:
     """Update portfolio list ordering on the database"""
     try:
-        # loop through json dict list and update each row order
-        for portfolio in new_portfolio_orders:
-            portfolio_id = portfolio["id"]
-            order = portfolio["order"]
-            db_utils.update_item_columns(Portfolio, portfolio_id, {"order": order})
-
+        reorder_rows(Portfolio, new_portfolio_orders)
         return Status.SUCCESS
     except:
         return Status.FAIL
@@ -102,7 +110,9 @@ def update_portfolio_name(portfolio_id: int, new_name: str) -> Status:
     """Update existing portfolio name, return success status"""
     try:
         db_utils.update_item_columns(
-            Portfolio, portfolio_id, {"portfolio_name": new_name}
+            Portfolio,
+            portfolio_id,
+            {"portfolio_name": new_name, "last_updated": datetime.now()},
         )
         return Status.SUCCESS
     except:
@@ -133,11 +143,9 @@ def get_stock_list(portfolio_id: int) -> Status:
             **{"portfolio": portfolio_id},
         )
         dict_list = [
-            {
-                **to_dict(stock),
-                "code": stock_page.code,
-                "stock_name": stock_page.stock_name,
-            }
+            # the order of dicts is important: we want stock to override same-named
+            # columns from stock_page, e.g. id
+            {**to_dict(stock_page), **to_dict(stock)}
             for stock, stock_page in sqla_tuples
         ]
         return dict_list
@@ -145,12 +153,30 @@ def get_stock_list(portfolio_id: int) -> Status:
         return Status.FAIL
 
 
+def reorder_stock_list(
+    portfolio_id: int, new_stock_orders: Sequence[Mapping[str, int]]
+) -> Status:
+    """Update stock list ordering on the database"""
+    try:
+        reorder_rows(Stock, new_stock_orders, **{"portfolio": portfolio_id})
+        return Status.SUCCESS
+    except:
+        return Status.FAIL
+
+
 def add_stock(portfolio_id: int, stock_page_id: int) -> Status:
     """Add a stock to the database, return success status"""
-    new_stock = Stock(
-        user_id=current_user.id, portfolio_id=portfolio_id, stock_page_id=stock_page_id
-    )
     try:
+        # do not allow stock to be added if not in stock_pages
+        # .one() will throw an error
+        StockPage.query.filter_by(id=stock_page_id).one()
+
+        new_stock = Stock(
+            user_id=current_user.id,
+            portfolio_id=portfolio_id,
+            stock_page_id=stock_page_id,
+        )
+
         db_utils.insert_item(new_stock)
         return Status.SUCCESS
     except:
@@ -160,8 +186,14 @@ def add_stock(portfolio_id: int, stock_page_id: int) -> Status:
 def fetch_stock(stock_id: int) -> Union[Stock, Status]:
     """Get existing stock by id, return item or success status"""
     try:
-        sqla_item = db_utils.query_item(Stock, stock_id)
-        return to_dict(sqla_item)
+        sqla_tuple = db_utils.query_with_join(
+            Stock, stock_id, [StockPage], [Stock, StockPage]
+        )
+        stock_dict, stock_page_dict = map(to_dict, sqla_tuple)
+
+        # the order of dicts is important: we want stock to override same-named
+        # columns from stock_page, e.g. id
+        return {**stock_page_dict, **stock_dict}
     except:
         return Status.FAIL
 
@@ -179,13 +211,73 @@ def delete_stock(stock_id: int) -> Status:
 # Stock Page Utils
 # ==============================================================================
 
-# TODO: rudimentary function for db population, needs updating
-def add_stock_page(code: str, stock_name: str) -> Status:
-    """Add a stock page to the database, return success status"""
-    new_stock_page = StockPage(code=code, stock_name=stock_name)
+
+def update_stock_page(stock_page_id: int) -> Status:
+    """Update a stock page on the database, return success status"""
     try:
-        db_utils.insert_item(new_stock_page)
+        sym = utils.id_to_code(stock_page_id)
+        price, change, perc_change, prev_close, info = api.fetch_stock_data(sym)
+        info_json = json.dumps(info)  # store info as serialised json string
+
+        db_utils.update_item_columns(
+            StockPage,
+            stock_page_id,
+            {
+                "price": price,
+                "change": change,
+                "perc_change": perc_change,
+                "prev_close": prev_close,
+                "info": info_json,
+                "last_updated": datetime.now(),  # update with current timestamp
+            },
+        )
         return Status.SUCCESS
+    except:
+        return Status.FAIL
+
+
+def fetch_stock_page(stock_page_id: int) -> Union[Dict, Status]:
+    """Get a stock page from the database, return item dict or fail status"""
+    try:
+        sqla_item = db_utils.query_item(StockPage, stock_page_id)
+        item = to_dict(sqla_item)
+
+        # need to deserialise info json and return combined dict
+        info_json = item.pop("info")
+        info = json.loads(info_json)
+
+        return {**item, **info}
+
+    except:
+        return Status.FAIL
+
+
+def fetch_stock_history(stock_page_id: int, period: str = "1y") -> Union[Dict, Status]:
+    """Get stock history from the database, return item dict or fail status"""
+    try:
+        # use stock symbol to query yfinance api
+        sym = utils.id_to_code(stock_page_id)
+        history_dicts = api.fetch_historical_data(sym, period)
+
+        # Get data from cache if failed to fetch, otherwise save fresh data and return
+        if history_dicts == Status.FAIL:
+            sqla_items = db_utils.query_all(History, **{"stock_page": stock_page_id})
+            if len(sqla_items) == 0:
+                raise LookupError("No history data found in cache")
+            history_dicts = [json.loads(sqla_item.history) for sqla_item in sqla_items]
+        else:
+            # delete old cache and insert new items
+            # TODO: currently not optimised - will need to revisit
+            db_utils.delete_items(History, **{"stock_page": stock_page_id})
+            for dict in history_dicts:
+                history = History(stock_page_id=stock_page_id, history=json.dumps(dict))
+                db_utils.insert_item(history)
+
+        # add stock_page_id to each dict then return
+        history_dicts = [
+            {"stock_page_id": stock_page_id, **dict} for dict in history_dicts
+        ]
+        return history_dicts
     except:
         return Status.FAIL
 
