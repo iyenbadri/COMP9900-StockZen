@@ -1,7 +1,7 @@
 const StockHistory = () => {
   return (
-    <div>Historical Data</div>
-  )
-}
+    <h3>Stock History data</h3>
+  );
+};
 
 export default StockHistory;

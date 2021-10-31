@@ -25,7 +25,6 @@ interface IPortfolioResponse {
     percGain: number;
 }
 
-
 // The stock data for PortfolioPage and PortfolioPageRow
 interface IStock {
     ordering: number;
@@ -44,7 +43,6 @@ interface IStock {
     prediction: number;
     confidence: number;
 }
-
 
 // The reponse got from backend (Will change it later to match the actual)
 interface IStockResponse {
@@ -65,8 +63,6 @@ interface IStockResponse {
     confidence: number;
 }
 
-
-// Backend response used for stock-page
 interface IStockPageResponse {
     id: number;
     code: string;
@@ -98,13 +94,11 @@ interface IStockPageResponse {
     confidence: number;
 }
 
-
 // Temp sort parameters
 interface TableOrdering<T extends string> {
     column: T | '',
     ordering: Ordering
 }
-
 
 interface OrderingIndicatorProp {
     target: string;

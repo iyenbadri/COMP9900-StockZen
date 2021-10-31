@@ -126,7 +126,7 @@ const StockPage = () => {
           <StockHistory />
         </TabPanel>
         <TabPanel>
-          <CompanyProfile />
+          <CompanyProfile {...stockData} />
         </TabPanel>
       </Tabs>
     </>
