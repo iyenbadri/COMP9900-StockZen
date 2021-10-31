@@ -30,6 +30,7 @@ interface IPortfolioResponse {
 interface IStock {
     ordering: number;
     stockId: number;
+    stockPageId: number;
     draggableId: string;
     symbol: string;
     name: string;
@@ -49,7 +50,7 @@ interface IStock {
 interface IStockResponse {
     id: number;
     code: string;
-    stock_page_id: number;
+    stockPageId: number;
     stockName: string;
     price: number;
     change: number;
