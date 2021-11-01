@@ -15,6 +15,7 @@ from app.utils.enums import LotType, Status
 from flask_login import current_user
 
 from . import api_utils as api
+from . import calc_utils as calc
 from . import db_utils, utils
 
 # ==============================================================================
@@ -152,6 +153,36 @@ def delete_portfolio(portfolio_id: int) -> Status:
         return Status.FAIL
 
 
+def update_portfolio(portfolio_id: int) -> Status:
+    """Update a stock page on the database, return success status"""
+    try:
+        (
+            stock_count,
+            value,
+            change,
+            gain,
+            perc_change,
+            perc_gain,
+        ) = calc.calc_portfolio_data(portfolio_id)
+        db_utils.update_item_columns(
+            Portfolio,
+            portfolio_id,
+            {
+                "stock_count": stock_count,
+                "value": value,
+                "change": change,
+                "perc_change": perc_change,
+                "gain": gain,
+                "perc_gain": perc_gain,
+                "last_updated": datetime.now(),  # update with current timestamp
+            },
+        )
+        return Status.SUCCESS
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+        return Status.FAIL
+
+
 # ==============================================================================
 # Stock Utils
 # ==============================================================================
@@ -166,12 +197,14 @@ def get_stock_list(portfolio_id: int) -> Status:
             columns=[Stock, StockPage],
             **{"portfolio": portfolio_id},
         )
+
         dict_list = [
             # the order of dicts is important: we want stock to override same-named
             # columns from stock_page, e.g. id
             {**to_dict(stock_page), **to_dict(stock)}
             for stock, stock_page in sqla_tuples
         ]
+        print(dict_list)
         return dict_list
     except Exception as e:
         utils.debug_exception(e, suppress=True)
@@ -217,7 +250,7 @@ def fetch_stock(stock_id: int) -> Union[Stock, Status]:
             Stock, stock_id, [StockPage], [Stock, StockPage]
         )
         stock_dict, stock_page_dict = map(to_dict, sqla_tuple)
-
+        print(stock_dict)
         # the order of dicts is important: we want stock to override same-named
         # columns from stock_page, e.g. id
         return {**stock_page_dict, **stock_dict}
@@ -230,6 +263,33 @@ def delete_stock(stock_id: int) -> Status:
     """Delete existing stock by id, return success status"""
     try:
         db_utils.delete_item(Stock, stock_id)
+        return Status.SUCCESS
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+        return Status.FAIL
+
+
+def update_stock(stock_id: int) -> Status:
+    """Update a stock in porfolio on the database, return success status"""
+    try:
+        print("im in")
+        (avg_price, units_held, gain, perc_gain, value, change) = calc.calc_stock_data(
+            stock_id
+        )
+        print(avg_price, units_held, gain, perc_gain, value)
+        db_utils.update_item_columns(
+            Stock,
+            stock_id,
+            {
+                "avg_price": avg_price,
+                "units_held": units_held,
+                "gain": gain,
+                "perc_gain": perc_gain,
+                "value": value,
+                "change": change,
+                "last_updated": datetime.now(),  # update with current timestamp
+            },
+        )
         return Status.SUCCESS
     except Exception as e:
         utils.debug_exception(e, suppress=True)
@@ -353,6 +413,7 @@ def add_lot(
                 trade_date=trade_date,
                 units=units,
                 unit_price=unit_price,
+                amount=units * unit_price,
             )
         else:
             raise ValueError("Incorrect type provided")
@@ -384,6 +445,38 @@ def fetch_lot(type: LotType, lot_id: int) -> Union[Stock, Status]:
 
         sqla_item = db_utils.query_item(table, lot_id)
         return to_dict(sqla_item)
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+        return Status.FAIL
+
+
+def update_lot(type: LotType, lot_id: int) -> Status:
+    """Update a bought lot on the database, return success status"""
+    try:
+        if type == LotType.BUY:
+            value, change = calc.calc_lot_data(lot_id)
+            db_utils.update_item_columns(
+                LotBought,
+                lot_id,
+                {
+                    "value": value,
+                    "change": change,
+                    "last_updated": datetime.now(),  # update with current timestamp
+                },
+            )
+
+        elif type == LotType.SELL:
+            realised = calc.calc_lot_sold(lot_id)
+            db_utils.update_item_columns(
+                LotSold,
+                lot_id,
+                {
+                    "realised": realised,
+                },
+            )
+        else:
+            raise ValueError("Incorrect type provided")
+        return Status.SUCCESS
     except Exception as e:
         utils.debug_exception(e, suppress=True)
         return Status.FAIL
