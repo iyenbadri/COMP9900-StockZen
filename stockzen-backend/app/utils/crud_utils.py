@@ -272,7 +272,6 @@ def delete_stock(stock_id: int) -> Status:
 def update_stock(stock_id: int) -> Status:
     """Update a stock in porfolio on the database, return success status"""
     try:
-        print("im in")
         (avg_price, units_held, gain, perc_gain, value, change) = calc.calc_stock_data(
             stock_id
         )
@@ -454,7 +453,7 @@ def update_lot(type: LotType, lot_id: int) -> Status:
     """Update a bought lot on the database, return success status"""
     try:
         if type == LotType.BUY:
-            value, change = calc.calc_lot_data(lot_id)
+            value, change = calc.calc_lot_bought(lot_id)
             db_utils.update_item_columns(
                 LotBought,
                 lot_id,
