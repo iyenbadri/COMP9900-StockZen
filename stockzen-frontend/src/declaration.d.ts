@@ -25,11 +25,11 @@ interface IPortfolioResponse {
     percGain: number;
 }
 
-
 // The stock data for PortfolioPage and PortfolioPageRow
 interface IStock {
     ordering: number;
     stockId: number;
+    stockPageId: number;
     draggableId: string;
     symbol: string;
     name: string;
@@ -44,12 +44,11 @@ interface IStock {
     confidence: number;
 }
 
-
 // The reponse got from backend (Will change it later to match the actual)
 interface IStockResponse {
     id: number;
     code: string;
-    stock_page_id: number;
+    stockPageId: number;
     stockName: string;
     price: number;
     change: number;
@@ -64,14 +63,42 @@ interface IStockResponse {
     confidence: number;
 }
 
-
+interface IStockPageResponse {
+    id: number;
+    code: string;
+    stockName: string;
+    exchange: string;
+    price: number;
+    change: number;
+    percChange: number;
+    prevClose: number;
+    open: number;
+    bid: number;
+    bidSize: number;
+    ask: number;
+    askSize: number;
+    dayHigh: number;
+    dayLow: number;
+    fiftyTwoWeekHigh: number;
+    fiftyTwoWeekLow: number;
+    volume: number;
+    avgVolume: number;
+    marketCap: number;
+    beta: number | null;
+    longName: string;
+    industry: string;
+    sector: string;
+    website: string;
+    longBusinessSummary: string;
+    prediction: number;
+    confidence: number;
+}
 
 // Temp sort parameters
 interface TableOrdering<T extends string> {
     column: T | '',
     ordering: Ordering
 }
-
 
 interface OrderingIndicatorProp {
     target: string;

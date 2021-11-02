@@ -1,0 +1,23 @@
+@import 'variables.css';
+
+.profileWrapper {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.companyName {
+  display: inline-block;
+  font-size: large;
+  font-weight: bolder;
+  margin: 5px 0px 15px 0px;
+}
+
+.linkImg {
+  display: inline-block;
+  transform: translate(-15%, -10%) scale(80%);
+}
+
+.description {
+  overflow: auto;
+}

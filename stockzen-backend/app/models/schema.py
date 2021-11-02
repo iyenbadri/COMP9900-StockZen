@@ -144,7 +144,6 @@ class LotBought(db.Model):
     unit_price = Column(Float, nullable=False)  # <user>
     value = Column(Float)  # stocks.price * bought.unit_price
     change = Column(Float)  # bought.units * stock.change
-    avg_price = Column(Float)  # sum(bought.units * bought.unit_price) / sum(bought.units)
     last_updated = Column(DateTime, default=datetime.now())
 
 
@@ -157,7 +156,7 @@ class LotSold(db.Model):
     units = Column(Integer, nullable=False, default=0)  # <user>
     unit_price = Column(Float, nullable=False)  # <user>
     amount = Column(Float)  # sold.units * sold.unit_price
-    realised = Column(Float)  # sold.units * (sold.unit_price - bought.avg_price)
+    realised = Column(Float)  # sold.units * (sold.unit_price - stock.avg_price)
     last_updated = Column(DateTime, default=datetime.now())
 
 
