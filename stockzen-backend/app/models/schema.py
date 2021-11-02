@@ -112,7 +112,6 @@ class Stock(db.Model):
     units_held = Column(
         Integer, default=0
     )  # sum(bought.units) - sum(sold.units)  -> not displayed
-    change = Column(Float)
     gain = Column(Float)  # (stocks.price - bought.avg_price) * stocks.units_held
     perc_gain = Column(Float)  # stocks.gain / (stocks.units_held * bought.avg_price)
     value = Column(Float)  # sum(bought.value)
@@ -163,7 +162,7 @@ class LotSold(db.Model):
     amount = Column(Float)  # sold.units * sold.unit_price
     realised = Column(Float)  # sold.units * (sold.unit_price - bought.avg_price)
     last_updated = Column(DateTime, default=datetime.now())
-    
+
 
 class StockPage(db.Model):
     __tablename__ = "stock_pages"

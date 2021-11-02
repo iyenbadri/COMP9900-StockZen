@@ -153,34 +153,34 @@ def delete_portfolio(portfolio_id: int) -> Status:
         return Status.FAIL
 
 
-def update_portfolio(portfolio_id: int) -> Status:
-    """Update a stock page on the database, return success status"""
-    try:
-        (
-            stock_count,
-            value,
-            change,
-            gain,
-            perc_change,
-            perc_gain,
-        ) = calc.calc_portfolio_data(portfolio_id)
-        db_utils.update_item_columns(
-            Portfolio,
-            portfolio_id,
-            {
-                "stock_count": stock_count,
-                "value": value,
-                "change": change,
-                "perc_change": perc_change,
-                "gain": gain,
-                "perc_gain": perc_gain,
-                "last_updated": datetime.now(),  # update with current timestamp
-            },
-        )
-        return Status.SUCCESS
-    except Exception as e:
-        utils.debug_exception(e, suppress=True)
-        return Status.FAIL
+# def update_portfolio(portfolio_id: int) -> Status:
+#     """Update a stock page on the database, return success status"""
+#     try:
+#         (
+#             stock_count,
+#             value,
+#             change,
+#             gain,
+#             perc_change,
+#             perc_gain,
+#         ) = calc.calc_portfolio_data(portfolio_id)
+#         db_utils.update_item_columns(
+#             Portfolio,
+#             portfolio_id,
+#             {
+#                 "stock_count": stock_count,
+#                 "value": value,
+#                 "change": change,
+#                 "perc_change": perc_change,
+#                 "gain": gain,
+#                 "perc_gain": perc_gain,
+#                 "last_updated": datetime.now(),  # update with current timestamp
+#             },
+#         )
+#         return Status.SUCCESS
+#     except Exception as e:
+#         utils.debug_exception(e, suppress=True)
+#         return Status.FAIL
 
 
 # ==============================================================================
@@ -269,30 +269,31 @@ def delete_stock(stock_id: int) -> Status:
         return Status.FAIL
 
 
-def update_stock(stock_id: int) -> Status:
-    """Update a stock in porfolio on the database, return success status"""
-    try:
-        (avg_price, units_held, gain, perc_gain, value, change) = calc.calc_stock_data(
-            stock_id
-        )
-        print(avg_price, units_held, gain, perc_gain, value)
-        db_utils.update_item_columns(
-            Stock,
-            stock_id,
-            {
-                "avg_price": avg_price,
-                "units_held": units_held,
-                "gain": gain,
-                "perc_gain": perc_gain,
-                "value": value,
-                "change": change,
-                "last_updated": datetime.now(),  # update with current timestamp
-            },
-        )
-        return Status.SUCCESS
-    except Exception as e:
-        utils.debug_exception(e, suppress=True)
-        return Status.FAIL
+# def update_stock_calcs(stock_id: int) -> Status:
+#     """Update a stock in porfolio on the database, return success status"""
+#     try:
+#         (avg_price, units_held, gain, perc_gain, value, change) = calc.calc_stock(
+#             stock_id
+#         )
+#         print(avg_price, units_held, gain, perc_gain, value)
+#         db_utils.update_item_columns(
+#             Stock,
+#             stock_id,
+#             {
+#                 "avg_price": avg_price,
+#                 "units_held": units_held,
+#                 "gain": gain,
+#                 "perc_gain": perc_gain,
+#                 "value": value,
+#                 "change": change,
+#                 "last_updated": datetime.now(),  # update with current timestamp
+#             },
+#         )
+#         return Status.SUCCESS
+
+#     except Exception as e:
+#         utils.debug_exception(e, suppress=True)
+#         return Status.FAIL
 
 
 # ==============================================================================
@@ -444,38 +445,6 @@ def fetch_lot(type: LotType, lot_id: int) -> Union[Stock, Status]:
 
         sqla_item = db_utils.query_item(table, lot_id)
         return to_dict(sqla_item)
-    except Exception as e:
-        utils.debug_exception(e, suppress=True)
-        return Status.FAIL
-
-
-def update_lot(type: LotType, lot_id: int) -> Status:
-    """Update a bought lot on the database, return success status"""
-    try:
-        if type == LotType.BUY:
-            value, change = calc.calc_lot_bought(lot_id)
-            db_utils.update_item_columns(
-                LotBought,
-                lot_id,
-                {
-                    "value": value,
-                    "change": change,
-                    "last_updated": datetime.now(),  # update with current timestamp
-                },
-            )
-
-        elif type == LotType.SELL:
-            realised = calc.calc_lot_sold(lot_id)
-            db_utils.update_item_columns(
-                LotSold,
-                lot_id,
-                {
-                    "realised": realised,
-                },
-            )
-        else:
-            raise ValueError("Incorrect type provided")
-        return Status.SUCCESS
     except Exception as e:
         utils.debug_exception(e, suppress=True)
         return Status.FAIL
