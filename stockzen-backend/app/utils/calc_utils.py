@@ -114,13 +114,12 @@ def update_lot(type: LotType, lot_id: int = None):
 def update_stock(stock_id: int):
     """Update a stock row with calculated data on the database, return success status"""
     try:
-        avg_price, units_held, gain, perc_gain, value = calc_stock(stock_id)
+        avg_price, gain, perc_gain, value = calc_stock(stock_id)
         db_utils.update_item_columns(
             Stock,
             stock_id,
             {
                 "avg_price": avg_price,
-                "units_held": units_held,
                 "gain": gain,
                 "perc_gain": perc_gain,
                 "value": value,
@@ -240,7 +239,7 @@ def calc_stock(stock_id: int):
             .scalar()
         ) or 0
 
-        # carry out calculations for avg_price, units_held, gain, perc_gain
+        # carry out calculations for avg_price, gain, perc_gain
         try:
             avg_price = total_price / units_bought
         except Exception as e:
@@ -256,7 +255,7 @@ def calc_stock(stock_id: int):
             print(f"Could not calculate perc_gain, error: {e}. Setting perc_gain = 0")
             perc_gain = 0
 
-        return avg_price, units_held, gain, perc_gain, value
+        return avg_price, gain, perc_gain, value
     except Exception as e:
         utils.debug_exception(e)
 
