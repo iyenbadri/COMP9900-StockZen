@@ -173,7 +173,7 @@ class StockPage(db.Model):
     prev_close = Column(Float)
     prediction = Column(Integer)  # -1 for down, 0 no change, 1 for up
     confidence = Column(Float)
-    last_updated = Column(DateTime, default=datetime.now())
+    last_updated = Column(DateTime)  # let this be NULL and add timestamp after update
     info = Column(String, default="{}")  # JSON-string of all company info
 
     # Relationships

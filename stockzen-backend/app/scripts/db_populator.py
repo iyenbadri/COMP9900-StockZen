@@ -71,7 +71,7 @@ def generate_dummy_portfolios(n_portfolios: int, user_id: int):
 
 
 def generate_dummy_stocks(n_stocks: int, n_portfolios: int, user_id: int):
-    STOCK_PAGE_RANGE = 22171
+    STOCK_PAGE_RANGE = 7567
 
     for stock_id in range(1, n_stocks + 1):
         new_stock = Stock(
@@ -94,7 +94,9 @@ def generate_dummy_stocks(n_stocks: int, n_portfolios: int, user_id: int):
 
 
 def generate_dummy_lots(n_lots: int, n_stocks: int, user_id: int):
-    for stock_id in range(1, n_stocks + 1):
+    range_low = (user_id - 1) * n_stocks + 1
+    range_high = user_id * n_stocks + 1
+    for stock_id in range(range_low, range_high):
         for i_lot in range(1, n_lots + 1):
             new_lot_bought = LotBought(
                 user_id=user_id,
@@ -111,7 +113,7 @@ def generate_dummy_lots(n_lots: int, n_stocks: int, user_id: int):
                 db_utils.insert_item(new_lot_bought)
                 print("Dummy buy lot added")
             except:
-                print(f"Could not add dummy buy lot for user_id: {id}")
+                print(f"Could not add dummy buy lot for user_id: {user_id}")
 
             if i_lot % 2 == 0:  # only do half as many Sold Lots
                 units_sold = randrange(0, 1000)
@@ -131,10 +133,10 @@ def generate_dummy_lots(n_lots: int, n_stocks: int, user_id: int):
                     db_utils.insert_item(new_lot_sold)
                     print("Dummy sell lot added")
                 except:
-                    print(f"Could not add dummy sell lot for user_id: {id}")
+                    print(f"Could not add dummy sell lot for user_id: {user_id}")
 
 
-def generate_dummy_data(n_users=2, n_portfolios=3, n_stocks=25, n_lots=5):
+def generate_dummy_data(n_users=2, n_portfolios=2, n_stocks=4, n_lots=5):
     """
     Generates dummy user data
     """
@@ -147,6 +149,7 @@ def generate_dummy_data(n_users=2, n_portfolios=3, n_stocks=25, n_lots=5):
         generate_dummy_portfolios(n_portfolios, user_id)
         generate_dummy_stocks(n_stocks, n_portfolios, user_id)
         generate_dummy_lots(n_lots, n_stocks, user_id)
+
     print(
         f"\n\t****************************************\n\
         The following dummy account may be used for testing:\n\n\
@@ -163,7 +166,6 @@ def populate_symbols(engine):
         df_symbols = pd.read_csv(filepath)
 
         df_symbols = df_symbols[["code", "stock_name", "exchange"]]
-        df_symbols["last_updated"] = datetime.now()  # use current time as timestamp
         df_symbols["info"] = "{}"  # fill with empty json string
 
         df_symbols.to_sql("stock_pages", engine, if_exists="append", index=False)

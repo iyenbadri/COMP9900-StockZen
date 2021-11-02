@@ -153,36 +153,6 @@ def delete_portfolio(portfolio_id: int) -> Status:
         return Status.FAIL
 
 
-# def update_portfolio(portfolio_id: int) -> Status:
-#     """Update a stock page on the database, return success status"""
-#     try:
-#         (
-#             stock_count,
-#             value,
-#             change,
-#             gain,
-#             perc_change,
-#             perc_gain,
-#         ) = calc.calc_portfolio_data(portfolio_id)
-#         db_utils.update_item_columns(
-#             Portfolio,
-#             portfolio_id,
-#             {
-#                 "stock_count": stock_count,
-#                 "value": value,
-#                 "change": change,
-#                 "perc_change": perc_change,
-#                 "gain": gain,
-#                 "perc_gain": perc_gain,
-#                 "last_updated": datetime.now(),  # update with current timestamp
-#             },
-#         )
-#         return Status.SUCCESS
-#     except Exception as e:
-#         utils.debug_exception(e, suppress=True)
-#         return Status.FAIL
-
-
 # ==============================================================================
 # Stock Utils
 # ==============================================================================
@@ -269,33 +239,6 @@ def delete_stock(stock_id: int) -> Status:
         return Status.FAIL
 
 
-# def update_stock_calcs(stock_id: int) -> Status:
-#     """Update a stock in porfolio on the database, return success status"""
-#     try:
-#         (avg_price, units_held, gain, perc_gain, value, change) = calc.calc_stock(
-#             stock_id
-#         )
-#         print(avg_price, units_held, gain, perc_gain, value)
-#         db_utils.update_item_columns(
-#             Stock,
-#             stock_id,
-#             {
-#                 "avg_price": avg_price,
-#                 "units_held": units_held,
-#                 "gain": gain,
-#                 "perc_gain": perc_gain,
-#                 "value": value,
-#                 "change": change,
-#                 "last_updated": datetime.now(),  # update with current timestamp
-#             },
-#         )
-#         return Status.SUCCESS
-
-#     except Exception as e:
-#         utils.debug_exception(e, suppress=True)
-#         return Status.FAIL
-
-
 # ==============================================================================
 # Stock Page Utils
 # ==============================================================================
@@ -305,7 +248,14 @@ def update_stock_page(stock_page_id: int) -> Status:
     """Update a stock page on the database, return success status"""
     try:
         sym = utils.id_to_code(stock_page_id)
+        print(f"Fetching stock: {sym}")
+
         price, change, perc_change, prev_close, info = api.fetch_stock_data(sym)
+
+        # force fail if price is None so that we don't overwrite last good value
+        if not price:
+            raise ValueError("Stock price not found, aborting stock_page update")
+
         info_json = json.dumps(info)  # store info as serialised json string
 
         db_utils.update_item_columns(
@@ -322,6 +272,10 @@ def update_stock_page(stock_page_id: int) -> Status:
         )
         return Status.SUCCESS
     except Exception as e:
+        # still need to update timestamp if fail so that min interval will skip this row
+        db_utils.update_item_columns(
+            StockPage, stock_page_id, {"last_updated": datetime.now()}
+        )
         utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
