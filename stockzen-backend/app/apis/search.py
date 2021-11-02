@@ -18,6 +18,7 @@ search_response = api.model(
         "id": fields.Integer(required=True, description="stock page id"),
         "code": fields.String(required=True, description="stock symbol/code"),
         "stock_name": fields.String(required=True, description="stock name"),
+        "exchange": fields.String(required=True, description="exchange"),
     },
 )
 

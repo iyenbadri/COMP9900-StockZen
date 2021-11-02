@@ -3,7 +3,7 @@
 .tableToolbar {
   display: flex;
   align-items: flex-end;
-  justify-content: end;
+  justify-content: flex-end;
   margin-bottom: 10px;
 }
 
@@ -39,13 +39,16 @@
 }
 
 .tableHeader,
-.tableRow {
+.rowStockInfo {
   display: flex;
   align-items: center;
 }
 
 .tableRow {
-  padding-bottom: 7px;
+  flex-grow: 1;
+  flex-basis: auto;
+  border-radius: 10px;
+  background-color: rgba(var(--row-gray-rgb), 0.6);
 }
 
 .tableHeader button {
@@ -70,17 +73,33 @@
   justify-content: center;
 }
 
+.stockWrapper {
+  padding-bottom: 7px;
+  display: flex;
+}
+
 .rowStockInfo {
   flex-grow: 1;
   flex-basis: auto;
   display: flex;
-  border-radius: 10px;
+  /* border: 2px solid transparent; */
+
+  border-radius: 10px 10px 0px 0px;
   padding: 5px 10px 5px 5px;
   align-items: center;
+
+  transition: border-radius 0.2s;
+  cursor: pointer;
+}
+
+.panelHidden .rowStockInfo {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 .tableRow .rowStockInfo {
-  background-color: rgba(var(--row-gray-rgb), 0.6);
+  /* border-color: var(--zen-5); */
+
   min-height: 50px;
 }
 
@@ -91,21 +110,27 @@
 }
 
 .rowCode {
-  flex-grow: 1;
+  flex-grow: 0.2;
   flex-shrink: 0;
   flex-basis: 70px;
   text-align: center;
 
   overflow-x: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .rowName {
-  flex-grow: 10;
+  flex-grow: 0.2;
   flex-basis: 100px;
   overflow-x: hidden;
   text-overflow: ellipsis;
   padding-left: 10px;
+  white-space: nowrap;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  word-wrap: break-word;
 }
 
 .rowStockLink {
@@ -132,31 +157,45 @@
   flex-shrink: 0;
 } */
 
+.panelContainer {
+  transition: 0.2s;
+  overflow: hidden;
+}
+
+.panelSeparator {
+  margin: 0;
+}
+
+.panelContent {
+  margin: 10px 0px;
+}
+
 .rowPrice {
   text-align: right;
   flex-basis: 80px;
   flex-shrink: 0;
+  flex-grow: 0.1;
 }
 
 .rowChange {
   text-align: right;
   flex-basis: 80px;
   flex-shrink: 0;
-  flex-grow: 0.2;
+  flex-grow: 0.1;
 }
 
 .rowAveragePrice {
   text-align: right;
   flex-basis: 90px;
   flex-shrink: 0;
-  flex-grow: 0.2;
+  flex-grow: 0.1;
 }
 
 .rowProfit {
   text-align: right;
   flex-basis: 65px;
   flex-shrink: 0;
-  flex-grow: 0.2;
+  flex-grow: 0.1;
 }
 
 .rowProfit {
@@ -165,14 +204,14 @@
   display: inline-block;
   text-align: right;
   flex-shrink: 0;
-  flex-grow: 0.2;
+  flex-grow: 0.1;
 }
 
 .rowValue {
   text-align: right;
   flex-basis: 109px;
   flex-shrink: 0;
-  flex-grow: 0.2;
+  flex-grow: 0.1;
 }
 
 .rowPredict {
@@ -180,13 +219,14 @@
   flex-basis: 88px;
   text-align: right;
   flex-shrink: 0;
-  flex-grow: 0.2;
+  flex-grow: 0.1;
 }
 
 .rowDelete {
   flex-basis: 35px;
   text-align: right;
   flex-shrink: 0;
+  padding-top: 10px;
 }
 
 .deleteButton {
@@ -199,7 +239,7 @@
     visibility: hidden;
   }
 
-  .tableRow:hover .rowDelete button {
+  .stockWrapper:hover .rowDelete button {
     visibility: visible;
   }
 
@@ -211,8 +251,11 @@
     visibility: visible;
   }
 
-  .notDragging .tableRow:hover .rowStockInfo {
+  .notDragging .tableRow:hover {
     outline: 1px solid var(--zen-4);
+  }
+
+  .notDragging .panelHidden .tableRow:hover .rowStockInfo {
     background-color: var(--zen-5);
   }
 

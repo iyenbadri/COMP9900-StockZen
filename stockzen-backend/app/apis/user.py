@@ -118,6 +118,7 @@ class UserCRUD(Resource):
 class UserCRUD(Resource):
     @login_required
     @api.doc("get user details")
+    @api.marshal_with(login_response)
     @api.response(200, "User details found")
     @api.response(401, "Unauthorized")
     def get(self):
