@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from app import db
+from app.config import UPDATE_MIN_INTERVAL
 from app.models.schema import LotBought, LotSold, Portfolio, Stock, StockPage
 from app.utils import crud_utils, db_utils, utils
 from app.utils.enums import LotType, Status
@@ -10,6 +11,8 @@ from sqlalchemy.sql import func
 
 def cascade_updates(portfolio_id: int):
     """Update all of a user's portfolios with latest calculated data"""
+    print("\n" + "#" * 30)
+    print(f"Cascading updates for portfolio: {portfolio_id}")
     try:
         sqla_tuples = (
             Portfolio.query.join(Stock, Portfolio.id == Stock.portfolio_id)
@@ -18,19 +21,42 @@ def cascade_updates(portfolio_id: int):
             .filter(Portfolio.id == portfolio_id)
             .all()
         )
+    except Exception as e:
+        utils.debug_exception(e)
 
-        for stock, stock_page in sqla_tuples:
+    for stock, stock_page in sqla_tuples:
+        try:
+            print("\n" + "*" * 30)  #
             stock_id = stock.id
             stock_page_id = stock_page.id
 
             # Update Stock Page with data from yfinance, if fail try to use latest (cached) data
             try:
-                if crud_utils.update_stock_page(stock_page_id) == Status.FAIL:
-                    raise ConnectionError(
-                        f"Could not fetch latest data for stockPageId: {stock_page_id}, attempting to return from cache."
+                # only need to fetch if the data is stale or timestamp is NULL (i.e. never been updated before)
+                last_updated = db_utils.query_item(StockPage, stock_page_id).last_updated
+                now = datetime.now()
+                try:
+                    elapsed = now - last_updated
+                except:
+                    pass  # let the if statement handle the error
+                if not last_updated or elapsed.seconds > UPDATE_MIN_INTERVAL:
+                    print(
+                        f"Data for stock_page {stock_page_id} is stale: fetching from yfinance"
                     )
+                    if crud_utils.update_stock_page(stock_page_id) == Status.FAIL:
+                        raise ConnectionError(
+                            f"Could not fetch latest data for stockPageId: {stock_page_id}, attempting to return from cache."
+                        )
             except Exception as e:
                 utils.debug_exception(e, suppress=True)
+
+            # Raise error if cached data is also not available
+            if not db_utils.query_item(StockPage, stock_page_id).price:
+                raise RuntimeError(
+                    f"Cached value for stockPageId: {stock_page_id} is not valid"
+                )
+            else:
+                print(f"Fetched cached data for stockPageId: {stock_page_id}")
 
             # Cascade the updates from StockPage to Lots, Stock, Portfolio
             # 1. get all BUY lot_id's that correspond to the stock and update their calcs
@@ -42,8 +68,8 @@ def cascade_updates(portfolio_id: int):
             # 4. update portfolio calculations
             update_portfolio(portfolio_id)
 
-    except Exception as e:
-        utils.debug_exception(e)
+        except Exception as e:
+            utils.debug_exception(e, suppress=True)
 
 
 # ==============================================================================
@@ -207,13 +233,11 @@ def calc_lot_sold(lot_id: int):
 
 def calc_stock(stock_id: int):
     """Calculates stock table columns using Stock, StockPage and Lots"""
+
     try:
         # get current stock price
         _, stock_page = db_utils.query_with_join(
-            main_table=Stock,
-            item_id=stock_id,
-            join_tables=[StockPage],
-            columns=[Stock, StockPage],
+            Stock, stock_id, [StockPage], [Stock, StockPage]
         )
         current_price = stock_page.price
 
