@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
 from app import db
@@ -9,67 +10,94 @@ from sqlalchemy.orm import load_only
 from sqlalchemy.sql import func
 
 
-def cascade_updates(portfolio_id: int):
+def cascade_updates():
     """Update all of a user's portfolios with latest calculated data"""
-    print("\n" + "#" * 30)
-    print(f"Cascading updates for portfolio: {portfolio_id}")
     try:
-        sqla_tuples = (
-            Portfolio.query.join(Stock, Portfolio.id == Stock.portfolio_id)
-            .join(StockPage, Stock.stock_page_id == StockPage.id)
-            .with_entities(Stock, StockPage)
-            .filter(Portfolio.id == portfolio_id)
-            .all()
-        )
+        # Get all portfolios associated with the current user and do updates for all
+        portfolios = db_utils.query_all(Portfolio)
+        for portfolio in portfolios:
+            portfolio_id = portfolio.id
+            print("\n" + "#" * 30)
+            print(f"Cascading updates for portfolio: {portfolio_id}")
+
+            # Get all stock rows and stock pages associated with this portfolio_id
+            stock_tuples = (
+                Portfolio.query.join(Stock, Portfolio.id == Stock.portfolio_id)
+                .join(StockPage, Stock.stock_page_id == StockPage.id)
+                .with_entities(Stock, StockPage)
+                .filter(Portfolio.id == portfolio_id)
+                .all()
+            )
+
+            # Collect all yfinance requests and run concurrently
+            tasks = []
+            for stock, stock_page in stock_tuples:
+                tasks.append((stock, stock_page, portfolio_id))
+            from app import create_app
+
+            app = create_app()
+            with app.app_context():
+                with ThreadPoolExecutor(max_workers=8) as executor:
+                    executor.map(update_routine, tasks)
+
     except Exception as e:
         utils.debug_exception(e)
 
-    for stock, stock_page in sqla_tuples:
+
+def update_routine(params):
+    stock, stock_page, portfolio_id = params
+    print("\n" + "*" * 30)
+    try:
+        stock_id = stock.id
+        stock_page_id = stock_page.id
+
+        update_request(stock_page_id)
+
+        # Cascade the updates from StockPage to Lots, Stock, Portfolio
+        # 1. get all BUY lot_id's that correspond to the stock and update their calcs
+        update_stock_lots(LotType.BUY, stock_id)
+        # 2. get all SELL lot_id's that correspond to the stock and update their calcs
+        update_stock_lots(LotType.SELL, stock_id)
+        # 3. update stock calculations
+        update_stock(stock_id)
+        # 4. update portfolio calculations
+        update_portfolio(portfolio_id)
+
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+
+
+def update_request(stock_page_id: int):
+    # Update Stock Page with data from yfinance, if fail try to use latest (cached) data
+    try:
+        # only need to fetch if the data is stale or timestamp is NULL (i.e. never been updated before)
+        last_updated = db_utils.query_item(StockPage, stock_page_id).last_updated
+        now = datetime.now()
         try:
-            print("\n" + "*" * 30)  #
-            stock_id = stock.id
-            stock_page_id = stock_page.id
+            elapsed = now - last_updated
+        except:
+            pass  # let the if statement handle the error
 
-            # Update Stock Page with data from yfinance, if fail try to use latest (cached) data
-            try:
-                # only need to fetch if the data is stale or timestamp is NULL (i.e. never been updated before)
-                last_updated = db_utils.query_item(StockPage, stock_page_id).last_updated
-                now = datetime.now()
-                try:
-                    elapsed = now - last_updated
-                except:
-                    pass  # let the if statement handle the error
-                if not last_updated or elapsed.seconds > UPDATE_MIN_INTERVAL:
-                    print(
-                        f"Data for stock_page {stock_page_id} is stale: fetching from yfinance"
-                    )
-                    if crud_utils.update_stock_page(stock_page_id) == Status.FAIL:
-                        raise ConnectionError(
-                            f"Could not fetch latest data for stockPageId: {stock_page_id}, attempting to return from cache."
-                        )
-            except Exception as e:
-                utils.debug_exception(e, suppress=True)
-
-            # Raise error if cached data is also not available
-            if not db_utils.query_item(StockPage, stock_page_id).price:
-                raise RuntimeError(
-                    f"Cached value for stockPageId: {stock_page_id} is not valid"
+        # Check if timestamp is NULL or data is stale
+        if not last_updated or elapsed.seconds > UPDATE_MIN_INTERVAL:
+            print(f"Data for stock_page {stock_page_id} is stale: fetching from yfinance")
+            if crud_utils.update_stock_page(stock_page_id) == Status.FAIL:
+                raise ConnectionError(
+                    f"Could not fetch latest data for stockPageId: {stock_page_id}, attempting to return from cache."
                 )
             else:
-                print(f"Fetched cached data for stockPageId: {stock_page_id}")
-
-            # Cascade the updates from StockPage to Lots, Stock, Portfolio
-            # 1. get all BUY lot_id's that correspond to the stock and update their calcs
-            update_stock_lots(LotType.BUY, stock_id)
-            # 2. get all SELL lot_id's that correspond to the stock and update their calcs
-            update_stock_lots(LotType.SELL, stock_id)
-            # 3. update stock calculations
-            update_stock(stock_id)
-            # 4. update portfolio calculations
-            update_portfolio(portfolio_id)
-
-        except Exception as e:
-            utils.debug_exception(e, suppress=True)
+                print(f"Updated yfinance data for stockPageId: {stock_page_id}")
+    except Exception as e:
+        # Use cached data instead
+        utils.debug_exception(e, suppress=True)
+        print(f"Using cached data for stockPageId: {stock_page_id}")
+    finally:
+        # Raise error if price is still not available
+        is_valid_price = db_utils.query_item(StockPage, stock_page_id).price
+        if not is_valid_price(stock_page_id):
+            raise RuntimeError(
+                f"API & Cached data for stockPageId: {stock_page_id} were both invalid"
+            )
 
 
 # ==============================================================================

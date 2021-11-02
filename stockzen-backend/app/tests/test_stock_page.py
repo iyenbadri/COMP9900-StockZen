@@ -1,6 +1,5 @@
 import app.tests.mocks as mock
 import app.tests.utils as utils
-from app.tests.conftest import auth_client
 
 
 def test_stock_page_endpoints(auth_client):
