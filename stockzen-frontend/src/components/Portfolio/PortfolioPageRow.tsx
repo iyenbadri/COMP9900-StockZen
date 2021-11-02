@@ -149,7 +149,9 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
               >
                 <hr className={styles.panelSeparator} />
                 <div className={styles.panelContent}>
-                  <PortfolioPageAlert></PortfolioPageAlert>
+                  <PortfolioPageAlert
+                    stockId={stock.stockId}
+                  ></PortfolioPageAlert>
                   <hr className={styles.panelSeparator} />
                   <PortfolioPageLots
                     stockId={stock.stockId}
