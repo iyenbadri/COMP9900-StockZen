@@ -416,8 +416,9 @@ const PortfolioPage = () => {
 
           {/* Wrapper to enable/disable hightlight when dragging */}
           <div
-            className={`${isDragging ? styles.dragging : styles.notDragging} ${tableOrdering.column !== '' ? styles.tempSort : ''
-              }`}
+            className={`${isDragging ? styles.dragging : styles.notDragging} ${
+              tableOrdering.column !== '' ? styles.tempSort : ''
+            }`}
           >
             <DragDropContext
               onDragEnd={handleDragEnd}
