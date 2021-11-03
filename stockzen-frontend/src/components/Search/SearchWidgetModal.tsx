@@ -53,7 +53,7 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
         setAddedStockIds((added) => {
           return [
             ...added,
-            ...response.data.map((stock) => stock.stock_page_id),
+            ...response.data.map((stock) => stock.stockPageId),
           ];
         });
       });
@@ -140,8 +140,11 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
                   <span className={styles.optionSymbol}>
                     {/* TODO: Will fix the nested `a` tag bug later. Have to find a way to fix it first */}
                     <Link
-                      to={'/stock-page/' + option.stockPageId}
-                      onClick={() => endSearch()}
+                      to={`/stock-page/${option.stockPageId}`}
+                      onClick={() => {
+                        endSearch();
+                        window.location.href = `/stock-page/${option.stockPageId}`;
+                      }}
                     >
                       {option.code}
                     </Link>

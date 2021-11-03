@@ -16,7 +16,6 @@ interface RouteParams {
 
 const StockPage = () => {
   const reloadStockInfo = () => {
-    // TO DO: API wire up 
     window.location.reload();
   }
 
@@ -45,14 +44,14 @@ const StockPage = () => {
     } catch (e: any) {
       setFetchError(true);
     }
-  }, [setStockData]
+  }, [stockPageId, setStockData]
   );
 
   useEffect(
     () => {
       getStockData();
     },
-    []
+    [stockPageId]
   );
   const numberFomatter = new Intl.NumberFormat('en-US', {
     style: 'decimal',
@@ -68,7 +67,21 @@ const StockPage = () => {
     }
   }
 
-  if (!(loading)) {
+  if (loading && !(fetchError)) {
+    return (
+      <>
+        <Modal
+          show={loading}
+          onHide={() => setLoading(false)}
+          className={styles.modalWrapper}
+        >
+          <Modal.Body>
+            Loading Data... Please wait
+          </Modal.Body>
+        </Modal>
+      </>
+    )
+  } else if (!(loading)) {
     return (
       <>
         {/* <PortfolioListSummary></PortfolioListSummary> */}
@@ -142,21 +155,7 @@ const StockPage = () => {
         </Tabs>
       </>
     )
-  } else if (!(fetchError)) {
-    return (
-      <>
-        <Modal
-          show={loading}
-          onHide={() => setLoading(false)}
-          className={styles.modalWrapper}
-        >
-          <Modal.Body>
-            Loading Data... Please wait
-          </Modal.Body>
-        </Modal>
-      </>
-    )
-  } else {
+  } else if (fetchError) {
     return (
       <>
         <Modal
@@ -184,6 +183,8 @@ const StockPage = () => {
       </>
     )
   }
+  setLoading(true);
+  setFetchError(false);
 };
 
 export default StockPage;
