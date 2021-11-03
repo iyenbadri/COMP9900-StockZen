@@ -157,29 +157,27 @@ const StockPage = () => {
             </Button>
           </div>
         </div>
-        <div className={styles.chartPlaceholder}>
-          <ResponsiveContainer width='100%' height={250} aspect={3}>
-            <LineChart
-              data={chartData}
-              margin={{
-                top: 5,
-                right: 50,
-                left: 0,
-                bottom: 25,
-              }}
-            >
-              <CartesianGrid strokeDasharray='3 3' />
-              <XAxis dataKey='date' tick={{ fontSize: 12 }} />
-              <YAxis dataKey='close' tick={{ fontSize: 12 }} />
-              <Tooltip content={<CustomTooltip />} />
-              <Line type='monotone' dataKey='close' stroke={'#5bc0be'} dot={false} />
-              <Line type='monotone' dataKey='open' strokeWidth={0} dot={false} />
-              <Line type='monotone' dataKey='high' strokeWidth={0} dot={false} />
-              <Line type='monotone' dataKey='low' strokeWidth={0} dot={false} />
-              <Line type='monotone' dataKey='volume' strokeWidth={0} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+        <ResponsiveContainer width='100%' height={240}>
+          <LineChart
+            data={chartData}
+            margin={{
+              top: 5,
+              right: 50,
+              left: 0,
+              bottom: 10,
+            }}
+          >
+            <CartesianGrid strokeDasharray='3 3' />
+            <XAxis dataKey='date' tick={{ fontSize: 12 }} />
+            <YAxis dataKey='close' tick={{ fontSize: 12 }} />
+            <Tooltip content={<CustomTooltip />} />
+            <Line type='monotone' dataKey='close' stroke={'#5bc0be'} dot={false} />
+            <Line type='monotone' dataKey='open' strokeWidth={0} dot={false} />
+            <Line type='monotone' dataKey='high' strokeWidth={0} dot={false} />
+            <Line type='monotone' dataKey='low' strokeWidth={0} dot={false} />
+            <Line type='monotone' dataKey='volume' strokeWidth={0} dot={false} />
+          </LineChart>
+        </ResponsiveContainer>
         <Tabs
           selectedIndex={activeTab}
           onSelect={idx => setActiveTab(idx)}

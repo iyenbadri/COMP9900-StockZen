@@ -54,13 +54,6 @@
   color: var(--row-gray-rgb);
 }
 
-.chartPlaceholder {
-  display: grid;
-  height: 250px;
-  margin-bottom: 15px;
-  padding: 0px 5px 0px 0px;
-}
-
 .tableBar {
   display: flex;
   height: 10%;
