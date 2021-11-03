@@ -115,7 +115,9 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                 <span
                   className={`${styles.rowAveragePrice} d-block d-lg-none d-xl-block`}
                 >
-                  {numberFormatter.format(stock.averagePrice)}
+                  {stock.averagePrice == null
+                    ? '-'
+                    : numberFormatter.format(stock.averagePrice)}
                 </span>
                 <span
                   className={`${styles.rowProfit} ${gainLossClass(
@@ -134,7 +136,9 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                   )}
                 </span>
                 <span className={styles.rowValue}>
-                  {numberFormatter.format(stock.value)}
+                  {stock.value == null
+                    ? '-'
+                    : numberFormatter.format(stock.value)}
                 </span>
                 <span className={styles.rowPredict}>+</span>
               </div>
