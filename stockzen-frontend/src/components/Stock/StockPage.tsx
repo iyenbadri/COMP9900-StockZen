@@ -2,7 +2,7 @@ import refreshIcon from 'assets/icon-outlines/outline-refresh-small.svg';
 import axios from 'axios';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Button, Col, Modal, Row } from 'react-bootstrap';
+import { Button, Col, Modal, Row, Spinner } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
@@ -58,7 +58,7 @@ const StockPage = () => {
     () => {
       getStockData();
     },
-    [stockPageId]
+    [stockPageId, getStockData]
   );
 
   const gainLossClass = (change: number): string => {
@@ -117,7 +117,10 @@ const StockPage = () => {
           className={styles.modalWrapper}
         >
           <Modal.Body>
-            Loading Data... Please wait
+            <Spinner animation='border' className='text-center' />
+            <div>
+              Loading Data... Please wait
+            </div>
           </Modal.Body>
         </Modal>
       </>
@@ -264,8 +267,6 @@ const StockPage = () => {
       </>
     )
   }
-  setLoading(true);
-  setFetchError(false);
 };
 
 export default StockPage;
