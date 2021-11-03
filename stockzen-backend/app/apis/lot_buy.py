@@ -1,4 +1,5 @@
 import app.utils.crud_utils as util
+from app.utils.calc_utils import propagate_updates
 from app.utils.enums import LotType, Status
 from dateutil import parser as dateparser
 from flask import request
@@ -90,6 +91,7 @@ class BuyLotCRUD(Resource):
             util.add_lot(LotType.BUY, stockId, trade_date, units, unit_price)
             == Status.SUCCESS
         ):
+            propagate_updates(stockId)  # update stock metrics calculations
             return {"message": "Buy Lot successfully created"}, 200
 
         return abort(500, "Buy Lot could not be created")

@@ -1,7 +1,6 @@
-from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
-from app import db
+from app import db, executor
 from app.config import UPDATE_MIN_INTERVAL
 from app.models.schema import LotBought, LotSold, Portfolio, Stock, StockPage
 from app.utils import crud_utils, db_utils, utils
@@ -30,30 +29,33 @@ def cascade_updates():
             )
 
             # Collect all yfinance requests and run concurrently
-            tasks = []
-            for stock, stock_page in stock_tuples:
-                tasks.append((stock, stock_page, portfolio_id))
-            from app import create_app
+            id_list = []
+            for _, stock_page in stock_tuples:
+                id_list.append(stock_page.id)
+            executor.map(api_request, id_list)
 
-            app = create_app()
-            with app.app_context():
-                with ThreadPoolExecutor(max_workers=8) as executor:
-                    executor.map(update_routine, tasks)
+            # Perform all calculation updates to database
+            for stock, _ in stock_tuples:
+                print("\n" + "*" * 30)
+                try:
+                    stock_id = stock.id
+                    propagate_updates(stock_id)
+
+                except Exception as e:
+                    utils.debug_exception(e, suppress=True)
 
     except Exception as e:
         utils.debug_exception(e)
 
 
-def update_routine(params):
-    stock, stock_page, portfolio_id = params
-    print("\n" + "*" * 30)
+def propagate_updates(stock_id):
+    """Cascade update calculations from StockPage to Lots, Stock, Portfolio"""
     try:
-        stock_id = stock.id
-        stock_page_id = stock_page.id
-
-        update_request(stock_page_id)
-
-        # Cascade the updates from StockPage to Lots, Stock, Portfolio
+        print(f"Propagating calculation updates for stockId: {stock_id}")
+        _, portfolio = db_utils.query_with_join(
+            Stock, stock_id, [Portfolio], [Stock, Portfolio]
+        )
+        portfolio_id = portfolio.id
         # 1. get all BUY lot_id's that correspond to the stock and update their calcs
         update_stock_lots(LotType.BUY, stock_id)
         # 2. get all SELL lot_id's that correspond to the stock and update their calcs
@@ -62,13 +64,12 @@ def update_routine(params):
         update_stock(stock_id)
         # 4. update portfolio calculations
         update_portfolio(portfolio_id)
-
     except Exception as e:
         utils.debug_exception(e, suppress=True)
 
 
-def update_request(stock_page_id: int):
-    # Update Stock Page with data from yfinance, if fail try to use latest (cached) data
+def api_request(stock_page_id: int):
+    """Update Stock Page with data from yfinance, if fail try to use latest (cached) data"""
     try:
         # only need to fetch if the data is stale or timestamp is NULL (i.e. never been updated before)
         last_updated = db_utils.query_item(StockPage, stock_page_id).last_updated
@@ -94,10 +95,8 @@ def update_request(stock_page_id: int):
     finally:
         # Raise error if price is still not available
         is_valid_price = db_utils.query_item(StockPage, stock_page_id).price
-        if not is_valid_price(stock_page_id):
-            raise RuntimeError(
-                f"API & Cached data for stockPageId: {stock_page_id} were both invalid"
-            )
+        if not is_valid_price:
+            print(f"API & Cached data for stockPageId: {stock_page_id} were both invalid")
 
 
 # ==============================================================================
@@ -223,10 +222,9 @@ def calc_lot_bought(lot_id: int):
             .filter(LotBought.id == lot_id)
             .one()
         )
-
         units = lot_bought.units
-        current_price = stockpage.price
-        daily_change = stockpage.change
+        current_price = stockpage.price or 0
+        daily_change = stockpage.change or 0
 
         value = units * current_price
         change = units * daily_change
@@ -267,9 +265,9 @@ def calc_stock(stock_id: int):
         _, stock_page = db_utils.query_with_join(
             Stock, stock_id, [StockPage], [Stock, StockPage]
         )
-        current_price = stock_page.price
+        current_price = stock_page.price or 0
 
-        # get number of units bought, total price, and value
+        # get calculated metrics for the stock row
         units_bought, total_price, value = (
             LotBought.query.with_entities(
                 func.sum(LotBought.units),
@@ -318,6 +316,8 @@ def calc_stock(stock_id: int):
 def calc_portfolio(portfolio_id: int):
     """Calculations for Portfolio table using Stock table data"""
     try:
+
+        # get calculated metrics for the portfolio
         stock_count, value, change, gain = (
             Stock.query.with_entities(
                 func.count(),
@@ -329,8 +329,23 @@ def calc_portfolio(portfolio_id: int):
             .filter(Stock.portfolio_id == portfolio_id)
             .one()
         )
-        perc_change = (change / value) or 0
-        perc_gain = (gain / value) or 0
+        # if no value, default to 0
+        stock_count = stock_count or 0
+        value = value or 0
+        change = change or 0
+        gain = gain or 0
+
+        try:
+            perc_change = change / value
+        except Exception as e:
+            print(f"Could not calculate perc_change, error: {e}. Setting perc_change = 0")
+            perc_change = 0
+
+        try:
+            perc_gain = gain / value
+        except Exception as e:
+            print(f"Could not calculate perc_gain, error: {e}. Setting perc_gain = 0")
+            perc_gain = 0
 
         return stock_count, value, change, gain, perc_change, perc_gain
 
