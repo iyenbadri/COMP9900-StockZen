@@ -11,15 +11,18 @@ import {
   DragDropContext,
   Droppable,
   DropResult,
-  ResponderProvided,
+  ResponderProvided
 } from 'react-beautiful-dnd';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useParams } from 'react-router-dom';
+import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import stocksListing from '../Search/listing.json';
 import styles from './PortfolioPage.module.css';
+import StockFundamental from './PortfolioPageFundamental';
 import PortfolioPageRow from './PortfolioPageRow';
 import PortfolioPageSummary from './PortfolioPageSummary';
+
 
 interface RouteRarams {
   portfolioId: string;
@@ -80,6 +83,8 @@ const PortfolioPage = () => {
   const [showDeleteStockModal, setShowDeleteStockModal] = useState(false);
   const [deletingStockId, setDeletingStockId] = useState(0);
   const [deletingStockName, setDeletingStockName] = useState('');
+
+  const [activeTab, setActiveTab] = useState(0);
 
   // The function to map response from backend to frontend object
   const mapStockList = useCallback(
@@ -284,171 +289,192 @@ const PortfolioPage = () => {
       </div>
       <hr />
 
-      <div className={styles.tableToolbar}>
-        <SearchWidget
-          portfolioId={portfolioId}
-          addStock={handleAddStock}
-        ></SearchWidget>
-        <Button
-          variant='light'
-          className='ms-1 text-muted d-flex align-items-center'
-        >
-          <img src={refresh} alt='refresh' style={{ opacity: 0.5 }} />
-          Refresh
-        </Button>
-      </div>
-
-      {/* Wrapper in case the screen is too small. It enable scrolling in case a really small screen. */}
-      <div className={styles.sideScrollWrapper}>
-        <div className={styles.sdieScrollContainer}>
-          <div className={styles.tableHeader}>
-            <span className={styles.rowStockInfo}>
-              <span className={styles.rowHandle}></span>
-              <span className={styles.rowCode}>
-                <Button
-                  variant='transparent'
-                  size={'sm'}
-                  onClick={() => handleTempSort('symbol')}
-                >
-                  Code
-                  <OrderingIndicator
-                    target='symbol'
-                    ordering={tableOrdering}
-                  ></OrderingIndicator>
-                </Button>
-              </span>
-              <span className={`${styles.rowName} d-none d-xxl-block`}>
-                <Button
-                  variant='transparent'
-                  size={'sm'}
-                  onClick={() => handleTempSort('name')}
-                >
-                  Name
-                  <OrderingIndicator
-                    target='name'
-                    ordering={tableOrdering}
-                  ></OrderingIndicator>
-                </Button>
-              </span>
-              <span className={styles.rowPrice}>
-                <Button
-                  variant='transparent'
-                  size={'sm'}
-                  onClick={() => handleTempSort('price')}
-                >
-                  Price
-                  <OrderingIndicator
-                    target='price'
-                    ordering={tableOrdering}
-                  ></OrderingIndicator>
-                </Button>
-              </span>
-              <span className={styles.rowChange}>
-                <Button
-                  variant='transparent'
-                  size={'sm'}
-                  onClick={() => handleTempSort('change')}
-                >
-                  Change
-                  <OrderingIndicator
-                    target='change'
-                    ordering={tableOrdering}
-                  ></OrderingIndicator>
-                </Button>
-              </span>
-              <span
-                className={`${styles.rowAveragePrice} d-block d-lg-none  d-xl-block`}
-              >
-                <Button
-                  variant='transparent'
-                  size={'sm'}
-                  onClick={() => handleTempSort('averagePrice')}
-                >
-                  Avg price
-                  <OrderingIndicator
-                    target='averagePrice'
-                    ordering={tableOrdering}
-                  ></OrderingIndicator>
-                </Button>
-              </span>
-              <span className={styles.rowProfit}>
-                <Button
-                  variant='transparent'
-                  size={'sm'}
-                  onClick={() => handleTempSort('profit')}
-                >
-                  Profit
-                  <OrderingIndicator
-                    target='profit'
-                    ordering={tableOrdering}
-                  ></OrderingIndicator>
-                </Button>
-              </span>
-              <span className={styles.rowValue}>
-                <Button
-                  variant='transparent'
-                  size={'sm'}
-                  onClick={() => handleTempSort('value')}
-                >
-                  Value
-                  <OrderingIndicator
-                    target='value'
-                    ordering={tableOrdering}
-                  ></OrderingIndicator>
-                </Button>
-              </span>
-              <span className={styles.rowPredict}>
-                <Button
-                  variant='transparent'
-                  size={'sm'}
-                  onClick={() => handleTempSort('prediction')}
-                >
-                  Predict
-                  <OrderingIndicator
-                    target='prediction'
-                    ordering={tableOrdering}
-                  ></OrderingIndicator>
-                </Button>
-              </span>
-            </span>
-            <span className={styles.rowDelete}></span>
-          </div>
-
-          {/* Wrapper to enable/disable hightlight when dragging */}
-          <div
-            className={`${isDragging ? styles.dragging : styles.notDragging} ${
-              tableOrdering.column !== '' ? styles.tempSort : ''
-            }`}
+      <Tabs
+        selectedIndex={activeTab}
+        onSelect={idx => setActiveTab(idx)}
+      >
+        <TabList className={styles.tableBar}>
+          <Tab
+            className={`${activeTab === 0 ? styles.activeTab : styles.tabs}`}
           >
-            <DragDropContext
-              onDragEnd={handleDragEnd}
-              onDragStart={handleDragStart}
+            My Holdings
+          </Tab>
+          <Tab
+            className={`${activeTab === 1 ? styles.activeTab : styles.tabs}`}
+          >
+            Fundamentals
+          </Tab>
+        </TabList>
+        <TabPanel>
+          <div className={styles.tableToolbar}>
+            <SearchWidget
+              portfolioId={portfolioId}
+              addStock={handleAddStock}
+            ></SearchWidget>
+            <Button
+              variant='light'
+              className='ms-1 text-muted d-flex align-items-center'
             >
-              <Droppable droppableId='stock-list' type='stock'>
-                {(provided, snapshot) => (
-                  <div ref={provided.innerRef} {...provided.droppableProps}>
-                    {stocks.map((stock, index) => {
-                      return (
-                        <PortfolioPageRow
-                          key={stock.stockId}
-                          index={index}
-                          stock={stock}
-                          showDeleteModal={(stockId: number, name: string) => {
-                            setDeletingStockId(stockId);
-                            setDeletingStockName(name);
-                            setShowDeleteStockModal(true);
-                          }}
-                        ></PortfolioPageRow>
-                      );
-                    })}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </DragDropContext>
+              <img src={refresh} alt='refresh' style={{ opacity: 0.5 }} />
+              Refresh
+            </Button>
           </div>
-        </div>
-      </div>
+
+          {/* Wrapper in case the screen is too small. It enable scrolling in case a really small screen. */}
+          <div className={styles.sideScrollWrapper}>
+            <div className={styles.sdieScrollContainer}>
+              <div className={styles.tableHeader}>
+                <span className={styles.rowStockInfo}>
+                  <span className={styles.rowHandle}></span>
+                  <span className={styles.rowCode}>
+                    <Button
+                      variant='transparent'
+                      size={'sm'}
+                      onClick={() => handleTempSort('symbol')}
+                    >
+                      Code
+                      <OrderingIndicator
+                        target='symbol'
+                        ordering={tableOrdering}
+                      ></OrderingIndicator>
+                    </Button>
+                  </span>
+                  <span className={`${styles.rowName} d-none d-xxl-block`}>
+                    <Button
+                      variant='transparent'
+                      size={'sm'}
+                      onClick={() => handleTempSort('name')}
+                    >
+                      Name
+                      <OrderingIndicator
+                        target='name'
+                        ordering={tableOrdering}
+                      ></OrderingIndicator>
+                    </Button>
+                  </span>
+                  <span className={styles.rowPrice}>
+                    <Button
+                      variant='transparent'
+                      size={'sm'}
+                      onClick={() => handleTempSort('price')}
+                    >
+                      Price
+                      <OrderingIndicator
+                        target='price'
+                        ordering={tableOrdering}
+                      ></OrderingIndicator>
+                    </Button>
+                  </span>
+                  <span className={styles.rowChange}>
+                    <Button
+                      variant='transparent'
+                      size={'sm'}
+                      onClick={() => handleTempSort('change')}
+                    >
+                      Change
+                      <OrderingIndicator
+                        target='change'
+                        ordering={tableOrdering}
+                      ></OrderingIndicator>
+                    </Button>
+                  </span>
+                  <span
+                    className={`${styles.rowAveragePrice} d-block d-lg-none  d-xl-block`}
+                  >
+                    <Button
+                      variant='transparent'
+                      size={'sm'}
+                      onClick={() => handleTempSort('averagePrice')}
+                    >
+                      Avg price
+                      <OrderingIndicator
+                        target='averagePrice'
+                        ordering={tableOrdering}
+                      ></OrderingIndicator>
+                    </Button>
+                  </span>
+                  <span className={styles.rowProfit}>
+                    <Button
+                      variant='transparent'
+                      size={'sm'}
+                      onClick={() => handleTempSort('profit')}
+                    >
+                      Profit
+                      <OrderingIndicator
+                        target='profit'
+                        ordering={tableOrdering}
+                      ></OrderingIndicator>
+                    </Button>
+                  </span>
+                  <span className={styles.rowValue}>
+                    <Button
+                      variant='transparent'
+                      size={'sm'}
+                      onClick={() => handleTempSort('value')}
+                    >
+                      Value
+                      <OrderingIndicator
+                        target='value'
+                        ordering={tableOrdering}
+                      ></OrderingIndicator>
+                    </Button>
+                  </span>
+                  <span className={styles.rowPredict}>
+                    <Button
+                      variant='transparent'
+                      size={'sm'}
+                      onClick={() => handleTempSort('prediction')}
+                    >
+                      Predict
+                      <OrderingIndicator
+                        target='prediction'
+                        ordering={tableOrdering}
+                      ></OrderingIndicator>
+                    </Button>
+                  </span>
+                </span>
+                <span className={styles.rowDelete}></span>
+              </div>
+
+              {/* Wrapper to enable/disable hightlight when dragging */}
+              <div
+                className={`${isDragging ? styles.dragging : styles.notDragging} ${tableOrdering.column !== '' ? styles.tempSort : ''
+                  }`}
+              >
+                <DragDropContext
+                  onDragEnd={handleDragEnd}
+                  onDragStart={handleDragStart}
+                >
+                  <Droppable droppableId='stock-list' type='stock'>
+                    {(provided, snapshot) => (
+                      <div ref={provided.innerRef} {...provided.droppableProps}>
+                        {stocks.map((stock, index) => {
+                          return (
+                            <PortfolioPageRow
+                              key={stock.stockId}
+                              index={index}
+                              stock={stock}
+                              showDeleteModal={(stockId: number, name: string) => {
+                                setDeletingStockId(stockId);
+                                setDeletingStockName(name);
+                                setShowDeleteStockModal(true);
+                              }}
+                            ></PortfolioPageRow>
+                          );
+                        })}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </DragDropContext>
+              </div>
+            </div>
+          </div>
+        </TabPanel>
+        <TabPanel>
+          <StockFundamental />
+        </TabPanel>
+      </Tabs>
     </>
   );
 };
