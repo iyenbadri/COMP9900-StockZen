@@ -9,61 +9,66 @@ from sqlalchemy.orm import load_only
 from sqlalchemy.sql import func
 
 
-def cascade_updates():
-    """Update all of a user's portfolios with latest calculated data"""
+def cascade_updates(refresh_data=False):
+    """Update all of a user's portfolios calculations
+    :param: refresh_data determines if the latest data is fetched"""
     try:
         # Get all portfolios associated with the current user and do updates for all
         portfolios = db_utils.query_all(Portfolio)
         for portfolio in portfolios:
             portfolio_id = portfolio.id
-            print("\n" + "#" * 30)
-            print(f"Cascading updates for portfolio: {portfolio_id}")
-
-            # Get all stock rows and stock pages associated with this portfolio_id
-            stock_tuples = (
-                Portfolio.query.join(Stock, Portfolio.id == Stock.portfolio_id)
-                .join(StockPage, Stock.stock_page_id == StockPage.id)
-                .with_entities(Stock, StockPage)
-                .filter(Portfolio.id == portfolio_id)
-                .all()
-            )
-
-            # Collect all yfinance requests and run concurrently
-            id_list = []
-            for _, stock_page in stock_tuples:
-                id_list.append(stock_page.id)
-            executor.map(api_request, id_list)
-
-            # Perform all calculation updates to database
-            for stock, _ in stock_tuples:
-                print("\n" + "*" * 30)
-                try:
-                    stock_id = stock.id
-                    propagate_updates(stock_id)
-
-                except Exception as e:
-                    utils.debug_exception(e, suppress=True)
+            propagate_portfolio_updates(portfolio_id, refresh_data)
 
     except Exception as e:
-        utils.debug_exception(e)
+        print("Update cascade was unsuccessful")
+        utils.debug_exception(e, suppress=True)
 
 
-def propagate_updates(stock_id):
+def propagate_portfolio_updates(portfolio_id, refresh_data=False):
+    """Cascade update calculations for all portfolio rows"""
+    print("\n" + "#" * 30)
+    print(f"Cascading updates for portfolio: {portfolio_id}")
+
+    # Get all stock rows and stock pages associated with this portfolio_id
+    stock_tuples = (
+        Portfolio.query.join(Stock, Portfolio.id == Stock.portfolio_id)
+        .join(StockPage, Stock.stock_page_id == StockPage.id)
+        .with_entities(Stock, StockPage)
+        .filter(Portfolio.id == portfolio_id)
+        .all()
+    )
+
+    # Collect all yfinance requests and run concurrently if flag is set
+    if refresh_data:
+        id_list = []
+        for _, stock_page in stock_tuples:
+            id_list.append(stock_page.id)
+        executor.map(api_request, id_list)
+
+    # Perform all calculation updates to database
+    for stock, _ in stock_tuples:
+        print("\n" + "*" * 30)
+        try:
+            stock_id = stock.id
+            propagate_stock_updates(stock_id)
+
+        except Exception as e:
+            utils.debug_exception(e, suppress=True)
+    # 4. finally update portfolio calculations
+    update_portfolio(portfolio_id)
+
+
+def propagate_stock_updates(stock_id):
     """Cascade update calculations from StockPage to Lots, Stock, Portfolio"""
     try:
         print(f"Propagating calculation updates for stockId: {stock_id}")
-        _, portfolio = db_utils.query_with_join(
-            Stock, stock_id, [Portfolio], [Stock, Portfolio]
-        )
-        portfolio_id = portfolio.id
         # 1. get all BUY lot_id's that correspond to the stock and update their calcs
         update_stock_lots(LotType.BUY, stock_id)
         # 2. get all SELL lot_id's that correspond to the stock and update their calcs
         update_stock_lots(LotType.SELL, stock_id)
         # 3. update stock calculations
         update_stock(stock_id)
-        # 4. update portfolio calculations
-        update_portfolio(portfolio_id)
+
     except Exception as e:
         utils.debug_exception(e, suppress=True)
 
@@ -165,7 +170,7 @@ def update_lot(type: LotType, lot_id: int = None):
 
 
 def update_stock(stock_id: int):
-    """Update a stock row with calculated data on the database, return success status"""
+    """Update a stock row with calculated data on the database"""
     try:
         avg_price, gain, perc_gain, value = calc_stock(stock_id)
         db_utils.update_item_columns(
@@ -184,7 +189,7 @@ def update_stock(stock_id: int):
 
 
 def update_portfolio(portfolio_id: int):
-    """Update a portfolio on the database"""
+    """Update a portfolio row with calculated data on the database"""
     try:
         stock_count, value, change, gain, perc_change, perc_gain = calc_portfolio(
             portfolio_id
@@ -271,17 +276,18 @@ def calc_stock(stock_id: int):
 
         # get calculated metrics for the stock row
         units_bought, total_price, value = (
-            LotBought.query.with_entities(
+            LotBought.query.filter(LotBought.stock_id == stock_id)
+            .with_entities(
                 func.sum(LotBought.units),
                 func.sum(LotBought.units * LotBought.unit_price),
                 func.sum(LotBought.value),
             )
-            .filter(LotBought.stock_id == stock_id)
             .one()
         )
         # if no value, default to 0
         units_bought = units_bought or 0
         total_price = total_price or 0
+        value = value or 0
 
         # get number of units sold
         units_sold = (
@@ -319,16 +325,21 @@ def calc_portfolio(portfolio_id: int):
     try:
 
         # get calculated metrics for the portfolio
-        stock_count, value, change, gain = (
+        stock_count, value, gain = (
             Stock.query.with_entities(
                 func.count(),
                 func.sum(Stock.value),
-                func.sum(StockPage.change),
                 func.sum(Stock.gain),
             )
-            .join(StockPage)
             .filter(Stock.portfolio_id == portfolio_id)
             .one()
+        )
+        # separate query for change as it requires join
+        change = (
+            Stock.query.join(LotBought)
+            .filter(Stock.portfolio_id == portfolio_id)
+            .with_entities(func.sum(LotBought.change))
+            .scalar()
         )
         # if no value, default to 0
         stock_count = stock_count or 0

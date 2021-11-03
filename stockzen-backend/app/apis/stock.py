@@ -1,4 +1,5 @@
 import app.utils.crud_utils as util
+from app.utils.calc_utils import propagate_portfolio_updates, propagate_stock_updates
 from app.utils.enums import Status
 from flask import request
 from flask_login.utils import login_required
@@ -86,6 +87,7 @@ stock_reorder_request = api.model(
 @api.route("/list/<int:portfolioId>")
 class StockCRUD(Resource):
     @login_required
+    @api.doc(params={"refresh": "refresh data (0 or 1)"})
     @api.marshal_list_with(stock_details_response)
     @api.response(200, "Successfully retrieved list")
     def get(self, portfolioId):
@@ -94,6 +96,13 @@ class StockCRUD(Resource):
         stock_list = util.get_stock_list(portfolioId)
         if stock_list == Status.FAIL:
             return abort(500, "Stock list for the portfolio could not be retrieved")
+
+        # We get the query string i.e. ?refresh=<refresh_flag> and convert to bool
+        refresh_flag = request.args.get("refresh") == "1"
+
+        propagate_portfolio_updates(
+            portfolioId, refresh_data=refresh_flag
+        )  # update stock metrics calculations
 
         return stock_list
 
@@ -128,6 +137,15 @@ class StockCRUD(Resource):
 
         json = marshal(request.json, stock_add_request)
         stock_page_id = json["stockPageId"]
+
+        # Get latest data from yfinance, if fail don't abort, just return latest (cached) data
+        try:
+            if util.update_stock_page(stock_page_id) == Status.FAIL:
+                raise ConnectionError(
+                    f"Could not fetch latest data for stockPageId: {stock_page_id}, attempting to return from cache."
+                )
+        except Exception as e:
+            print(e)
 
         if util.add_stock(portfolioId, stock_page_id) == Status.SUCCESS:
             return {"message": "Stock successfully added"}, 200
