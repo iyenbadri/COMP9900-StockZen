@@ -3,6 +3,7 @@ import Footer from 'components/Layout/Footer';
 import Header from 'components/Layout/Header';
 import TopPerformerProvider from 'contexts/TopPerformerContext';
 import UserProvider, { UserContext } from 'contexts/UserContext';
+import RefreshProvider from 'contexts/RefreshContext';
 import Landing from 'pages/Landing';
 import Portfolio from 'pages/Portfolio';
 import Stock from 'pages/Stock';
@@ -24,7 +25,7 @@ function App() {
           fluid
           className={`${styles.appContent} ${
             !isAuthenticated ? styles.hero : ''
-            }`}
+          }`}
         >
           <Switch>
             <GuestRoute exact path={'/'} component={Landing} />
@@ -40,11 +41,13 @@ function App() {
 }
 
 const WrappedApp = () => (
-  <UserProvider>
-    <TopPerformerProvider>
-      <App />
-    </TopPerformerProvider>
-  </UserProvider>
+  <RefreshProvider>
+    <UserProvider>
+      <TopPerformerProvider>
+        <App />
+      </TopPerformerProvider>
+    </UserProvider>
+  </RefreshProvider>
 );
 
 export default WrappedApp;
