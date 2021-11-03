@@ -4,12 +4,13 @@ import plusCircle from 'assets/icon-outlines/outline-plus-circle.svg';
 import axios, { AxiosResponse } from 'axios';
 import { LotType } from 'enums';
 import moment, { Moment } from 'moment';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState, useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { useForm } from 'react-hook-form';
 import styles from './PortfolioPage-Panel.module.css';
+import { RefreshContext } from 'contexts/RefreshContext';
 
 // Number formatter
 const numberFormatter = new Intl.NumberFormat('en-US', {
@@ -35,6 +36,9 @@ const mapSoldLotResponse = (lot: ILotSoldResponse): ILotSold => ({
 const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
   // Deconstruct the properties
   const { stockId, currentPrice, priceChange, onSizeChanged } = props;
+
+  // Get functions for refresh
+  const { refresh } = useContext(RefreshContext);
 
   const {
     register,
@@ -191,6 +195,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     await reloadBoughtLotsList();
 
     setShowAddLotBoughtModal(false);
+    refresh();
   };
 
   // Hanlder of add sold lot
@@ -206,6 +211,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     await reloadSoldLotsList();
 
     setShowAddLotSoldModal(false);
+    refresh();
   };
 
   // Handler of delete lot
@@ -225,6 +231,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
         break;
     }
     setShowDeleteModal(false);
+    refresh();
   };
 
   // Handler of edit lot
@@ -267,6 +274,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
         break;
     }
     setShowEditingLotModal(false);
+    refresh();
   };
 
   return (

@@ -17,7 +17,6 @@ import {
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useParams } from 'react-router-dom';
-import stocksListing from '../Search/listing.json';
 import styles from './PortfolioPage.module.css';
 import PortfolioPageRow from './PortfolioPageRow';
 import PortfolioPageSummary from './PortfolioPageSummary';
@@ -89,24 +88,22 @@ const PortfolioPage = () => {
   const mapStockList = useCallback(
     (data: IStockResponse[]): IStock[] => {
       return data.map((stock) => {
-        const randomIndex = Math.round(Math.random() * 10000);
-        const symbol = stocksListing[randomIndex];
         return {
           stockId: stock.id,
-          stockPageId: stock.stockPageId ?? Math.random(),
+          stockPageId: stock.stockPageId,
           draggableId: `stock-${stock.id}`,
-          ordering: stock.order ?? Math.random(), // TODO: map the backend data
-          symbol: stock.code ?? symbol.symbol,
-          name: stock.stockName ?? symbol.description,
-          price: stock.price ?? Math.random() * 2000,
-          change: stock.change ?? Math.random() * 500 - 200,
-          changePercent: stock.percChange ?? Math.random() * 300 - 150,
-          averagePrice: stock.avgPrice ?? Math.random() * 100,
-          profit: stock.gain ?? Math.random() * 10000 - 5000,
-          profitPercent: stock.percGain ?? Math.random() * 10000 - 5000,
-          value: stock.value ?? Math.random() * 10000,
-          prediction: stock.prediction ?? Math.random() * 200 - 100,
-          confidence: stock.confidence ?? Math.random() * 200 - 100,
+          ordering: stock.order,
+          symbol: stock.code,
+          name: stock.stockName,
+          price: stock.price,
+          change: stock.change,
+          changePercent: stock.percChange,
+          averagePrice: stock.avgPrice,
+          profit: stock.gain,
+          profitPercent: stock.percGain,
+          value: stock.value,
+          prediction: stock.prediction,
+          confidence: stock.confidence,
         };
       });
     },
@@ -296,7 +293,7 @@ const PortfolioPage = () => {
       </Modal>
 
       <div>
-        <PortfolioPageSummary></PortfolioPageSummary>
+        <PortfolioPageSummary portfolioId={portfolioId}></PortfolioPageSummary>
       </div>
       <hr />
 
