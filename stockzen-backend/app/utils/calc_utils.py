@@ -195,7 +195,6 @@ def update_portfolio(portfolio_id: int):
         stock_count, value, change, gain, perc_change, perc_gain = calc_portfolio(
             portfolio_id
         )
-        print(stock_count, value, change, gain, perc_change, perc_gain)
         db_utils.update_item_columns(
             Portfolio,
             portfolio_id,
@@ -236,7 +235,7 @@ def calc_lot_bought(lot_id: int):
         # attempt to calculate value, change; leave as None if error
         value = None
         change = None
-        with suppress(TypeError):
+        with suppress(TypeError, ZeroDivisionError):
             value = units * current_price
             change = units * daily_change
 
@@ -288,20 +287,20 @@ def calc_stock(stock_id: int):
             )
             .one()
         )
-
-        # get number of units sold
+        units_bought = units_bought or 0
+        # get number of units sold, default 0 if none sold yet
         units_sold = (
             LotSold.query.with_entities(func.sum(LotSold.units))
             .filter(LotSold.stock_id == stock_id)
             .scalar()
-        )
+        ) or 0
 
         # carry out calculations for avg_price, gain, perc_gain
         avg_price = None
         units_held = None
         gain = None
         perc_gain = None
-        with suppress(TypeError):
+        with suppress(TypeError, ZeroDivisionError):
             avg_price = total_price / units_bought
             units_held = units_bought - units_sold
             gain = (current_price - avg_price) * units_held
@@ -337,7 +336,7 @@ def calc_portfolio(portfolio_id: int):
         # attempt to calculate; leave as None if error
         perc_change = None
         perc_gain = None
-        with suppress(TypeError):
+        with suppress(TypeError, ZeroDivisionError):
             perc_change = change / value
             perc_gain = gain / value
 
