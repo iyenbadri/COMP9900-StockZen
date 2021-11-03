@@ -1,14 +1,36 @@
 import crossIcon from 'assets/icon-outlines/outline-cross.svg';
-import plusCircle from 'assets/icon-outlines/outline-plus-circle.svg';
 import editIcon from 'assets/icon-outlines/outline-edit-1.svg';
+import plusCircle from 'assets/icon-outlines/outline-plus-circle.svg';
+import axios, { AxiosResponse } from 'axios';
 import { LotType } from 'enums';
 import moment, { Moment } from 'moment';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { useForm } from 'react-hook-form';
 import styles from './PortfolioPage-Panel.module.css';
+
+// Number formatter
+const numberFormatter = new Intl.NumberFormat('en-US', {
+  style: 'decimal',
+  maximumFractionDigits: 2,
+  minimumFractionDigits: 2,
+});
+
+const mapBoughtLotResponse = (lot: ILotBoughtResponse): ILotBought => ({
+  lotId: lot.id,
+  tradeDate: moment(lot.tradeDate, 'YYYY-MM-DD'),
+  units: lot.units,
+  unitPrice: lot.unitPrice,
+});
+
+const mapSoldLotResponse = (lot: ILotSoldResponse): ILotSold => ({
+  lotId: lot.id,
+  tradeDate: moment(lot.tradeDate, 'YYYY-MM-DD'),
+  units: lot.units,
+  unitPrice: lot.unitPrice,
+});
 
 const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
   // Deconstruct the properties
@@ -55,17 +77,6 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     price: 0,
   });
 
-  // Number formatter
-  const numberFormatter = useMemo(
-    () =>
-      new Intl.NumberFormat('en-US', {
-        style: 'decimal',
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2,
-      }),
-    []
-  );
-
   // Function to sum the lots
   const sumLot = useCallback((lots: ILot[]): ILotTotal => {
     const sum = lots.reduce(
@@ -95,62 +106,36 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
     onSizeChanged();
   }, [lotsSold, setSoldTotal, sumLot, onSizeChanged]);
 
+  const reloadBoughtLotsList = async () => {
+    let response: AxiosResponse<ILotBoughtResponse[]> = await axios.get(
+      '/lot/buy/list/' + stockId.toString()
+    );
+
+    setLotsBought(
+      response.data
+        .map(mapBoughtLotResponse)
+        .sort((a, b) => a.tradeDate.unix() - b.tradeDate.unix())
+    );
+  };
+
+  const reloadSoldLotsList = async () => {
+    let response: AxiosResponse<ILotSoldResponse[]> = await axios.get(
+      '/lot/sell/list/' + stockId.toString()
+    );
+
+    setLotsSold(
+      response.data
+        .map(mapSoldLotResponse)
+        .sort((a, b) => a.tradeDate.unix() - b.tradeDate.unix())
+    );
+  };
+
   // Set lots to dummy data
   useEffect(() => {
-    setLotsBought([
-      {
-        lotId: Math.random(),
-        tradeDate: moment(new Date(2021, 3, 12)),
-        units: 10,
-        unitPrice: 2,
-      },
-      {
-        lotId: Math.random(),
-        tradeDate: moment(new Date(2021, 4, 1)),
-        units: 5,
-        unitPrice: 15,
-      },
-      {
-        lotId: Math.random(),
-        tradeDate: moment(new Date(2021, 4, 14)),
-        units: 5,
-        unitPrice: 17,
-      },
-      {
-        lotId: Math.random(),
-        tradeDate: moment(new Date(2021, 4, 14)),
-        units: Math.random() * 10000,
-        unitPrice: Math.random() * 100,
-      },
-      {
-        lotId: Math.random(),
-        tradeDate: moment(new Date(2021, 4, 14)),
-        units: Math.random() * 10000,
-        unitPrice: Math.random() * 100,
-      },
-    ]);
+    reloadBoughtLotsList();
 
-    setLotsSold([
-      {
-        lotId: Math.random(),
-        tradeDate: moment(new Date(2021, 10, 12)),
-        units: 10,
-        unitPrice: 2,
-      },
-      {
-        lotId: Math.random(),
-        tradeDate: moment(new Date(2021, 11, 12)),
-        units: Math.random() * 10000,
-        unitPrice: Math.random() * 100,
-      },
-      {
-        lotId: Math.random(),
-        tradeDate: moment(new Date(2021, 11, 15)),
-        units: Math.random() * 10000,
-        unitPrice: Math.random() * 100,
-      },
-    ]);
-  }, [setLotsBought, setLotsSold]);
+    reloadSoldLotsList();
+  }, []);
 
   // Handler of add lot (both bought and sold)
   const addLot = useCallback(
@@ -166,64 +151,26 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           {
             // Payload to call API
             const payload = {
-              stockId: stockId,
-              tradeDate: tradeDate,
+              tradeDate: tradeDate.format('YYYY-MM-DD'),
               units: units,
               unitPrice: unitPrice,
             };
 
-            // TODO: Wire up the API
-            const response = await Promise.resolve();
-
-            // TODO: Reload the whole list instead
-            // Update the lotsBought (with sorted)
-            setLotsBought((lots: ILotBought[]) => {
-              return [
-                // The old lots
-                ...lots,
-
-                // The newly created lot
-                {
-                  lotId: Math.random(),
-                  stockId: stockId,
-                  tradeDate: tradeDate,
-                  units: units,
-                  unitPrice: unitPrice,
-                },
-              ].sort((a, b) => a.tradeDate.unix() - b.tradeDate.unix());
-            });
+            // Wire up the API
+            await axios.post('/lot/buy/' + stockId.toString(), payload);
           }
           break;
         case LotType.Sold:
           {
             // Payload to call API
             const payload = {
-              stockId: stockId,
-              tradeDate: tradeDate,
+              tradeDate: tradeDate.format('YYYY-MM-DD'),
               units: units,
               unitPrice: unitPrice,
             };
 
-            // TODO: Wire up the API
-            const response = await Promise.resolve();
-
-            // TODO: Reload the whole list instead
-            // Set the lots sold
-            setLotsSold((lots: ILotSold[]) => {
-              return [
-                // The old lots
-                ...lots,
-
-                // The newly created lot
-                {
-                  lotId: Math.random(),
-                  stockId: stockId,
-                  tradeDate: tradeDate,
-                  units: units,
-                  unitPrice: unitPrice,
-                },
-              ].sort((a, b) => a.tradeDate.unix() - b.tradeDate.unix());
-            });
+            // Wire up the API
+            await axios.post('/lot/sell/' + stockId.toString(), payload);
           }
           break;
       }
@@ -233,7 +180,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
   // Handler of add bought lot
   const handleAddBoughtLot = async (data: any) => {
-    addLot(
+    await addLot(
       LotType.Bought,
       stockId,
       moment(data.tradeDate),
@@ -241,12 +188,14 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
       parseFloat(data.unitPrice)
     );
 
+    await reloadBoughtLotsList();
+
     setShowAddLotBoughtModal(false);
   };
 
   // Hanlder of add sold lot
   const handleAddSoldLot = async (data: any) => {
-    addLot(
+    await addLot(
       LotType.Sold,
       stockId,
       moment(data.tradeDate),
@@ -254,35 +203,25 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
       parseFloat(data.unitPrice)
     );
 
+    await reloadSoldLotsList();
+
     setShowAddLotSoldModal(false);
   };
 
   // Handler of delete lot
-  const handleDeleteLot = () => {
+  const handleDeleteLot = async () => {
     switch (deletingLotType) {
       case LotType.Bought:
-        // TODO: Wire up the API
-        // axios.delete('/lot', {lotId: deletingLotId}).then(()=>{
+        // Wire up the API
+        await axios.delete('/lot/buy/' + deletingLotId!.toString());
 
-        // });
-
-        // TODO: Reload the whole list instead
-        // Update the lots list to exclude the deleted lot
-        setLotsBought((lots: ILotSold[]) => {
-          return lots.filter((x) => x.lotId !== deletingLotId);
-        });
+        // Reload the whole list instead
+        await reloadBoughtLotsList();
         break;
       case LotType.Sold:
-        // TODO: Wire up the API
-        // axios.delete('/lot', {lotId: deletingLotId}).then(()=>{
-
-        // });
-
-        // TODO: Reload the whole list instead
-        // Update the lots list to exclude the deleted lot
-        setLotsSold((lots: ILotSold[]) => {
-          return lots.filter((x) => x.lotId !== deletingLotId);
-        });
+        await axios.delete('/lot/sell/' + deletingLotId!.toString());
+        // Reload the whole list instead
+        await reloadSoldLotsList();
         break;
     }
     setShowDeleteModal(false);
@@ -302,16 +241,11 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
         );
 
         // Delete the old lot
-        // TODO: Wire up the API
-        // axios.delete('/lot', {lotId: editingLotId}).then(()=>{
+        // Wire up the API
+        await axios.delete('/lot/buy/' + editingLotId!.toString());
 
-        // });
-
-        // TODO: Reload the whole list instead
-        // Filter out the edited lot ( the old one)
-        setLotsBought((lots: ILotSold[]) => {
-          return lots.filter((x) => x.lotId !== editingLotId);
-        });
+        // Reload the whole list instead
+        await reloadBoughtLotsList();
 
         break;
       case LotType.Sold:
@@ -324,16 +258,11 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           parseFloat(data.unitPrice)
         );
 
-        // TODO: Wire up the API
-        // axios.delete('/lot', {lotId: editingLotId}).then(()=>{
+        // Wire up the API
+        await axios.delete('/lot/sell/' + editingLotId!.toString());
 
-        // });
-
-        // TODO: Reload the whole list instead
-        // Filter out the edited lot ( the old one)
-        setLotsSold((lots: ILotSold[]) => {
-          return lots.filter((x) => x.lotId !== editingLotId);
-        });
+        // Reload the whole list instead
+        await reloadSoldLotsList();
 
         break;
     }
@@ -614,58 +543,64 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           <div className={styles.lotActions}></div>
         </div>
 
-        <hr style={{ marginBottom: '5px', marginTop: '5px' }} />
+        {lotsBought.length !== 0 && (
+          <>
+            <hr style={{ marginBottom: '5px', marginTop: '5px' }} />
 
-        {/* List of bought lots */}
-        {lotsBought.map((lot) => (
-          <div key={`lot-${lot.lotId}`} className={styles.lotRow}>
-            <div className={styles.lotTradeDate}>
-              {lot.tradeDate.format('DD/MM/YYYY')}
-            </div>
-            <div className={styles.lotUnits}>
-              {numberFormatter.format(lot.units)}
-            </div>
-            <div className={styles.lotUnitPrice}>
-              {numberFormatter.format(lot.unitPrice)}
-            </div>
-            <div className={styles.lotValue}>
-              {numberFormatter.format(lot.units * currentPrice)}
-            </div>
-            <div className={styles.lotChange}>
-              {numberFormatter.format(lot.units * priceChange)}
-            </div>
+            {/* List of bought lots */}
+            {lotsBought.map((lot) => (
+              <div key={`lot-${lot.lotId}`} className={styles.lotRow}>
+                <div className={styles.lotTradeDate}>
+                  {lot.tradeDate.format('DD/MM/YYYY')}
+                </div>
+                <div className={styles.lotUnits}>
+                  {numberFormatter.format(lot.units)}
+                </div>
+                <div className={styles.lotUnitPrice}>
+                  {numberFormatter.format(lot.unitPrice)}
+                </div>
+                <div className={styles.lotValue}>
+                  {numberFormatter.format(lot.units * currentPrice)}
+                </div>
+                <div className={styles.lotChange}>
+                  {numberFormatter.format(lot.units * priceChange)}
+                </div>
 
-            {/* Actions of lot in bought section */}
-            <div className={styles.lotActions}>
-              <Button
-                variant='transparent'
-                className={`p-0 ${styles.editButton}`}
-                onClick={() => {
-                  setEditingLotType(LotType.Bought);
-                  setEditingLotId(lot.lotId);
-                  setEditingLotTradeDate(lot.tradeDate.format('YYYY-MM-DD'));
-                  setEditingLotUnits(lot.units.toString());
-                  setEditingLotUnitPrice(lot.unitPrice.toString());
-                  setShowEditingLotModal(true);
-                }}
-              >
-                <img src={editIcon} alt='edit this row of bought lots' />
-              </Button>
+                {/* Actions of lot in bought section */}
+                <div className={styles.lotActions}>
+                  <Button
+                    variant='transparent'
+                    className={`p-0 ${styles.editButton}`}
+                    onClick={() => {
+                      setEditingLotType(LotType.Bought);
+                      setEditingLotId(lot.lotId);
+                      setEditingLotTradeDate(
+                        lot.tradeDate.format('YYYY-MM-DD')
+                      );
+                      setEditingLotUnits(lot.units.toString());
+                      setEditingLotUnitPrice(lot.unitPrice.toString());
+                      setShowEditingLotModal(true);
+                    }}
+                  >
+                    <img src={editIcon} alt='edit this row of bought lots' />
+                  </Button>
 
-              <Button
-                variant='transparent'
-                className={`p-0 ${styles.deleteButton}`}
-                onClick={() => {
-                  setDeletingLotType(LotType.Bought);
-                  setDeletingLotId(lot.lotId);
-                  setShowDeleteModal(true);
-                }}
-              >
-                <img src={crossIcon} alt='cross' />
-              </Button>
-            </div>
-          </div>
-        ))}
+                  <Button
+                    variant='transparent'
+                    className={`p-0 ${styles.deleteButton}`}
+                    onClick={() => {
+                      setDeletingLotType(LotType.Bought);
+                      setDeletingLotId(lot.lotId);
+                      setShowDeleteModal(true);
+                    }}
+                  >
+                    <img src={crossIcon} alt='cross' />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
 
         <hr style={{ marginBottom: '5px', marginTop: '5px' }} />
 
@@ -717,60 +652,66 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           <div className={styles.lotActions}></div>
         </div>
 
-        <hr style={{ marginBottom: '5px', marginTop: '5px' }} />
+        {lotsSold.length !== 0 && (
+          <>
+            <hr style={{ marginBottom: '5px', marginTop: '5px' }} />
 
-        {/* List of sold lots */}
-        {lotsSold.map((lot) => (
-          <div key={`lot-${lot.lotId}`} className={styles.lotRow}>
-            <div className={styles.lotTradeDate}>
-              {lot.tradeDate.format('DD/MM/YYYY')}
-            </div>
-            <div className={styles.lotUnits}>
-              {numberFormatter.format(lot.units)}
-            </div>
-            <div className={styles.lotUnitPrice}>
-              {numberFormatter.format(lot.unitPrice)}
-            </div>
-            <div className={styles.lotValue}>
-              {numberFormatter.format(lot.units * lot.unitPrice)}
-            </div>
-            <div className={styles.lotChange}>
-              {numberFormatter.format(
-                lot.units * (lot.unitPrice - boughtTotal.unitPrice)
-              )}
-            </div>
+            {/* List of sold lots */}
+            {lotsSold.map((lot) => (
+              <div key={`lot-${lot.lotId}`} className={styles.lotRow}>
+                <div className={styles.lotTradeDate}>
+                  {lot.tradeDate.format('DD/MM/YYYY')}
+                </div>
+                <div className={styles.lotUnits}>
+                  {numberFormatter.format(lot.units)}
+                </div>
+                <div className={styles.lotUnitPrice}>
+                  {numberFormatter.format(lot.unitPrice)}
+                </div>
+                <div className={styles.lotValue}>
+                  {numberFormatter.format(lot.units * lot.unitPrice)}
+                </div>
+                <div className={styles.lotChange}>
+                  {numberFormatter.format(
+                    lot.units * (lot.unitPrice - boughtTotal.unitPrice)
+                  )}
+                </div>
 
-            {/* Action of lot in sold section */}
-            <div className={styles.lotActions}>
-              <Button
-                variant='transparent'
-                className={`p-0 ${styles.editButton}`}
-                onClick={() => {
-                  setEditingLotType(LotType.Sold);
-                  setEditingLotId(lot.lotId);
-                  setEditingLotTradeDate(lot.tradeDate.format('YYYY-MM-DD'));
-                  setEditingLotUnits(lot.units.toString());
-                  setEditingLotUnitPrice(lot.unitPrice.toString());
-                  setShowEditingLotModal(true);
-                }}
-              >
-                <img src={editIcon} alt='edit this row of sold lots' />
-              </Button>
+                {/* Action of lot in sold section */}
+                <div className={styles.lotActions}>
+                  <Button
+                    variant='transparent'
+                    className={`p-0 ${styles.editButton}`}
+                    onClick={() => {
+                      setEditingLotType(LotType.Sold);
+                      setEditingLotId(lot.lotId);
+                      setEditingLotTradeDate(
+                        lot.tradeDate.format('YYYY-MM-DD')
+                      );
+                      setEditingLotUnits(lot.units.toString());
+                      setEditingLotUnitPrice(lot.unitPrice.toString());
+                      setShowEditingLotModal(true);
+                    }}
+                  >
+                    <img src={editIcon} alt='edit this row of sold lots' />
+                  </Button>
 
-              <Button
-                variant='transparent'
-                className={`p-0 ${styles.deleteButton}`}
-                onClick={() => {
-                  setDeletingLotType(LotType.Sold);
-                  setDeletingLotId(lot.lotId);
-                  setShowDeleteModal(true);
-                }}
-              >
-                <img src={crossIcon} alt='cross' />
-              </Button>
-            </div>
-          </div>
-        ))}
+                  <Button
+                    variant='transparent'
+                    className={`p-0 ${styles.deleteButton}`}
+                    onClick={() => {
+                      setDeletingLotType(LotType.Sold);
+                      setDeletingLotId(lot.lotId);
+                      setShowDeleteModal(true);
+                    }}
+                  >
+                    <img src={crossIcon} alt='cross' />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
 
         <hr style={{ marginBottom: '5px', marginTop: '5px' }} />
 
@@ -816,9 +757,23 @@ interface ILotBought extends ILot {
   unitPrice: number;
 }
 
+interface ILotBoughtResponse {
+  id: number;
+  tradeDate: string;
+  units: number;
+  unitPrice: number;
+}
+
 interface ILotSold extends ILot {
   lotId: number;
   tradeDate: Moment;
+  units: number;
+  unitPrice: number;
+}
+
+interface ILotSoldResponse {
+  id: number;
+  tradeDate: string;
   units: number;
   unitPrice: number;
 }
