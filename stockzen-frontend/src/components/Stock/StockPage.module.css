@@ -107,3 +107,10 @@
 .moneyLoss {
   color: var(--loss-red);
 }
+
+.modalWrapper {
+  max-width: 30%;
+  position: fixed;
+  transform: translate(120%, 30%);
+  text-align: center;
+}

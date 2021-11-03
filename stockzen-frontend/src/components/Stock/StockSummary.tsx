@@ -2,8 +2,6 @@ import questionIcon from 'assets/icon-outlines/outline-question-circle.svg';
 import React, { FC } from 'react';
 import styles from './StockSummary.module.css';
 
-// TO DO: API WIRE UP
-
 const StockSummary: FC<IStockPageResponse> = (prop) => {
   const numberFomatter = new Intl.NumberFormat('en-US', {
     style: 'decimal',
