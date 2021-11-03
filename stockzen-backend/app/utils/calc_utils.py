@@ -304,7 +304,7 @@ def calc_stock(stock_id: int):
             avg_price = 0
 
         units_held = units_bought - units_sold
-        gain = (current_price - avg_price) * units_held
+        gain = ((current_price - avg_price) * units_held) or 0
 
         try:
             perc_gain = gain / (units_held * avg_price)
@@ -327,9 +327,7 @@ def calc_portfolio(portfolio_id: int):
         # get calculated metrics for the portfolio
         stock_count, value, gain = (
             Stock.query.with_entities(
-                func.count(),
-                func.sum(Stock.value),
-                func.sum(Stock.gain),
+                func.count(), func.sum(Stock.value), func.sum(Stock.gain)
             )
             .filter(Stock.portfolio_id == portfolio_id)
             .one()

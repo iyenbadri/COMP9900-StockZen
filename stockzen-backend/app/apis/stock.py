@@ -1,5 +1,6 @@
 import app.utils.crud_utils as util
-from app.utils.calc_utils import propagate_portfolio_updates, propagate_stock_updates
+from app import executor
+from app.utils.calc_utils import propagate_portfolio_updates
 from app.utils.enums import Status
 from flask import request
 from flask_login.utils import login_required
@@ -138,14 +139,8 @@ class StockCRUD(Resource):
         json = marshal(request.json, stock_add_request)
         stock_page_id = json["stockPageId"]
 
-        # Get latest data from yfinance, if fail don't abort, just return latest (cached) data
-        try:
-            if util.update_stock_page(stock_page_id) == Status.FAIL:
-                raise ConnectionError(
-                    f"Could not fetch latest data for stockPageId: {stock_page_id}, attempting to return from cache."
-                )
-        except Exception as e:
-            print(e)
+        # concurrent request for latest stock data, finishes after response
+        executor.submit(util.update_stock_page, stock_page_id)
 
         if util.add_stock(portfolioId, stock_page_id) == Status.SUCCESS:
             return {"message": "Stock successfully added"}, 200
