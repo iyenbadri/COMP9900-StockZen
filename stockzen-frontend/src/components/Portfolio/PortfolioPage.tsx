@@ -14,7 +14,9 @@ import {
   ResponderProvided,
 } from 'react-beautiful-dnd';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import { useParams } from 'react-router-dom';
+import stocksListing from '../Search/listing.json';
 import styles from './PortfolioPage.module.css';
 import PortfolioPageRow from './PortfolioPageRow';
 import PortfolioPageSummary from './PortfolioPageSummary';
@@ -74,27 +76,35 @@ const PortfolioPage = () => {
     ordering: Ordering.Unknown,
   });
 
+  // States for delete a stock
+  const [showDeleteStockModal, setShowDeleteStockModal] = useState(false);
+  const [deletingStockId, setDeletingStockId] = useState(0);
+  const [deletingStockName, setDeletingStockName] = useState('');
+
   // The function to map response from backend to frontend object
   const mapStockList = useCallback(
     (data: IStockResponse[]): IStock[] => {
-      return data.map((stock) => ({
-        stockId: stock.id,
-        draggableId: `stock-${stock.id}`,
-        ordering: stock.order ?? Math.random(), // TODO: map the backend data
-        symbol:
-          stock.code ??
-          Math.random().toString() + ' ' + Math.random().toString(),
-        name: stock.stockName ?? Math.random().toString(),
-        price: stock.price ?? Math.random() * 10000 - 5000,
-        change: stock.change ?? Math.random() * 10000 - 5000,
-        changePercent: stock.percChange ?? Math.random() * 10000 - 5000,
-        averagePrice: stock.avgPrice ?? Math.random() * 10000 - 5000,
-        profit: stock.gain ?? Math.random() * 10000 - 5000,
-        profitPercent: stock.percGain ?? Math.random() * 10000 - 5000,
-        value: stock.value ?? Math.random() * 10000 - 5000,
-        prediction: stock.prediction ?? Math.random() * 200 - 100,
-        confidence: stock.confidence ?? Math.random() * 200 - 100,
-      }));
+      return data.map((stock) => {
+        const randomIndex = Math.round(Math.random() * 10000);
+        const symbol = stocksListing[randomIndex];
+        return {
+          stockId: stock.id,
+          stockPageId: stock.stockPageId ?? Math.random(),
+          draggableId: `stock-${stock.id}`,
+          ordering: stock.order ?? Math.random(), // TODO: map the backend data
+          symbol: stock.code ?? symbol.symbol,
+          name: stock.stockName ?? symbol.description,
+          price: stock.price ?? Math.random() * 2000,
+          change: stock.change ?? Math.random() * 500 - 200,
+          changePercent: stock.percChange ?? Math.random() * 300 - 150,
+          averagePrice: stock.avgPrice ?? Math.random() * 100,
+          profit: stock.gain ?? Math.random() * 10000 - 5000,
+          profitPercent: stock.percGain ?? Math.random() * 10000 - 5000,
+          value: stock.value ?? Math.random() * 10000,
+          prediction: stock.prediction ?? Math.random() * 200 - 100,
+          confidence: stock.confidence ?? Math.random() * 200 - 100,
+        };
+      });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -189,7 +199,11 @@ const PortfolioPage = () => {
           newList[i].ordering = i;
         }
 
-        // TODO: Call API to reorder the list in the backend.
+        // Call API to reorder the list in the backend.
+        axios.put(
+          `/stock/list/${portfolioId}`,
+          newList.map((x) => ({ id: x.stockId, order: x.ordering }))
+        );
 
         return newList;
       });
@@ -231,8 +245,40 @@ const PortfolioPage = () => {
     );
   };
 
+  // Handle the stock delete
+  const handleStockDelete = () => {
+    setShowDeleteStockModal(false);
+
+    axios.delete(`/stock/${deletingStockId}`).then(() => {
+      reloadStockList();
+    });
+  };
+
   return (
     <>
+      <Modal
+        show={showDeleteStockModal}
+        onHide={() => setShowDeleteStockModal(false)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Delete stock</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Do you want to delete stock {deletingStockName}?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant={'danger'} onClick={handleStockDelete}>
+            Yes
+          </Button>
+          <Button
+            variant={'secondary'}
+            onClick={(ev) => setShowDeleteStockModal(false)}
+          >
+            No
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <div>
         <PortfolioPageSummary></PortfolioPageSummary>
       </div>
@@ -387,7 +433,11 @@ const PortfolioPage = () => {
                           key={stock.stockId}
                           index={index}
                           stock={stock}
-                          showDeleteModal={() => {}}
+                          showDeleteModal={(stockId: number, name: string) => {
+                            setDeletingStockId(stockId);
+                            setDeletingStockName(name);
+                            setShowDeleteStockModal(true);
+                          }}
                         ></PortfolioPageRow>
                       );
                     })}

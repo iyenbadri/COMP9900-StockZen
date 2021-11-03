@@ -142,12 +142,11 @@ class LotBought(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     stock_id = Column(Integer, ForeignKey("stocks.id"), nullable=False)
-    trade_date = Column(DateTime)  # <user>
-    units = Column(Integer)  # <user>
-    unit_price = Column(Float)  # <user>
+    trade_date = Column(DateTime, nullable=False)  # <user>
+    units = Column(Integer, nullable=False, default=0)  # <user>
+    unit_price = Column(Float, nullable=False)  # <user>
     value = Column(Float)  # stocks.price * bought.unit_price
     change = Column(Float)  # bought.units * stock.change
-    avg_price = Column(Float)  # sum(bought.units * bought.unit_price) / sum(bought.units)
     last_updated = Column(DateTime, default=datetime.now())
 
 
@@ -156,11 +155,11 @@ class LotSold(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     stock_id = Column(Integer, ForeignKey("stocks.id"), nullable=False)
-    trade_date = Column(DateTime)  # <user>
-    units = Column(Integer)  # <user>
-    unit_price = Column(Float)  # <user>
+    trade_date = Column(DateTime, nullable=False)  # <user>
+    units = Column(Integer, nullable=False, default=0)  # <user>
+    unit_price = Column(Float, nullable=False)  # <user>
     amount = Column(Float)  # sold.units * sold.unit_price
-    realised = Column(Float)  # sold.units * (sold.unit_price * bought.avg_price)
+    realised = Column(Float)  # sold.units * (sold.unit_price - stock.avg_price)
     last_updated = Column(DateTime, default=datetime.now())
 
 
@@ -187,7 +186,6 @@ class StockPage(db.Model):
         lazy="select",
         cascade="all, delete, delete-orphan",
     )
-
     # one-to-many stock_pages:history
     history = relationship(
         "History",

@@ -54,6 +54,11 @@ const StockPage = () => {
     },
     []
   );
+  const numberFomatter = new Intl.NumberFormat('en-US', {
+    style: 'decimal',
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2,
+  })
 
   const gainLossClass = (change: number): string => {
     if (change >= 0) {

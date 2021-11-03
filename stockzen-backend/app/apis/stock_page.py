@@ -82,7 +82,7 @@ stock_page_history_response = api.model(
 # ==============================================================================
 
 
-@api.route("/<stockPageId>")
+@api.route("/<int:stockPageId>")
 class StockPageCRUD(Resource):
     @login_required
     @api.marshal_with(stock_page_details_response)
@@ -105,11 +105,10 @@ class StockPageCRUD(Resource):
 
         if stock_page_item == Status.FAIL:
             return abort(404, "Stock page could not be found")
-          
         return stock_page_item, 200
 
 
-@api.route("/<stockPageId>/history")
+@api.route("/<int:stockPageId>/history")
 class StockPageCRUD(Resource):
     @login_required
     @api.marshal_list_with(stock_page_history_response)
