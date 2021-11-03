@@ -96,7 +96,7 @@ const StockSummary: FC<IStockPageResponse> = (prop) => {
                 Stock's volatility in relation to the overall market
               </div>
             </div>
-            <div>{typeof prop.beta === 'number' ? numberFomatter.format(prop.beta) : ''}</div>
+            <div>{typeof prop.beta === 'number' ? numberFomatter.format(prop.beta) : '-'}</div>
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@ import refreshIcon from 'assets/icon-outlines/outline-refresh-small.svg';
 import axios from 'axios';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Col, Modal, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
@@ -76,31 +76,31 @@ const StockPage = () => {
           <div className='text-center'>
             <div><b>{label}</b></div>
           </div>
-          <div className={styles.index}>
-            <div className={styles.indexTitle}>Open</div>
-            <div className={styles.sep}>:</div>
-            <div className={styles.indexValue}>{numberFomatter.format(payload[1].value)}</div>
-          </div>
-          <div className={styles.index}>
-            <div className={styles.indexTitle}>Close</div>
-            <div className={styles.sep}>:</div>
-            <div className={styles.indexValue}>{numberFomatter.format(payload[0].value)}</div>
-          </div>
-          <div className={styles.index}>
-            <div className={styles.indexTitle}>High</div>
-            <div className={styles.sep}>:</div>
-            <div className={styles.indexValue}>{numberFomatter.format(payload[2].value)}</div>
-          </div>
-          <div className={styles.index}>
-            <div className={styles.indexTitle}>Low</div>
-            <div className={styles.sep}>:</div>
-            <div className={styles.indexValue}>{numberFomatter.format(payload[3].value)}</div>
-          </div>
-          <div className={styles.index}>
-            <div className={styles.indexTitle}>Volume</div>
-            <div className={styles.sep}>:</div>
-            <div className={styles.indexValue}>{intFormatter.format(payload[4].value)}</div>
-          </div>
+          <Row className={styles.index}>
+            <Col className={styles.indexTitle}>Open</Col>
+            <Col className={styles.sep}>:</Col>
+            <Col className={styles.indexValue}>{numberFomatter.format(payload[1].value)}</Col>
+          </Row>
+          <Row className={styles.index}>
+            <Col className={styles.indexTitle}>Close</Col>
+            <Col className={styles.sep}>:</Col>
+            <Col className={styles.indexValue}>{numberFomatter.format(payload[0].value)}</Col>
+          </Row>
+          <Row className={styles.index}>
+            <Col className={styles.indexTitle}>High</Col>
+            <Col className={styles.sep}>:</Col>
+            <Col className={styles.indexValue}>{numberFomatter.format(payload[2].value)}</Col>
+          </Row>
+          <Row className={styles.index}>
+            <Col className={styles.indexTitle}>Low</Col>
+            <Col className={styles.sep}>:</Col>
+            <Col className={styles.indexValue}>{numberFomatter.format(payload[3].value)}</Col>
+          </Row>
+          <Row className={styles.index}>
+            <Col className={styles.indexTitle}>Volume</Col>
+            <Col className={styles.sep}>:</Col>
+            <Col className={styles.indexValue}>{intFormatter.format(payload[4].value)}</Col>
+          </Row>
         </div>
       );
     } else {

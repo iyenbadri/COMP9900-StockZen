@@ -28,7 +28,6 @@ const SearchWidget: FC<Prop> = (prop) => {
       {/* The search modal */}
       {showSearchInput && (
         <SearchWidgetModal {...prop} />
-        // setShowSearchInput(false);
       )}
     </>
   );

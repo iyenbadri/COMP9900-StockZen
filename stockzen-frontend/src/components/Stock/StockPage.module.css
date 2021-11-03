@@ -107,9 +107,9 @@
 .tooltip {
   background-color: white;
   border: 1px solid var(--zen-5);
-  width: 100%;
-  height: 140px;
-  padding: 10px;
+  width: 140%;
+  height: 100%;
+  padding: 5px 0px 5px 10px;
   font-size: small;
 }
 
@@ -120,7 +120,7 @@
 .tooltip
 .index
 .indexTitle {
-  width: 40%;
+  max-width: 44%;
   float: left;
   font-weight: bold;
 }
@@ -128,7 +128,7 @@
 .tooltip
 .index
 .sep {
-  width: 5%;
+  width: 1%;
   float: left;
   font-weight: bold;
   margin-right: 1px;
@@ -138,7 +138,7 @@
 .tooltip
 .index
 .indexValue {
-  width: 54%;
+  width: 55%;
   float: left;
   text-align: right;
   padding: 0;
