@@ -23,7 +23,7 @@ def fetch_stock_data(sym):
         stock = yf.Ticker(sym)
         info = stock.info
         if not has_data(stock):
-            raise RuntimeError("Stock details could not be fetched")
+            raise RuntimeError(f"Stock details could not be fetched for {sym}")
 
         change, perc_change, price, prev_close = calc_change(sym, info)
 

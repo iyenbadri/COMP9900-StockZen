@@ -174,7 +174,6 @@ def get_stock_list(portfolio_id: int) -> Status:
             {**to_dict(stock_page), **to_dict(stock)}
             for stock, stock_page in sqla_tuples
         ]
-        print(dict_list)
         return dict_list
     except Exception as e:
         utils.debug_exception(e, suppress=True)
@@ -220,7 +219,6 @@ def fetch_stock(stock_id: int) -> Union[Stock, Status]:
             Stock, stock_id, [StockPage], [Stock, StockPage]
         )
         stock_dict, stock_page_dict = map(to_dict, sqla_tuple)
-        print(stock_dict)
         # the order of dicts is important: we want stock to override same-named
         # columns from stock_page, e.g. id
         return {**stock_page_dict, **stock_dict}
