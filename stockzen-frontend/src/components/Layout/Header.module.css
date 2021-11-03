@@ -29,35 +29,36 @@ header.userAuthenticated {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  width: 100%;
-  margin-left: 5%;
+  align-items: flex-start;
+  width: 40%;
+  margin: 0 0 5px 15%;
+  padding: 0;
 }
 
 .tabs:nth-child(1) {
-  width: 20%;
-  flex: 0 1 auto;
+  flex: 1 0 content;
   font-weight: bold;
+  padding: 0;
 }
 
 .tabs:nth-child(2) {
-  width: 20%;
   flex: 1 1 auto;
-  margin-right: 0;
   font-weight: bold;
+  padding: 0;
 }
 
 .tabs:nth-child(3) {
-  width: 60%;
   flex: 1 1 auto;
-  padding-right: 0;
-  margin-right: 0;
+  padding: 0;
 }
 
 .tab {
+  white-space: nowrap;
   size: large;
   outline: none;
   font-weight: bold;
   color: var(--zen-2);
+  padding: 0;
   margin-right: 15px;
 }
 

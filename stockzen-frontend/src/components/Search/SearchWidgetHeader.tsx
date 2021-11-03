@@ -14,7 +14,12 @@ const SearchWidgetHeader: FC<Prop> = (prop) => {
     <>
       <Form className={`${styles.searchBox}`}>
         <Form.Label>
-          <img className={styles.searchImg} src={searchIcon} alt='search'></img>
+          <img
+            className={styles.searchImg}
+            src={searchIcon}
+            alt='search'
+            onClick={() => search()}
+          ></img>
         </Form.Label>
         <Form.Control
           className={styles.searchEntry}
