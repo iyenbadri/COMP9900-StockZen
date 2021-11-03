@@ -32,7 +32,7 @@ def portfolio_details(id, name="Test Portfolio", order=0):
         "id": id,
         "portfolioName": name,
         "stockCount": 0,
-        "value": 0,
+        "value": None,
         "change": None,
         "percChange": None,
         "gain": None,

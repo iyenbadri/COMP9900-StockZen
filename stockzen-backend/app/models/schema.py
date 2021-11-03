@@ -71,7 +71,7 @@ class Portfolio(db.Model):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     portfolio_name = Column(String(50), nullable=False)
     stock_count = Column(Integer, default=0)  # count(stocks)
-    value = Column(Float, default=0)  # sum(stocks.value)
+    value = Column(Float)  # sum(stocks.value)
     change = Column(Float)  # sum(stocks.change)
     perc_change = Column(Float)  # portfolios.change / portfolios.value
     gain = Column(Float)  # sum(stocks.gain)
