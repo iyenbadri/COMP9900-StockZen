@@ -5,6 +5,8 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { intFormatter, numberFomatter } from 'utils/Utilities';
 import CompanyProfile from './CompanyProfile';
 import StockHistory from './StockHistory';
 import styles from './StockPage.module.css';
@@ -24,9 +26,10 @@ const StockPage = () => {
   const { setShowPortfolioSummary } = useContext(TopPerformerContext);
 
   const [stockData, setStockData] = useState<IStockPageResponse>();
+  const [chartData, setChartData] = useState<IStockHistoryResponse[]>([]);
+  const [historyData, setHistoryData] = useState<IStockHistoryResponse[]>([]);
 
   const [loading, setLoading] = useState<boolean>(true);
-
   const [fetchError, setFetchError] = useState<boolean>(false);
 
   const [activeTab, setActiveTab] = useState(0);
@@ -36,15 +39,19 @@ const StockPage = () => {
   // Retrieve backend response data
   const getStockData = useCallback(async () => {
     try {
-      let res = await axios.get(`/stock-page/${stockPageId}`);
-      if (res.status === 200) {
-        setStockData(res.data);
+      let stock = await axios.get(`/stock-page/${stockPageId}`);
+      let history = await axios.get(`/stock-page/${stockPageId}/history`)
+      if (stock.status === 200 && history.status === 200) {
+        setStockData(stock.data);
+        setChartData(history.data);
+        const data = [...history.data].reverse();
+        setHistoryData(data);
         setLoading(false);
       }
     } catch (e: any) {
       setFetchError(true);
     }
-  }, [stockPageId, setStockData]
+  }, [stockPageId, setStockData, setChartData, setHistoryData]
   );
 
   useEffect(
@@ -53,11 +60,6 @@ const StockPage = () => {
     },
     [stockPageId]
   );
-  const numberFomatter = new Intl.NumberFormat('en-US', {
-    style: 'decimal',
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 2,
-  })
 
   const gainLossClass = (change: number): string => {
     if (change >= 0) {
@@ -66,6 +68,45 @@ const StockPage = () => {
       return styles.moneyLoss;
     }
   }
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active) {
+      return (
+        <div className={styles.tooltip}>
+          <div className='text-center'>
+            <div><b>{label}</b></div>
+          </div>
+          <div className={styles.index}>
+            <div className={styles.indexTitle}>Open</div>
+            <div className={styles.sep}>:</div>
+            <div className={styles.indexValue}>{numberFomatter.format(payload[1].value)}</div>
+          </div>
+          <div className={styles.index}>
+            <div className={styles.indexTitle}>Close</div>
+            <div className={styles.sep}>:</div>
+            <div className={styles.indexValue}>{numberFomatter.format(payload[0].value)}</div>
+          </div>
+          <div className={styles.index}>
+            <div className={styles.indexTitle}>High</div>
+            <div className={styles.sep}>:</div>
+            <div className={styles.indexValue}>{numberFomatter.format(payload[2].value)}</div>
+          </div>
+          <div className={styles.index}>
+            <div className={styles.indexTitle}>Low</div>
+            <div className={styles.sep}>:</div>
+            <div className={styles.indexValue}>{numberFomatter.format(payload[3].value)}</div>
+          </div>
+          <div className={styles.index}>
+            <div className={styles.indexTitle}>Volume</div>
+            <div className={styles.sep}>:</div>
+            <div className={styles.indexValue}>{intFormatter.format(payload[4].value)}</div>
+          </div>
+        </div>
+      );
+    } else {
+      return null;
+    }
+  };
 
   if (loading && !(fetchError)) {
     return (
@@ -81,7 +122,7 @@ const StockPage = () => {
         </Modal>
       </>
     )
-  } else if (!(loading)) {
+  } else if (!(loading) && !(fetchError)) {
     return (
       <>
         {/* <PortfolioListSummary></PortfolioListSummary> */}
@@ -90,16 +131,16 @@ const StockPage = () => {
           <div className={styles.stockCode}>({stockData?.code})</div>
         </div>
         <div className={styles.stockSummmary}>
-          <div className={`${styles.stockPrice} outerStroke`}>{stockData?.price}</div>
+          <div className={`${styles.stockPrice} outerStroke`}>{stockData?.price ? numberFomatter.format(stockData.price) : ''}</div>
           <div
             className={`${styles.stockChange} ${stockData?.change ? gainLossClass(stockData?.change) : ''}`}
           >
-            {stockData?.change}
+            {stockData?.change ? numberFomatter.format(stockData.change) : ''}
           </div>
           <div
             className={`${styles.stockPercChange} ${stockData?.change ? gainLossClass(stockData?.change) : ''}`}
           >
-            ({stockData?.percChange})
+            {stockData?.percChange ? `(${numberFomatter.format(stockData.percChange)}%)` : ''}
           </div>
           <div className={styles.update}>
             <Button
@@ -117,7 +158,27 @@ const StockPage = () => {
           </div>
         </div>
         <div className={styles.chartPlaceholder}>
-          <h3>Chart Placeholder</h3>
+          <ResponsiveContainer width='100%' height={250} aspect={3}>
+            <LineChart
+              data={chartData}
+              margin={{
+                top: 5,
+                right: 50,
+                left: 0,
+                bottom: 25,
+              }}
+            >
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis dataKey='date' tick={{ fontSize: 12 }} />
+              <YAxis dataKey='close' tick={{ fontSize: 12 }} />
+              <Tooltip content={<CustomTooltip />} />
+              <Line type='monotone' dataKey='close' stroke={'#5bc0be'} dot={false} />
+              <Line type='monotone' dataKey='open' strokeWidth={0} dot={false} />
+              <Line type='monotone' dataKey='high' strokeWidth={0} dot={false} />
+              <Line type='monotone' dataKey='low' strokeWidth={0} dot={false} />
+              <Line type='monotone' dataKey='volume' strokeWidth={0} dot={false} />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
         <Tabs
           selectedIndex={activeTab}
@@ -146,7 +207,29 @@ const StockPage = () => {
             ></StockSummary>
           </TabPanel>
           <TabPanel>
-            <StockHistory />
+            <div className={styles.historyTable}>
+              <div className={styles.historyTitle}>
+                <div className={styles.title}>Date</div>
+                <div className={styles.title}>Open</div>
+                <div className={styles.title}>High</div>
+                <div className={styles.title}>Low</div>
+                <div className={styles.title}>Close</div>
+                <div className={styles.title}>Volume</div>
+                <div></div>
+              </div>
+              {historyData!.map((history, index) => {
+                return (
+                  <StockHistory
+                    date={history.date}
+                    open={history.open}
+                    high={history.high}
+                    low={history.low}
+                    close={history.close}
+                    volume={history.volume}
+                  ></StockHistory>
+                );
+              })}
+            </div>
           </TabPanel>
           <TabPanel>
             <CompanyProfile {...stockData!}
