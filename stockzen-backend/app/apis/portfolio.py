@@ -1,5 +1,5 @@
 import app.utils.crud_utils as util
-from app.utils.calc_utils import cascade_updates
+from app.utils.calc_utils import calc_summary, cascade_updates
 from app.utils.enums import Status
 from flask import request
 from flask_login.utils import login_required
@@ -106,6 +106,37 @@ class PortfolioCRUD(Resource):
             return {"message": "Portfolio list successfully reordered"}, 200
 
         return abort(500, "Portfolio list could not be reordered")
+
+
+portfolio_summary_response = api.model(
+    "Response: User portfolio performance summary details",
+    {
+        "holdings": fields.Float(required=True, description="total holdings value"),
+        "today": fields.Float(required=True, description="percentage change today"),
+        "overall": fields.Float(required=True, description="percentage gain today"),
+    },
+)
+
+
+@api.route("/list/summary")
+class PortfolioCRUD(Resource):
+    @login_required
+    @api.marshal_list_with(portfolio_summary_response)
+    @api.response(200, "Successfully retrieved summary")
+    def get(self):
+        """Return portfolio performance summary"""
+
+        summary = calc_summary()
+        # WRITE SCHEMA
+        # SAVE TO DATABASE IN CASCADE
+        # TODO: WRITE CRUD UTIL FOR DATABASE
+        if summary == Status.FAIL:
+            return abort(
+                500, "Portfolio performance summary for this user could not be retrieved"
+            )
+        print(summary)
+
+        return summary
 
 
 @api.route("")

@@ -6,6 +6,7 @@ from app.config import UPDATE_MIN_INTERVAL
 from app.models.schema import LotBought, LotSold, Portfolio, Stock, StockPage
 from app.utils import crud_utils, db_utils, utils
 from app.utils.enums import LotType, Status
+from flask_login import current_user
 from sqlalchemy.orm import load_only
 from sqlalchemy.sql import func
 
@@ -304,7 +305,7 @@ def calc_stock(stock_id: int):
             avg_price = total_price / units_bought
             units_held = units_bought - units_sold
             gain = (current_price - avg_price) * units_held
-            perc_gain = gain / (units_held * avg_price)
+            perc_gain = gain / (units_held * avg_price) * 100
 
         return avg_price, gain, perc_gain, value
     except Exception as e:
@@ -337,9 +338,39 @@ def calc_portfolio(portfolio_id: int):
         perc_change = None
         perc_gain = None
         with suppress(TypeError, ZeroDivisionError):
-            perc_change = change / value
-            perc_gain = gain / value
+            perc_change = change / value * 100
+            perc_gain = gain / value * 100
 
         return stock_count, value, change, gain, perc_change, perc_gain
+    except Exception as e:
+        utils.debug_exception(e)
+
+
+# ==============================================================================
+# Summary Banner Calculations
+# ==============================================================================
+def calc_summary():
+    """Calculations for Performance Summary Banner using portfolio table data"""
+    try:
+        value, change, gain = (
+            Portfolio.query.with_entities(
+                func.sum(Portfolio.value),
+                func.sum(Portfolio.change),
+                func.sum(Portfolio.gain),
+            )
+            .filter(Portfolio.user_id == current_user.id)
+            .one()
+        )
+        holdings = value
+
+        # attempt to calculate; leave as None if error
+        today = None
+        overall = None
+        with suppress(TypeError, ZeroDivisionError):
+            today = change / holdings * 100
+            overall = gain / holdings * 100
+
+        return holdings, today, overall
+
     except Exception as e:
         utils.debug_exception(e)
