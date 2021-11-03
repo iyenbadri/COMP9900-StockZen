@@ -4,6 +4,7 @@ interface ISearchContext {
   showSearchInput: boolean;
   searchAtHeader: boolean;
   addStock: () => void;
+  endAddStock: () => void;
   search: () => void;
   endSearch: () => void;
 }
@@ -12,6 +13,7 @@ const searchDefaultValues: ISearchContext = {
   showSearchInput: false,
   searchAtHeader: true,
   addStock: () => { },
+  endAddStock: () => { },
   search: () => { },
   endSearch: () => { },
 }
@@ -25,6 +27,10 @@ const SearchProvider: FC = ({ children }): any => {
   const addStock = () => {
     setSearchAtHeader(false);
     setShowSearchInput(true);
+  }
+
+  const endAddStock = () => {
+    setSearchAtHeader(true);
   }
 
   const search = () => {
@@ -41,6 +47,7 @@ const SearchProvider: FC = ({ children }): any => {
         showSearchInput,
         searchAtHeader,
         addStock,
+        endAddStock,
         search,
         endSearch,
       }}

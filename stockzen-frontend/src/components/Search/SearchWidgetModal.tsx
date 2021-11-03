@@ -20,11 +20,12 @@ interface SearchResponse {
   id: number;
   code: string;
   stock_name: string;
+  exchange: string;
 }
 
 const SearchWidgetModal: FC<Prop> = (prop) => {
   const { portfolioId, addStock } = prop;
-  const { showSearchInput, searchAtHeader, endSearch } = useContext(SearchContext);
+  const { showSearchInput, searchAtHeader, endSearch, endAddStock } = useContext(SearchContext);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [options, setOptions] = useState<TypeaheadOption[]>([]);
 
@@ -35,7 +36,7 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
       stockPageId: x.id,
       code: x.code,
       description: x.stock_name,
-      market: Math.round(Math.random() * 100).toString(),
+      market: x.exchange,
       searchLabel: `${x.code}` + (x.stock_name ? ` : ${x.stock_name}` : ''),
     }),
     []
@@ -49,13 +50,7 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
     axios
       .get(`/stock/list/${portfolioId}`)
       .then((response: AxiosResponse<IStockResponse[]>) => {
-        // Set the list of stock_page_id as added stocks
-        setAddedStockIds((added) => {
-          return [
-            ...added,
-            ...response.data.map((stock) => stock.stockPageId),
-          ];
-        });
+        setAddedStockIds(response.data.map((stock) => stock.stockPageId));
       });
   }, [portfolioId, setAddedStockIds]);
 
@@ -68,6 +63,7 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
       backdrop={true}
       onHide={() => {
         endSearch();
+        endAddStock();
       }}
     >
       <AsyncTypeahead
@@ -143,7 +139,6 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
                       to={`/stock/${option.stockPageId}`}
                       onClick={() => {
                         endSearch();
-                        window.location.href = `/stock/${option.stockPageId}`;
                       }}
                     >
                       {option.code}
