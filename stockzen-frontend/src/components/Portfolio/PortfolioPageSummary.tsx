@@ -89,7 +89,7 @@ const PortfolioPageSummary: FC<IPortfolioPageSummaryProp> = (props) => {
       <div>
         <div className={`${styles.summaryRow} ${styles.summaryHeaderRow}`}>
           <div className={styles.rowStocks}>Stocks</div>
-          <div className={styles.rowMarketValue}>Merket value</div>
+          <div className={styles.rowMarketValue}>Market value</div>
           <div className={styles.rowChange}>Change</div>
           <div className={styles.rowTotalGain}>Total gain</div>
         </div>
