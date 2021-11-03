@@ -8,7 +8,7 @@ import SearchWidgetModal from './SearchWidgetModal';
 
 
 const SearchWidgetHeader: FC<Prop> = (prop) => {
-  const { showSearchInput, search, endSearch } = useContext(SearchContext);
+  const { showSearchInput, search } = useContext(SearchContext);
 
   return (
     <>

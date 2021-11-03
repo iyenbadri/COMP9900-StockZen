@@ -39,6 +39,7 @@ const SearchProvider: FC = ({ children }): any => {
 
   const endSearch = () => {
     setShowSearchInput(false);
+    setSearchAtHeader(true);
   }
 
   return (
