@@ -13,13 +13,14 @@ interface PortfolioPageRowProp {
   readonly showDeleteModal: (stockId: number, stock: string) => void;
 }
 
+const numberFormatter = new Intl.NumberFormat('en-US', {
+  style: 'decimal',
+  maximumFractionDigits: 2,
+  minimumFractionDigits: 2,
+});
+
 const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
   const { stock } = props;
-  const numberFormatter = new Intl.NumberFormat('en-US', {
-    style: 'decimal',
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 2,
-  });
 
   const ref = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState<number>();
@@ -114,7 +115,9 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                 <span
                   className={`${styles.rowAveragePrice} d-block d-lg-none d-xl-block`}
                 >
-                  {numberFormatter.format(stock.averagePrice)}
+                  {stock.averagePrice == null
+                    ? '-'
+                    : numberFormatter.format(stock.averagePrice)}
                 </span>
                 <span
                   className={`${styles.rowProfit} ${gainLossClass(
@@ -133,7 +136,9 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                   )}
                 </span>
                 <span className={styles.rowValue}>
-                  {numberFormatter.format(stock.value)}
+                  {stock.value == null
+                    ? '-'
+                    : numberFormatter.format(stock.value)}
                 </span>
                 <span className={styles.rowPredict}>+</span>
               </div>

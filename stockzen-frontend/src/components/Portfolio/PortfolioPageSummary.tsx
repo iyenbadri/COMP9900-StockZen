@@ -1,5 +1,6 @@
+import axios from 'axios';
 import { RefreshContext } from 'contexts/RefreshContext';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { usdFormatter } from 'utils/Utilities';
 import styles from './PortfolioPageSummary.module.css';
 
@@ -9,30 +10,53 @@ const numberFormatter = new Intl.NumberFormat('en-US', {
   minimumFractionDigits: 2,
 });
 
-const PortfolioPageSummary = () => {
+interface IPortfolioPageSummaryProp {
+  portfolioId: string;
+}
+
+interface PortfolioSummary {
+  name: string | null;
+  stocks: number | null;
+  holdings: number | null;
+  change: number | null;
+  changePercent: number | null;
+  totalGain: number | null;
+  totalGainPercent: number | null;
+}
+
+const PortfolioPageSummary: FC<IPortfolioPageSummaryProp> = (props) => {
+  const { portfolioId } = props;
   const { subscribe, unsubscribe } = useContext(RefreshContext);
 
-  const [summaryData, setSummaryData] = useState({
-    stocks: 3,
-    holdings: 7248.1,
-    change: 403.1,
-    changePercent: 0.59,
-    totalGain: 1403.1,
-    totalGainPercent: 11.7,
+  const [summaryData, setSummaryData] = useState<PortfolioSummary>({
+    name: '-',
+    stocks: null,
+    holdings: null,
+    change: null,
+    changePercent: null,
+    totalGain: null,
+    totalGainPercent: null,
   });
 
   useEffect(
     () => {
-      let refresh = () => {
+      let refresh = async () => {
+        const response = await axios.get<SummaryResponse>(
+          '/portfolio/' + portfolioId
+        );
+
         setSummaryData({
-          stocks: Math.round(Math.random() * 10),
-          holdings: Math.random() * 10000,
-          change: Math.random() * 1000,
-          changePercent: Math.random(),
-          totalGain: Math.random() * 1000,
-          totalGainPercent: Math.random() * 10,
+          name: response.data.portfolioName,
+          stocks: response.data.stockCount,
+          holdings: response.data.value,
+          change: response.data.change,
+          changePercent: response.data.percChange,
+          totalGain: response.data.gain,
+          totalGainPercent: response.data.percGain,
         });
       };
+
+      refresh();
 
       subscribe(refresh);
 
@@ -59,13 +83,13 @@ const PortfolioPageSummary = () => {
   return (
     <>
       <div className={styles.portfolioName}>
-        <h2>My portfolio 1</h2>
+        <h2>{summaryData.name}</h2>
       </div>
 
       <div>
         <div className={`${styles.summaryRow} ${styles.summaryHeaderRow}`}>
           <div className={styles.rowStocks}>Stocks</div>
-          <div className={styles.rowMarketValue}>Merket value</div>
+          <div className={styles.rowMarketValue}>Market value</div>
           <div className={styles.rowChange}>Change</div>
           <div className={styles.rowTotalGain}>Total gain</div>
         </div>
@@ -73,7 +97,9 @@ const PortfolioPageSummary = () => {
         <div className={styles.summaryRow}>
           <div className={styles.rowStocks}>{summaryData.stocks}</div>
           <div className={styles.rowMarketValue}>
-            {usdFormatter.format(summaryData.holdings)}
+            {summaryData.holdings == null
+              ? '-'
+              : usdFormatter.format(summaryData.holdings)}
           </div>
           <div
             className={`${styles.rowChange} ${gainLossClass(
@@ -85,7 +111,10 @@ const PortfolioPageSummary = () => {
             ) : (
               <>
                 <div className={styles.percent}>
-                  {numberFormatter.format(summaryData.changePercent)}%
+                  {summaryData.changePercent == null
+                    ? '-'
+                    : numberFormatter.format(summaryData.changePercent)}
+                  %
                 </div>
                 <div>{numberFormatter.format(summaryData.change)}</div>
               </>
@@ -101,7 +130,10 @@ const PortfolioPageSummary = () => {
             ) : (
               <>
                 <div className={styles.percent}>
-                  {numberFormatter.format(summaryData.totalGainPercent)}%
+                  {summaryData.totalGainPercent == null
+                    ? '-'
+                    : numberFormatter.format(summaryData.totalGainPercent)}
+                  %
                 </div>
                 <div>{numberFormatter.format(summaryData.totalGain)}</div>
               </>
@@ -112,5 +144,17 @@ const PortfolioPageSummary = () => {
     </>
   );
 };
+
+interface SummaryResponse {
+  id: number;
+  portfolioName: string;
+  stockCount: number;
+  value: number;
+  change: number;
+  percChange: number;
+  gain: number;
+  percGain: number;
+  order: number;
+}
 
 export default PortfolioPageSummary;

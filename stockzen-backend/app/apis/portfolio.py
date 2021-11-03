@@ -1,4 +1,5 @@
 import app.utils.crud_utils as util
+from app.utils.calc_utils import cascade_updates
 from app.utils.enums import Status
 from flask import request
 from flask_login.utils import login_required
@@ -82,6 +83,7 @@ class PortfolioCRUD(Resource):
         if portfolio_list == Status.FAIL:
             return abort(500, "Portfolio list for this user could not be retrieved")
 
+        cascade_updates(refresh_data=False)  # cascade calculations updates
         return portfolio_list
 
     @login_required

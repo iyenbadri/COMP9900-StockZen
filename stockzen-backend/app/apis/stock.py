@@ -1,4 +1,6 @@
 import app.utils.crud_utils as util
+from app import executor
+from app.utils.calc_utils import propagate_portfolio_updates
 from app.utils.enums import Status
 from flask import request
 from flask_login.utils import login_required
@@ -37,11 +39,6 @@ stock_details_response = api.model(
             attribute="avg_price",
             required=True,
             description="average price of bought lots",
-        ),
-        "unitsHeld": fields.Integer(
-            attribute="units_held",
-            required=True,
-            description="number of units currently held",
         ),
         "gain": fields.Float(required=True, description="capital gain made by stock"),
         "percGain": fields.Float(
@@ -91,6 +88,7 @@ stock_reorder_request = api.model(
 @api.route("/list/<int:portfolioId>")
 class StockCRUD(Resource):
     @login_required
+    @api.doc(params={"refresh": "refresh data (0 or 1)"})
     @api.marshal_list_with(stock_details_response)
     @api.response(200, "Successfully retrieved list")
     def get(self, portfolioId):
@@ -99,6 +97,13 @@ class StockCRUD(Resource):
         stock_list = util.get_stock_list(portfolioId)
         if stock_list == Status.FAIL:
             return abort(500, "Stock list for the portfolio could not be retrieved")
+
+        # We get the query string i.e. ?refresh=<refresh_flag> and convert to bool
+        refresh_flag = request.args.get("refresh") == "1"
+
+        propagate_portfolio_updates(
+            portfolioId, refresh_data=refresh_flag
+        )  # update stock metrics calculations
 
         return stock_list
 
@@ -133,6 +138,9 @@ class StockCRUD(Resource):
 
         json = marshal(request.json, stock_add_request)
         stock_page_id = json["stockPageId"]
+
+        # concurrent request for latest stock data, finishes after response
+        executor.submit(util.update_stock_page, stock_page_id)
 
         if util.add_stock(portfolioId, stock_page_id) == Status.SUCCESS:
             return {"message": "Stock successfully added"}, 200
