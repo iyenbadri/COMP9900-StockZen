@@ -353,6 +353,7 @@ def add_lot(
                 trade_date=trade_date,
                 units=units,
                 unit_price=unit_price,
+                amount=units * unit_price,
             )
         else:
             raise ValueError("Incorrect type provided")

@@ -35,11 +35,6 @@ buy_lot_details_response = api.model(
         "change": fields.Float(
             required=True, description="change in value of lots at current price"
         ),
-        "avgPrice": fields.Float(
-            attribute="avg_price",
-            required=True,
-            description="average price of bought lots",
-        ),
     },
 )
 

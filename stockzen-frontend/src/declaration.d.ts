@@ -29,6 +29,7 @@ interface IPortfolioResponse {
 interface IStock {
     ordering: number;
     stockId: number;
+    stockPageId: number;
     draggableId: string;
     symbol: string;
     name: string;
@@ -43,62 +44,11 @@ interface IStock {
     confidence: number;
 }
 
-// Stock data for StockPage
-// This is just a draft reseponse from the backend,
-// will change later to match what is actually retrieved
-interface IStockInfo {
-    stockId: number;
-    symbol: string;
-    name: string;
-    price: number;
-    change: number;
-    changePercent: number;
-    avgPrice: number;
-    profit: number;
-    profitPercent: number;
-    value: number;
-    summary: IStockSummary;
-    profile: IStockProfile;
-}
-
-// Stock summary response (draft)
-interface IStockSummary {
-    prevClose: number | null;        // previousClose
-    open: number | null;             // open
-    bid: number | null;              // bid
-    bidSize: number | null;          // bidSize
-    ask: number | null;              // ask
-    askSize: number | null;          // askSize
-    dayHigh: number | null;          // dayHigh
-    dayLow: number | null;           // dahLow
-    fiftyTwoWeekHigh: number | null; // fiftyTwoWeekHigh
-    fiftyTwoWeekLow: number | null;  // fiftyTwoWeekLow
-    volume: number | null;           // volume24Hr
-    avgVolume: number | null;        // averageVolume
-    marketCap: number | null;        // marketCap
-    beta: number | null;             // beta
-    // PERatio: number;
-    // EPS: number;
-    // earningDate: string;
-    // forwardDividendNYield: string;
-    // exDividendDate: string;
-    // targetEst: string;
-}
-
-// Company profile response (draft)
-interface IStockProfile {
-    name: string;
-    industry: string | null;
-    sector: string | null;
-    website: string | null;
-    longBusinessSummary: string | null;
-}
-
 // The reponse got from backend (Will change it later to match the actual)
 interface IStockResponse {
     id: number;
     code: string;
-    stock_page_id: number;
+    stockPageId: number;
     stockName: string;
     price: number;
     change: number;
@@ -113,21 +63,33 @@ interface IStockResponse {
     confidence: number;
 }
 
-// The reponse got from backend (Will change it later to match the actual)
-interface IStockResponse {
+interface IStockPageResponse {
     id: number;
     code: string;
-    stock_page_id: number;
     stockName: string;
+    exchange: string;
     price: number;
     change: number;
     percChange: number;
-    avgPrice: number;
-    unitsHeld: number;
-    gain: number;
-    percGain: number;
-    value: number;
-    order: number;
+    prevClose: number;
+    open: number;
+    bid: number;
+    bidSize: number;
+    ask: number;
+    askSize: number;
+    dayHigh: number;
+    dayLow: number;
+    fiftyTwoWeekHigh: number;
+    fiftyTwoWeekLow: number;
+    volume: number;
+    avgVolume: number;
+    marketCap: number;
+    beta: number | null;
+    longName: string;
+    industry: string;
+    sector: string;
+    website: string;
+    longBusinessSummary: string;
     prediction: number;
     confidence: number;
 }
