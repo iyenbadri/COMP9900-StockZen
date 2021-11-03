@@ -223,11 +223,13 @@ def calc_lot_bought(lot_id: int):
             .one()
         )
         units = lot_bought.units
-        current_price = stockpage.price or 0
-        daily_change = stockpage.change or 0
+        current_price = stockpage.price
+        daily_change = stockpage.change
 
-        value = units * current_price
-        change = units * daily_change
+        if current_price and daily_change:
+            value = units * current_price
+            change = units * daily_change
+        # allow value and change to be None otherwise
 
         return value, change
     except Exception as e:
@@ -280,7 +282,6 @@ def calc_stock(stock_id: int):
         # if no value, default to 0
         units_bought = units_bought or 0
         total_price = total_price or 0
-        value = value or 0
 
         # get number of units sold
         units_sold = (
