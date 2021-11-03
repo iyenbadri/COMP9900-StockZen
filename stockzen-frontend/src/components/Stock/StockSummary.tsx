@@ -70,7 +70,7 @@ const StockSummary: FC<IStockPageResponse> = (prop) => {
               Avg. Volume
             </div>
             <div className={styles.infoValue}>
-              {numberFomatter.format(prop.avgVolume)}
+              {intFormatter.format(prop.avgVolume)}
             </div>
           </div>
           <div className={styles.infoRow}>
@@ -78,7 +78,7 @@ const StockSummary: FC<IStockPageResponse> = (prop) => {
               Market Cap
             </div>
             <div className={styles.infoValue}>
-              {numberFomatter.format(prop.marketCap)}
+              {intFormatter.format(prop.marketCap)}
             </div>
           </div>
           <div className={styles.infoRow}>
