@@ -141,13 +141,18 @@ const PortfolioPage = () => {
   );
 
   // A function to load the stocks list
-  const reloadStockList = useCallback(() => {
-    // Call the API
-    axios.get(`/stock/list/${portfolioId}`).then((response) => {
-      // Map the response and then set it.
-      setStocks(mapStockList(response.data), tableOrdering);
-    });
-  }, [portfolioId, mapStockList, setStocks, tableOrdering]);
+  const reloadStockList = useCallback(
+    (forceRefresh: boolean) => {
+      // Call the API
+      axios
+        .get(`/stock/list/${portfolioId}?refresh=${forceRefresh ? '1' : '0'}`)
+        .then((response) => {
+          // Map the response and then set it.
+          setStocks(mapStockList(response.data), tableOrdering);
+        });
+    },
+    [portfolioId, mapStockList, setStocks, tableOrdering]
+  );
 
   // Init
   useEffect(
@@ -156,7 +161,7 @@ const PortfolioPage = () => {
       setShowPortfolioSummary(true);
 
       // Load the stock list from backend.
-      reloadStockList();
+      reloadStockList(false);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -164,7 +169,7 @@ const PortfolioPage = () => {
 
   useEffect(() => {
     const refresh = () => {
-      reloadStockList();
+      reloadStockList(true);
     };
 
     subscribe(refresh);
@@ -181,7 +186,7 @@ const PortfolioPage = () => {
       .post(`/stock/${portfolioId}`, { stockPageId: stockPageId })
       .then(() => {
         // Then reload the stock list
-        reloadStockList();
+        reloadStockList(false);
       });
   };
 
@@ -263,7 +268,7 @@ const PortfolioPage = () => {
     setShowDeleteStockModal(false);
 
     axios.delete(`/stock/${deletingStockId}`).then(() => {
-      reloadStockList();
+      reloadStockList(false);
     });
   };
 
