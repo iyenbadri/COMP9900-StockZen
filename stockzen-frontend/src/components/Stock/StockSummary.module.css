@@ -48,7 +48,6 @@
   background-color: white;
   font-size: x-small;
   font-weight: bold;
-  transition: all .35s;
 }
 
 .indexInfo:hover .indexInfoVal {
