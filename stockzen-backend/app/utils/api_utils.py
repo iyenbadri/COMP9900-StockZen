@@ -30,8 +30,7 @@ def fetch_stock_data(sym):
         return price, change, perc_change, prev_close, info
 
     except Exception as e:
-        util.debug_exception(e, suppress=True)
-        return Status.FAIL
+        util.debug_exception(e)
 
 
 def fetch_historical_data(sym, period):

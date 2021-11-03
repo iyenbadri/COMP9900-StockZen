@@ -38,11 +38,6 @@ stock_details_response = api.model(
             required=True,
             description="average price of bought lots",
         ),
-        "unitsHeld": fields.Integer(
-            attribute="units_held",
-            required=True,
-            description="number of units currently held",
-        ),
         "gain": fields.Float(required=True, description="capital gain made by stock"),
         "percGain": fields.Float(
             attribute="perc_gain",
