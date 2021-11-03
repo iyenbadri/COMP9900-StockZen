@@ -1,6 +1,7 @@
 import 'bootstrap-custom.scss';
 import Footer from 'components/Layout/Footer';
 import Header from 'components/Layout/Header';
+import RefreshProvider from 'contexts/RefreshContext';
 import SearchProvider from 'contexts/SearchContext';
 import TopPerformerProvider from 'contexts/TopPerformerContext';
 import UserProvider, { UserContext } from 'contexts/UserContext';
@@ -40,13 +41,15 @@ function App() {
 }
 
 const WrappedApp = () => (
-  <UserProvider>
-    <SearchProvider>
-      <TopPerformerProvider>
-        <App />
-      </TopPerformerProvider>
-    </SearchProvider>
-  </UserProvider>
+  <RefreshProvider>
+    <UserProvider>
+      <SearchProvider>
+        <TopPerformerProvider>
+          <App />
+        </TopPerformerProvider>
+      </SearchProvider>
+    </UserProvider>
+  </RefreshProvider>
 );
 
 export default WrappedApp;

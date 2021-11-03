@@ -2,8 +2,10 @@ import { arrayMoveImmutable } from 'array-move';
 import orderDown from 'assets/icon-outlines/outline-chevron-down-small.svg';
 import orderUp from 'assets/icon-outlines/outline-chevron-up-small.svg';
 import plusIcon from 'assets/icon-outlines/outline-plus-circle.svg';
+import refreshIcon from 'assets/icon-outlines/outline-refresh-small.svg';
 import axios from 'axios';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
+import { RefreshContext } from 'contexts/RefreshContext';
 import { Ordering } from 'enums';
 import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import {
@@ -59,6 +61,8 @@ const OrderingIndicator: FC<OrderingIndicatorProp> = (props) => {
 const PortfolioList = () => {
   // Get the setShowPortfolioSummary from context
   const { setShowPortfolioSummary } = useContext(TopPerformerContext);
+
+  const { subscribe, unsubscribe, refresh } = useContext(RefreshContext);
 
   // States for delete a portfolio. name, id, showModel
   const [deletingPortfolioName, setDeletingPortfolioName] =
@@ -173,6 +177,16 @@ const PortfolioList = () => {
 
       // Load the portfolio list
       reloadPortfolioList();
+
+      const refresh = () => {
+        reloadPortfolioList();
+      };
+
+      subscribe(refresh);
+
+      return () => {
+        unsubscribe(refresh);
+      };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -386,6 +400,15 @@ const PortfolioList = () => {
               className={styles.toolbarPlusIcon}
             />
             Create a portfolio
+          </Button>
+
+          <Button
+            variant='light'
+            className='ms-1 text-muted d-inline-flex align-items-center'
+            onClick={() => refresh()}
+          >
+            <img src={refreshIcon} alt='refresh' style={{ opacity: 0.5 }} />
+            Refresh
           </Button>
         </div>
       </div>

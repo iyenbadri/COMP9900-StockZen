@@ -1,0 +1,87 @@
+@import 'variables.css';
+
+.portfolioName {
+  margin-top: 30px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.summaryHeaderRow {
+  font-weight: bold;
+  font-size: 1.1em;
+  padding: 7px 0;
+  margin-top: 10px;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+
+.rowStocks {
+  flex-basis: 120px;
+}
+
+.rowMarketValue {
+  flex-basis: 120px;
+}
+
+.rowChange {
+  flex-basis: 100px;
+  text-align: right;
+}
+
+.rowTotalGain {
+  flex-basis: 120px;
+  text-align: right;
+}
+
+/* .summaryContainer {
+  
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin: 20px auto 0;
+  max-width: 550px;
+} */
+
+.summaryWrapper {
+  text-align: center;
+}
+
+.summaryWrapper img {
+  width: 30px;
+  margin: 0 5px 5px 0;
+}
+
+.summaryTitle {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.summaryValue {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+
+.separatorLine {
+  margin: 10px 0;
+}
+
+.moneyGain {
+  color: #5bc07d;
+}
+
+.moneyLoss {
+  color: #e26b6b;
+}
+
+.percent {
+  font-size: 0.8em;
+  line-height: 0.9em;
+}

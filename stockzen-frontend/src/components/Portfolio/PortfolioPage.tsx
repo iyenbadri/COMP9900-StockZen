@@ -1,9 +1,10 @@
 import { arrayMoveImmutable } from 'array-move';
 import orderDown from 'assets/icon-outlines/outline-chevron-down-small.svg';
 import orderUp from 'assets/icon-outlines/outline-chevron-up-small.svg';
-import refresh from 'assets/icon-outlines/outline-refresh-small.svg';
+import refreshIcon from 'assets/icon-outlines/outline-refresh-small.svg';
 import axios from 'axios';
 import AddStock from 'components/Portfolio/AddStock';
+import { RefreshContext } from 'contexts/RefreshContext';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import { Ordering } from 'enums';
 import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
@@ -58,6 +59,9 @@ const OrderingIndicator: FC<OrderingIndicatorProp> = (props) => {
 const PortfolioPage = () => {
   // Get the setShowPortfolioSummary from TopPerformerContext
   const { setShowPortfolioSummary } = useContext(TopPerformerContext);
+
+  // Get functions for refresh
+  const { subscribe, unsubscribe, refresh } = useContext(RefreshContext);
 
   // Extract the portfolioId from route
   const { portfolioId } = useParams<RouteRarams>();
@@ -160,6 +164,18 @@ const PortfolioPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+
+  useEffect(() => {
+    const refresh = () => {
+      reloadStockList();
+    };
+
+    subscribe(refresh);
+
+    return () => {
+      unsubscribe(refresh);
+    };
+  }, []);
 
   // Handler of add stock
   const handleAddStock = (symbol: string, stockPageId: number) => {
@@ -292,8 +308,9 @@ const PortfolioPage = () => {
         <Button
           variant='light'
           className='ms-1 text-muted d-flex align-items-center'
+          onClick={() => refresh()}
         >
-          <img src={refresh} alt='refresh' style={{ opacity: 0.5 }} />
+          <img src={refreshIcon} alt='refresh' style={{ opacity: 0.5 }} />
           Refresh
         </Button>
       </div>
