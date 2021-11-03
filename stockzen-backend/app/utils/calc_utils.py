@@ -1,3 +1,4 @@
+from contextlib import suppress
 from datetime import datetime
 
 from app import db, executor
@@ -194,6 +195,7 @@ def update_portfolio(portfolio_id: int):
         stock_count, value, change, gain, perc_change, perc_gain = calc_portfolio(
             portfolio_id
         )
+        print(stock_count, value, change, gain, perc_change, perc_gain)
         db_utils.update_item_columns(
             Portfolio,
             portfolio_id,
@@ -231,10 +233,12 @@ def calc_lot_bought(lot_id: int):
         current_price = stockpage.price
         daily_change = stockpage.change
 
-        if current_price and daily_change:
+        # attempt to calculate value, change; leave as None if error
+        value = None
+        change = None
+        with suppress(TypeError):
             value = units * current_price
             change = units * daily_change
-        # allow value and change to be None otherwise
 
         return value, change
     except Exception as e:
@@ -250,10 +254,10 @@ def calc_lot_sold(lot_id: int):
             .filter_by(id=lot_sold.stock_id)
             .one()
             .avg_price
-        ) or 0
+        )
         sold_unit_price = lot_sold.unit_price
         sold_units = lot_sold.units
-        realised = sold_units * (sold_unit_price - buy_avg_price)
+        realised = sold_units * (sold_unit_price - (buy_avg_price or 0))
         return realised
     except Exception as e:
         utils.debug_exception(e)
@@ -272,7 +276,7 @@ def calc_stock(stock_id: int):
         _, stock_page = db_utils.query_with_join(
             Stock, stock_id, [StockPage], [Stock, StockPage]
         )
-        current_price = stock_page.price or 0
+        current_price = stock_page.price
 
         # get calculated metrics for the stock row
         units_bought, total_price, value = (
@@ -284,33 +288,24 @@ def calc_stock(stock_id: int):
             )
             .one()
         )
-        # if no value, default to 0
-        units_bought = units_bought or 0
-        total_price = total_price or 0
-        value = value or 0
 
         # get number of units sold
         units_sold = (
             LotSold.query.with_entities(func.sum(LotSold.units))
             .filter(LotSold.stock_id == stock_id)
             .scalar()
-        ) or 0
+        )
 
         # carry out calculations for avg_price, gain, perc_gain
-        try:
+        avg_price = None
+        units_held = None
+        gain = None
+        perc_gain = None
+        with suppress(TypeError):
             avg_price = total_price / units_bought
-        except Exception as e:
-            print(f"Could not calculate avg_price, error: {e}. Setting avg_price = 0")
-            avg_price = 0
-
-        units_held = units_bought - units_sold
-        gain = ((current_price - avg_price) * units_held) or 0
-
-        try:
+            units_held = units_bought - units_sold
+            gain = (current_price - avg_price) * units_held
             perc_gain = gain / (units_held * avg_price)
-        except Exception as e:
-            print(f"Could not calculate perc_gain, error: {e}. Setting perc_gain = 0")
-            perc_gain = 0
 
         return avg_price, gain, perc_gain, value
     except Exception as e:
@@ -323,7 +318,6 @@ def calc_stock(stock_id: int):
 def calc_portfolio(portfolio_id: int):
     """Calculations for Portfolio table using Stock table data"""
     try:
-
         # get calculated metrics for the portfolio
         stock_count, value, gain = (
             Stock.query.with_entities(
@@ -339,25 +333,14 @@ def calc_portfolio(portfolio_id: int):
             .with_entities(func.sum(LotBought.change))
             .scalar()
         )
-        # if no value, default to 0
-        stock_count = stock_count or 0
-        value = value or 0
-        change = change or 0
-        gain = gain or 0
 
-        try:
+        # attempt to calculate; leave as None if error
+        perc_change = None
+        perc_gain = None
+        with suppress(TypeError):
             perc_change = change / value
-        except Exception as e:
-            print(f"Could not calculate perc_change, error: {e}. Setting perc_change = 0")
-            perc_change = 0
-
-        try:
             perc_gain = gain / value
-        except Exception as e:
-            print(f"Could not calculate perc_gain, error: {e}. Setting perc_gain = 0")
-            perc_gain = 0
 
         return stock_count, value, change, gain, perc_change, perc_gain
-
     except Exception as e:
         utils.debug_exception(e)
