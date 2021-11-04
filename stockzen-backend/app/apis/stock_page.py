@@ -86,8 +86,8 @@ top_performers_response = api.model(
             attribute="code", required=True, description="stock symbol"
         ),
         "price": fields.Float(required=True, description="stock price"),
-        "gain": fields.Float(
-            attribute="perc_change", required=True, description="stock gain"
+        "change": fields.Float(
+            attribute="perc_change", required=True, description="stock daily change"
         ),
     },
 )
