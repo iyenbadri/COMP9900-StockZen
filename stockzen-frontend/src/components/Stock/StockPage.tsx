@@ -131,10 +131,12 @@ const StockPage = () => {
             <div className={styles.stockCode}>({stockData?.code})</div>
           </div>
           <div className={styles.stockSummmary}>
-            <div className={`${styles.stockPrice} outerStroke`}>{stockData?.price ? numberFomatter.format(stockData.price) : ''}</div>
+            <div className={`${styles.stockPrice} outerStroke`}>{stockData?.price ? `$${numberFomatter.format(stockData.price)}` : ''}</div>
             <div
               className={`${styles.stockChange} ${stockData?.change ? gainLossClass(stockData?.change) : ''}`}
             >
+              {(stockData?.change! > 0) ? '+' : ''}
+              {(stockData?.change! < 0) ? '-' : ''}
               {stockData?.change ? numberFomatter.format(stockData.change) : ''}
             </div>
             <div
