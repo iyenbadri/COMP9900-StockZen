@@ -66,4 +66,4 @@ def test_performance_summary(auth_client):
     response = client.get("/portfolio/list/summary")
     # No portfolios to start with
     assert response.status_code == 200
-    assert response.json == mock.new_summary_1
+    assert response.json == mock.sold_summary_1

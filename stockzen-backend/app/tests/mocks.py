@@ -152,4 +152,4 @@ today = (simulated_change * units / holdings) * 100
 overall = (simulated_gain / holdings) * 100
 new_summary_1 = {"holdings": holdings, "today": today, "overall": overall}
 
-sold_summary_1 = {"holdings": holdings, "today": today, "overall": 0}
+sold_summary_1 = {"holdings": 0, "today": None, "overall": None}

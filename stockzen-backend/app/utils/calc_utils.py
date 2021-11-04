@@ -10,6 +10,10 @@ from flask_login import current_user
 from sqlalchemy.orm import load_only
 from sqlalchemy.sql import func
 
+# ==============================================================================
+# Cascade Operations
+# ==============================================================================
+
 
 def cascade_updates(refresh_data=False):
     """Update all of a user's portfolios calculations
@@ -279,12 +283,11 @@ def calc_stock(stock_id: int):
         current_price = stock_page.price
 
         # get calculated metrics for the stock row
-        units_bought, total_price, value = (
+        units_bought, total_price = (
             LotBought.query.filter(LotBought.stock_id == stock_id)
             .with_entities(
                 func.sum(LotBought.units),
                 func.sum(LotBought.units * LotBought.unit_price),
-                func.sum(LotBought.value),
             )
             .one()
         )
@@ -298,12 +301,14 @@ def calc_stock(stock_id: int):
 
         # carry out calculations for avg_price, gain, perc_gain
         avg_price = None
-        units_held = None
+        units_held = 0
         gain = None
         perc_gain = None
+        value = None
         with suppress(TypeError, ZeroDivisionError):
             avg_price = total_price / units_bought
             units_held = units_bought - units_sold
+            value = units_held * current_price
             gain = (current_price - avg_price) * units_held
             perc_gain = gain / (units_held * avg_price) * 100
 
@@ -362,7 +367,6 @@ def calc_summary():
             .one()
         )
         holdings = value
-
         # attempt to calculate; leave as None if error
         today = None
         overall = None
