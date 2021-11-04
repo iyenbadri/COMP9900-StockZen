@@ -73,7 +73,7 @@ const RegisterForm: FC<IProps> = (props) => {
       let response = await axios.post('/user/register', payload);
 
       // Read the response
-      if (response.data.message === 'user successfully registered') {
+      if (response.data.message === 'User successfully registered') {
         props.onRegisterSuccess(data.firstName, data.lastName);
       }
     } catch (e: any) {
