@@ -75,3 +75,27 @@ Tasks ahead:
 Implementation and demo of the ML prediction also to be merged in to the main.
 
 - 22/10/2021
+
+Week 06 - 07:
+
+I have been focusing on the ML Prediction side of project which was due this sprint and focused on the research
+
+Meeting with Gunjan and hai over the week to discuss about the algorithm and methopd of deploying the code on to the production side of system.
+
+Research done on:
+LSTM models for stock prediction: Not feasible due to the scope of project and the need to predict all stocks.
+Focused on classifying the stocks using Linear regression as it would provide means to classify all stocks with a generic model.
+ 
+Time spent: ~>20 hours.
+
+Tasks ahead:
+
+Finish up the demo model and get a production read code which will sit on the stock predict section of backend.
+Gunjan and Khai have worked out the logics for the data fetch. I can now focus on the widgets and banner routes necessary to be deployed so that front end can connect these.
+
+Issues:
+- Slow progress due to other course commitments.
+- Unforeseen health issues faced in the past few dayas delayed the process of completing research on time.
+
+    - 28/10/2021
+

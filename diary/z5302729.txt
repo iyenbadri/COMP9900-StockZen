@@ -16,3 +16,15 @@ Week 4:
 •	Defined and executed logout API route 
 •	Created Alpha Vantage local Database
 
+Week 5:
+•	populating database with existing Tickers
+
+Week 6:
+•	StockPage update function
+•	yfinance api utils functions
+•	database utils for ML to gather data
+
+Week 7:
+•	StockPage backend calculations 
+•	ML feature discussion
+•	Code review for Stockpage endpoint, stock history
