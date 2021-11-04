@@ -32,7 +32,7 @@ def portfolio_details(id, name="Test Portfolio", order=0):
         "id": id,
         "portfolioName": name,
         "stockCount": 0,
-        "value": 0,
+        "value": None,
         "change": None,
         "percChange": None,
         "gain": None,
@@ -53,7 +53,7 @@ new_stock_1 = {
     "stockName": "Agilent Technologies, Inc.",
 }
 new_stock_2 = {
-    "stockPageId": 20181,
+    "stockPageId": 6876,
     "code": "TSLA",
     "stockName": "Tesla, Inc.",
 }
@@ -69,7 +69,6 @@ def stock_details(id, stock, order=0):
         "change": None,
         "percChange": None,
         "avgPrice": None,
-        "unitsHeld": 0,
         "gain": None,
         "percGain": None,
         "value": None,

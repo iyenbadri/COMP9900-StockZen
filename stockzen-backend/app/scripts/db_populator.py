@@ -1,14 +1,14 @@
 import os
 from datetime import datetime
 from random import randrange, uniform
-from typing import Tuple
 
 import app.utils.crud_utils as crud
 import pandas as pd
 from app import create_app, db
-from app.models.schema import Portfolio, Stock, User
+from app.models.schema import LotBought, LotSold, Portfolio, Stock
 from app.utils import db_utils
 from app.utils.enums import Status
+from dateutil.parser import parse
 from faker import Faker
 
 # ==============================================================================
@@ -71,7 +71,7 @@ def generate_dummy_portfolios(n_portfolios: int, user_id: int):
 
 
 def generate_dummy_stocks(n_stocks: int, n_portfolios: int, user_id: int):
-    STOCK_PAGE_RANGE = 22171
+    STOCK_PAGE_RANGE = 7567
 
     for stock_id in range(1, n_stocks + 1):
         new_stock = Stock(
@@ -81,7 +81,6 @@ def generate_dummy_stocks(n_stocks: int, n_portfolios: int, user_id: int):
             ),
             stock_page_id=randrange(1, STOCK_PAGE_RANGE + 1),
             avg_price=round(uniform(-10000, 10000), 4),
-            units_held=randrange(0, 500),
             gain=round(uniform(-10000, 10000), 4),
             perc_gain=round(uniform(-150, 150), 4),
             value=round(uniform(-100000, 100000), 4),
@@ -94,7 +93,50 @@ def generate_dummy_stocks(n_stocks: int, n_portfolios: int, user_id: int):
             print(f"Could not add dummy stock for user_id: {id}")
 
 
-def generate_dummy_data(n_users=2, n_portfolios=5, n_stocks=50):
+def generate_dummy_lots(n_lots: int, n_stocks: int, user_id: int):
+    range_low = (user_id - 1) * n_stocks + 1
+    range_high = user_id * n_stocks + 1
+    for stock_id in range(range_low, range_high):
+        for i_lot in range(1, n_lots + 1):
+            new_lot_bought = LotBought(
+                user_id=user_id,
+                stock_id=stock_id,
+                trade_date=parse(
+                    f"20{randrange(00,22):02}-{randrange(1,13):02}-{randrange(1,29):02}"
+                ),
+                units=randrange(0, 1000),
+                unit_price=round(uniform(0.1000, 1000), 4),
+                value=None,
+                change=None,
+            )
+            try:
+                db_utils.insert_item(new_lot_bought)
+                print("Dummy buy lot added")
+            except:
+                print(f"Could not add dummy buy lot for user_id: {user_id}")
+
+            if i_lot % 2 == 0:  # only do half as many Sold Lots
+                units_sold = randrange(0, 1000)
+                unit_price = round(uniform(0.1000, 1000), 4)
+                new_lot_sold = LotSold(
+                    user_id=user_id,
+                    stock_id=stock_id,
+                    trade_date=parse(
+                        f"20{randrange(00,22):02}-{randrange(1,13):02}-{randrange(1,29):02}"
+                    ),
+                    units=units_sold,
+                    unit_price=unit_price,
+                    amount=units_sold * unit_price,
+                    realised=None,
+                )
+                try:
+                    db_utils.insert_item(new_lot_sold)
+                    print("Dummy sell lot added")
+                except:
+                    print(f"Could not add dummy sell lot for user_id: {user_id}")
+
+
+def generate_dummy_data(n_users=2, n_portfolios=2, n_stocks=4, n_lots=5):
     """
     Generates dummy user data
     """
@@ -106,6 +148,7 @@ def generate_dummy_data(n_users=2, n_portfolios=5, n_stocks=50):
     for user_id in range(1, n_users + 1):
         generate_dummy_portfolios(n_portfolios, user_id)
         generate_dummy_stocks(n_stocks, n_portfolios, user_id)
+        generate_dummy_lots(n_lots, n_stocks, user_id)
 
     print(
         f"\n\t****************************************\n\
@@ -123,7 +166,6 @@ def populate_symbols(engine):
         df_symbols = pd.read_csv(filepath)
 
         df_symbols = df_symbols[["code", "stock_name", "exchange"]]
-        df_symbols["last_updated"] = datetime.now()  # use current time as timestamp
         df_symbols["info"] = "{}"  # fill with empty json string
 
         df_symbols.to_sql("stock_pages", engine, if_exists="append", index=False)

@@ -2,13 +2,16 @@ import os
 from sqlite3 import Connection as SQLite3Connection
 
 from flask import Flask
+from flask_executor import Executor
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
 
+# Flask Extensions
 db = SQLAlchemy()
 login_manager = LoginManager()
+executor = Executor()
 
 
 def create_app(test_config=None):
@@ -40,6 +43,11 @@ def create_app(test_config=None):
     app.secret_key = SESSION_KEY
 
     login_manager.init_app(app)
+
+    # ==============================================================================
+    # Concurrency Manager
+    # ==============================================================================
+    executor.init_app(app)
 
     # ==============================================================================
     # Initialise backend APIs

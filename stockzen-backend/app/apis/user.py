@@ -11,6 +11,7 @@ import app.utils.auth_utils as auth
 import app.utils.crud_utils as util
 from app import login_manager
 from app.models.schema import User
+from app.utils.calc_utils import cascade_updates
 from app.utils.enums import Status
 from flask import request
 from flask_login import current_user
@@ -84,6 +85,9 @@ class UserCRUD(Resource):
         else:
             login_user(user)
             user_details = auth.extract_user_details(user)
+
+            cascade_updates(refresh_data=True)  # refresh StockPage data and cascade calculations updates
+
             return user_details
 
 

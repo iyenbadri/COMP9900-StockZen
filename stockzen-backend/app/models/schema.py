@@ -71,7 +71,7 @@ class Portfolio(db.Model):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     portfolio_name = Column(String(50), nullable=False)
     stock_count = Column(Integer, default=0)  # count(stocks)
-    value = Column(Float, default=0)  # sum(stocks.value)
+    value = Column(Float)  # sum(stocks.value)
     change = Column(Float)  # sum(stocks.change)
     perc_change = Column(Float)  # portfolios.change / portfolios.value
     gain = Column(Float)  # sum(stocks.gain)
@@ -109,9 +109,6 @@ class Stock(db.Model):
         Integer, ForeignKey("stock_pages.id"), nullable=False
     )  # to get current price, change, percent_change, prediction, confidence
     avg_price = Column(Float)  # = bought.avg_price
-    units_held = Column(
-        Integer, default=0
-    )  # sum(bought.units) - sum(sold.units)  -> not displayed
     gain = Column(Float)  # (stocks.price - bought.avg_price) * stocks.units_held
     perc_gain = Column(Float)  # stocks.gain / (stocks.units_held * bought.avg_price)
     value = Column(Float)  # sum(bought.value)
@@ -175,7 +172,7 @@ class StockPage(db.Model):
     prev_close = Column(Float)
     prediction = Column(Integer)  # -1 for down, 0 no change, 1 for up
     confidence = Column(Float)
-    last_updated = Column(DateTime, default=datetime.now())
+    last_updated = Column(DateTime)  # let this be NULL and add timestamp after update
     info = Column(String, default="{}")  # JSON-string of all company info
 
     # Relationships
