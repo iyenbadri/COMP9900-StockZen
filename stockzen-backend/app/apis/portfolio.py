@@ -66,6 +66,15 @@ portfolio_reorder_request = api.model(
     },
 )
 
+portfolio_summary_response = api.model(
+    "Response: User portfolio performance summary details",
+    {
+        "holdings": fields.Float(required=True, description="total holdings value"),
+        "today": fields.Float(required=True, description="percentage change today"),
+        "overall": fields.Float(required=True, description="percentage gain today"),
+    },
+)
+
 # ==============================================================================
 # API Routes/Endpoints
 # ==============================================================================
@@ -106,16 +115,6 @@ class PortfolioCRUD(Resource):
             return {"message": "Portfolio list successfully reordered"}, 200
 
         return abort(500, "Portfolio list could not be reordered")
-
-
-portfolio_summary_response = api.model(
-    "Response: User portfolio performance summary details",
-    {
-        "holdings": fields.Float(required=True, description="total holdings value"),
-        "today": fields.Float(required=True, description="percentage change today"),
-        "overall": fields.Float(required=True, description="percentage gain today"),
-    },
-)
 
 
 @api.route("/list/summary")
