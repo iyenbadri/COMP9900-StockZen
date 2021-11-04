@@ -28,3 +28,8 @@ Week 7:
 •	StockPage backend calculations 
 •	ML feature discussion
 •	Code review for Stockpage endpoint, stock history
+
+Week 8:
+•	Backend calculations
+•	Discussion on Top widgets
+•	Research on Valid Tickers for yfinance
