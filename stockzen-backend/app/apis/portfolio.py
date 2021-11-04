@@ -1,4 +1,4 @@
-import app.utils.crud_utils as util
+import app.utils.crud_utils as crud
 from app.utils.calc_utils import calc_summary, cascade_updates
 from app.utils.enums import Status
 from flask import request
@@ -79,7 +79,7 @@ class PortfolioCRUD(Resource):
     def get(self):
         """List all portfolios from a user"""
 
-        portfolio_list = util.get_portfolio_list()
+        portfolio_list = crud.get_portfolio_list()
         if portfolio_list == Status.FAIL:
             return abort(500, "Portfolio list for this user could not be retrieved")
 
@@ -102,7 +102,7 @@ class PortfolioCRUD(Resource):
         if len(orderList) > len(set(orderList)):
             return abort(409, "Failed because non-unique order numbers were provided")
 
-        if util.reorder_portfolio_list(reorder_request) == Status.SUCCESS:
+        if crud.reorder_portfolio_list(reorder_request) == Status.SUCCESS:
             return {"message": "Portfolio list successfully reordered"}, 200
 
         return abort(500, "Portfolio list could not be reordered")
@@ -126,16 +126,11 @@ class PortfolioCRUD(Resource):
     def get(self):
         """Return portfolio performance summary"""
 
-        summary = calc_summary()
-        # WRITE SCHEMA
-        # SAVE TO DATABASE IN CASCADE
-        # TODO: WRITE CRUD UTIL FOR DATABASE
+        summary = crud.get_performance_summary()
         if summary == Status.FAIL:
             return abort(
                 500, "Portfolio performance summary for this user could not be retrieved"
             )
-        print(summary)
-
         return summary
 
 
@@ -151,7 +146,7 @@ class PortfolioCRUD(Resource):
 
         portfolio_name = json["portfolioName"]
 
-        if util.add_portfolio(portfolio_name) == Status.SUCCESS:
+        if crud.add_portfolio(portfolio_name) == Status.SUCCESS:
             return {"message": "Portfolio successfully created"}, 200
 
         return abort(500, "Portfolio could not be created")
@@ -166,7 +161,7 @@ class PortfolioCRUD(Resource):
     def get(self, portfolioId):
         """Fetch data for a portfolio"""
 
-        portfolio_item = util.fetch_portfolio(portfolioId)
+        portfolio_item = crud.fetch_portfolio(portfolioId)
 
         if portfolio_item == Status.FAIL:
             return abort(404, "Portfolio could not be found")
@@ -183,7 +178,7 @@ class PortfolioCRUD(Resource):
 
         new_name = json["newName"]
 
-        if util.update_portfolio_name(portfolioId, new_name) == Status.SUCCESS:
+        if crud.update_portfolio_name(portfolioId, new_name) == Status.SUCCESS:
             return {"message": "Portfolio name successfully updated"}, 200
 
         return abort(500, "Portfolio name could not be updated")
@@ -193,7 +188,7 @@ class PortfolioCRUD(Resource):
     def delete(self, portfolioId):
         """Delete an existing portfolio"""
 
-        if util.delete_portfolio(portfolioId) == Status.SUCCESS:
+        if crud.delete_portfolio(portfolioId) == Status.SUCCESS:
             return {"message": "Portfolio successfully deleted"}, 200
 
         return abort(500, "Portfolio could not be deleted")

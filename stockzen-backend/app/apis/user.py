@@ -86,7 +86,9 @@ class UserCRUD(Resource):
             login_user(user)
             user_details = auth.extract_user_details(user)
 
-            cascade_updates(refresh_data=True)  # refresh StockPage data and cascade calculations updates
+            cascade_updates(
+                refresh_data=True
+            )  # refresh StockPage data and cascade calculations updates
 
             return user_details
 
