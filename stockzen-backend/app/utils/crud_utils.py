@@ -1,7 +1,8 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict, Mapping, Sequence, Union
 
+from app.config import N_TOP_PERFORMERS
 from app.models.schema import (
     History,
     LotBought,
@@ -13,9 +14,9 @@ from app.models.schema import (
 )
 from app.utils.enums import LotType, Status
 from flask_login import current_user
+from sqlalchemy.orm import load_only
 
 from . import api_utils as api
-from . import calc_utils as calc
 from . import db_utils, utils
 
 # ==============================================================================
@@ -321,6 +322,34 @@ def fetch_stock_history(stock_page_id: int, period: str = "1y") -> Union[Dict, S
             {"stock_page_id": stock_page_id, **dict} for dict in history_dicts
         ]
         return history_dicts
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+        return Status.FAIL
+
+
+def fetch_top_stocks() -> Union[Dict, Status]:
+    """Get top performing stocks from database and return dict list"""
+    try:
+        # Return N top performing stocks
+        # Only consider recent updates
+        min_timestamp = datetime.now() - timedelta(hours=1)
+        sqla_list = (
+            StockPage.query.options(
+                load_only(
+                    StockPage.id,
+                    StockPage.code,
+                    StockPage.price,
+                    StockPage.perc_change,
+                    StockPage.last_updated,
+                )
+            )
+            .filter(StockPage.last_updated > min_timestamp)
+            .order_by(StockPage.perc_change.desc())
+            .limit(N_TOP_PERFORMERS)
+            .all()
+        )
+        dict_list = [to_dict(obj) for obj in sqla_list]
+        return dict_list
     except Exception as e:
         utils.debug_exception(e, suppress=True)
         return Status.FAIL

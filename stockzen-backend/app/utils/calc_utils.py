@@ -79,9 +79,8 @@ def api_request(stock_page_id: int):
     try:
         # only need to fetch if the data is stale or timestamp is NULL (i.e. never been updated before)
         last_updated = db_utils.query_item(StockPage, stock_page_id).last_updated
-        now = datetime.now()
         try:
-            elapsed = now - last_updated
+            elapsed = datetime.now() - last_updated
         except:
             pass  # let the if statement handle the error
 

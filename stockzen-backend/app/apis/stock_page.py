@@ -76,6 +76,21 @@ stock_page_history_response = api.model(
     },
 )
 
+top_performers_response = api.model(
+    "Response: Top performing stocks",
+    {
+        "stockPageId": fields.Integer(
+            attribute="id", required=True, description="stock page id"
+        ),
+        "symbol": fields.String(
+            attribute="code", required=True, description="stock symbol"
+        ),
+        "price": fields.Float(required=True, description="stock price"),
+        "gain": fields.Float(
+            attribute="perc_change", required=True, description="stock gain"
+        ),
+    },
+)
 
 # ==============================================================================
 # API Routes/Endpoints
@@ -122,3 +137,18 @@ class StockPageCRUD(Resource):
             return abort(500, "Stock page history could not be retrieved")
 
         return stock_history, 200
+
+
+@api.route("/top")
+class StockPageCRUD(Resource):
+    @login_required
+    @api.marshal_list_with(top_performers_response)
+    @api.response(200, "Successfully retrieved top performing stocks list")
+    def get(self):
+
+        stock_list = crud.fetch_top_stocks()
+
+        if stock_list == Status.FAIL:
+            return abort(500, "Could not get top stock performers")
+
+        return stock_list, 200
