@@ -64,3 +64,24 @@ def test_stock_history_endpoints(auth_client):
     assert response.status_code == 200
     assert response.json == history  # cached data should be the same
     utils.net_blocker(block=False)
+
+
+def test_top_performer_endpoint(auth_client):
+    client = auth_client
+    # --------------------------------------------------------------------------
+    # Top Performers endpoint
+    # --------------------------------------------------------------------------
+    response = client.get("/stock-page/top")
+    # None to start with
+    assert response.status_code == 200
+    assert response.json == []
+
+    # Add predetermined stock_page data
+    expected = utils.populate_top_stocks()
+
+    # TODO: turn off api queries for testing mode
+
+    response = client.get("/stock-page/top")
+    # Successfully return top stocks in the correct order
+    assert response.status_code == 200
+    assert response.json == expected
