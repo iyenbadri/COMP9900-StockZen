@@ -1,5 +1,4 @@
 from app.utils.enums import LotType
-from sqlalchemy.sql.expression import over
 
 # ==============================================================================
 # MOCK DATA
