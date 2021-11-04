@@ -17,7 +17,7 @@ const Header = () => {
     <header className={isAuthenticated ? styles.userAuthenticated : ''}>
       <Container className={styles.headerContainer}>
         <Row>
-          <Col md={3} lg={2} xl={2} className='text-start'>
+          <Col md={3} lg={2} className='text-start'>
             <Link to={isAuthenticated ? '/portfolio' : '/'}>
               {isAuthenticated && <img src={logo_light} alt='StockZen' />}
               {!isAuthenticated && <img src={logo_dark} alt='StockZen' />}
@@ -46,7 +46,7 @@ const Header = () => {
               </div>
             </Col>
           )}
-          <Col md={2} lg={2} xl={3} className='text-end'>
+          <Col className='text-end'>
             {!isAuthenticated && (
               <>
                 <Link to='/user/login' className='btn btn-zen-5 me-3'>

@@ -121,7 +121,7 @@
 .tooltip
 .index
 .sep {
-  width: 1%;
+  max-width: 1%;
   float: left;
   font-weight: bold;
   margin-right: 1px;
@@ -131,7 +131,7 @@
 .tooltip
 .index
 .indexValue {
-  width: 55%;
+  max-width: 55%;
   float: left;
   text-align: right;
   padding: 0;
