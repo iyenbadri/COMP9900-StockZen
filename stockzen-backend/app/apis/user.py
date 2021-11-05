@@ -8,10 +8,12 @@
 # ==============================================================================
 
 import app.utils.auth_utils as auth
-import app.utils.crud_utils as util
+import app.utils.calc_utils as calc
+import app.utils.crud_utils as crud
+import app.utils.utils as utils
 from app import login_manager
+from app.config import TOP_COMPANIES
 from app.models.schema import User
-from app.utils.calc_utils import cascade_updates
 from app.utils.enums import Status
 from flask import request
 from flask_login import current_user
@@ -82,13 +84,16 @@ class UserCRUD(Resource):
 
         elif user == Status.INCORRECT_PASSWORD:
             return abort(401, "Incorrect password")
-        else:
-            login_user(user)
-            user_details = auth.extract_user_details(user)
 
-            cascade_updates(refresh_data=True)  # refresh StockPage data and cascade calculations updates
+        login_user(user)
+        user_details = auth.extract_user_details(user)
 
-            return user_details
+        # Update top companies for top-performer widget
+        utils.bulk_stock_fetch(TOP_COMPANIES)
+        # refresh StockPage data and cascade calculations updates
+        calc.cascade_updates(refresh_data=True)
+
+        return user_details
 
 
 @api.route("/register")
@@ -112,7 +117,7 @@ class UserCRUD(Resource):
         if auth.email_exists(email) == Status.FOUND:
             return abort(409, "Email already exists")
 
-        if util.add_user(email, first_name, last_name, plain_password) == Status.SUCCESS:
+        if crud.add_user(email, first_name, last_name, plain_password) == Status.SUCCESS:
             return {"message": "User successfully registered"}, 200
 
         return abort(500, "Registration error occurred")
