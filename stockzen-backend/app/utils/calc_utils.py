@@ -6,8 +6,13 @@ from app.config import UPDATE_MIN_INTERVAL
 from app.models.schema import LotBought, LotSold, Portfolio, Stock, StockPage
 from app.utils import crud_utils, db_utils, utils
 from app.utils.enums import LotType, Status
+from flask_login import current_user
 from sqlalchemy.orm import load_only
 from sqlalchemy.sql import func
+
+# ==============================================================================
+# Cascade Operations
+# ==============================================================================
 
 
 def cascade_updates(refresh_data=False):
@@ -278,12 +283,11 @@ def calc_stock(stock_id: int):
         current_price = stock_page.price
 
         # get calculated metrics for the stock row
-        units_bought, total_price, value = (
+        units_bought, total_price = (
             LotBought.query.filter(LotBought.stock_id == stock_id)
             .with_entities(
                 func.sum(LotBought.units),
                 func.sum(LotBought.units * LotBought.unit_price),
-                func.sum(LotBought.value),
             )
             .one()
         )
@@ -297,14 +301,16 @@ def calc_stock(stock_id: int):
 
         # carry out calculations for avg_price, gain, perc_gain
         avg_price = None
-        units_held = None
+        units_held = 0
         gain = None
         perc_gain = None
+        value = None
         with suppress(TypeError, ZeroDivisionError):
             avg_price = total_price / units_bought
             units_held = units_bought - units_sold
+            value = units_held * current_price
             gain = (current_price - avg_price) * units_held
-            perc_gain = gain / (units_held * avg_price)
+            perc_gain = gain / (units_held * avg_price) * 100
 
         return avg_price, gain, perc_gain, value
     except Exception as e:
@@ -337,9 +343,38 @@ def calc_portfolio(portfolio_id: int):
         perc_change = None
         perc_gain = None
         with suppress(TypeError, ZeroDivisionError):
-            perc_change = change / value
-            perc_gain = gain / value
+            perc_change = change / value * 100
+            perc_gain = gain / value * 100
 
         return stock_count, value, change, gain, perc_change, perc_gain
+    except Exception as e:
+        utils.debug_exception(e)
+
+
+# ==============================================================================
+# Summary Banner Calculations
+# ==============================================================================
+def calc_summary():
+    """Calculations for Performance Summary Banner using portfolio table data"""
+    try:
+        value, change, gain = (
+            Portfolio.query.with_entities(
+                func.sum(Portfolio.value),
+                func.sum(Portfolio.change),
+                func.sum(Portfolio.gain),
+            )
+            .filter(Portfolio.user_id == current_user.id)
+            .one()
+        )
+        holdings = value
+        # attempt to calculate; leave as None if error
+        today = None
+        overall = None
+        with suppress(TypeError, ZeroDivisionError):
+            today = change / holdings * 100
+            overall = gain / holdings * 100
+
+        return holdings, today, overall
+
     except Exception as e:
         utils.debug_exception(e)

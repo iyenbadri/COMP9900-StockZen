@@ -134,3 +134,21 @@ def lot_details(type, id, lot):
         raise ValueError("Incorrect type provided")
 
     return lot_details
+
+
+# ------------------------------------------------------------------------------
+# Performance Summary
+# ------------------------------------------------------------------------------
+simulated_price = 5
+simulated_change = 2
+simulated_gain = (
+    simulated_price - unit_price
+) * units  # == (current_price - avg_price) * units_held
+empty_summary = {"holdings": None, "today": None, "overall": None}
+holdings = units * simulated_price
+today = (simulated_change * units / holdings) * 100
+
+overall = (simulated_gain / holdings) * 100
+new_summary_1 = {"holdings": holdings, "today": today, "overall": overall}
+
+sold_summary_1 = {"holdings": 0, "today": None, "overall": None}
