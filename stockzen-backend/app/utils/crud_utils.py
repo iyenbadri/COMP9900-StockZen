@@ -2,7 +2,7 @@ import json
 from datetime import datetime, timedelta
 from typing import Dict, Mapping, Sequence, Union
 
-from app.config import N_TOP_PERFORMERS
+from app.config import N_TOP_PERFORMERS, TOP_STOCKS_INTERVAL
 from app.models.schema import (
     History,
     LotBought,
@@ -332,7 +332,7 @@ def fetch_top_stocks() -> Union[Dict, Status]:
     try:
         # Return N top performing stocks
         # Only consider recent updates
-        min_timestamp = datetime.now() - timedelta(hours=1)
+        min_timestamp = datetime.now() - timedelta(seconds=TOP_STOCKS_INTERVAL)
         sqla_list = (
             StockPage.query.options(
                 load_only(

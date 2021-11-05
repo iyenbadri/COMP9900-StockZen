@@ -55,6 +55,6 @@ def populate_top_stocks():
         )
 
     # sort high to low
-    expected_res = sorted(expected_res, key=lambda d: d["change"], reverse=True)
+    expected_res = sorted(expected_res, key=lambda dict: dict["change"], reverse=True)
     expected_res.pop()  # remove extra stock
     return expected_res

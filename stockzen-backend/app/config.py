@@ -6,7 +6,10 @@ EXECUTOR_TYPE = "thread"  # flask-executor thread or processes
 EXECUTOR_MAX_WORKERS = 8  # max concurrents
 EXECUTOR_PROPAGATE_EXCEPTIONS = True  # don't swallow exceptions
 SEARCH_LIMIT = 30
-UPDATE_MIN_INTERVAL = 90  # min seconds before a stock page is considered stale
+STALENESS_INTERVAL = 90  # min seconds before a stock page is considered stale
+TOP_STOCKS_INTERVAL = (
+    3600  # min seconds before a top performance stock is considered stale
+)
 N_TOP_PERFORMERS = 5  # number of top performing stocks to return
 TOP_COMPANIES = [
     "AAPL",

@@ -1,9 +1,11 @@
 import inspect
 import os
+from itertools import repeat
 from typing import Sequence
 
 import app.utils.calc_utils as calc
 from app import executor
+from app.config import TOP_STOCKS_INTERVAL
 from app.models.schema import StockPage
 from sqlalchemy.orm import load_only
 
@@ -45,7 +47,8 @@ def bulk_stock_fetch(sym_list: Sequence[str]):
         .with_entities(StockPage.id)
         .all()
     )
-    id_list = [tuple[0] for tuple in tuple_list]
+    id_list = [tuple[0] for tuple in tuple_list]  # where tuple[0] -> stock_page_id
 
-    # fetch api data to update each stock page
-    executor.map(calc.api_request, id_list)
+    # concurrently fetch api data to update each stock page
+    # pass longer update interval so app does not request bulk from yfinance too often
+    executor.map(calc.api_request, id_list, repeat(TOP_STOCKS_INTERVAL))
