@@ -15,38 +15,47 @@ def do_price_alert():
     print("Running the price alert script. Use Ctrl+C to abort the script")
 
     while True:
-        # Query the stock that we need to get the history
-        stock_alerts = query_active_price_alert_info()
+        try:
+            # Query the stock that we need to get the history
+            stock_alerts = query_active_price_alert_info()
 
-        # For each if them
-        for stock_alert in stock_alerts:
-            print("Checking alert", stock_alert.code)
+            # For each if them
+            for stock_alert in stock_alerts:
+                print("Checking alert", stock_alert.code)
 
-            # Limit the start of the history to be 60 days.
-            start_date = max(
-                [
-                    stock_alert.min_date,
-                    datetime.datetime.now() - datetime.timedelta(days=60),
-                ]
-            )
+                # Limit the start of the history to be 60 days.
+                start_date = max(
+                    [
+                        stock_alert.min_date,
+                        datetime.datetime.now() - datetime.timedelta(days=60),
+                    ]
+                )
 
-            # Query the history from yfinance
-            history = Ticker(stock_alert.code).history(start=start_date, interval="30m")
+                # Query the history from yfinance
+                history = Ticker(stock_alert.code).history(
+                    start=start_date,
+                    interval="30m"
+                )
 
-            # Check if there any alert matched.
-            has_high = (history["High"] >= stock_alert.min_high).any()
-            has_low = (history["Low"] <= stock_alert.max_low).any()
+                # Check if there any alert matched.
+                has_high = (history["High"] >= stock_alert.min_high).any()
+                has_low = (history["Low"] <= stock_alert.max_low).any()
 
-            if has_high:
-                notify_high_threshold(history, stock_alert)
+                if has_high:
+                    notify_high_threshold(history, stock_alert)
 
-            if has_low:
-                notify_low_threshold(history, stock_alert)
+                if has_low:
+                    notify_low_threshold(history, stock_alert)
 
-            update_price_alert_check_time(stock_alert.id)
+                update_price_alert_check_time(stock_alert.id)
 
-            time.sleep(1)
+                time.sleep(1)
+        except KeyboardInterrupt:
+            break
+        except Exception as ex:
+            print(ex)
 
+        print("Sleeping")
         time.sleep(30 * 60)
 
 
