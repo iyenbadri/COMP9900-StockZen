@@ -100,21 +100,34 @@ Week 6
 Week 7
 
 • Planned  : Complete stock page including API wire up
-• Achieved : (Guess I would be able to complete this +next tasks as well) 
+• Achieved : 80% Done, still need some refinements over codes for PR
 
 - Did PR reviews for:
-  ·
-- Wrote codes for:
-  · stock page search widget
-  · stock page API wire up
-  · stock page historical data tab and tables
-  · 
+  · PR#66_Portfolio page lots (Rittisak)
+- Wrote codes for stock page's:
+  · historical data tab and table
+  · 1 year history chart
+  · API wire up
+  · search widget
 - Refined the codes based on the feedbacks I got from PR 
 - Did test for stock page endpoints (partially reviewing Khai's code)
 
 ========================================================================================
 
 Week 8
+
+• Planned  : Finish (1)stock page (including bug fix) 
+                    (2)fundamental tab in portfolio page
+• Achieved : (1) Done, (2) In progress
+
+- Did PR reviews for:
+  · PR#78_Refresh functionality (Rittisak)
+  · 
+- Wrote codes for:
+  · stock search widget in header
+  · Tabifying portfolio page ('My Holdings' and 'Fundamental')
+  · 
+- 
 
 ========================================================================================
 
