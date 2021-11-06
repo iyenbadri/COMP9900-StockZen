@@ -1,18 +1,13 @@
 import lossArrow from 'assets/icon-outlines/outline-arrow-down-circle-red.svg';
 import gainArrow from 'assets/icon-outlines/outline-arrow-up-circle-green.svg';
+import axios from 'axios';
 import { RefreshContext } from 'contexts/RefreshContext';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import moment from 'moment';
-import React, {
-  FC,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-  useMemo,
-} from 'react';
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './TopPerformerWidget.module.css';
+import { usdFormatter } from 'utils/Utilities';
 
 // interface IProps {
 //   firstName: string;
@@ -28,66 +23,39 @@ const gainLossArrow = (change: number) => {
   else return <></>;
 };
 
+// Number formatter
+const numberFormatter = new Intl.NumberFormat('en-US', {
+  style: 'decimal',
+  maximumFractionDigits: 2,
+  minimumFractionDigits: 2,
+});
+
+const changeFormatter = new Intl.NumberFormat('en-US', {
+  style: 'percent',
+  maximumFractionDigits: 2,
+  minimumFractionDigits: 2,
+  signDisplay: 'always',
+});
+
 const TopPerformerWidget: FC = (props) => {
   const { subscribe, unsubscribe } = useContext(RefreshContext);
-  const { showPortfolioSummary } = useContext(TopPerformerContext);
-
-  const usdFormatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
-
-  // Number formatter
-  const numberFormatter = useMemo(
-    () =>
-      new Intl.NumberFormat('en-US', {
-        style: 'decimal',
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2,
-      }),
-    []
-  );
+  const { showPortfolioSummary, topPerformers } =
+    useContext(TopPerformerContext);
 
   const [lastUpdateDate, setLastUpdateDate] = useState<Date>();
-  const [topPerformers, setTopPerformers] = useState<ITopPerformer[]>([]);
+
   const [portfolioSummary, setPortfolioSummary] =
     useState<IPortfolioPerformance>();
 
-  const reloadData = useCallback(() => {
+  const reloadData = useCallback(async () => {
     setLastUpdateDate(new Date());
-    setTopPerformers([
-      {
-        symbol: 'GOOG',
-        price: Math.random() * 1000,
-        gain: Math.random(),
-      },
-      {
-        symbol: 'TSLA',
-        price: Math.random() * 1000,
-        gain: Math.random(),
-      },
-      {
-        symbol: 'APPL',
-        price: Math.random() * 1000,
-        gain: Math.random(),
-      },
-      {
-        symbol: 'ARTAW',
-        price: Math.random() * 1000,
-        gain: Math.random(),
-      },
-      {
-        symbol: 'DIS',
-        price: Math.random() * 1000,
-        gain: Math.random(),
-      },
-    ]);
+
     setPortfolioSummary({
       holding: Math.random() * 2000,
       todayChangePercent: Math.random() * 10 - 5,
       overallChangePercent: Math.random() * 10 - 5,
     });
-  }, [setLastUpdateDate, setTopPerformers, setPortfolioSummary]);
+  }, [setLastUpdateDate, setPortfolioSummary]);
 
   useEffect(() => {
     reloadData();
@@ -119,15 +87,12 @@ const TopPerformerWidget: FC = (props) => {
           <div className={styles.summaryTitle}>Today</div>
           <div className={`${styles.summaryValue} outerStroke`}>
             {gainLossArrow(portfolioSummary?.todayChangePercent ?? 0)}
-            {numberFormatter.format(portfolioSummary?.todayChangePercent ?? 0)}%
+            {usdFormatter.format(portfolioSummary?.todayChangePercent ?? 0)}%
           </div>
           <div className={styles.summaryTitle}>Overall</div>
           <div className={`${styles.summaryValue} outerStroke`}>
             {gainLossArrow(portfolioSummary?.overallChangePercent ?? 0)}
-            {numberFormatter.format(
-              portfolioSummary?.overallChangePercent ?? 0
-            )}
-            %
+            {usdFormatter.format(portfolioSummary?.overallChangePercent ?? 0)}%
           </div>
           <hr className={styles.separatorLine} />
         </>
@@ -138,19 +103,23 @@ const TopPerformerWidget: FC = (props) => {
           <tr>
             <th className={styles.symbol}>Symbol</th>
             <th className={styles.price}>Price</th>
-            <th className={styles.gain}>Gain</th>
+            <th className={styles.gain}>Change</th>
           </tr>
         </thead>
         <tbody>
           {topPerformers.map((stock, index) => {
             return (
               <tr key={stock.symbol} className={styles.symbolRow}>
-                <td className={styles.symbol}>{stock.symbol}</td>
+                <td className={styles.symbol}>
+                  <Link to={'/stock/' + stock.stockPageId.toString()}>
+                    {stock.symbol}
+                  </Link>
+                </td>
                 <td className={styles.price}>
                   {usdFormatter.format(stock.price)}
                 </td>
                 <td className={styles.gain}>
-                  +{numberFormatter.format(stock.gain)}%
+                  {changeFormatter.format(stock.change)}
                 </td>
               </tr>
             );
@@ -164,12 +133,6 @@ const TopPerformerWidget: FC = (props) => {
     </div>
   );
 };
-
-interface ITopPerformer {
-  symbol: string;
-  price: number;
-  gain: number;
-}
 
 interface IPortfolioPerformance {
   holding: number;

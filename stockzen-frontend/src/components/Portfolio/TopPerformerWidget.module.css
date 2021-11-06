@@ -54,6 +54,12 @@
   text-align: center;
 }
 
+.symbolRow .symbol a {
+  text-decoration: none;
+  color: var(--zen-4);
+  font-weight: 700;
+}
+
 .price {
   text-align: center;
 }
