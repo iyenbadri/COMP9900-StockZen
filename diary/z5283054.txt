@@ -224,16 +224,41 @@ Week 8
 # Planned:      Implement the price alert functionality.
 # Finished:     Mock up the UI of the price alert.
 # Issue:        -
-# Unfinished:   -
+# Unfinished:   Price alert functionality.
 # Next:         We will have a retrospective meeting this week.
 
 
 Gunjan has done implement the stock calculation. I will wire up the API route after the
 endpoints are merged.
 
+Jeehyun has implement chart for the stock page.
+
+Khai and Gunjan have implement a lot of the missing endpoints.
+
+I mostly wire up the endpoint calling. Give an advice to Jeehyun on how to split the search
+component. Find the URL collision bug.
+
+Badri said he had an update on ML but still no contribution.
+
 K 1
-J (TODO)
+J 1
 G 1
+
+
+============================================
+Week 9
+
+# Planned:      Implement the leaderboard functionality. Add documentation.
+# Finished:     Price alert functionality.
+# Issue:        -
+# Unfinished:   -
+# Next:         -
+
+
+
+K (TODO)
+J (TODO)
+G (TODO)
 B (TODO)
 
 -----------------------------------------------------------------------------------------
