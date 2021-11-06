@@ -1,6 +1,5 @@
 import lossArrow from 'assets/icon-outlines/outline-arrow-down-circle-red.svg';
 import gainArrow from 'assets/icon-outlines/outline-arrow-up-circle-green.svg';
-import axios from 'axios';
 import { RefreshContext } from 'contexts/RefreshContext';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import moment from 'moment';
@@ -24,12 +23,6 @@ const gainLossArrow = (change: number) => {
 };
 
 // Number formatter
-const numberFormatter = new Intl.NumberFormat('en-US', {
-  style: 'decimal',
-  maximumFractionDigits: 2,
-  minimumFractionDigits: 2,
-});
-
 const changeFormatter = new Intl.NumberFormat('en-US', {
   style: 'percent',
   maximumFractionDigits: 2,
@@ -39,7 +32,7 @@ const changeFormatter = new Intl.NumberFormat('en-US', {
 
 const TopPerformerWidget: FC = (props) => {
   const { subscribe, unsubscribe } = useContext(RefreshContext);
-  const { showPortfolioSummary, topPerformers } =
+  const { showPortfolioSummary, topPerformers, isLoading } =
     useContext(TopPerformerContext);
 
   const [lastUpdateDate, setLastUpdateDate] = useState<Date>();
@@ -61,17 +54,21 @@ const TopPerformerWidget: FC = (props) => {
     reloadData();
   }, [reloadData]);
 
-  useEffect(() => {
-    const refresh = () => {
-      reloadData();
-    };
+  useEffect(
+    () => {
+      const refresh = () => {
+        reloadData();
+      };
 
-    subscribe(refresh);
+      subscribe(refresh);
 
-    return () => {
-      unsubscribe(refresh);
-    };
-  }, []);
+      return () => {
+        unsubscribe(refresh);
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   return (
     <div className={styles.widget}>
@@ -107,23 +104,31 @@ const TopPerformerWidget: FC = (props) => {
           </tr>
         </thead>
         <tbody>
-          {topPerformers.map((stock, index) => {
-            return (
-              <tr key={stock.symbol} className={styles.symbolRow}>
-                <td className={styles.symbol}>
-                  <Link to={'/stock/' + stock.stockPageId.toString()}>
-                    {stock.symbol}
-                  </Link>
-                </td>
-                <td className={styles.price}>
-                  {usdFormatter.format(stock.price)}
-                </td>
-                <td className={styles.gain}>
-                  {changeFormatter.format(stock.change)}
-                </td>
-              </tr>
-            );
-          })}
+          {isLoading && (
+            <tr>
+              <td colSpan={99} className='text-center'>
+                Loading
+              </td>
+            </tr>
+          )}
+          {!isLoading &&
+            topPerformers.map((stock, index) => {
+              return (
+                <tr key={stock.symbol} className={styles.symbolRow}>
+                  <td className={styles.symbol}>
+                    <Link to={'/stock/' + stock.stockPageId.toString()}>
+                      {stock.symbol}
+                    </Link>
+                  </td>
+                  <td className={styles.price}>
+                    {usdFormatter.format(stock.price)}
+                  </td>
+                  <td className={styles.gain}>
+                    {changeFormatter.format(stock.changePercent)}
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
       <hr className={styles.separatorLine} />
