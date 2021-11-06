@@ -36,18 +36,12 @@ const PortfolioPageAlert: FC<IProps> = (props) => {
           '/price-alert/' + stockId.toString()
         );
 
-        setLowThresholdAlerted(response.data.isLowThresholdAlerted ?? false);
-        setHighThresholdAlerted(response.data.isHighThresholdAlerted ?? false);
+        setLowThresholdAlerted(response.data.isLowThresholdAlerted ?? true);
+        setHighThresholdAlerted(response.data.isHighThresholdAlerted ?? true);
 
         reset({
-          low:
-            response.data.low == null || response.data.isLowThresholdAlerted
-              ? ''
-              : response.data.low.toString(),
-          high:
-            response.data.high == null || response.data.isHighThresholdAlerted
-              ? ''
-              : response.data.high.toString(),
+          low: response.data.low == null ? '' : response.data.low.toString(),
+          high: response.data.high == null ? '' : response.data.high.toString(),
         });
       })();
     },
@@ -68,6 +62,9 @@ const PortfolioPageAlert: FC<IProps> = (props) => {
       low: data.low,
       high: data.high,
     });
+
+    setLowThresholdAlerted(data.low === '');
+    setHighThresholdAlerted(data.high === '');
   };
 
   return (
