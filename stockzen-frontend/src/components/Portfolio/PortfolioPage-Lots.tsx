@@ -8,9 +8,11 @@ import moment, { Moment } from 'moment';
 import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 import Modal from 'react-bootstrap/Modal';
 import { useForm } from 'react-hook-form';
 import styles from './PortfolioPage-Panel.module.css';
+import { usdFormatter } from 'utils/Utilities';
 
 // Number formatter
 const numberFormatter = new Intl.NumberFormat('en-US', {
@@ -291,9 +293,9 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
               autoComplete='off'
               onSubmit={handleSubmit(handleAddBoughtLot)}
             >
-              <h5>Add new lot: Bought</h5>
+              <h5 className='mb-4'>Add new lot: Bought</h5>
 
-              <Form.Group>
+              <Form.Group className='mb-4'>
                 <Form.Label>Trade Date</Form.Label>
                 <Form.Control
                   type='date'
@@ -308,7 +310,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 </Form.Text>
               </Form.Group>
 
-              <Form.Group>
+              <Form.Group className='mb-4'>
                 <Form.Label>Units</Form.Label>
                 <Form.Control
                   type='number'
@@ -324,15 +326,18 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 </Form.Text>
               </Form.Group>
 
-              <Form.Group>
+              <Form.Group className='mb-4'>
                 <Form.Label>Price/unit</Form.Label>
-                <Form.Control
-                  type='number'
-                  step='0.01'
-                  {...register('unitPrice', {
-                    required: true,
-                  })}
-                ></Form.Control>
+                <InputGroup>
+                  <InputGroup.Text>$</InputGroup.Text>
+                  <Form.Control
+                    type='number'
+                    step='0.01'
+                    {...register('unitPrice', {
+                      required: true,
+                    })}
+                  ></Form.Control>
+                </InputGroup>
 
                 <Form.Text className={styles.errorMessage}>
                   {errors.unitPrice?.type === 'required' &&
@@ -340,7 +345,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 </Form.Text>
               </Form.Group>
 
-              <div className='text-center mt-4'>
+              <div className='text-center mt-5'>
                 <Button type='submit' variant='zen-3'>
                   OK
                 </Button>
@@ -359,9 +364,9 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
         >
           <Modal.Body>
             <Form autoComplete='off' onSubmit={handleSubmit(handleAddSoldLot)}>
-              <h5>Add new lot: Sold</h5>
+              <h5 className='mb-4'>Add new lot: Sold</h5>
 
-              <Form.Group>
+              <Form.Group className='mb-4'>
                 <Form.Label>Trade Date</Form.Label>
                 <Form.Control
                   type='date'
@@ -376,7 +381,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 </Form.Text>
               </Form.Group>
 
-              <Form.Group>
+              <Form.Group className='mb-4'>
                 <Form.Label>Units</Form.Label>
                 <Form.Control
                   type='number'
@@ -392,15 +397,18 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 </Form.Text>
               </Form.Group>
 
-              <Form.Group>
+              <Form.Group className='mb-4'>
                 <Form.Label>Price/unit</Form.Label>
-                <Form.Control
-                  type='number'
-                  step='0.01'
-                  {...register('unitPrice', {
-                    required: true,
-                  })}
-                ></Form.Control>
+                <InputGroup>
+                  <InputGroup.Text>$</InputGroup.Text>
+                  <Form.Control
+                    type='number'
+                    step='0.01'
+                    {...register('unitPrice', {
+                      required: true,
+                    })}
+                  ></Form.Control>
+                </InputGroup>
 
                 <Form.Text className={styles.errorMessage}>
                   {errors.unitPrice?.type === 'required' &&
@@ -408,7 +416,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 </Form.Text>
               </Form.Group>
 
-              <div className='text-center mt-4'>
+              <div className='text-center mt-5'>
                 <Button type='submit' variant='zen-3'>
                   OK
                 </Button>
@@ -427,12 +435,12 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
         >
           <Modal.Body>
             <Form autoComplete='off' onSubmit={handleSubmit(handleEditLot)}>
-              <h5>
+              <h5 className='mb-4'>
                 Edit new lot:
                 {editingLotType === LotType.Bought ? 'Bought' : 'Sold'}
               </h5>
 
-              <Form.Group>
+              <Form.Group className='mb-4'>
                 <Form.Label>Trade Date</Form.Label>
                 <Form.Control
                   type='date'
@@ -451,7 +459,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 </Form.Text>
               </Form.Group>
 
-              <Form.Group>
+              <Form.Group className='mb-4'>
                 <Form.Label>Units</Form.Label>
                 <Form.Control
                   type='number'
@@ -471,19 +479,22 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 </Form.Text>
               </Form.Group>
 
-              <Form.Group>
+              <Form.Group className='mb-4'>
                 <Form.Label>Price/unit</Form.Label>
-                <Form.Control
-                  type='number'
-                  step='0.01'
-                  {...register('unitPrice', {
-                    required: true,
-                    value: editingLotUnitPrice,
-                  })}
-                  onChange={(ev) => {
-                    setEditingLotUnitPrice(ev.target.value);
-                  }}
-                ></Form.Control>
+                <InputGroup>
+                  <InputGroup.Text>$</InputGroup.Text>
+                  <Form.Control
+                    type='number'
+                    step='0.01'
+                    {...register('unitPrice', {
+                      required: true,
+                      value: editingLotUnitPrice,
+                    })}
+                    onChange={(ev) => {
+                      setEditingLotUnitPrice(ev.target.value);
+                    }}
+                  ></Form.Control>
+                </InputGroup>
 
                 <Form.Text className={styles.errorMessage}>
                   {errors.unitPrice?.type === 'required' &&
@@ -491,7 +502,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                 </Form.Text>
               </Form.Group>
 
-              <div className='text-center mt-4'>
+              <div className='text-center mt-5'>
                 <Button type='submit' variant='zen-3'>
                   OK
                 </Button>
@@ -565,13 +576,13 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                   {numberFormatter.format(lot.units)}
                 </div>
                 <div className={styles.lotUnitPrice}>
-                  {numberFormatter.format(lot.unitPrice)}
+                  {usdFormatter.format(lot.unitPrice)}
                 </div>
                 <div className={styles.lotValue}>
-                  {numberFormatter.format(lot.units * currentPrice)}
+                  {usdFormatter.format(lot.units * currentPrice)}
                 </div>
                 <div className={styles.lotChange}>
-                  {numberFormatter.format(lot.units * priceChange)}
+                  {usdFormatter.format(lot.units * priceChange)}
                 </div>
 
                 {/* Actions of lot in bought section */}
@@ -619,13 +630,13 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
             {numberFormatter.format(boughtTotal.units)}
           </div>
           <div className={styles.lotUnitPrice}>
-            {numberFormatter.format(boughtTotal.unitPrice)}
+            {usdFormatter.format(boughtTotal.unitPrice)}
           </div>
           <div className={styles.lotValue}>
-            {numberFormatter.format(boughtTotal.units * currentPrice)}
+            {usdFormatter.format(boughtTotal.units * currentPrice)}
           </div>
           <div className={styles.lotChange}>
-            {numberFormatter.format(boughtTotal.units * priceChange)}
+            {usdFormatter.format(boughtTotal.units * priceChange)}
           </div>
           <div className={styles.lotActions}></div>
         </div>
@@ -674,13 +685,13 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
                   {numberFormatter.format(lot.units)}
                 </div>
                 <div className={styles.lotUnitPrice}>
-                  {numberFormatter.format(lot.unitPrice)}
+                  {usdFormatter.format(lot.unitPrice)}
                 </div>
                 <div className={styles.lotValue}>
-                  {numberFormatter.format(lot.units * lot.unitPrice)}
+                  {usdFormatter.format(lot.units * lot.unitPrice)}
                 </div>
                 <div className={styles.lotChange}>
-                  {numberFormatter.format(
+                  {usdFormatter.format(
                     lot.units * (lot.unitPrice - boughtTotal.unitPrice)
                   )}
                 </div>
@@ -730,13 +741,13 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
             {numberFormatter.format(soldTotal.units)}
           </div>
           <div className={styles.lotUnitPrice}>
-            {numberFormatter.format(soldTotal.unitPrice)}
+            {usdFormatter.format(soldTotal.unitPrice)}
           </div>
           <div className={styles.lotValue}>
-            {numberFormatter.format(soldTotal.price)}
+            {usdFormatter.format(soldTotal.price)}
           </div>
           <div className={styles.lotChange}>
-            {numberFormatter.format(
+            {usdFormatter.format(
               soldTotal.price - boughtTotal.unitPrice * soldTotal.units
             )}
           </div>

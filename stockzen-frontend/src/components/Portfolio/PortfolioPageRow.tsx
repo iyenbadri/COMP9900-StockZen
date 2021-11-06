@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import PortfolioPageAlert from './PortfolioPage-Alert';
 import PortfolioPageLots from './PortfolioPage-Lots';
 import styles from './PortfolioPage.module.css';
+import { usdFormatter } from 'utils/Utilities';
 
 interface PortfolioPageRowProp {
   readonly stock: IStock;
@@ -94,7 +95,7 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                   </div>
                 </div>
                 <span className={styles.rowPrice}>
-                  {numberFormatter.format(stock.price)}
+                  {usdFormatter.format(stock.price)}
                 </span>
                 <span
                   className={`${styles.rowChange} ${gainLossClass(
@@ -108,7 +109,7 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                       <div className={styles.percent}>
                         {numberFormatter.format(stock.changePercent)}%
                       </div>
-                      <div>{numberFormatter.format(stock.change)}</div>
+                      <div>{usdFormatter.format(stock.change)}</div>
                     </>
                   )}
                 </span>
@@ -117,7 +118,7 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                 >
                   {stock.averagePrice == null
                     ? '-'
-                    : numberFormatter.format(stock.averagePrice)}
+                    : usdFormatter.format(stock.averagePrice)}
                 </span>
                 <span
                   className={`${styles.rowProfit} ${gainLossClass(
@@ -131,14 +132,12 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                       <div className={styles.percent}>
                         {numberFormatter.format(stock.profitPercent)}%
                       </div>
-                      <div>{numberFormatter.format(stock.profit)}</div>
+                      <div>{usdFormatter.format(stock.profit)}</div>
                     </>
                   )}
                 </span>
                 <span className={styles.rowValue}>
-                  {stock.value == null
-                    ? '-'
-                    : numberFormatter.format(stock.value)}
+                  {stock.value == null ? '-' : usdFormatter.format(stock.value)}
                 </span>
                 <span className={styles.rowPredict}>+</span>
               </div>
