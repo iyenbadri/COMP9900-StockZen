@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import styles from './PortfolioPage-Panel.module.css';
 import { useForm } from 'react-hook-form';
+import axios from 'axios';
 
 const PortfolioPageAlert: FC<IProps> = (props) => {
   const { stockId } = props;
@@ -22,18 +23,14 @@ const PortfolioPageAlert: FC<IProps> = (props) => {
   useEffect(
     () => {
       (async () => {
-        // TODO: Query the current threshold from backend
-        const response = await Promise.resolve<{
-          low: number | null;
-          high: number | null;
-        }>({
-          high: null,
-          low: null,
-        });
+        // Query the current threshold from backend
+        const response = await axios.get<PriceAlertResponse>(
+          '/price-alert/' + stockId.toString()
+        );
 
         reset({
-          low: response.low == null ? '' : response.low.toString(),
-          high: response.high == null ? '' : response.high.toString(),
+          low: response.data.low == null ? '' : response.data.low.toString(),
+          high: response.data.high == null ? '' : response.data.high.toString(),
         });
       })();
     },
@@ -41,14 +38,14 @@ const PortfolioPageAlert: FC<IProps> = (props) => {
     []
   );
 
-  const saveThresholds = (data: any) => {
+  const saveThresholds = async (data: any) => {
     const payload = {
-      stockId: stockId,
-      high: data.high,
-      low: data.low,
+      high: data.high === '' ? null : parseFloat(data.high),
+      low: data.low === '' ? null : parseFloat(data.low),
     };
 
-    // TODO: Wire up the API call
+    // Wire up the API call
+    await axios.post('/price-alert/' + stockId.toString(), payload);
 
     reset({
       low: data.low,
@@ -93,6 +90,11 @@ const PortfolioPageAlert: FC<IProps> = (props) => {
 
 interface IProps {
   stockId: number;
+}
+
+interface PriceAlertResponse {
+  high: number | null;
+  low: number | null;
 }
 
 export default PortfolioPageAlert;
