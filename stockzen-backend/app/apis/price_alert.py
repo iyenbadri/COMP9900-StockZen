@@ -26,8 +26,8 @@ get_price_alert_thresholds_response = api.model(
     {
         "high": fields.Float( attribute="high_threshold", required=False, description="The high threshold"),
         "low": fields.Float(attribute="low_threshold", required=False, description="The low threshold"),
-        "isHighThresholdAlerted":  fields.Float(attribute="is_high_threshold_alerted", required=False, description="Indicate wheather the high threshold is still active"),
-        "isLowThresholdAlerted":  fields.Float(attribute="is_low_threshold_alerted", required=False, description="Indicate wheather the low threshold is still active"),
+        "isHighThresholdAlerted":  fields.Boolean(attribute="is_high_threshold_alerted", required=False, description="Indicate wheather the high threshold is still active"),
+        "isLowThresholdAlerted":  fields.Boolean(attribute="is_low_threshold_alerted", required=False, description="Indicate wheather the low threshold is still active"),
     },
 )
 

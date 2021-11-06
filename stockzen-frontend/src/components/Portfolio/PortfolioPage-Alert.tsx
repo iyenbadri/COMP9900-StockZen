@@ -1,9 +1,11 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import InputGroup from 'react-bootstrap/InputGroup';
 import styles from './PortfolioPage-Panel.module.css';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
+import bellIcon from 'assets/icon-outlines/outline-bell.svg';
 
 const PortfolioPageAlert: FC<IProps> = (props) => {
   const { stockId } = props;
@@ -20,6 +22,12 @@ const PortfolioPageAlert: FC<IProps> = (props) => {
     },
   });
 
+  const [lowThresholdAlerted, setLowThresholdAlerted] =
+    useState<boolean>(false);
+
+  const [highThresholdAlerted, setHighThresholdAlerted] =
+    useState<boolean>(false);
+
   useEffect(
     () => {
       (async () => {
@@ -28,9 +36,18 @@ const PortfolioPageAlert: FC<IProps> = (props) => {
           '/price-alert/' + stockId.toString()
         );
 
+        setLowThresholdAlerted(response.data.isLowThresholdAlerted ?? false);
+        setHighThresholdAlerted(response.data.isHighThresholdAlerted ?? false);
+
         reset({
-          low: response.data.low == null ? '' : response.data.low.toString(),
-          high: response.data.high == null ? '' : response.data.high.toString(),
+          low:
+            response.data.low == null || response.data.isLowThresholdAlerted
+              ? ''
+              : response.data.low.toString(),
+          high:
+            response.data.high == null || response.data.isHighThresholdAlerted
+              ? ''
+              : response.data.high.toString(),
         });
       })();
     },
@@ -61,20 +78,44 @@ const PortfolioPageAlert: FC<IProps> = (props) => {
         </div>
         <div className={styles.alertThresholds}>
           <Form.Label>High limit:</Form.Label>
-          <Form.Control
-            min='0'
-            {...register('high')}
-            className={styles.alrtThresholdControl}
-          />
+          <InputGroup className={styles.alertThresholdInputGroup}>
+            <Form.Control
+              min='0'
+              {...register('high')}
+              className={styles.alertThresholdControl}
+            />
+            <InputGroup.Text>
+              <img
+                src={bellIcon}
+                className={highThresholdAlerted ? styles.alertAlerted : ''}
+                alt={highThresholdAlerted ? 'alerted' : 'alert set'}
+                title={highThresholdAlerted ? 'alerted' : 'alert set'}
+                width={16}
+              />
+            </InputGroup.Text>
+          </InputGroup>
+
           <Form.Label>Low limit:</Form.Label>
-          <Form.Control
-            min='0'
-            {...register('low')}
-            className={styles.alrtThresholdControl}
-          />
+          <InputGroup className={styles.alertThresholdInputGroup}>
+            <Form.Control
+              min='0'
+              {...register('low')}
+              className={styles.alertThresholdControl}
+            />
+
+            <InputGroup.Text>
+              <img
+                src={bellIcon}
+                className={lowThresholdAlerted ? styles.alertAlerted : ''}
+                alt={lowThresholdAlerted ? 'alerted' : 'alert set'}
+                title={lowThresholdAlerted ? 'alerted' : 'alert set'}
+                width={16}
+              />
+            </InputGroup.Text>
+          </InputGroup>
         </div>
 
-        <div className='text-center'>
+        <div className='text-center mt-4'>
           <Button
             variant={isDirty ? 'primary' : 'disabled'}
             type='submit'
@@ -95,6 +136,8 @@ interface IProps {
 interface PriceAlertResponse {
   high: number | null;
   low: number | null;
+  isHighThresholdAlerted: boolean | null;
+  isLowThresholdAlerted: boolean | null;
 }
 
 export default PortfolioPageAlert;

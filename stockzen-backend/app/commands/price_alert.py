@@ -1,9 +1,10 @@
-from flask.cli import AppGroup
-from yfinance import Ticker
+import time
 import datetime
+from flask.cli import AppGroup
+from flask_mail import Message
+from yfinance import Ticker
 from sqlalchemy import or_, not_, select, func, update
 
-from flask_mail import Message
 
 user_cli = AppGroup("price-alert")
 
@@ -11,30 +12,42 @@ user_cli = AppGroup("price-alert")
 # A command to run in the server
 @user_cli.command("run")
 def do_price_alert():
-    # Query the stock that we need to get the history
-    stock_alerts = query_active_price_alert_info()
+    print("Running the price alert script. Use Ctrl+C to abort the script")
 
-    # For each if them
-    for stock_alert in stock_alerts:
-        # Limit the start of the history to be 60 days.
-        start_date = max(
-            [stock_alert.min_date, datetime.datetime.now() - datetime.timedelta(days=60)]
-        )
+    while True:
+        # Query the stock that we need to get the history
+        stock_alerts = query_active_price_alert_info()
 
-        # Query the history from yfinance
-        history = Ticker(stock_alert.code).history(start=start_date, interval="30m")
+        # For each if them
+        for stock_alert in stock_alerts:
+            print("Checking alert", stock_alert.code)
 
-        # Check if there any alert matched.
-        has_high = (history["High"] >= stock_alert.min_high).any()
-        has_low = (history["Low"] <= stock_alert.max_low).any()
+            # Limit the start of the history to be 60 days.
+            start_date = max(
+                [
+                    stock_alert.min_date,
+                    datetime.datetime.now() - datetime.timedelta(days=60),
+                ]
+            )
 
-        if has_high:
-            notify_high_threshold(history, stock_alert)
+            # Query the history from yfinance
+            history = Ticker(stock_alert.code).history(start=start_date, interval="30m")
 
-        if has_low:
-            notify_low_threshold(history, stock_alert)
+            # Check if there any alert matched.
+            has_high = (history["High"] >= stock_alert.min_high).any()
+            has_low = (history["Low"] <= stock_alert.max_low).any()
 
-        update_price_alert_check_time(stock_alert.id)
+            if has_high:
+                notify_high_threshold(history, stock_alert)
+
+            if has_low:
+                notify_low_threshold(history, stock_alert)
+
+            update_price_alert_check_time(stock_alert.id)
+
+            time.sleep(1)
+
+        time.sleep(30 * 60)
 
 
 def query_active_price_alert_info():
@@ -136,7 +149,9 @@ def notify_high_threshold(history, stock_alert):
 
         alert_row = alert_row.iloc[0]
 
-        msg = f"""The high price alert for {price_alert.code} in portfolio {price_alert.portfolio_name} has bean reached on {alert_row.name} with the price of {alert_row['High']}."""
+        alert_date = alert_row.name.strftime("%d %B %H:%M")
+
+        msg = f"""The high price alert for {price_alert.code} in portfolio {price_alert.portfolio_name} has bean reached on {alert_date} with the price of {alert_row['High']:.2f}."""
 
         message = Message(
             f"[Stockzen] High price alert for stock {price_alert.code}",
@@ -196,17 +211,19 @@ def notify_low_threshold(history, stock_alert):
 
     for price_alert in price_alerts:
         user_save_date = price_alert.user_save_time.strftime("%Y-%m-%d %H:%M:%S")
-        first_row = history[
+        alert_row = history[
             (history.index >= user_save_date)
             & (history["Low"] <= price_alert.low_threshold)
         ]
 
-        if first_row.empty:
+        if alert_row.empty:
             continue
 
-        first_row = first_row.iloc[0]
+        alert_row = alert_row.iloc[0]
 
-        msg = f"""The low price alert for {price_alert.code} in portfolio {price_alert.portfolio_name} has bean reached on {first_row.name} with the price of {first_row['Low']}."""
+        alert_date = alert_row.name.strftime("%d %B %H:%M")
+
+        msg = f"""The low price alert for {price_alert.code} in portfolio {price_alert.portfolio_name} has bean reached on {alert_date} with the price of {alert_row['Low']:.2f}."""
 
         message = Message(
             f"[Stockzen] Low price alert for stock {price_alert.code}",

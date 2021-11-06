@@ -31,11 +31,18 @@
   align-items: baseline;
   justify-content: space-around;
   margin: auto;
-  width: 400px;
+  width: 500px;
 }
 
-.alrtThresholdControl {
-  width: 100px;
+img.alertAlerted {
+  opacity: 0.4;
+}
+
+.alertThresholdInputGroup {
+  width: 150px;
+}
+
+.alertThresholdControl {
   text-align: center;
 }
 
