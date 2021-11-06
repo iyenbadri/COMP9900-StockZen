@@ -61,8 +61,6 @@ const TopPerformerProvider: FC = ({ children }): any => {
       setTopPerformers(topPerformers.data.map(mapTopPerformer));
     };
 
-    console.log('RELOAD');
-
     reloadTopPerformar();
 
     subscribe(reloadTopPerformar);
