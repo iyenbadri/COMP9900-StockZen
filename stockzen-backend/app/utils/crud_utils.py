@@ -444,3 +444,13 @@ def search_stock(stock_query: str) -> Status:
     except Exception as e:
         utils.debug_exception(e, suppress=True)
         return Status.FAIL
+
+
+# ==============================================================================
+# Summary Utils
+# ==============================================================================
+def get_performance_summary() -> Status:
+    """Get performance summary banner data for this user"""
+    holdings, today, overall = calc.calc_summary()
+
+    return {"holdings": holdings, "today": today, "overall": overall}
