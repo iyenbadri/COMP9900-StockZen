@@ -2,6 +2,7 @@ import json
 from datetime import datetime, timedelta
 from typing import Dict, Mapping, Sequence, Union
 
+import app.utils.calc_utils as calc
 from app.config import N_TOP_PERFORMERS, TOP_STOCKS_INTERVAL
 from app.models.schema import (
     History,

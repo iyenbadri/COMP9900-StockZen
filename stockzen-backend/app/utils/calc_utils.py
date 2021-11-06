@@ -7,6 +7,7 @@ from app.models.schema import LotBought, LotSold, Portfolio, Stock, StockPage
 from app.utils import crud_utils, db_utils, utils
 from app.utils.enums import LotType, Status
 from flask import current_app
+from flask_login import current_user
 from sqlalchemy.orm import load_only
 from sqlalchemy.sql import func
 

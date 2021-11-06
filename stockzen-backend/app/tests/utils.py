@@ -50,11 +50,11 @@ def populate_top_stocks():
                 "stockPageId": stock_page.id,
                 "symbol": str(i),
                 "price": float(i * 1000),
-                "change": float(changes[i]),
+                "percChange": float(changes[i]),
             }
         )
 
     # sort high to low
-    expected_res = sorted(expected_res, key=lambda dict: dict["change"], reverse=True)
+    expected_res = sorted(expected_res, key=lambda dict: dict["percChange"], reverse=True)
     expected_res.pop()  # remove extra stock
     return expected_res

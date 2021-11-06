@@ -79,8 +79,6 @@ def test_top_performer_endpoint(auth_client):
     # Add predetermined stock_page data
     expected = utils.populate_top_stocks()
 
-    # TODO: turn off api queries for testing mode
-
     response = client.get("/stock-page/top")
     # Successfully return top stocks in the correct order
     assert response.status_code == 200
