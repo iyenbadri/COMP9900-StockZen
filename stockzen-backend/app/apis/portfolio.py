@@ -1,4 +1,5 @@
-import app.utils.crud_utils as util
+import app.utils.crud_utils as crud
+from app.utils.calc_utils import calc_summary, cascade_updates
 from app.utils.enums import Status
 from flask import request
 from flask_login.utils import login_required
@@ -65,6 +66,15 @@ portfolio_reorder_request = api.model(
     },
 )
 
+portfolio_summary_response = api.model(
+    "Response: User portfolio performance summary details",
+    {
+        "holdings": fields.Float(required=True, description="total holdings value"),
+        "today": fields.Float(required=True, description="percentage change today"),
+        "overall": fields.Float(required=True, description="percentage gain today"),
+    },
+)
+
 # ==============================================================================
 # API Routes/Endpoints
 # ==============================================================================
@@ -78,10 +88,11 @@ class PortfolioCRUD(Resource):
     def get(self):
         """List all portfolios from a user"""
 
-        portfolio_list = util.get_portfolio_list()
+        portfolio_list = crud.get_portfolio_list()
         if portfolio_list == Status.FAIL:
             return abort(500, "Portfolio list for this user could not be retrieved")
 
+        cascade_updates(refresh_data=False)  # cascade calculations updates
         return portfolio_list
 
     @login_required
@@ -100,10 +111,26 @@ class PortfolioCRUD(Resource):
         if len(orderList) > len(set(orderList)):
             return abort(409, "Failed because non-unique order numbers were provided")
 
-        if util.reorder_portfolio_list(reorder_request) == Status.SUCCESS:
+        if crud.reorder_portfolio_list(reorder_request) == Status.SUCCESS:
             return {"message": "Portfolio list successfully reordered"}, 200
 
         return abort(500, "Portfolio list could not be reordered")
+
+
+@api.route("/list/summary")
+class PortfolioCRUD(Resource):
+    @login_required
+    @api.marshal_list_with(portfolio_summary_response)
+    @api.response(200, "Successfully retrieved summary")
+    def get(self):
+        """Return portfolio performance summary"""
+
+        summary = crud.get_performance_summary()
+        if summary == Status.FAIL:
+            return abort(
+                500, "Portfolio performance summary for this user could not be retrieved"
+            )
+        return summary
 
 
 @api.route("")
@@ -118,7 +145,7 @@ class PortfolioCRUD(Resource):
 
         portfolio_name = json["portfolioName"]
 
-        if util.add_portfolio(portfolio_name) == Status.SUCCESS:
+        if crud.add_portfolio(portfolio_name) == Status.SUCCESS:
             return {"message": "Portfolio successfully created"}, 200
 
         return abort(500, "Portfolio could not be created")
@@ -133,7 +160,7 @@ class PortfolioCRUD(Resource):
     def get(self, portfolioId):
         """Fetch data for a portfolio"""
 
-        portfolio_item = util.fetch_portfolio(portfolioId)
+        portfolio_item = crud.fetch_portfolio(portfolioId)
 
         if portfolio_item == Status.FAIL:
             return abort(404, "Portfolio could not be found")
@@ -150,7 +177,7 @@ class PortfolioCRUD(Resource):
 
         new_name = json["newName"]
 
-        if util.update_portfolio_name(portfolioId, new_name) == Status.SUCCESS:
+        if crud.update_portfolio_name(portfolioId, new_name) == Status.SUCCESS:
             return {"message": "Portfolio name successfully updated"}, 200
 
         return abort(500, "Portfolio name could not be updated")
@@ -160,7 +187,7 @@ class PortfolioCRUD(Resource):
     def delete(self, portfolioId):
         """Delete an existing portfolio"""
 
-        if util.delete_portfolio(portfolioId) == Status.SUCCESS:
+        if crud.delete_portfolio(portfolioId) == Status.SUCCESS:
             return {"message": "Portfolio successfully deleted"}, 200
 
         return abort(500, "Portfolio could not be deleted")

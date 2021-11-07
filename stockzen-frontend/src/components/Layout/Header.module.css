@@ -26,9 +26,42 @@ header.userAuthenticated {
 }
 
 .tabs {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 40%;
+  margin: 0 0 5px 15%;
+  padding: 0;
+}
+
+.tabs:nth-child(1) {
+  flex: 1 0 content;
+  font-weight: bold;
+  padding: 0;
+}
+
+.tabs:nth-child(2) {
+  flex: 1 1 auto;
+  font-weight: bold;
+  padding: 0;
+}
+
+.tabs:nth-child(3) {
+  flex: 1 1 auto;
+  padding: 0;
+}
+
+.tab {
+  white-space: nowrap;
   size: large;
   outline: none;
   font-weight: bold;
   color: var(--zen-2);
-  margin-right: 5%;
+  padding: 0;
+  margin-right: 15px;
+}
+
+.searchWidget {
+  margin-left: auto;
 }

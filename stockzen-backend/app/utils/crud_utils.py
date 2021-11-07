@@ -15,6 +15,7 @@ from app.utils.enums import LotType, Status
 from flask_login import current_user
 
 from . import api_utils as api
+from . import calc_utils as calc
 from . import db_utils, utils
 
 # ==============================================================================
@@ -166,6 +167,7 @@ def get_stock_list(portfolio_id: int) -> Status:
             columns=[Stock, StockPage],
             **{"portfolio": portfolio_id},
         )
+
         dict_list = [
             # the order of dicts is important: we want stock to override same-named
             # columns from stock_page, e.g. id
@@ -217,7 +219,6 @@ def fetch_stock(stock_id: int) -> Union[Stock, Status]:
             Stock, stock_id, [StockPage], [Stock, StockPage]
         )
         stock_dict, stock_page_dict = map(to_dict, sqla_tuple)
-
         # the order of dicts is important: we want stock to override same-named
         # columns from stock_page, e.g. id
         return {**stock_page_dict, **stock_dict}
@@ -245,7 +246,14 @@ def update_stock_page(stock_page_id: int) -> Status:
     """Update a stock page on the database, return success status"""
     try:
         sym = utils.id_to_code(stock_page_id)
+        print(f"Fetching stock: {sym}")
+
         price, change, perc_change, prev_close, info = api.fetch_stock_data(sym)
+
+        # force fail if price is None so that we don't overwrite last good value
+        if not price:
+            raise ValueError("Stock price not found, aborting stock_page update")
+
         info_json = json.dumps(info)  # store info as serialised json string
 
         db_utils.update_item_columns(
@@ -262,6 +270,10 @@ def update_stock_page(stock_page_id: int) -> Status:
         )
         return Status.SUCCESS
     except Exception as e:
+        # still need to update timestamp if fail so that min interval will skip this row
+        db_utils.update_item_columns(
+            StockPage, stock_page_id, {"last_updated": datetime.now()}
+        )
         utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
@@ -403,3 +415,13 @@ def search_stock(stock_query: str) -> Status:
     except Exception as e:
         utils.debug_exception(e, suppress=True)
         return Status.FAIL
+
+
+# ==============================================================================
+# Summary Utils
+# ==============================================================================
+def get_performance_summary() -> Status:
+    """Get performance summary banner data for this user"""
+    holdings, today, overall = calc.calc_summary()
+
+    return {"holdings": holdings, "today": today, "overall": overall}

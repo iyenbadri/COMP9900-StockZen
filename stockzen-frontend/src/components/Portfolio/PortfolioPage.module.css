@@ -66,7 +66,7 @@
 }
 
 .tableHeader .rowCode button {
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .tableHeader .rowName button {

@@ -5,7 +5,7 @@ import React, { FC, useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import Form from 'react-bootstrap/Form';
 import { Link, useRouteMatch } from 'react-router-dom';
-import { usdFormatter } from 'utils/Utilities';
+import { percFormatter, usdFormatter } from 'utils/Utilities';
 import styles from './PortfolioList.module.css';
 
 interface IPortfolioListRow {
@@ -113,7 +113,9 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
                   '-'
                 ) : (
                   <>
-                    <div className={styles.percent}>{port.changePercent}%</div>
+                    <div className={styles.percent}>
+                      {percFormatter.format(port.changePercent || 0)}%
+                    </div>
                     <div>{usdFormatter.format(port.change)}</div>
                   </>
                 )}
@@ -128,7 +130,7 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
                 ) : (
                   <>
                     <div className={styles.percent}>
-                      {port.totalGainPercent}%
+                      {percFormatter.format(port.totalGainPercent || 0)}%
                     </div>
                     <div>{usdFormatter.format(port.totalGain)}</div>
                   </>

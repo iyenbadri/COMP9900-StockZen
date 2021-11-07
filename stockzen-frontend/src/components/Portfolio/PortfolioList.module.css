@@ -8,10 +8,14 @@
 
 .toolbarText {
   flex-basis: auto;
-  flex-grow: 1;
   font-size: 1.2rem;
   margin-left: 10px;
   text-decoration: underline;
+}
+
+.toolbarControls {
+  flex-grow: 1;
+  text-align: right;
 }
 
 .toolbarCreateButton {

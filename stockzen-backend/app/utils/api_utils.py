@@ -23,15 +23,14 @@ def fetch_stock_data(sym):
         stock = yf.Ticker(sym)
         info = stock.info
         if not has_data(stock):
-            raise RuntimeError("Stock details could not be fetched")
+            raise RuntimeError(f"Stock details could not be fetched for {sym}")
 
         change, perc_change, price, prev_close = calc_change(sym, info)
 
         return price, change, perc_change, prev_close, info
 
     except Exception as e:
-        util.debug_exception(e, suppress=True)
-        return Status.FAIL
+        util.debug_exception(e)
 
 
 def fetch_historical_data(sym, period):

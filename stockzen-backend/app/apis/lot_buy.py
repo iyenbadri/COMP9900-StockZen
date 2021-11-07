@@ -1,4 +1,5 @@
 import app.utils.crud_utils as util
+from app.utils.calc_utils import propagate_stock_updates
 from app.utils.enums import LotType, Status
 from dateutil import parser as dateparser
 from flask import request
@@ -70,6 +71,7 @@ class BuyLotCRUD(Resource):
         if lot_list == Status.FAIL:
             return abort(500, "Buy Lot list for the stock row could not be retrieved")
 
+        propagate_stock_updates(stockId)  # update stock metrics calculations
         return lot_list
 
 

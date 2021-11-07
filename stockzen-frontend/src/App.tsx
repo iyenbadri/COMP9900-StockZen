@@ -1,6 +1,8 @@
 import 'bootstrap-custom.scss';
 import Footer from 'components/Layout/Footer';
 import Header from 'components/Layout/Header';
+import RefreshProvider from 'contexts/RefreshContext';
+import SearchProvider from 'contexts/SearchContext';
 import TopPerformerProvider from 'contexts/TopPerformerContext';
 import UserProvider, { UserContext } from 'contexts/UserContext';
 import Landing from 'pages/Landing';
@@ -30,7 +32,7 @@ function App() {
             <GuestRoute exact path={'/'} component={Landing} />
             <Route path={'/user'} component={User} />
             <Route path={'/portfolio'} component={Portfolio} />
-            <Route path={'/stock/:stockPageId'} component={Stock} />
+            <Route path={'/stock'} component={Stock} />
           </Switch>
         </Container>
         <Footer></Footer>
@@ -40,11 +42,15 @@ function App() {
 }
 
 const WrappedApp = () => (
-  <UserProvider>
-    <TopPerformerProvider>
-      <App />
-    </TopPerformerProvider>
-  </UserProvider>
+  <RefreshProvider>
+    <UserProvider>
+      <SearchProvider>
+        <TopPerformerProvider>
+          <App />
+        </TopPerformerProvider>
+      </SearchProvider>
+    </UserProvider>
+  </RefreshProvider>
 );
 
 export default WrappedApp;

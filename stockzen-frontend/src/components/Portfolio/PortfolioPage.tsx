@@ -1,9 +1,9 @@
 import { arrayMoveImmutable } from 'array-move';
 import orderDown from 'assets/icon-outlines/outline-chevron-down-small.svg';
 import orderUp from 'assets/icon-outlines/outline-chevron-up-small.svg';
-import refresh from 'assets/icon-outlines/outline-refresh-small.svg';
+import refreshIcon from 'assets/icon-outlines/outline-refresh-small.svg';
 import axios from 'axios';
-import SearchWidget from 'components/Search/SearchWidget';
+import { RefreshContext } from 'contexts/RefreshContext';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import { Ordering } from 'enums';
 import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
@@ -17,12 +17,11 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useParams } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
-import stocksListing from '../Search/listing.json';
+import AddStock from './AddStock';
 import styles from './PortfolioPage.module.css';
 import StockFundamental from './PortfolioPageFundamental';
 import PortfolioPageRow from './PortfolioPageRow';
 import PortfolioPageSummary from './PortfolioPageSummary';
-
 
 interface RouteRarams {
   portfolioId: string;
@@ -62,6 +61,9 @@ const PortfolioPage = () => {
   // Get the setShowPortfolioSummary from TopPerformerContext
   const { setShowPortfolioSummary } = useContext(TopPerformerContext);
 
+  // Get functions for refresh
+  const { subscribe, unsubscribe, refresh } = useContext(RefreshContext);
+
   // Extract the portfolioId from route
   const { portfolioId } = useParams<RouteRarams>();
 
@@ -90,24 +92,22 @@ const PortfolioPage = () => {
   const mapStockList = useCallback(
     (data: IStockResponse[]): IStock[] => {
       return data.map((stock) => {
-        const randomIndex = Math.round(Math.random() * 10000);
-        const symbol = stocksListing[randomIndex];
         return {
           stockId: stock.id,
-          stockPageId: stock.stockPageId ?? Math.random(),
+          stockPageId: stock.stockPageId,
           draggableId: `stock-${stock.id}`,
-          ordering: stock.order ?? Math.random(), // TODO: map the backend data
-          symbol: stock.code ?? symbol.symbol,
-          name: stock.stockName ?? symbol.description,
-          price: stock.price ?? Math.random() * 2000,
-          change: stock.change ?? Math.random() * 500 - 200,
-          changePercent: stock.percChange ?? Math.random() * 300 - 150,
-          averagePrice: stock.avgPrice ?? Math.random() * 100,
-          profit: stock.gain ?? Math.random() * 10000 - 5000,
-          profitPercent: stock.percGain ?? Math.random() * 10000 - 5000,
-          value: stock.value ?? Math.random() * 10000,
-          prediction: stock.prediction ?? Math.random() * 200 - 100,
-          confidence: stock.confidence ?? Math.random() * 200 - 100,
+          ordering: stock.order,
+          symbol: stock.code,
+          name: stock.stockName,
+          price: stock.price,
+          change: stock.change,
+          changePercent: stock.percChange,
+          averagePrice: stock.avgPrice,
+          profit: stock.gain,
+          profitPercent: stock.percGain,
+          value: stock.value,
+          prediction: stock.prediction,
+          confidence: stock.confidence,
         };
       });
     },
@@ -145,13 +145,18 @@ const PortfolioPage = () => {
   );
 
   // A function to load the stocks list
-  const reloadStockList = useCallback(() => {
-    // Call the API
-    axios.get(`/stock/list/${portfolioId}`).then((response) => {
-      // Map the response and then set it.
-      setStocks(mapStockList(response.data), tableOrdering);
-    });
-  }, [portfolioId, mapStockList, setStocks, tableOrdering]);
+  const reloadStockList = useCallback(
+    (forceRefresh: boolean) => {
+      // Call the API
+      axios
+        .get(`/stock/list/${portfolioId}?refresh=${forceRefresh ? '1' : '0'}`)
+        .then((response) => {
+          // Map the response and then set it.
+          setStocks(mapStockList(response.data), tableOrdering);
+        });
+    },
+    [portfolioId, mapStockList, setStocks, tableOrdering]
+  );
 
   // Init
   useEffect(
@@ -160,11 +165,23 @@ const PortfolioPage = () => {
       setShowPortfolioSummary(true);
 
       // Load the stock list from backend.
-      reloadStockList();
+      reloadStockList(false);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+
+  useEffect(() => {
+    const refresh = () => {
+      reloadStockList(true);
+    };
+
+    subscribe(refresh);
+
+    return () => {
+      unsubscribe(refresh);
+    };
+  }, []);
 
   // Handler of add stock
   const handleAddStock = (symbol: string, stockPageId: number) => {
@@ -173,7 +190,7 @@ const PortfolioPage = () => {
       .post(`/stock/${portfolioId}`, { stockPageId: stockPageId })
       .then(() => {
         // Then reload the stock list
-        reloadStockList();
+        reloadStockList(false);
       });
   };
 
@@ -255,7 +272,7 @@ const PortfolioPage = () => {
     setShowDeleteStockModal(false);
 
     axios.delete(`/stock/${deletingStockId}`).then(() => {
-      reloadStockList();
+      reloadStockList(false);
     });
   };
 
@@ -285,7 +302,7 @@ const PortfolioPage = () => {
       </Modal>
 
       <div>
-        <PortfolioPageSummary></PortfolioPageSummary>
+        <PortfolioPageSummary portfolioId={portfolioId}></PortfolioPageSummary>
       </div>
       <hr />
 
@@ -307,15 +324,15 @@ const PortfolioPage = () => {
         </TabList>
         <TabPanel>
           <div className={styles.tableToolbar}>
-            <SearchWidget
+            <AddStock
               portfolioId={portfolioId}
               addStock={handleAddStock}
-            ></SearchWidget>
+            ></AddStock>
             <Button
               variant='light'
               className='ms-1 text-muted d-flex align-items-center'
             >
-              <img src={refresh} alt='refresh' style={{ opacity: 0.5 }} />
+              <img src={refreshIcon} alt='refresh' style={{ opacity: 0.5 }} />
               Refresh
             </Button>
           </div>

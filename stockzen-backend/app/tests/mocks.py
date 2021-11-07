@@ -32,7 +32,7 @@ def portfolio_details(id, name="Test Portfolio", order=0):
         "id": id,
         "portfolioName": name,
         "stockCount": 0,
-        "value": 0,
+        "value": None,
         "change": None,
         "percChange": None,
         "gain": None,
@@ -53,7 +53,7 @@ new_stock_1 = {
     "stockName": "Agilent Technologies, Inc.",
 }
 new_stock_2 = {
-    "stockPageId": 20181,
+    "stockPageId": 6876,
     "code": "TSLA",
     "stockName": "Tesla, Inc.",
 }
@@ -69,7 +69,6 @@ def stock_details(id, stock, order=0):
         "change": None,
         "percChange": None,
         "avgPrice": None,
-        "unitsHeld": 0,
         "gain": None,
         "percGain": None,
         "value": None,
@@ -135,3 +134,21 @@ def lot_details(type, id, lot):
         raise ValueError("Incorrect type provided")
 
     return lot_details
+
+
+# ------------------------------------------------------------------------------
+# Performance Summary
+# ------------------------------------------------------------------------------
+simulated_price = 5
+simulated_change = 2
+simulated_gain = (
+    simulated_price - unit_price
+) * units  # == (current_price - avg_price) * units_held
+empty_summary = {"holdings": None, "today": None, "overall": None}
+holdings = units * simulated_price
+today = (simulated_change * units / holdings) * 100
+
+overall = (simulated_gain / holdings) * 100
+new_summary_1 = {"holdings": holdings, "today": today, "overall": overall}
+
+sold_summary_1 = {"holdings": 0, "today": None, "overall": None}
