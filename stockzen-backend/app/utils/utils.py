@@ -38,7 +38,7 @@ def id_to_code(stock_page_id: int):
         debug_exception(e)
 
 
-def bulk_stock_fetch(sym_list: Sequence[str]):
+def bulk_stock_fetch(sym_list: Sequence[str], await_all: bool = False):
     """Update all stocks from a list of symbols"""
     # convert symbol list to stock_page_id list
     tuple_list = (
@@ -51,4 +51,7 @@ def bulk_stock_fetch(sym_list: Sequence[str]):
 
     # concurrently fetch api data to update each stock page
     # pass longer update interval so app does not request bulk from yfinance too often
-    executor.map(calc.api_request, id_list, repeat(TOP_STOCKS_INTERVAL))
+    results = executor.map(calc.api_request, id_list, repeat(TOP_STOCKS_INTERVAL))
+    if await_all:
+        list(results)  # use the result to force program to wait before continuing
+        print("All concurrent results returned, continuing...")

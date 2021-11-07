@@ -1,4 +1,6 @@
 import app.utils.crud_utils as crud
+import app.utils.utils as utils
+from app.config import TOP_COMPANIES
 from app.utils.enums import Status
 from flask_login.utils import login_required
 from flask_restx import Namespace, Resource, abort, fields, marshal
@@ -145,6 +147,9 @@ class StockPageCRUD(Resource):
     @api.marshal_list_with(top_performers_response)
     @api.response(200, "Successfully retrieved top performing stocks list")
     def get(self):
+
+        # Update top companies for top-performer widget before getting from db
+        utils.bulk_stock_fetch(TOP_COMPANIES, await_all=True)  # blocking request
 
         stock_list = crud.fetch_top_stocks()
 
