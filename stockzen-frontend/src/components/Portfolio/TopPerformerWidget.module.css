@@ -79,3 +79,13 @@
 .challenge a {
   color: var(--zen-3);
 }
+
+.spinner {
+  height: 20px;
+  margin: 15px;
+}
+
+.spinnerText {
+  font-style: italic;
+  margin-top: 25px;
+}
