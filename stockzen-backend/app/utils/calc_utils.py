@@ -2,10 +2,11 @@ from contextlib import suppress
 from datetime import datetime
 
 from app import db, executor
-from app.config import UPDATE_MIN_INTERVAL
+from app.config import STALENESS_INTERVAL
 from app.models.schema import LotBought, LotSold, Portfolio, Stock, StockPage
 from app.utils import crud_utils, db_utils, utils
 from app.utils.enums import LotType, Status
+from flask import current_app
 from flask_login import current_user
 from sqlalchemy.orm import load_only
 from sqlalchemy.sql import func
@@ -79,19 +80,23 @@ def propagate_stock_updates(stock_id):
         utils.debug_exception(e, suppress=True)
 
 
-def api_request(stock_page_id: int):
-    """Update Stock Page with data from yfinance, if fail try to use latest (cached) data"""
+def api_request(stock_page_id: int, interval: str = STALENESS_INTERVAL):
+    """Update Stock Page with data from yfinance, if fail try to use latest (cached) data
+    :param: default interval is STALENESS_INTERVAL (90s), can also be TOP_STOCKS_INTERVAL (1hr)"""
+    # Do not send API requests in testing mode
+    if current_app.config["TESTING"]:
+        return
+
     try:
         # only need to fetch if the data is stale or timestamp is NULL (i.e. never been updated before)
         last_updated = db_utils.query_item(StockPage, stock_page_id).last_updated
-        now = datetime.now()
         try:
-            elapsed = now - last_updated
+            elapsed = datetime.now() - last_updated
         except:
             pass  # let the if statement handle the error
 
         # Check if timestamp is NULL or data is stale
-        if not last_updated or elapsed.seconds > UPDATE_MIN_INTERVAL:
+        if not last_updated or elapsed.seconds > interval:
             print(f"Data for stock_page {stock_page_id} is stale: fetching from yfinance")
             if crud_utils.update_stock_page(stock_page_id) == Status.FAIL:
                 raise ConnectionError(
