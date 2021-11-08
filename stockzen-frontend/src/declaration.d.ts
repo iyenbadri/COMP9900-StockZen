@@ -94,6 +94,16 @@ interface IStockPageResponse {
     confidence: number;
 }
 
+interface IStockHistoryResponse {
+    stockPageId: number;
+    date: string;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+    volume: number;
+}
+
 // Temp sort parameters
 interface TableOrdering<T extends string> {
     column: T | '',

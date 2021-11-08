@@ -137,11 +137,15 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
   };
 
   // Set lots to dummy data
-  useEffect(() => {
-    reloadBoughtLotsList();
+  useEffect(
+    () => {
+      reloadBoughtLotsList();
 
-    reloadSoldLotsList();
-  }, []);
+      reloadSoldLotsList();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   // Handler of add lot (both bought and sold)
   const addLot = useCallback(

@@ -1,13 +1,12 @@
 import lossArrow from 'assets/icon-outlines/outline-arrow-down-circle-red.svg';
 import gainArrow from 'assets/icon-outlines/outline-arrow-up-circle-green.svg';
-import axios from 'axios';
-import { RefreshContext } from 'contexts/RefreshContext';
+import loadSpinner from 'assets/load_spinner.svg';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import moment from 'moment';
-import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import styles from './TopPerformerWidget.module.css';
 import { usdFormatter } from 'utils/Utilities';
+import styles from './TopPerformerWidget.module.css';
 
 // interface IProps {
 //   firstName: string;
@@ -24,12 +23,6 @@ const gainLossArrow = (change: number) => {
 };
 
 // Number formatter
-const numberFormatter = new Intl.NumberFormat('en-US', {
-  style: 'decimal',
-  maximumFractionDigits: 2,
-  minimumFractionDigits: 2,
-});
-
 const changeFormatter = new Intl.NumberFormat('en-US', {
   style: 'percent',
   maximumFractionDigits: 2,
@@ -37,62 +30,53 @@ const changeFormatter = new Intl.NumberFormat('en-US', {
   signDisplay: 'always',
 });
 
+const percentFormatter = new Intl.NumberFormat('en-US', {
+  style: 'percent',
+  maximumFractionDigits: 2,
+  minimumFractionDigits: 2,
+});
+
 const TopPerformerWidget: FC = (props) => {
-  const { subscribe, unsubscribe } = useContext(RefreshContext);
-  const { showPortfolioSummary, topPerformers } =
-    useContext(TopPerformerContext);
-
-  const [lastUpdateDate, setLastUpdateDate] = useState<Date>();
-
-  const [portfolioSummary, setPortfolioSummary] =
-    useState<IPortfolioPerformance>();
-
-  const reloadData = useCallback(async () => {
-    setLastUpdateDate(new Date());
-
-    setPortfolioSummary({
-      holding: Math.random() * 2000,
-      todayChangePercent: Math.random() * 10 - 5,
-      overallChangePercent: Math.random() * 10 - 5,
-    });
-  }, [setLastUpdateDate, setPortfolioSummary]);
-
-  useEffect(() => {
-    reloadData();
-  }, [reloadData]);
-
-  useEffect(() => {
-    const refresh = () => {
-      reloadData();
-    };
-
-    subscribe(refresh);
-
-    return () => {
-      unsubscribe(refresh);
-    };
-  }, []);
+  const {
+    showPortfolioSummary,
+    portfolioSummary,
+    lastUpdateDate,
+    topPerformers,
+    isLoading,
+  } = useContext(TopPerformerContext);
 
   return (
     <div className={styles.widget}>
       <div className={styles.date}>
-        {moment(lastUpdateDate).format('dddd Do MMMM h:mma')}
+        {lastUpdateDate == null
+          ? '-'
+          : moment(lastUpdateDate).format('dddd Do MMMM h:mma')}
       </div>
       {showPortfolioSummary && (
         <>
           <div className={styles.summaryTitle}>My Holdings</div>
           <div className={`${styles.summaryValue} outerStroke`}>
-            {usdFormatter.format(portfolioSummary?.holding ?? 0)}
+            {portfolioSummary == null
+              ? '-'
+              : usdFormatter.format(portfolioSummary?.holding ?? 0)}
           </div>
           <div className={styles.summaryTitle}>Today</div>
           <div className={`${styles.summaryValue} outerStroke`}>
             {gainLossArrow(portfolioSummary?.todayChangePercent ?? 0)}
-            {usdFormatter.format(portfolioSummary?.todayChangePercent ?? 0)}%
+            {portfolioSummary == null
+              ? '-'
+              : percentFormatter.format(
+                  portfolioSummary?.todayChangePercent ?? 0
+                )}
           </div>
           <div className={styles.summaryTitle}>Overall</div>
           <div className={`${styles.summaryValue} outerStroke`}>
             {gainLossArrow(portfolioSummary?.overallChangePercent ?? 0)}
-            {usdFormatter.format(portfolioSummary?.overallChangePercent ?? 0)}%
+            {portfolioSummary == null
+              ? '-'
+              : percentFormatter.format(
+                  portfolioSummary?.overallChangePercent ?? 0
+                )}
           </div>
           <hr className={styles.separatorLine} />
         </>
@@ -107,23 +91,36 @@ const TopPerformerWidget: FC = (props) => {
           </tr>
         </thead>
         <tbody>
-          {topPerformers.map((stock, index) => {
-            return (
-              <tr key={stock.symbol} className={styles.symbolRow}>
-                <td className={styles.symbol}>
-                  <Link to={'/stock/' + stock.stockPageId.toString()}>
-                    {stock.symbol}
-                  </Link>
-                </td>
-                <td className={styles.price}>
-                  {usdFormatter.format(stock.price)}
-                </td>
-                <td className={styles.gain}>
-                  {changeFormatter.format(stock.change)}
-                </td>
-              </tr>
-            );
-          })}
+          {isLoading && (
+            <tr>
+              <td colSpan={99} className='text-center'>
+                <img
+                  src={loadSpinner}
+                  alt='loading spinner'
+                  className={styles.spinner}
+                />
+                <span className={styles.spinnerText}>Loading...</span>
+              </td>
+            </tr>
+          )}
+          {!isLoading &&
+            topPerformers.map((stock, index) => {
+              return (
+                <tr key={stock.symbol} className={styles.symbolRow}>
+                  <td className={styles.symbol}>
+                    <Link to={'/stock/' + stock.stockPageId.toString()}>
+                      {stock.symbol}
+                    </Link>
+                  </td>
+                  <td className={styles.price}>
+                    {usdFormatter.format(stock.price)}
+                  </td>
+                  <td className={styles.gain}>
+                    {changeFormatter.format(stock.changePercent)}
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
       <hr className={styles.separatorLine} />
@@ -133,11 +130,5 @@ const TopPerformerWidget: FC = (props) => {
     </div>
   );
 };
-
-interface IPortfolioPerformance {
-  holding: number;
-  todayChangePercent: number;
-  overallChangePercent: number;
-}
 
 export default TopPerformerWidget;

@@ -10,9 +10,7 @@
 import app.utils.auth_utils as auth
 import app.utils.calc_utils as calc
 import app.utils.crud_utils as crud
-import app.utils.utils as utils
 from app import login_manager
-from app.config import TOP_COMPANIES
 from app.models.schema import User
 from app.utils.enums import Status
 from flask import request
@@ -88,8 +86,6 @@ class UserCRUD(Resource):
         login_user(user)
         user_details = auth.extract_user_details(user)
 
-        # Update top companies for top-performer widget
-        utils.bulk_stock_fetch(TOP_COMPANIES)
         # refresh StockPage data and cascade calculations updates
         calc.cascade_updates(refresh_data=True)
 
