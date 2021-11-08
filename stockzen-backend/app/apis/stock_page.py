@@ -1,4 +1,6 @@
 import app.utils.crud_utils as crud
+import app.utils.utils as utils
+from app.config import TOP_COMPANIES
 from app.utils.enums import Status
 from flask_login.utils import login_required
 from flask_restx import Namespace, Resource, abort, fields, marshal
@@ -76,6 +78,21 @@ stock_page_history_response = api.model(
     },
 )
 
+top_performers_response = api.model(
+    "Response: Top performing stocks",
+    {
+        "stockPageId": fields.Integer(
+            attribute="id", required=True, description="stock page id"
+        ),
+        "symbol": fields.String(
+            attribute="code", required=True, description="stock symbol"
+        ),
+        "price": fields.Float(required=True, description="stock price"),
+        "percChange": fields.Float(
+            attribute="perc_change", required=True, description="stock daily change"
+        ),
+    },
+)
 
 # ==============================================================================
 # API Routes/Endpoints
@@ -105,7 +122,6 @@ class StockPageCRUD(Resource):
 
         if stock_page_item == Status.FAIL:
             return abort(404, "Stock page could not be found")
-
         return stock_page_item, 200
 
 
@@ -122,3 +138,21 @@ class StockPageCRUD(Resource):
             return abort(500, "Stock page history could not be retrieved")
 
         return stock_history, 200
+
+
+@api.route("/top")
+class StockPageCRUD(Resource):
+    @login_required
+    @api.marshal_list_with(top_performers_response)
+    @api.response(200, "Successfully retrieved top performing stocks list")
+    def get(self):
+
+        # Update top companies for top-performer widget before getting from db
+        utils.bulk_stock_fetch(TOP_COMPANIES, await_all=True)  # blocking request
+
+        stock_list = crud.fetch_top_stocks()
+
+        if stock_list == Status.FAIL:
+            return abort(500, "Could not get top stock performers")
+
+        return stock_list, 200

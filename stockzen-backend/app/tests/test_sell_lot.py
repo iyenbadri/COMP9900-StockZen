@@ -16,7 +16,7 @@ def test_sell_lot_endpoints(auth_client):
     assert response.status_code == 200
 
     # --------------------------------------------------------------------------
-    # Stock Sell Create and List
+    # Lot Sell Create
     # --------------------------------------------------------------------------
     response = client.get("lot/sell/list/1")
     # No lots at the start
@@ -24,11 +24,11 @@ def test_sell_lot_endpoints(auth_client):
     assert response.json == []
 
     response = client.post("lot/sell/1", json=mock.new_lot_1)
-    # Should successfully add a stock
+    # Should successfully add a lot
     assert response.status_code == 200
 
     response = client.post("lot/sell/1", json=mock.new_lot_1)
-    # Should successfully add a similar stock again
+    # Should successfully add a similar lot again
     assert response.status_code == 200
 
     response = client.get("lot/sell/list/1")
@@ -40,7 +40,7 @@ def test_sell_lot_endpoints(auth_client):
     assert lot_list[1] == mock.lot_details(LotType.SELL, id=2, lot=mock.new_lot_1)
 
     # --------------------------------------------------------------------------
-    # Stock Sell Delete
+    # Lot Sell Delete
     # --------------------------------------------------------------------------
 
     response = client.delete("lot/sell/2")
@@ -51,7 +51,7 @@ def test_sell_lot_endpoints(auth_client):
     assert len(lot_list) == 1
 
     # --------------------------------------------------------------------------
-    # Stock Sell Get Details
+    # Lot Sell Get Details
     # --------------------------------------------------------------------------
     response = client.get("lot/sell/9999")
     # Should not be able to find a non-existent lot Id
