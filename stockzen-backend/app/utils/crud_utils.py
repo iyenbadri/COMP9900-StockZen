@@ -463,26 +463,28 @@ def get_performance_summary() -> Status:
 # ==============================================================================
 # Challenge Utils
 # ==============================================================================
-def get_active_challenge() -> int:
-    active_challenge_id = Challenge.query.filter_by(is_active=True).one().id
-    return active_challenge_id
 
 
-def get_leaderboard() -> Union[Dict, Status]:
+def get_leaderboard_results() -> Union[Dict, Status]:
+    """Return dict list of best performing user portfolios during current challenge period"""
     try:
         leaderboard = []
-        active_challenge_id = get_active_challenge()
+        prev_challenge_id, _ = utils.get_prev_challenge()
+
+        if not prev_challenge_id:
+            return Status.NOT_EXIST
 
         # Get a ranked list of users and their avg perc_changes
         result_tuples = (
             ChallengeEntry.query.join(Challenge)
-            .filter(Challenge.id == active_challenge_id)
+            .filter(Challenge.id == prev_challenge_id)
             .with_entities(
                 ChallengeEntry.user_id,
                 func.avg(ChallengeEntry.perc_change).label("avg_change"),
             )
             .group_by(ChallengeEntry.user_id)
             .order_by(desc("avg_change"))
+            .limit(10)  # max of 10 results
             .all()
         )
 
@@ -491,12 +493,13 @@ def get_leaderboard() -> Union[Dict, Status]:
             stock_codes = (
                 ChallengeEntry.query.join(Challenge)
                 .filter(
-                    Challenge.id == active_challenge_id, ChallengeEntry.user_id == user_id
+                    Challenge.id == prev_challenge_id, ChallengeEntry.user_id == user_id
                 )
                 .order_by(ChallengeEntry.perc_change.desc())
                 .with_entities(ChallengeEntry.code)
                 .all()
             )
+
             stock_codes = [tuple[0] for tuple in stock_codes]
             leaderboard.append(
                 {
@@ -505,9 +508,7 @@ def get_leaderboard() -> Union[Dict, Status]:
                     "stock_codes": stock_codes,
                 }
             )
-
         return leaderboard
-
     except Exception as e:
         utils.debug_exception(e, suppress=True)
         return Status.FAIL
