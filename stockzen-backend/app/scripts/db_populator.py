@@ -1,13 +1,21 @@
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from random import randrange, uniform
 
 import app.utils.crud_utils as crud
 import pandas as pd
 from app import create_app, db
-from app.models.schema import LotBought, LotSold, Portfolio, Stock
+from app.models.schema import (
+    Challenge,
+    ChallengeEntry,
+    LotBought,
+    LotSold,
+    Portfolio,
+    Stock,
+)
 from app.utils import db_utils
 from app.utils.enums import Status
+from app.utils.utils import id_to_code
 from dateutil.parser import parse
 from faker import Faker
 
@@ -136,6 +144,39 @@ def generate_dummy_lots(n_lots: int, n_stocks: int, user_id: int):
                     print(f"Could not add dummy sell lot for user_id: {user_id}")
 
 
+def generate_dummy_challenges(n_users):
+    try:
+        # Create some challenges
+        challenge = Challenge(
+            start_date=datetime.now() - timedelta(weeks=2), is_active=False
+        )
+        db_utils.insert_item(challenge)
+        print("Challenge added")
+        challenge = Challenge(
+            start_date=datetime.now() - timedelta(weeks=1), is_active=True
+        )
+        db_utils.insert_item(challenge)
+        print("Challenge added")
+
+        # Add entries to challenges
+        for i_users in range(1, n_users + 1):
+            for i in range(1, 6):
+                entry = ChallengeEntry(
+                    challenge_id=1,
+                    user_id=i_users,
+                    stock_page_id=i,
+                    code=id_to_code(i),
+                    start_price=None,
+                    end_price=None,
+                    # perc_change=i + i_users,
+                    perc_change=None,
+                )
+                db_utils.insert_item(entry)
+                print("Challenge Entry added")
+    except Exception as e:
+        print(e)
+
+
 def generate_dummy_data(n_users=2, n_portfolios=2, n_stocks=4, n_lots=5):
     """
     Generates dummy user data
@@ -149,6 +190,7 @@ def generate_dummy_data(n_users=2, n_portfolios=2, n_stocks=4, n_lots=5):
         generate_dummy_portfolios(n_portfolios, user_id)
         generate_dummy_stocks(n_stocks, n_portfolios, user_id)
         generate_dummy_lots(n_lots, n_stocks, user_id)
+    generate_dummy_challenges(n_users)
 
     print(
         f"\n\t****************************************\n\
