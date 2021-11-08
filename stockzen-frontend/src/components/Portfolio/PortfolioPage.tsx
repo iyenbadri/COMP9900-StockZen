@@ -12,7 +12,7 @@ import {
   DragDropContext,
   Droppable,
   DropResult,
-  ResponderProvided
+  ResponderProvided,
 } from 'react-beautiful-dnd';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -45,8 +45,8 @@ const OrderingIndicator: FC<OrderingIndicatorProp> = (props) => {
     <>
       {target === ordering.column && (
         <img
-          width={24}
-          height={24}
+          width={20}
+          height={20}
           src={ordering.ordering === Ordering.Ascending ? orderUp : orderDown}
           alt='order-indicator'
         />

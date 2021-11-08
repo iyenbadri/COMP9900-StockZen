@@ -21,7 +21,7 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  font-size: 1.0rem;
+  font-size: 1rem;
   margin: 0px 15px 5px 0px;
 }
 
@@ -35,7 +35,7 @@
 .stockChange {
   flex: 0 0 content;
   font-size: large;
-  padding: 0px 15px 0px 0px;
+  padding: 0px 8px 0px 0px;
 }
 
 .stockPercChange {
@@ -110,17 +110,13 @@
   width: 100%;
 }
 
-.tooltip
-.index
-.indexTitle {
+.tooltip .index .indexTitle {
   max-width: 44%;
   float: left;
   font-weight: bold;
 }
 
-.tooltip
-.index
-.sep {
+.tooltip .index .sep {
   max-width: 1%;
   float: left;
   font-weight: bold;
@@ -128,9 +124,7 @@
   padding: 0;
 }
 
-.tooltip
-.index
-.indexValue {
+.tooltip .index .indexValue {
   max-width: 55%;
   float: left;
   text-align: right;
@@ -157,7 +151,7 @@
 }
 
 .historyTitle .title {
-  width: 16%; 
+  width: 16%;
   font-weight: bold;
   float: left;
   text-align: center;
