@@ -7,6 +7,7 @@ class Status(Enum):
     INCORRECT_PASSWORD = 2
     SUCCESS = 3
     FAIL = 4
+    NOT_EXIST = 5
 
 
 class LotType(Enum):

@@ -42,4 +42,4 @@ TOP_COMPANIES = [
 # ------------------------------------------------------------------------------
 # Portfolio Challenge
 # ------------------------------------------------------------------------------
-CHALLENGE_PERIOD = 1 * 60  # length of each challenge round in seconds
+CHALLENGE_PERIOD = 7 * 24 * 60 * 60  # length of each challenge round in seconds
