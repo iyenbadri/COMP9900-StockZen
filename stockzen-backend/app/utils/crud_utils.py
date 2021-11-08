@@ -5,6 +5,8 @@ from typing import Dict, Mapping, Sequence, Union
 import app.utils.calc_utils as calc
 from app.config import N_TOP_PERFORMERS, TOP_STOCKS_INTERVAL
 from app.models.schema import (
+    Challenge,
+    ChallengeEntry,
     History,
     LotBought,
     LotSold,
@@ -15,6 +17,7 @@ from app.models.schema import (
 )
 from app.utils.enums import LotType, Status
 from flask_login import current_user
+from sqlalchemy import desc, func
 from sqlalchemy.orm import load_only
 
 from . import api_utils as api
@@ -420,7 +423,7 @@ def delete_lot(type: LotType, lot_id: int) -> Status:
         return Status.FAIL
 
 
-def fetch_lot(type: LotType, lot_id: int) -> Union[Stock, Status]:
+def fetch_lot(type: LotType, lot_id: int) -> Union[Dict, Status]:
     """Get existing lot by id, return item or success status"""
     try:
         table = LotBought if type == LotType.BUY else LotSold
@@ -455,3 +458,56 @@ def get_performance_summary() -> Status:
     holdings, today, overall = calc.calc_summary()
 
     return {"holdings": holdings, "today": today, "overall": overall}
+
+
+# ==============================================================================
+# Challenge Utils
+# ==============================================================================
+def get_active_challenge() -> int:
+    active_challenge_id = Challenge.query.filter_by(is_active=True).one().id
+    return active_challenge_id
+
+
+def get_leaderboard() -> Union[Dict, Status]:
+    try:
+        leaderboard = []
+        active_challenge_id = get_active_challenge()
+
+        # Get a ranked list of users and their avg perc_changes
+        result_tuples = (
+            ChallengeEntry.query.join(Challenge)
+            .filter(Challenge.id == active_challenge_id)
+            .with_entities(
+                ChallengeEntry.user_id,
+                func.avg(ChallengeEntry.perc_change).label("avg_change"),
+            )
+            .group_by(ChallengeEntry.user_id)
+            .order_by(desc("avg_change"))
+            .all()
+        )
+
+        # Append each user's stock codes to the results
+        for user_id, avg_change in result_tuples:
+            stock_codes = (
+                ChallengeEntry.query.join(Challenge)
+                .filter(
+                    Challenge.id == active_challenge_id, ChallengeEntry.user_id == user_id
+                )
+                .order_by(ChallengeEntry.perc_change.desc())
+                .with_entities(ChallengeEntry.code)
+                .all()
+            )
+            stock_codes = [tuple[0] for tuple in stock_codes]
+            leaderboard.append(
+                {
+                    "user_id": user_id,
+                    "perc_change": avg_change,
+                    "stock_codes": stock_codes,
+                }
+            )
+
+        return leaderboard
+
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+        return Status.FAIL

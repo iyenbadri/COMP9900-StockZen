@@ -1,6 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from app import db
+from app.config import CHALLENGE_PERIOD
 from flask_login import UserMixin
 from sqlalchemy import Column, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import backref, relationship
@@ -198,3 +199,60 @@ class History(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     stock_page_id = Column(Integer, ForeignKey("stock_pages.id"), nullable=False)
     history = Column(String, nullable=False)
+
+
+# ------------------------------------------------------------------------------
+# Portfolio Challenge tables
+# ------------------------------------------------------------------------------
+
+# Holds Portfolio Challenge round info
+class Challenge(db.Model):
+    __tablename__ = "challenges"
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    start_date = Column(DateTime, nullable=False, default=datetime.now())
+    end_date = Column(
+        DateTime,
+        default=datetime.now()
+        + timedelta(seconds=CHALLENGE_PERIOD),  # get endtime from config
+    )
+    is_active = Column(Boolean, default=False)
+
+    # Relationships
+    # one-to-many challenges:entries
+    entries = relationship(
+        "ChallengeEntry",
+        backref=backref("challenges", lazy="select"),
+        lazy="select",
+        cascade="all, delete, delete-orphan",
+    )
+
+
+# Holds Portfolio Challenge entries
+class ChallengeEntry(db.Model):
+    __tablename__ = "challenge_entries"
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    challenge_id = Column(Integer, ForeignKey("challenges.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    stock_page_id = Column(Integer, ForeignKey("stock_pages.id"), nullable=False)
+    code = Column(String)  # stock symbol
+    start_price = Column(Float)
+    end_price = Column(Float)
+    perc_change = Column(Float)
+
+
+# # Cache Portfolio Challenge stock data
+# class ChallengeData(db.Model):
+#     __tablename__ = "challenge_data"
+#     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+#     challenge_id = Column(Integer, ForeignKey("challenges.id"), nullable=False)
+#     stock_page_id = Column(Integer, ForeignKey("stock_pages.id"), nullable=False)
+
+
+#     # Relationships
+#     # one-to-many challenge_data:challenge_entries
+#     entries = relationship(
+#         "Entry",
+#         backref=backref("challenge_data", lazy="select"),
+#         lazy="select",
+#         cascade="all, delete, delete-orphan",
+#     )
