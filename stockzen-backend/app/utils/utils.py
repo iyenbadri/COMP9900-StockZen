@@ -68,6 +68,14 @@ def bulk_stock_fetch(sym_list: Sequence[str], await_all: bool = False):
         print("All concurrent results returned, continuing...")
 
 
+def get_open_challenge():
+    """Return id and start date of active challenge, or None if not exist"""
+    challenge = Challenge.query.filter_by(is_open=True).one()
+    if not challenge:
+        return None, None
+    return challenge.id, challenge.start_date
+
+
 def get_prev_challenge():
     """Return id and start date of previous challenge, or None if not exist"""
     challenge = (
@@ -76,7 +84,6 @@ def get_prev_challenge():
     if not challenge:
         return None, None
     return challenge.id, challenge.start_date
-
 
 
 def bulk_challenge_fetch(await_all: bool = False):
@@ -100,7 +107,7 @@ def bulk_challenge_fetch(await_all: bool = False):
         list(results)  # use the result to force program to wait before continuing
         print("All concurrent Challenge results returned, continuing...")
 
-def is_valid_challenge(challenge_id) ->Status:
+def is_valid_challenge(challenge_id) -> Status:
     try:
         challenge = Challenge.query.filter_by(id=challenge_id).one()
         if datetime.now()< challenge.start_date and challenge.is_active==True:

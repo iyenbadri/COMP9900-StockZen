@@ -168,7 +168,6 @@ def generate_dummy_challenges(n_users):
                     code=id_to_code(i),
                     start_price=None,
                     end_price=None,
-                    # perc_change=i + i_users,
                     perc_change=None,
                 )
                 db_utils.insert_item(entry)
