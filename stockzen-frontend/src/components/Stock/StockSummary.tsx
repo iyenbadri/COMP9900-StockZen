@@ -1,6 +1,6 @@
 import questionIcon from 'assets/icon-outlines/outline-question-circle.svg';
 import React, { FC } from 'react';
-import { intFormatter, numberFomatter } from 'utils/Utilities';
+import { intFormatter, numberFormatter } from 'utils/Utilities';
 import styles from './StockSummary.module.css';
 
 const StockSummary: FC<IStockPageResponse> = (prop) => {
@@ -13,7 +13,7 @@ const StockSummary: FC<IStockPageResponse> = (prop) => {
               Previous Close
             </div>
             <div className={styles.infoValue}>
-              {numberFomatter.format(prop.prevClose)}
+              {numberFormatter.format(prop.prevClose)}
             </div>
           </div>
           <div className={styles.infoRow}>
@@ -21,14 +21,14 @@ const StockSummary: FC<IStockPageResponse> = (prop) => {
               Open
             </div>
             <div className={styles.infoValue}>
-              {numberFomatter.format(prop.open)}
+              {numberFormatter.format(prop.open)}
             </div>
           </div>
           <div className={styles.infoRow}>
             <div className={styles.infoTitle}>
               Bid
             </div>
-            <div className={styles.infoValue}>{numberFomatter.format(prop.bid)} x {intFormatter.format(prop.bidSize)}
+            <div className={styles.infoValue}>{numberFormatter.format(prop.bid)} x {intFormatter.format(prop.bidSize)}
             </div>
           </div>
           <div className={styles.infoRow}>
@@ -36,7 +36,7 @@ const StockSummary: FC<IStockPageResponse> = (prop) => {
               Ask
             </div>
             <div className={styles.infoValue}>
-              {numberFomatter.format(prop.ask)} x {intFormatter.format(prop.askSize)}
+              {numberFormatter.format(prop.ask)} x {intFormatter.format(prop.askSize)}
             </div>
           </div>
           <div className={styles.infoRow}>
@@ -44,7 +44,7 @@ const StockSummary: FC<IStockPageResponse> = (prop) => {
               Day's Range
             </div>
             <div className={styles.infoValue}>
-              {numberFomatter.format(prop.dayLow)} - {numberFomatter.format(prop.dayHigh)}
+              {numberFormatter.format(prop.dayLow)} - {numberFormatter.format(prop.dayHigh)}
             </div>
           </div>
         </div>
@@ -54,7 +54,7 @@ const StockSummary: FC<IStockPageResponse> = (prop) => {
               52 Week Range
             </div>
             <div className={styles.infoValue}>
-              {numberFomatter.format(prop.fiftyTwoWeekLow)} - {numberFomatter.format(prop.fiftyTwoWeekHigh)}
+              {numberFormatter.format(prop.fiftyTwoWeekLow)} - {numberFormatter.format(prop.fiftyTwoWeekHigh)}
             </div>
           </div>
           <div className={styles.infoRow}>
@@ -96,7 +96,7 @@ const StockSummary: FC<IStockPageResponse> = (prop) => {
                 Stock's volatility in relation to the overall market
               </div>
             </div>
-            <div>{typeof prop.beta === 'number' ? numberFomatter.format(prop.beta) : '-'}</div>
+            <div>{typeof prop.beta === 'number' ? numberFormatter.format(prop.beta) : '-'}</div>
           </div>
         </div>
       </div>
