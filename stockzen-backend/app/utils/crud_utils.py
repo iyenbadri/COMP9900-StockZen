@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from typing import Dict, Mapping, Sequence, Union
 
 import app.utils.calc_utils as calc
-from app.config import N_TOP_PERFORMERS, TOP_STOCKS_INTERVAL
+from app.config import CHALLENGE_PERIOD, N_TOP_PERFORMERS, TOP_STOCKS_INTERVAL
 from app.models.schema import (
     Challenge,
     ChallengeEntry,
@@ -508,7 +508,33 @@ def get_leaderboard_results() -> Union[Dict, Status]:
                     "stock_codes": stock_codes,
                 }
             )
-        return leaderboard
+
+        # Get challenge start and end dates
+        start_date = (
+            Challenge.query.filter(Challenge.id == prev_challenge_id).one().start_date
+        )
+        end_date = start_date + timedelta(seconds=CHALLENGE_PERIOD)
+
+        return {
+            "start_date": start_date,
+            "end_date": end_date,
+            "leaderboard": leaderboard,
+        }
     except Exception as e:
         utils.debug_exception(e, suppress=True)
         return Status.FAIL
+
+
+def get_leaderboard_status():
+    """Return active and open status of the last challenge"""
+    try:
+        challenge = Challenge.query.order_by(Challenge.id.desc()).first()
+        return to_dict(challenge)
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+        return Status.FAIL
+
+
+def add_challenge_stocks(stocks, challenge_id: int) -> Status:
+
+    return

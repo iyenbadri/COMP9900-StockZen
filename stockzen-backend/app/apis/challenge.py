@@ -1,7 +1,8 @@
 from app.utils import crud_utils, utils
 from app.utils.enums import Status
+from flask import request
 from flask_login.utils import login_required
-from flask_restx import Namespace, Resource, abort, fields
+from flask_restx import Namespace, Resource, abort, fields, marshal
 
 api = Namespace("challenge", description="Portfolio Challenge related operations")
 
@@ -12,18 +13,8 @@ api = Namespace("challenge", description="Portfolio Challenge related operations
 #   used to convert to the the frontend representation, i.e. camelCase
 # ==============================================================================
 
-
-challenge_entry_request = api.model(
-    "Request: Submit a portfolio challenge entry",
-    {
-        "stockPageId": fields.Integer(
-            required=True, description="stock page id for entry"
-        ),
-    },
-)
-
-challenge_leaderboard_response = api.model(
-    "Response: Portfolio challenge leaderboard",
+challenge_leaderboard = api.model(
+    "Nested: Portfolio challenge leaderboard (the last non-active challenge on the list)",
     {
         "userId": fields.Integer(
             attribute="user_id", required=True, description="user's id"
@@ -42,6 +33,52 @@ challenge_leaderboard_response = api.model(
     },
 )
 
+leaderboard_wrapped_response = api.model(
+    "Response: Wrapper for Leaderboard AND start/end dates",
+    {
+        "startDate": fields.DateTime(
+            attribute="start_date", required=True, description="challenge start datetime"
+        ),
+        "endDate": fields.DateTime(
+            attribute="end_date", required=True, description="challenge end datetime"
+        ),
+        "leaderboard": fields.List(
+            fields.Nested(
+                challenge_leaderboard,
+                required=True,
+                description="challenge leaderboard list",
+            )
+        ),
+    },
+)
+
+challenge_status_response = api.model(
+    "Response: Leaderboard challenge status (for the last challenge on the list)",
+    {
+        "challengeId": fields.Integer(
+            attribute="id", required=True, description="challenge id"
+        ),
+        "isActive": fields.Boolean(
+            attribute="is_active",
+            required=True,
+            description="whether challenge has reached end date",
+        ),
+        "isOpen": fields.Boolean(
+            attribute="is_open",
+            required=True,
+            description="whether challenge submissions are open",
+        ),
+    },
+)
+
+challenge_entry_request = api.model(
+    "Request: Submit a portfolio challenge entry ",
+    {
+        "stockPageId": fields.Integer(
+            required=True, description="stock page id for entry"
+        ),
+    },
+)
 
 # ==============================================================================
 # API Routes/Endpoint for Challenge
@@ -51,22 +88,64 @@ challenge_leaderboard_response = api.model(
 @api.route("/leaderboard")
 class ChallengeCRUD(Resource):
     @login_required
-    @api.marshal_with(challenge_leaderboard_response)
+    @api.marshal_with(leaderboard_wrapped_response)
     @api.response(200, "Leaderboard successfully returned")
     @api.response(404, "No challenge found")
     def get(self):
         """Return data for the Portfolio Challenge Leaderboard"""
 
+        # TODO: MOVE TO SCRIPT
         # update all challenge stocks
-        utils.bulk_challenge_fetch(await_all=True)
+        # utils.bulk_challenge_fetch(await_all=True)
 
         # get leaderboard date for last challenge period
-        leaderboard_list = crud_utils.get_leaderboard_results()
+        result = crud_utils.get_leaderboard_results()
 
-        if leaderboard_list == Status.NOT_EXIST:
+        if result == Status.NOT_EXIST:
             return abort(404, "No previous challenge found")
 
-        if leaderboard_list == Status.FAIL:
+        if result == Status.FAIL:
             return abort(500, "Could not get challenge leaderboard")
 
-        return leaderboard_list
+        return result
+
+
+@api.route("/status")
+class ChallengeCRUD(Resource):
+    @login_required
+    @api.marshal_with(challenge_status_response)
+    @api.response(200, "Last challenge status successfully returned")
+    @api.response(404, "No challenge found")
+    def get(self):
+        """Return whether there is an active Challenge (is_active) and whether submissions are being accepted (is_open)"""
+
+        challenge_status = crud_utils.get_leaderboard_status()
+
+        if challenge_status == Status.FAIL:
+            return abort(404, "Challenge status not found")
+
+        return challenge_status
+
+
+@api.route("/submit")
+class ChallengeCRUD(Resource):
+    @login_required
+    @api.expect([challenge_entry_request])
+    @api.response(200, "Challenge portfolio successfully submitted")
+    @api.response(409, "Prior Challenge portfolio already exists")
+    def post(self):
+        """Submits a user's challenge portfolio to the database"""
+
+        stock_list = marshal(request.json, challenge_entry_request)
+
+        challenge_id, _ = utils.get_active_challenge()
+
+        status = crud_utils.add_challenge_stocks(stock_list, challenge_id)
+
+        if status == Status.NOT_EXIST:
+            return abort(404, "No active challenge found")
+
+        if status == Status.FAIL:
+            return abort(409, "User has already submitted a Challenge portfolio")
+
+        return {"message": "Challenge portfolio successfully submitted"}, 200

@@ -209,7 +209,12 @@ class Challenge(db.Model):
     __tablename__ = "challenges"
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     start_date = Column(DateTime, nullable=False, default=datetime.now())
-    is_active = Column(Boolean, default=False)
+    is_active = Column(
+        Boolean, default=False
+    )  # whether challenge is active (end_date not reached yet)
+    is_open = Column(
+        Boolean, default=False
+    )  # whether submissions are open (is_active == True and start_date not reached yet)
 
     # Relationships
     # one-to-many challenges:entries
@@ -232,3 +237,8 @@ class ChallengeEntry(db.Model):
     start_price = Column(Float)
     end_price = Column(Float)
     perc_change = Column(Float)
+
+    # Unique Constraints (multiple column)
+    UniqueConstraint(challenge_id, user_id, stock_page_id)
+    # NOTE: challenge_id and user_id unique constraint is enforced in the CRUD function
+    # to allow for a more informative error message to the frontend
