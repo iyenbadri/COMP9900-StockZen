@@ -11,8 +11,8 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Modal from 'react-bootstrap/Modal';
 import { useForm } from 'react-hook-form';
-import styles from './PortfolioPage-Panel.module.css';
 import { usdFormatter } from 'utils/Utilities';
+import styles from './PortfolioPage-Panel.module.css';
 
 // Number formatter
 const numberFormatter = new Intl.NumberFormat('en-US', {
@@ -629,8 +629,10 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
         {/* Summary row of bought lots */}
         <div className={styles.lotRow}>
-          <div className={styles.lotTradeDate}>TOTAL</div>
-          <div className={styles.lotUnits}>
+          <div className={`${styles.lotTradeDate} ${styles.totalTradeDate}`}>
+            TOTAL
+          </div>
+          <div className={`${styles.lotUnits} ${styles.totalUnits}`}>
             {numberFormatter.format(boughtTotal.units)}
           </div>
           <div className={styles.lotUnitPrice}>
@@ -740,8 +742,10 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
         {/* Summary row of sold lots */}
         <div className={styles.lotRow}>
-          <div className={styles.lotTradeDate}>TOTAL</div>
-          <div className={styles.lotUnits}>
+          <div className={`${styles.lotTradeDate} ${styles.totalTradeDate}`}>
+            TOTAL
+          </div>
+          <div className={`${styles.lotUnits} ${styles.totalUnits}`}>
             {numberFormatter.format(soldTotal.units)}
           </div>
           <div className={styles.lotUnitPrice}>
