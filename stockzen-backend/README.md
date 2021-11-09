@@ -49,6 +49,10 @@ We use `.flaskenv` to keep track of environment variables. Please do the followi
 - `apis/__init__.py`'s only job is to consolidate all the backend APIs into the main app
   - this allows us to define separate API namespaces cleanly
 
+### Scripts
+
+- Run `flask price-alert run` to price alert script.
+
 ## Architecture
 
 **Core:**
