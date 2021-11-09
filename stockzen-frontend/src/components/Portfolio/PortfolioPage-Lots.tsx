@@ -618,17 +618,19 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
         {/* Summary row of bought lots */}
         <div className={styles.lotRow}>
-          <div className={styles.lotTradeDate}>TOTAL</div>
-          <div className={styles.lotUnits}>
+          <div className={`${styles.lotTradeDate} ${styles.totalTradeDate}`}>
+            TOTAL
+          </div>
+          <div className={`${styles.lotUnits} ${styles.totalUnits}`}>
             {numberFormatter.format(boughtTotal.units)}
           </div>
-          <div className={styles.lotUnitPrice}>
+          <div className={`${styles.lotUnitPrice} ${styles.totalUnitPrice}`}>
             {numberFormatter.format(boughtTotal.unitPrice)}
           </div>
-          <div className={styles.lotValue}>
+          <div className={`${styles.lotValue} ${styles.totalValue}`}>
             {numberFormatter.format(boughtTotal.units * currentPrice)}
           </div>
-          <div className={styles.lotChange}>
+          <div className={`${styles.lotChange} ${styles.totalChange}`}>
             {numberFormatter.format(boughtTotal.units * priceChange)}
           </div>
           <div className={styles.lotActions}></div>
@@ -729,17 +731,19 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
         {/* Summary row of sold lots */}
         <div className={styles.lotRow}>
-          <div className={styles.lotTradeDate}>TOTAL</div>
-          <div className={styles.lotUnits}>
+          <div className={`${styles.lotTradeDate} ${styles.totalTradeDate}`}>
+            TOTAL
+          </div>
+          <div className={`${styles.lotUnits} ${styles.totalUnits}`}>
             {numberFormatter.format(soldTotal.units)}
           </div>
-          <div className={styles.lotUnitPrice}>
+          <div className={`${styles.lotUnitPrice} ${styles.totalUnitPrice}`}>
             {numberFormatter.format(soldTotal.unitPrice)}
           </div>
-          <div className={styles.lotValue}>
+          <div className={`${styles.lotValue} ${styles.totalValue}`}>
             {numberFormatter.format(soldTotal.price)}
           </div>
-          <div className={styles.lotChange}>
+          <div className={`${styles.lotChange} ${styles.totalChange}`}>
             {numberFormatter.format(
               soldTotal.price - boughtTotal.unitPrice * soldTotal.units
             )}

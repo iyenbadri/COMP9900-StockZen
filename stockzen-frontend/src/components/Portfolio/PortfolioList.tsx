@@ -4,8 +4,8 @@ import orderUp from 'assets/icon-outlines/outline-chevron-up-small.svg';
 import plusIcon from 'assets/icon-outlines/outline-plus-circle.svg';
 import refreshIcon from 'assets/icon-outlines/outline-refresh-small.svg';
 import axios from 'axios';
-import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import { RefreshContext } from 'contexts/RefreshContext';
+import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import { Ordering } from 'enums';
 import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import {
@@ -41,8 +41,8 @@ const OrderingIndicator: FC<OrderingIndicatorProp> = (props) => {
       {/* Show if the sorting column is the same as current column */}
       {target === ordering.column && (
         <img
-          width={24}
-          height={24}
+          width={20}
+          height={20}
           src={ordering.ordering === Ordering.Ascending ? orderUp : orderDown}
           alt='order-indicator'
         />
