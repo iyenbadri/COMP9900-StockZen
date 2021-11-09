@@ -62,6 +62,7 @@ We use `.flaskenv` to keep track of environment variables. Please do the followi
     - SQLite
     - SQLALchemy ORM
     - Flask-Login
+    - Flask-Mail
 
 **Others:**
 
