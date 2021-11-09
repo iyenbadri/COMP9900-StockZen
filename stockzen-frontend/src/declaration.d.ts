@@ -63,6 +63,24 @@ interface IStockResponse {
     confidence: number;
 }
 
+// The stock data for fundamental tab in portfolio page
+interface IStockFundamental {
+    ordering: number;
+    stockId: number;
+    stockPageId: number;
+    draggableId: string;
+    symbol: string;
+    name: string;
+    dayHigh: number;
+    dayLow: number;
+    fiftyTwoWeekHigh: number;
+    fiftyTwoWeekLow: number;
+    volume: number;
+    avgVolume: number;
+    marketCap: number;
+    beta: number | null;
+}
+
 interface IStockPageResponse {
     id: number;
     code: string;

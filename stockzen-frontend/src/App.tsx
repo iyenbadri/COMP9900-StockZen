@@ -1,6 +1,7 @@
 import 'bootstrap-custom.scss';
 import Footer from 'components/Layout/Footer';
 import Header from 'components/Layout/Header';
+import PortfolioProvider from 'contexts/PortfolioContext';
 import RefreshProvider from 'contexts/RefreshContext';
 import SearchProvider from 'contexts/SearchContext';
 import TopPerformerProvider from 'contexts/TopPerformerContext';
@@ -24,8 +25,7 @@ function App() {
         <Header></Header>
         <Container
           fluid
-          className={`${styles.appContent} ${
-            !isAuthenticated ? styles.hero : ''
+          className={`${styles.appContent} ${!isAuthenticated ? styles.hero : ''
             }`}
         >
           <Switch>
@@ -45,9 +45,11 @@ const WrappedApp = () => (
   <RefreshProvider>
     <UserProvider>
       <SearchProvider>
-        <TopPerformerProvider>
-          <App />
-        </TopPerformerProvider>
+        <PortfolioProvider>
+          <TopPerformerProvider>
+            <App />
+          </TopPerformerProvider>
+        </PortfolioProvider>
       </SearchProvider>
     </UserProvider>
   </RefreshProvider>
