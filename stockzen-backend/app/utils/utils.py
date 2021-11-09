@@ -1,12 +1,16 @@
+from datetime import datetime
 import inspect
 import os
 from itertools import repeat
 from typing import Sequence, Union
 
+from sqlalchemy.sql.sqltypes import BOOLEAN
+from .enums import Status
 from app import executor
 from app.config import TOP_STOCKS_INTERVAL
 from app.models.schema import Challenge, ChallengeEntry, StockPage
 from app.utils import api_utils
+
 from sqlalchemy.orm import load_only
 
 # ==============================================================================
@@ -74,6 +78,7 @@ def get_prev_challenge():
     return challenge.id, challenge.start_date
 
 
+
 def bulk_challenge_fetch(await_all: bool = False):
     """Function for challenge script to call that caches perc_change for all challenge stocks"""
 
@@ -94,3 +99,14 @@ def bulk_challenge_fetch(await_all: bool = False):
     if await_all:
         list(results)  # use the result to force program to wait before continuing
         print("All concurrent Challenge results returned, continuing...")
+
+def is_valid_challenge(challenge_id) ->Status:
+    try:
+        challenge = Challenge.query.filter_by(id=challenge_id).one()
+        if datetime.now()< challenge.start_date and challenge.is_active==True:
+            return Status.VALID
+        else:
+            return Status.INVALID
+    except Exception as e:
+        debug_exception(e, suppress=True)
+        return Status.FAIL

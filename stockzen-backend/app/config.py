@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 TESTING = False
 APP_DB_PATH = "database/app.sqlite"
 SQLALCHEMY_DATABASE_URI = f"sqlite:///{APP_DB_PATH}"
@@ -42,4 +44,4 @@ TOP_COMPANIES = [
 # ------------------------------------------------------------------------------
 # Portfolio Challenge
 # ------------------------------------------------------------------------------
-CHALLENGE_PERIOD = 7 * 24 * 60 * 60  # length of each challenge round in seconds
+CHALLENGE_PERIOD =timedelta(weeks=1)# length of each challenge round in seconds

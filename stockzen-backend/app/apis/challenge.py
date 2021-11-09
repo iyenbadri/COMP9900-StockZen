@@ -56,10 +56,7 @@ class ChallengeCRUD(Resource):
     @api.response(404, "No challenge found")
     def get(self):
         """Return data for the Portfolio Challenge Leaderboard"""
-
-        # update all challenge stocks
-        utils.bulk_challenge_fetch(await_all=True)
-
+        
         # get leaderboard date for last challenge period
         leaderboard_list = crud_utils.get_leaderboard_results()
 

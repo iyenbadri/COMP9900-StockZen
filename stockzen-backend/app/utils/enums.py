@@ -8,7 +8,10 @@ class Status(Enum):
     SUCCESS = 3
     FAIL = 4
     NOT_EXIST = 5
-
+    ACTIVE = 6
+    INACTIVE = 7
+    VALID = 8
+    INVALID = 9
 
 class LotType(Enum):
     BUY = 0

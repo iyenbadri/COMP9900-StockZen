@@ -2,6 +2,8 @@ import json
 from datetime import datetime, timedelta
 from typing import Dict, Mapping, Sequence, Union
 
+from sqlalchemy.sql.expression import null
+
 import app.utils.calc_utils as calc
 from app.config import N_TOP_PERFORMERS, TOP_STOCKS_INTERVAL
 from app.models.schema import (
@@ -513,28 +515,31 @@ def get_leaderboard_results() -> Union[Dict, Status]:
         utils.debug_exception(e, suppress=True)
         return Status.FAIL
 
-def add_challenge_entry(stocks, challenge_id: int) -> Status:
+def add_challenge_stocks(stocks, challenge_id: int) -> Status:
     """adds a user portfolio for challenge"""
-    """check user if already present"""
     try:
-        user = (ChallengeEntry.query.join(Challenge)
-                .filter(Challenge.id == challenge_id, ChallengeEntry.user_id == current_user.id)
-                .one())
-        if(user == []):
-
-            for stock_page_id in stocks:
-                stock = StockPage.query.filter_by(id=stock_page_id).one()
-                new_stock = ChallengeEntry(
-                    challenge_id=challenge_id,
-                    user_id=current_user.id,
-                    stock_page_id=stock_page_id,
-                    code=stock.code,
-                    start_price=stock.price
-                )
-                db_utils.insert_item(new_stock)
-            return Status.SUCCESS
+        valid=utils.is_valid_challenge(challenge_id)
+        if valid == Status.VALID:
+            """check user if already present"""
+            user = (ChallengeEntry.query.join(Challenge)
+                    .filter(Challenge.id == challenge_id, ChallengeEntry.user_id == current_user.id)
+                    .one())
+            if(user == null):
+                for stock_page_id in stocks:
+                    stock = StockPage.query.filter_by(id=stock_page_id).one()
+                    new_stock = ChallengeEntry(
+                        challenge_id=challenge_id,
+                        user_id=current_user.id,
+                        stock_page_id=stock_page_id,
+                        code=stock.code,
+                        start_price=stock.price
+                    )
+                    db_utils.insert_item(new_stock)
+                return Status.SUCCESS
+            else:
+                return Status.FAIL
         else:
-            return Status.FAIL # User already exists in the challenge
+            return Status.NOT_EXIST # User already exists in the challenge
         
     except Exception as e:
         utils.debug_exception(e, suppress=True)
