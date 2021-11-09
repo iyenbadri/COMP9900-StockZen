@@ -1,7 +1,6 @@
 import 'bootstrap-custom.scss';
 import Footer from 'components/Layout/Footer';
 import Header from 'components/Layout/Header';
-import PortfolioProvider from 'contexts/PortfolioContext';
 import RefreshProvider from 'contexts/RefreshContext';
 import SearchProvider from 'contexts/SearchContext';
 import TopPerformerProvider from 'contexts/TopPerformerContext';
@@ -45,11 +44,9 @@ const WrappedApp = () => (
   <RefreshProvider>
     <UserProvider>
       <SearchProvider>
-        <PortfolioProvider>
-          <TopPerformerProvider>
-            <App />
-          </TopPerformerProvider>
-        </PortfolioProvider>
+        <TopPerformerProvider>
+          <App />
+        </TopPerformerProvider>
       </SearchProvider>
     </UserProvider>
   </RefreshProvider>
