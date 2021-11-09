@@ -64,9 +64,9 @@ def bulk_stock_fetch(sym_list: Sequence[str], await_all: bool = False):
         print("All concurrent results returned, continuing...")
 
 
-def get_active_challenge():
-    """Return id and start date of active challenge, or None if not exist"""
-    challenge = Challenge.query.filter_by(is_active=True).one()
+def get_open_challenge():
+    """Return id and start date of open challenge, or None if not exist"""
+    challenge = Challenge.query.filter_by(is_open=True).one()
     if not challenge:
         return None, None
     return challenge.id, challenge.start_date

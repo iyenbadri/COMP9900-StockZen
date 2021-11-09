@@ -147,13 +147,16 @@ def generate_dummy_lots(n_lots: int, n_stocks: int, user_id: int):
 def generate_dummy_challenges(n_users):
     try:
         # Create some challenges
+        for _ in range(n_users - 1):
+            challenge = Challenge(
+                start_date=datetime.now() - timedelta(weeks=2),
+                is_active=False,
+                is_open=False,
+            )
+            db_utils.insert_item(challenge)
+            print("Challenge added")
         challenge = Challenge(
-            start_date=datetime.now() - timedelta(weeks=2), is_active=False
-        )
-        db_utils.insert_item(challenge)
-        print("Challenge added")
-        challenge = Challenge(
-            start_date=datetime.now() - timedelta(weeks=1), is_active=True
+            start_date=datetime.now() - timedelta(weeks=1), is_active=True, is_open=False
         )
         db_utils.insert_item(challenge)
         print("Challenge added")
@@ -162,7 +165,7 @@ def generate_dummy_challenges(n_users):
         for i_users in range(1, n_users + 1):
             for i in range(1, 6):
                 entry = ChallengeEntry(
-                    challenge_id=1,
+                    challenge_id=n_users - 1,
                     user_id=i_users,
                     stock_page_id=i,
                     code=id_to_code(i),
@@ -176,7 +179,7 @@ def generate_dummy_challenges(n_users):
         print(e)
 
 
-def generate_dummy_data(n_users=2, n_portfolios=2, n_stocks=4, n_lots=5):
+def generate_dummy_data(n_users=3, n_portfolios=2, n_stocks=4, n_lots=5):
     """
     Generates dummy user data
     """
