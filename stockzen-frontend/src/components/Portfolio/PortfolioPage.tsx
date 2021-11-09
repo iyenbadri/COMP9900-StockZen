@@ -9,8 +9,9 @@ import { Ordering } from 'enums';
 import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import {
   DragDropContext,
-  Droppable, DropResult,
-  ResponderProvided
+  Droppable,
+  DropResult,
+  ResponderProvided,
 } from 'react-beautiful-dnd';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -93,7 +94,7 @@ const PortfolioPage = () => {
   const [stocks, _setStocks] = useState<IStock[]>([]);
 
   // List of stock fundamental info
-  const [stockInfo, _setStockInfo] = useState<IStockFundamental[]>([]);
+  const [stockInfos, _setStockInfos] = useState<IStockFundamental[]>([]);
 
   // The function to map response from backend to frontend object
   const mapStockList = useCallback(
@@ -122,99 +123,98 @@ const PortfolioPage = () => {
     []
   );
 
-  const mapStockInfoList = useCallback(
-    (data: IStockResponse[]): any => {
-      return data.map(async (stock) => {
-        try {
-          axios
-            .get(`/stock-page/${stock.stockPageId}`)
-            .then((res) => {
-              const infoRes = res.data;
-              const fundamentalInfo: IStockFundamental = {
-                stockId: stock.id,
-                stockPageId: stock.stockPageId,
-                draggableId: `stock-${stock.id}`,
-                ordering: stock.order,
-                symbol: stock.code,
-                name: stock.stockName,
-                dayLow: infoRes.dayLow,
-                dayHigh: infoRes.dayHigh,
-                fiftyTwoWeekLow: infoRes.fiftyTwoWeekLow,
-                fiftyTwoWeekHigh: infoRes.fiftyTwoWeekHigh,
-                volume: infoRes.volume,
-                avgVolume: infoRes.avgVolume,
-                marketCap: infoRes.marketCap,
-                beta: infoRes.beta,
-              };
-              return fundamentalInfo;
-            })
-        } catch (e: any) {
-          const blankFundamentalInfo: IStockFundamental = {
+  const mapStockInfoList = useCallback((data: IStockResponse[]): any => {
+    return data.map(async (stock) => {
+      try {
+        return axios.get(`/stock-page/${stock.stockPageId}`).then((res) => {
+          const infoRes = res.data;
+          const fundamentalInfo: IStockFundamental = {
             stockId: stock.id,
             stockPageId: stock.stockPageId,
             draggableId: `stock-${stock.id}`,
             ordering: stock.order,
             symbol: stock.code,
             name: stock.stockName,
-            dayLow: null,
-            dayHigh: null,
-            fiftyTwoWeekLow: null,
-            fiftyTwoWeekHigh: null,
-            volume: null,
-            avgVolume: null,
-            marketCap: null,
-            beta: null,
-          }
-          return blankFundamentalInfo;
-        }
-      })
-      // const res = await axios.get(`/stock-page/${stock.stockPageId}`);
-      // if (res.status === 200) {
-      //   const infoRes = res.data;
-      //   const fundamentalInfo: IStockFundamental = {
-      //     stockId: stock.id,
-      //     stockPageId: stock.stockPageId,
-      //     draggableId: `stock-${stock.id}`,
-      //     ordering: stock.order,
-      //     symbol: stock.code,
-      //     name: stock.stockName,
-      //     dayLow: infoRes.dayLow,
-      //     dayHigh: infoRes.dayHigh,
-      //     fiftyTwoWeekLow: infoRes.fiftyTwoWeekLow,
-      //     fiftyTwoWeekHigh: infoRes.fiftyTwoWeekHigh,
-      //     volume: infoRes.volume,
-      //     avgVolume: infoRes.avgVolume,
-      //     marketCap: infoRes.marketCap,
-      //     beta: infoRes.beta,
-      //   };
-      //   return fundamentalInfo;
-      // } else {
-      //   const blankFundamentalInfo: IStockFundamental = {
-      //     stockId: stock.id,
-      //     stockPageId: stock.stockPageId,
-      //     draggableId: `stock-${stock.id}`,
-      //     ordering: stock.order,
-      //     symbol: stock.code,
-      //     name: stock.stockName,
-      //     dayLow: null,
-      //     dayHigh: null,
-      //     fiftyTwoWeekLow: null,
-      //     fiftyTwoWeekHigh: null,
-      //     volume: null,
-      //     avgVolume: null,
-      //     marketCap: null,
-      //     beta: null,
-      //   };
-      //   return blankFundamentalInfo;
-      // }
-      // })
-    }, []
-  );
+            dayLow: infoRes.dayLow,
+            dayHigh: infoRes.dayHigh,
+            fiftyTwoWeekLow: infoRes.fiftyTwoWeekLow,
+            fiftyTwoWeekHigh: infoRes.fiftyTwoWeekHigh,
+            volume: infoRes.volume,
+            avgVolume: infoRes.avgVolume,
+            marketCap: infoRes.marketCap,
+            beta: infoRes.beta,
+          };
+          return fundamentalInfo;
+        });
+      } catch (e: any) {
+        const blankFundamentalInfo: IStockFundamental = {
+          stockId: stock.id,
+          stockPageId: stock.stockPageId,
+          draggableId: `stock-${stock.id}`,
+          ordering: stock.order,
+          symbol: stock.code,
+          name: stock.stockName,
+          dayLow: null,
+          dayHigh: null,
+          fiftyTwoWeekLow: null,
+          fiftyTwoWeekHigh: null,
+          volume: null,
+          avgVolume: null,
+          marketCap: null,
+          beta: null,
+        };
+        return blankFundamentalInfo;
+      }
+    });
+    // const res = await axios.get(`/stock-page/${stock.stockPageId}`);
+    // if (res.status === 200) {
+    //   const infoRes = res.data;
+    //   const fundamentalInfo: IStockFundamental = {
+    //     stockId: stock.id,
+    //     stockPageId: stock.stockPageId,
+    //     draggableId: `stock-${stock.id}`,
+    //     ordering: stock.order,
+    //     symbol: stock.code,
+    //     name: stock.stockName,
+    //     dayLow: infoRes.dayLow,
+    //     dayHigh: infoRes.dayHigh,
+    //     fiftyTwoWeekLow: infoRes.fiftyTwoWeekLow,
+    //     fiftyTwoWeekHigh: infoRes.fiftyTwoWeekHigh,
+    //     volume: infoRes.volume,
+    //     avgVolume: infoRes.avgVolume,
+    //     marketCap: infoRes.marketCap,
+    //     beta: infoRes.beta,
+    //   };
+    //   return fundamentalInfo;
+    // } else {
+    //   const blankFundamentalInfo: IStockFundamental = {
+    //     stockId: stock.id,
+    //     stockPageId: stock.stockPageId,
+    //     draggableId: `stock-${stock.id}`,
+    //     ordering: stock.order,
+    //     symbol: stock.code,
+    //     name: stock.stockName,
+    //     dayLow: null,
+    //     dayHigh: null,
+    //     fiftyTwoWeekLow: null,
+    //     fiftyTwoWeekHigh: null,
+    //     volume: null,
+    //     avgVolume: null,
+    //     marketCap: null,
+    //     beta: null,
+    //   };
+    //   return blankFundamentalInfo;
+    // }
+    // })
+  }, []);
 
   // A function to do the sorting in MyHoldings table
   // (Used the same logic as in PortfolioList)
   const setStocks = useCallback(
-    (stocks: IStock[], holdingsTableOrdering: TableOrdering<HoldingsColumn>) => {
+    (
+      stocks: IStock[],
+      holdingsTableOrdering: TableOrdering<HoldingsColumn>
+    ) => {
       if (holdingsTableOrdering.column === '') {
         stocks = stocks.sort((a, b) => a.ordering - b.ordering);
       } else {
@@ -242,12 +242,17 @@ const PortfolioPage = () => {
   );
 
   // A function to do the sorting in Fundamental table
-  const setStockInfo = useCallback(
-    (stockInfo: IStockFundamental[], infoTableOrdering: TableOrdering<FundamentalColumn>) => {
+  const setStockInfos = useCallback(
+    async (
+      stockInfos: Promise<IStockFundamental>[],
+      infoTableOrdering: TableOrdering<FundamentalColumn>
+    ) => {
+      let infos = await Promise.all(stockInfos);
+
       if (infoTableOrdering.column === '') {
-        stockInfo = stockInfo.sort((a, b) => a.ordering - b.ordering);
+        infos = infos.sort((a, b) => a.ordering - b.ordering);
       } else {
-        stockInfo = stockInfo.sort((a, b) => {
+        infos = infos.sort((a, b) => {
           if (infoTableOrdering.column !== '') {
             const keyA = a[infoTableOrdering.column] ?? 0;
             const keyB = b[infoTableOrdering.column] ?? 0;
@@ -265,9 +270,9 @@ const PortfolioPage = () => {
         });
       }
 
-      _setStockInfo(stockInfo);
+      _setStockInfos(infos);
     },
-    [_setStockInfo]
+    [_setStockInfos]
   );
 
   // The temp sort order in MyHoldings tab
@@ -295,11 +300,18 @@ const PortfolioPage = () => {
         .then((response) => {
           // Map the response and then set it.
           setStocks(mapStockList(response.data), holdingsTableOrdering);
-          setStockInfo(mapStockInfoList(response.data), infoTableOrdering);
+          setStockInfos(mapStockInfoList(response.data), infoTableOrdering);
         });
     },
-    [portfolioId, setStocks, mapStockList, setStockInfo, mapStockInfoList,
-      holdingsTableOrdering, infoTableOrdering]
+    [
+      portfolioId,
+      setStocks,
+      mapStockList,
+      setStockInfos,
+      mapStockInfoList,
+      holdingsTableOrdering,
+      infoTableOrdering,
+    ]
   );
 
   /* Ordering */
@@ -403,8 +415,10 @@ const PortfolioPage = () => {
           ordering = { column: columnName, ordering: Ordering.Ascending };
         }
 
+        const infos = stockInfos.map((x) => Promise.resolve(x));
+
         // Update the list with sorting
-        setStockInfo(stockInfo, ordering);
+        setStockInfos(infos, ordering);
 
         return ordering;
       }
@@ -414,7 +428,7 @@ const PortfolioPage = () => {
   // Init
   useEffect(
     () => {
-      // Hide the summary in the top performer widget.
+      // Show the summary in the top performer widget.
       setShowPortfolioSummary(true);
 
       // Load the stock list from backend.
@@ -486,10 +500,7 @@ const PortfolioPage = () => {
       </div>
       <hr />
 
-      <Tabs
-        selectedIndex={activeTab}
-        onSelect={idx => setActiveTab(idx)}
-      >
+      <Tabs selectedIndex={activeTab} onSelect={(idx) => setActiveTab(idx)}>
         <TabList className={styles.tableBar}>
           <Tab
             className={`${activeTab === 0 ? styles.activeTab : styles.tabs}`}
@@ -636,8 +647,9 @@ const PortfolioPage = () => {
           </div>
           {/* Wrapper to enable/disable hightlight when dragging */}
           <div
-            className={`${isDragging ? styles.dragging : styles.notDragging} ${holdingsTableOrdering.column !== '' ? styles.tempSort : ''
-              }`}
+            className={`${isDragging ? styles.dragging : styles.notDragging} ${
+              holdingsTableOrdering.column !== '' ? styles.tempSort : ''
+            }`}
           >
             <DragDropContext
               onDragEnd={handleDragEnd}
@@ -733,7 +745,9 @@ const PortfolioPage = () => {
                     <Button
                       variant='transparent'
                       size={'sm'}
-                      onClick={() => handleFundamentalTempSort('fiftyTwoWeekLow')}
+                      onClick={() =>
+                        handleFundamentalTempSort('fiftyTwoWeekLow')
+                      }
                     >
                       52Wk Low
                       <OrderingIndicator
@@ -742,11 +756,15 @@ const PortfolioPage = () => {
                       ></OrderingIndicator>
                     </Button>
                   </span>
-                  <span className={`${styles.rowLongInfo} d-block d-lg-none  d-xl-block`}>
+                  <span
+                    className={`${styles.rowLongInfo} d-block d-lg-none  d-xl-block`}
+                  >
                     <Button
                       variant='transparent'
                       size={'sm'}
-                      onClick={() => handleFundamentalTempSort('fiftyTwoWeekHigh')}
+                      onClick={() =>
+                        handleFundamentalTempSort('fiftyTwoWeekHigh')
+                      }
                     >
                       52Wk High
                       <OrderingIndicator
@@ -800,8 +818,8 @@ const PortfolioPage = () => {
             </div>
           </div>
           <div>
-            {stockInfo.map((stock, index) => {
-              console.log(stockInfo);
+            {stockInfos.map((stock, index) => {
+              console.log(stockInfos);
               return (
                 <PortfolioFundamentalRow
                   key={stock.stockId}
@@ -816,7 +834,6 @@ const PortfolioPage = () => {
               );
             })}
           </div>
-
         </TabPanel>
       </Tabs>
     </>
