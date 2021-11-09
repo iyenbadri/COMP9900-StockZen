@@ -3,7 +3,7 @@ export const usdFormatter = new Intl.NumberFormat('en-US', {
   currency: 'USD',
 });
 
-export const numberFomatter = new Intl.NumberFormat('en-US', {
+export const numberFormatter = new Intl.NumberFormat('en-US', {
   style: 'decimal',
   maximumFractionDigits: 2,
   minimumFractionDigits: 2,
