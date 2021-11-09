@@ -20,14 +20,14 @@
 
 .headerText {
   font-weight: 700;
-  font-size: 1.2em;
+  font-size: 1.1em;
   text-align: center;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
   text-decoration: underline;
 }
 
 .rowHeader {
-  text-decoration: underline;
+  /* text-decoration: underline; */
 }
 
 .rowHeader .lotTradeDate,
@@ -55,7 +55,7 @@
 .lotUnitPrice,
 .lotValue,
 .lotActions {
-  flex-basis: 80px;
+  flex-basis: 100px;
   flex-grow: 0;
   flex-shrink: 0;
 }
@@ -85,12 +85,21 @@
   text-align: center;
 }
 
+.totalTradeDate,
+.totalUnits,
+.totalUnitPrice,
+.totalValue,
+.totalChange {
+  font-weight: 500;
+}
+
 .editButton {
   min-width: 0 !important;
   visibility: hidden;
 }
 
 .deleteButton {
+  padding-left: 15px !important;
   min-width: 0 !important;
   visibility: hidden;
 }
