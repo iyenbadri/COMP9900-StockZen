@@ -32,9 +32,6 @@ const PortfolioFundamentalRow: FC<PortfolioPageRowProp> = (props) => {
   const [showPanel, setShowPanel] = useState(false);
 
   return (
-    // <Draggable draggableId={stock.draggableId} index={props.index}>
-    //   {(provided, snapshot) => (
-    //     <div ref={provided.innerRef} {...provided.draggableProps}>
     <div
       className={`${styles.stockWrapper} ${showPanel ? styles.panelVisible : styles.panelHidden
         }`}
@@ -64,37 +61,37 @@ const PortfolioFundamentalRow: FC<PortfolioPageRowProp> = (props) => {
               {stock.name}
             </div>
           </div>
-          <span className={styles.rowPrice}>
+          <span className={styles.rowInfo}>
             {stock.dayLow == null
               ? '-'
               : numberFormatter.format(stock.dayLow)}
           </span>
-          <span className={styles.rowPrice}>
+          <span className={styles.rowInfo}>
             {stock.dayHigh == null
               ? '-'
               : numberFormatter.format(stock.dayHigh)}
           </span>
-          <span className={styles.rowPrice}>
+          <span className={`${styles.rowLongInfo} d-block d-lg-none  d-xl-block`}>
             {stock.fiftyTwoWeekLow == null
               ? '-'
               : numberFormatter.format(stock.fiftyTwoWeekLow)}
           </span>
-          <span className={styles.rowPrice}>
+          <span className={`${styles.rowLongInfo} d-block d-lg-none  d-xl-block`}>
             {stock.fiftyTwoWeekHigh == null
               ? '-'
               : numberFormatter.format(stock.fiftyTwoWeekHigh)}
           </span>
-          <span className={styles.rowPrice}>
+          <span className={styles.rowValue}>
             {stock.avgVolume == null
               ? '-'
               : numberFormatter.format(stock.avgVolume)}
           </span>
-          <span className={styles.rowPrice}>
+          <span className={styles.rowValue}>
             {stock.marketCap == null
               ? '-'
               : numberFormatter.format(stock.marketCap)}
           </span>
-          <span className={styles.rowPrice}>
+          <span className={styles.rowShortInfo}>
             {stock.beta == null
               ? '-'
               : numberFormatter.format(stock.beta)}

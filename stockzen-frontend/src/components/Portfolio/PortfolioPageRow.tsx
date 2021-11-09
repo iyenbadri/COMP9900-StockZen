@@ -3,6 +3,7 @@ import handleIcon from 'assets/icon-outlines/outline-drag-handle.svg';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { Link } from 'react-router-dom';
+import { numberFormatter } from 'utils/Utilities';
 import PortfolioPageAlert from './PortfolioPage-Alert';
 import PortfolioPageLots from './PortfolioPage-Lots';
 import styles from './PortfolioPage.module.css';
@@ -12,12 +13,6 @@ interface PortfolioPageRowProp {
   readonly index: number;
   readonly showDeleteModal: (stockId: number, stock: string) => void;
 }
-
-const numberFormatter = new Intl.NumberFormat('en-US', {
-  style: 'decimal',
-  maximumFractionDigits: 2,
-  minimumFractionDigits: 2,
-});
 
 const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
   const { stock } = props;
@@ -57,9 +52,8 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
       {(provided, snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps}>
           <div
-            className={`${styles.stockWrapper} ${
-              showPanel ? styles.panelVisible : styles.panelHidden
-            }`}
+            className={`${styles.stockWrapper} ${showPanel ? styles.panelVisible : styles.panelHidden
+              }`}
           >
             <div className={styles.tableRow}>
               <div

@@ -71,13 +71,13 @@ interface IStockFundamental {
     draggableId: string;
     symbol: string;
     name: string;
-    dayHigh: number;
-    dayLow: number;
-    fiftyTwoWeekHigh: number;
-    fiftyTwoWeekLow: number;
-    volume: number;
-    avgVolume: number;
-    marketCap: number;
+    dayHigh: number | null;
+    dayLow: number | null;
+    fiftyTwoWeekHigh: number | null;
+    fiftyTwoWeekLow: number | null;
+    volume: number | null;
+    avgVolume: number | null;
+    marketCap: number | null;
     beta: number | null;
 }
 
