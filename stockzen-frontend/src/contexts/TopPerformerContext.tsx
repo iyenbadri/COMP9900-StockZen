@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { RefreshContext } from 'contexts/RefreshContext';
+import { UserContext } from 'contexts/UserContext';
 import React, {
   createContext,
   FC,
@@ -58,6 +59,7 @@ const mapTopPerformer = (x: ITopPerformerResponse): ITopPerformer => ({
 
 const TopPerformerProvider: FC = ({ children }): any => {
   const { subscribe, unsubscribe } = useContext(RefreshContext);
+  const { isAuthenticated } = useContext(UserContext);
 
   const [showPortfolioSummary, setShowPortfolioSummary] =
     useState<boolean>(false);
@@ -70,17 +72,17 @@ const TopPerformerProvider: FC = ({ children }): any => {
   const [portfolioSummary, setPortfolioSummary] =
     useState<IPortfolioPerformance | null>(null);
 
-  useEffect(
-    () => {
-      const reloadTopPerformar = async () => {
-        setLastUpdateDate(new Date());
+  const reloadTopPerformer = async () => {
+    if (isAuthenticated) {
+      setLastUpdateDate(new Date());
 
-        setPortfolioSummary({
-          holding: Math.random() * 2000,
-          todayChangePercent: (Math.random() * 10 - 5) / 100,
-          overallChangePercent: (Math.random() * 10 - 5) / 100,
-        });
+      setPortfolioSummary({
+        holding: Math.random() * 2000,
+        todayChangePercent: (Math.random() * 10 - 5) / 100,
+        overallChangePercent: (Math.random() * 10 - 5) / 100,
+      });
 
+      try {
         const topPerformers = await axios.get<ITopPerformerResponse[]>(
           '/stock-page/top'
         );
@@ -88,14 +90,23 @@ const TopPerformerProvider: FC = ({ children }): any => {
         setTopPerformers(topPerformers.data.map(mapTopPerformer));
 
         setIsLoading(false);
-      };
+      } catch {}
+    }
+  };
 
-      reloadTopPerformar();
+  // Reload when isAuthenticated is changed.
+  useEffect(() => {
+    reloadTopPerformer();
+  }, [isAuthenticated]);
 
-      subscribe(reloadTopPerformar);
+  useEffect(
+    () => {
+      reloadTopPerformer();
+
+      subscribe(reloadTopPerformer);
 
       return () => {
-        unsubscribe(reloadTopPerformar);
+        unsubscribe(reloadTopPerformer);
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
