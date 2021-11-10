@@ -1,10 +1,13 @@
-import time
 import datetime
+import time
+
+from app import db, mail
+from app.config import MAIL_SENDER
+from app.models.schema import Portfolio, PriceAlert, Stock, StockPage, User
 from flask.cli import AppGroup
 from flask_mail import Message
+from sqlalchemy import func, not_, or_, select, update
 from yfinance import Ticker
-from sqlalchemy import or_, not_, select, func, update
-
 
 user_cli = AppGroup("price-alert")
 
@@ -33,8 +36,7 @@ def do_price_alert():
 
                 # Query the history from yfinance
                 history = Ticker(stock_alert.code).history(
-                    start=start_date,
-                    interval="30m"
+                    start=start_date, interval="30m"
                 )
 
                 # Check if there any alert matched.
@@ -60,10 +62,10 @@ def do_price_alert():
 
 
 def query_active_price_alert_info():
-    from app import db
-    from app.models.schema import PriceAlert, Stock, StockPage
+    """Query for stock_pages that users have set a threshold for it"""
 
     stmt = (
+        # Select the relavence data
         select(
             StockPage.id,
             StockPage.code,
@@ -76,12 +78,14 @@ def query_active_price_alert_info():
         .select_from(StockPage)
         .join(Stock)
         .join(PriceAlert)
+        # Where the alert is active
         .where(
             or_(
                 not_(PriceAlert.is_high_threshold_alerted),
                 not_(PriceAlert.is_low_threshold_alerted),
             )
         )
+        # Select only the stock_page
         .group_by(StockPage.id, StockPage.code)
     )
 
@@ -89,8 +93,7 @@ def query_active_price_alert_info():
 
 
 def update_price_alert_check_time(stock_page_id):
-    from app import db
-    from app.models.schema import PriceAlert, Stock
+    """Update the last_check_time to be now"""
 
     update_stmt = (
         update(PriceAlert)
@@ -111,10 +114,10 @@ def update_price_alert_check_time(stock_page_id):
 
 
 def query_high_price_alerts(stock_page_id, threshold):
-    from app import db
-    from app.models.schema import PriceAlert, Stock, StockPage, Portfolio, User
+    """Get the PriceAlert that pass the threshold"""
 
     stmt = (
+        # Select the relavence data
         select(
             PriceAlert.id,
             PriceAlert.user_save_time,
@@ -128,6 +131,7 @@ def query_high_price_alerts(stock_page_id, threshold):
         .join(StockPage)
         .join(Portfolio)
         .join(User)
+        # Where the high_threshold is lower then threshold
         .where(
             Stock.stock_page_id == stock_page_id,
             not_(PriceAlert.is_high_threshold_alerted),
@@ -140,13 +144,12 @@ def query_high_price_alerts(stock_page_id, threshold):
 
 
 def notify_high_threshold(history, stock_alert):
-    from app import db, mail
-    from app.config import MAIL_SENDER
-    from app.models.schema import PriceAlert
-
     price_alerts = query_high_price_alerts(stock_alert.id, history["High"].max())
 
+    # For each price_alert
     for price_alert in price_alerts:
+        # Reader the save time of the price_alert and check if there any history
+        # such that the High is more than the threshold
         user_save_date = price_alert.user_save_time.strftime("%Y-%m-%d %H:%M:%S")
         alert_row = history[
             (history.index >= user_save_date)
@@ -158,8 +161,8 @@ def notify_high_threshold(history, stock_alert):
 
         alert_row = alert_row.iloc[0]
 
+        # Construct and send the mail
         alert_date = alert_row.name.strftime("%d %B %H:%M")
-
         msg = f"""The high price alert for {price_alert.code} in portfolio {price_alert.portfolio_name} has bean reached on {alert_date} with the price of {alert_row['High']:.2f}."""
 
         message = Message(
@@ -171,6 +174,10 @@ def notify_high_threshold(history, stock_alert):
 
         mail.send(message)
 
+        # Log the message
+        print(f"High price alert of {price_alert.code} has been sent to {price_alert.email}")
+
+        # Update the price_alert so that it's marked as alerted
         stmt = (
             update(PriceAlert)
             .where(PriceAlert.id == price_alert.id)
@@ -183,9 +190,6 @@ def notify_high_threshold(history, stock_alert):
 
 
 def query_low_price_alerts(stock_page_id, threshold):
-    from app import db
-    from app.models.schema import PriceAlert, Stock, StockPage, Portfolio, User
-
     stmt = (
         select(
             PriceAlert.id,
@@ -212,13 +216,12 @@ def query_low_price_alerts(stock_page_id, threshold):
 
 
 def notify_low_threshold(history, stock_alert):
-    from app import db, mail
-    from app.config import MAIL_SENDER
-    from app.models.schema import PriceAlert
-
     price_alerts = query_low_price_alerts(stock_alert.id, history["Low"].min())
 
+    # For each price_alert
     for price_alert in price_alerts:
+        # Reader the save time of the price_alert and check if there any history
+        # such that the Low is less than the threshold
         user_save_date = price_alert.user_save_time.strftime("%Y-%m-%d %H:%M:%S")
         alert_row = history[
             (history.index >= user_save_date)
@@ -230,8 +233,9 @@ def notify_low_threshold(history, stock_alert):
 
         alert_row = alert_row.iloc[0]
 
-        alert_date = alert_row.name.strftime("%d %B %H:%M")
 
+        # Construct and send the mail
+        alert_date = alert_row.name.strftime("%d %B %H:%M")
         msg = f"""The low price alert for {price_alert.code} in portfolio {price_alert.portfolio_name} has bean reached on {alert_date} with the price of {alert_row['Low']:.2f}."""
 
         message = Message(
@@ -243,6 +247,11 @@ def notify_low_threshold(history, stock_alert):
 
         mail.send(message)
 
+        # Log the message
+        print(f"Low price alert of {price_alert.code} has been sent to {price_alert.email}")
+
+
+        # Update the price_alert so that it's marked as alerted
         stmt = (
             update(PriceAlert)
             .where(PriceAlert.id == price_alert.id)

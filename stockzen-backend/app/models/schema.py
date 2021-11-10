@@ -130,6 +130,13 @@ class Stock(db.Model):
         cascade="all, delete, delete-orphan",
     )
 
+    price_alert = relationship(
+        "PriceAlert",
+        backref=backref("stock", lazy="select"),
+        lazy="select",
+        cascade="all, delete, delete-orphan",
+    )
+
     # Unique Constraints (multiple column)
     UniqueConstraint(user_id, portfolio_id, stock_page_id)
 
