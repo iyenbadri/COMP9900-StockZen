@@ -114,8 +114,6 @@ def is_valid_challenge(challenge_id) -> Status:
         challenge = Challenge.query.filter_by(id=challenge_id).one()
         if datetime.now() < challenge.start_date and challenge.is_open == True:
             return Status.VALID
-        else:
-            return Status.INVALID
     except Exception as e:
         debug_exception(e, suppress=True)
         return Status.FAIL

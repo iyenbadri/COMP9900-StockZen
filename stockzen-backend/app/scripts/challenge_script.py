@@ -20,7 +20,7 @@ def start_challenge(start_date):
             challenge_id,
             {"is_open": False},
         )
-        while datetime.now() < start_date + timedelta(seconds=CHALLENGE_PERIOD):
+        while datetime.now() < start_date + CHALLENGE_PERIOD:
             continue
         db_utils.update_item_columns(
             Challenge,

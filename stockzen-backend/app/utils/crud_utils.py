@@ -4,17 +4,8 @@ from typing import Dict, Mapping, Sequence, Union
 
 import app.utils.calc_utils as calc
 from app.config import CHALLENGE_PERIOD, N_TOP_PERFORMERS, TOP_STOCKS_INTERVAL
-from app.models.schema import (
-    Challenge,
-    ChallengeEntry,
-    History,
-    LotBought,
-    LotSold,
-    Portfolio,
-    Stock,
-    StockPage,
-    User,
-)
+from app.models.schema import (Challenge, ChallengeEntry, History, LotBought,
+                               LotSold, Portfolio, Stock, StockPage, User)
 from app.utils.enums import LotType, Status
 from flask_login import current_user
 from sqlalchemy import desc, func
@@ -543,7 +534,7 @@ def get_leaderboard_results() -> Union[Dict, Status]:
         start_date = (
             Challenge.query.filter(Challenge.id == prev_challenge_id).one().start_date
         )
-        end_date = start_date + timedelta(seconds=CHALLENGE_PERIOD)
+        end_date = start_date + CHALLENGE_PERIOD
 
         return {
             "start_date": start_date,
@@ -570,30 +561,34 @@ def add_challenge_stocks(stocks, challenge_id: int) -> Status:
     """adds a user portfolio for challenge"""
     try:
         valid = utils.is_valid_challenge(challenge_id)
-        print(valid)
-        try:
-            # (
-            #     ChallengeEntry.query.join(Challenge)
-            #     .filter(
-            #         Challenge.id == challenge_id,
-            #         ChallengeEntry.user_id == current_user.id,
-            #     )
-            #     .one()
-            # )
-            for stock_page_id in stocks:
-                stock = StockPage.query.filter_by(id=stock_page_id["stockPageId"]).one()
-                new_stock = ChallengeEntry(
-                    challenge_id=challenge_id,
-                    user_id=current_user.id,
-                    stock_page_id=stock_page_id["stockPageId"],
-                    code=stock.code,
-                    start_price=stock.price,
+        if valid == Status.VALID:
+            try:
+                (
+                    ChallengeEntry.query.join(Challenge)
+                    .filter(
+                        Challenge.id == challenge_id,
+                        ChallengeEntry.user_id == current_user.id,
+                    )
+                    .one()
                 )
-                db_utils.insert_item(new_stock)
-            return Status.SUCCESS
-        except Exception as e:
-            utils.debug_exception(e, suppress=True)
+                return Status.FAIL
+
+            except:
+                for stock_page_id in stocks:
+                    stock = StockPage.query.filter_by(
+                        id=stock_page_id["stockPageId"]
+                    ).one()
+                    new_stock = ChallengeEntry(
+                        challenge_id=challenge_id,
+                        user_id=current_user.id,
+                        stock_page_id=stock_page_id["stockPageId"],
+                        code=stock.code,
+                    )
+                    db_utils.insert_item(new_stock)
+                return Status.SUCCESS
+        else:
             return Status.FAIL
+
     except Exception as e:
         utils.debug_exception(e, suppress=True)
         return Status.NOT_EXIST

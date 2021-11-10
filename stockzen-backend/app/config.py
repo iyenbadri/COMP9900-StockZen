@@ -44,4 +44,4 @@ TOP_COMPANIES = [
 # ------------------------------------------------------------------------------
 # Portfolio Challenge
 # ------------------------------------------------------------------------------
-CHALLENGE_PERIOD = 30  # length of each challenge round in seconds
+CHALLENGE_PERIOD = timedelta(weeks=1)  # length of each challenge round in seconds

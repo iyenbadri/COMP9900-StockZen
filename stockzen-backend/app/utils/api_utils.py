@@ -163,7 +163,7 @@ def api_history_request(stock_page_id: int, start_date: datetime):
     if current_app.config["TESTING"]:
         return
     # Check valid date, return if end_date is in the future
-    end_date = start_date + timedelta(seconds=CHALLENGE_PERIOD)
+    end_date = start_date + CHALLENGE_PERIOD
 
     if end_date > datetime.now():
         raise RuntimeError("Challenge end date is in the future")
