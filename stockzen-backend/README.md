@@ -63,9 +63,10 @@ We use `.flaskenv` to keep track of environment variables. Please do the followi
     - SQLALchemy ORM
     - Flask-Login
     - Flask-Mail
+    - Flask-Executor
 
 **Others:**
-
+    - faker
     - python-dotenv (for environment variable access)
 
 ## Tests
