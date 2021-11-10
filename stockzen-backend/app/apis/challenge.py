@@ -22,6 +22,9 @@ challenge_leaderboard = api.model(
         "userId": fields.Integer(
             attribute="user_id", required=True, description="user's id"
         ),
+        "userName": fields.String(
+            attribute="user_name", required=True, description="user's concatenated name"
+        ),
         "percChange": fields.Float(
             attribute="perc_change",
             required=True,
@@ -51,6 +54,12 @@ leaderboard_wrapped_response = api.model(
                 required=True,
                 description="challenge leaderboard list",
             )
+        ),
+        "userRow": fields.Nested(
+            challenge_leaderboard,
+            attribute="user_row",
+            required=True,
+            description="user's leaderboard row",
         ),
     },
 )
@@ -146,7 +155,7 @@ class ChallengeCRUD(Resource):
         status = crud_utils.add_challenge_stocks(stock_list, challenge_id)
 
         if status == Status.NOT_EXIST:
-            return abort(404, "No active challenge found")
+            return abort(404, "No open challenge found")
 
         if status == Status.FAIL:
             return abort(409, "User has already submitted a Challenge portfolio")

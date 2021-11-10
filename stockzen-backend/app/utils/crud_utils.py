@@ -469,27 +469,47 @@ def get_leaderboard_results() -> Union[Dict, Status]:
     """Return dict list of best performing user portfolios during current challenge period"""
     try:
         leaderboard = []
-        prev_challenge_id, _ = utils.get_prev_challenge()
 
+        prev_challenge_id, _ = utils.get_prev_challenge()
         if not prev_challenge_id:
             return Status.NOT_EXIST
 
         # Get a ranked list of users and their avg perc_changes
         result_tuples = (
             ChallengeEntry.query.join(Challenge)
+            .join(User)
             .filter(Challenge.id == prev_challenge_id)
             .with_entities(
                 ChallengeEntry.user_id,
+                User.first_name,
+                User.last_name,
                 func.avg(ChallengeEntry.perc_change).label("avg_change"),
             )
             .group_by(ChallengeEntry.user_id)
             .order_by(desc("avg_change"))
-            .limit(10)  # max of 10 results
             .all()
         )
+        results_list = result_tuples[:10]  # limit to first 10
 
-        # Append each user's stock codes to the results
-        for user_id, avg_change in result_tuples:
+        # generator expression to find user's rank and portfolio
+        user_tuple = ()
+        try:
+            user_i = next(
+                (
+                    i
+                    for i, tuple in enumerate(result_tuples)
+                    if tuple[0] == current_user.id
+                ),
+                None,
+            )
+            user_tuple = result_tuples[user_i]
+            results_list.append(user_tuple)  # process user row as well
+        except:
+            pass
+
+        # Append each user's stock codes and names to the results
+        for user_id, first_name, last_name, avg_change in results_list:
+            # process stock codes/syms
             stock_codes = (
                 ChallengeEntry.query.join(Challenge)
                 .filter(
@@ -499,15 +519,25 @@ def get_leaderboard_results() -> Union[Dict, Status]:
                 .with_entities(ChallengeEntry.code)
                 .all()
             )
-
             stock_codes = [tuple[0] for tuple in stock_codes]
+
+            # concat names
+            user_name = ""
+            try:
+                user_name = " ".join([first_name, last_name])
+            except:
+                pass
+
             leaderboard.append(
                 {
                     "user_id": user_id,
+                    "user_name": user_name,
                     "perc_change": avg_change,
                     "stock_codes": stock_codes,
                 }
             )
+
+        user_row = leaderboard.pop()  # remove user row after processing
 
         # Get challenge start and end dates
         start_date = (
@@ -519,6 +549,7 @@ def get_leaderboard_results() -> Union[Dict, Status]:
             "start_date": start_date,
             "end_date": end_date,
             "leaderboard": leaderboard,
+            "user_row": user_row,  # include User's rank/portfolio
         }
     except Exception as e:
         utils.debug_exception(e, suppress=True)
