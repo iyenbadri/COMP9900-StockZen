@@ -1,3 +1,5 @@
+import os
+
 TESTING = False
 APP_DB_PATH = "database/app.sqlite"
 SQLALCHEMY_DATABASE_URI = f"sqlite:///{APP_DB_PATH}"
@@ -9,8 +11,8 @@ SEARCH_LIMIT = 30
 
 MAIL_SERVER = "smtp.mailtrap.io"
 MAIL_PORT = 2525
-MAIL_USERNAME = "a15b07c5c03683"
-MAIL_PASSWORD = "69cce18ae605e1"
+MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
+MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
 MAIL_USE_TLS = True
 MAIL_USE_SSL = False
 MAIL_SENDER = "alert@stockzen.com"
