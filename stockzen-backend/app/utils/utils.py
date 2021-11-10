@@ -1,17 +1,16 @@
-from datetime import datetime
 import inspect
 import os
+from datetime import datetime
 from itertools import repeat
 from typing import Sequence, Union
 
-from sqlalchemy.sql.sqltypes import BOOLEAN
-from .enums import Status
 from app import executor
 from app.config import TOP_STOCKS_INTERVAL
 from app.models.schema import Challenge, ChallengeEntry, StockPage
 from app.utils import api_utils
-
 from sqlalchemy.orm import load_only
+
+from .enums import Status
 
 # ==============================================================================
 # For generic or shared helper functions
@@ -70,7 +69,9 @@ def bulk_stock_fetch(sym_list: Sequence[str], await_all: bool = False):
 
 def get_open_challenge():
     """Return id and start date of active challenge, or None if not exist"""
-    challenge = Challenge.query.filter_by(is_open=True).one()
+    challenge = (
+        Challenge.query.filter_by(is_open=True).order_by(Challenge.id.desc()).first()
+    )
     if not challenge:
         return None, None
     return challenge.id, challenge.start_date
@@ -107,10 +108,11 @@ def bulk_challenge_fetch(await_all: bool = False):
         list(results)  # use the result to force program to wait before continuing
         print("All concurrent Challenge results returned, continuing...")
 
+
 def is_valid_challenge(challenge_id) -> Status:
     try:
         challenge = Challenge.query.filter_by(id=challenge_id).one()
-        if datetime.now()< challenge.start_date and challenge.is_active==True:
+        if datetime.now() < challenge.start_date and challenge.is_open == True:
             return Status.VALID
         else:
             return Status.INVALID

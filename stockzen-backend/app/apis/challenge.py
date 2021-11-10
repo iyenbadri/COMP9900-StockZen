@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from app.scripts import challenge_script
 from app.utils import crud_utils, utils
 from app.utils.enums import Status
 from flask import request
@@ -118,7 +121,7 @@ class ChallengeCRUD(Resource):
     @api.response(404, "No challenge found")
     def get(self):
         """Return whether there is an active Challenge (is_active) and whether submissions are being accepted (is_open)"""
-
+        challenge_script.start_challenge(datetime(2021, 11, 10, 20, 34, 14))
         challenge_status = crud_utils.get_leaderboard_status()
 
         if challenge_status == Status.FAIL:
