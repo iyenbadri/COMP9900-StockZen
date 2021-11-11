@@ -26,6 +26,26 @@
   text-decoration: underline;
 }
 
+.alertThresholds {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-around;
+  margin: auto;
+  width: 500px;
+}
+
+img.alertAlerted {
+  opacity: 0.4;
+}
+
+.alertThresholdInputGroup {
+  width: 150px;
+}
+
+.alertThresholdControl {
+  text-align: center;
+}
+
 .rowHeader {
   /* text-decoration: underline; */
 }
