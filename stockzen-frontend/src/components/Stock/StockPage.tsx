@@ -288,14 +288,19 @@ const StockPage = (props: any) => {
         <>
           <Modal
             show={fetchError}
-            onHide={() => setFetchError(false)}
+            onHide={() => {
+              setFetchError(false);
+              history.goBack();
+            }}
             className={styles.modalWrapper}
           >
-            <Modal.Body>
-              <div className={'mt-3'}>
-                Sorry. <br /> Data you required does not exist.<br />
+            <Modal.Header className={`${styles.errormsg} my-0`} closeButton />
+            <Modal.Body className={`${styles.errormsg} mt-0`}>
+              <div className={'mt-0'}>
+                <h4 className={'mb-1'}>Sorry.</h4>
+                <div className={styles.msg}>Data you required does not exist.<br /></div>
               </div>
-              <div className={'my-3'}>
+              <div className={'my-4'}>
                 <Button
                   variant={'zen-4'}
                   onClick={(ev) => {
