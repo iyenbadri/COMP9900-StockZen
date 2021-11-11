@@ -99,3 +99,43 @@ Issues:
 
     - 28/10/2021
 
+Week 08:
+
+ML stock prediction model needed to be implemented using LSTM. 
+The issues in the Linear regression model has been obsereved and discarded due to its short comings.
+
+Worked on finalising the ML model and needs to be improved a bit to be incorporated into the backend.
+
+Figured out a way to save the model as a .sav file to reduce training nd load time.
+
+Issues:
+- Extensive research prevented to complete the task before the s]print.
+- Conflicting deadlines and poor health added the trouble.
+
+Pending:
+- Completing the ML backend tasks to work with Gunjan and Khai on other backend task.
+
+    -04/11/21
+
+Week 09:
+
+Accomplishments:
+- A working model with acceptable accuracy and justifiable methodology.
+- Worked on accuracy prediction for the ML model.
+- Logistics of handling the saving of model and loading the predicted results has been successfully completed.
+
+meetings attended:
+- Backend team meeting after Retro-B for ML and Lots logic discussion.
+- Meeting with Khai: Discussion of accuracy.
+
+research for the week:
+- Problem: With the current state and design of ML prediction model, the need to do an accuracy printing was imperative to print the confidence of the model to given users an understanding of the model accuracy. 
+- Calculating accuracy for LSTM models.
+- Traditional methods of accuracy printing does not fit the solution as our results are regression based.
+
+Time Spent: ~15 Hours 
+Pending Tasks:
+- Pickling of models and storing into files.
+- Addition: Saving of files into JSON to get single file contain gin all the predicted prices and the accuracies.
+
+    -11/11/21

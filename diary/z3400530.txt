@@ -178,6 +178,8 @@ Implemented Sell Lots endpoints
 Set up a draft PR for Buy and Sell Lots endpoints
 Complete some of Buy Lot tests
 Begin reviewing frontend Lots PR
+Meet with Gunjan to discuss calculations approch
+Meet with Badri to discuss linear regression model
 
 Planned work: Finish as many endpoints as possible to unblock frontend work
 Achieved: Bit behind on calculations and lots, but we can catch up this weekend
@@ -185,11 +187,55 @@ Achieved: Bit behind on calculations and lots, but we can catch up this weekend
 ===========================================================================
 Week 8
 ===========================================================================
+ML research on confidence/ prediction intervals
+Debug calculation code issues
+Review Gunjan's PR on backend-calculations
+Update PR on backend calcs
+Implement calculation cascade/propagation rules
+Update db populator for lots population
+Implement update interval feature for backend calcs
+Add concurrency feature to backend calcs with flask-executor
+Update/fix tests
+Review Rittisak's PR for Lots wireup
+Meeting: Demo discussion and planning
+PR and Merge backend calculations branch
+Demo testing and preparation on new branch
+Raise issue with load blocking
+Implemented Portfolio Performance Summary endpoint
+Implement Portfolio Performance Summary endpoint tests
+Provide feedback to Jeehyun on Stock Page
+Make CSS formatting changes for Demo2 branch
+Meeting: Demo runthrough
+Did Demo Presentation
+
+Implement Portfolio summary banner endpoint and logic
+Set up PR for Portfolio summary banner endpoint
+Implement Top performing stocks logic and endpoint
+Add testing mode for top performing stocks
+Add longer staleness flag for top performing stocks
+Set up PR for top performing stocks
+Bugfix for merge issues
+PR for Rittisak
+Update to do requests from within top performance fetch
+Meeting: Retro 2
+Meeting: Gunjan discuss Portfolio Challenge architecture
+
 
 ===========================================================================
 Week 9
 ===========================================================================
-
+Meeting: Badri discuss ML model accuracy
+Implement db schema and endpoints for portfolio challenge
+Implement leaderboard, status, submit
+Implement fixes for username response and user rank response
+Update portfolio challenge script, merge
+PR for Rittisak Price Alerts
+Bugfix PR review for Top Performer
+Meeting: Gunjan to discuss Challenge script
+Add flask.cli to challenge script
+Bugfixes for challenge script for wire up section and datetime issues
+Implement Portfolio row ML Prediction frontend: arrow and indicator
+PR for ML Prediction arrow and indicator
 ===========================================================================
 Week 10
 ===========================================================================

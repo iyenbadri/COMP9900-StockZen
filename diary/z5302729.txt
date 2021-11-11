@@ -28,3 +28,14 @@ Week 7:
 •	StockPage backend calculations 
 •	ML feature discussion
 •	Code review for Stockpage endpoint, stock history
+
+Week 8:
+•	Backend calculations
+•	Discussion on Top widgets
+•	Research on Valid Tickers for yfinance
+
+Week 9:
+•	Backend Meeting on Porfolio Challenge logic
+•	store valid Tickers for StockPage table
+•	Completed crud function to add stocks to the portfolio Challenge
+•	Wrote and tested the portfolio challenge script 
