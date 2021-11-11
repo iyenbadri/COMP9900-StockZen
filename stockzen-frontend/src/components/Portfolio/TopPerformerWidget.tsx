@@ -1,5 +1,6 @@
 import lossArrow from 'assets/icon-outlines/outline-arrow-down-circle-red.svg';
 import gainArrow from 'assets/icon-outlines/outline-arrow-up-circle-green.svg';
+import loadSpinner from 'assets/load_spinner.svg';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import moment from 'moment';
 import React, { FC, useContext } from 'react';
@@ -93,7 +94,12 @@ const TopPerformerWidget: FC = (props) => {
           {isLoading && (
             <tr>
               <td colSpan={99} className='text-center'>
-                Loading
+                <img
+                  src={loadSpinner}
+                  alt='loading spinner'
+                  className={styles.spinner}
+                />
+                <span className={styles.spinnerText}>Loading...</span>
               </td>
             </tr>
           )}

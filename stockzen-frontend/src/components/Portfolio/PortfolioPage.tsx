@@ -3,7 +3,7 @@ import orderDown from 'assets/icon-outlines/outline-chevron-down-small.svg';
 import orderUp from 'assets/icon-outlines/outline-chevron-up-small.svg';
 import refreshIcon from 'assets/icon-outlines/outline-refresh-small.svg';
 import axios from 'axios';
-import SearchWidget from 'components/Search/SearchWidget';
+import AddStock from 'components/Portfolio/AddStock';
 import { RefreshContext } from 'contexts/RefreshContext';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import { Ordering } from 'enums';
@@ -45,8 +45,8 @@ const OrderingIndicator: FC<OrderingIndicatorProp> = (props) => {
     <>
       {target === ordering.column && (
         <img
-          width={24}
-          height={24}
+          width={20}
+          height={20}
           src={ordering.ordering === Ordering.Ascending ? orderUp : orderDown}
           alt='order-indicator'
         />
@@ -303,10 +303,10 @@ const PortfolioPage = () => {
       <hr />
 
       <div className={styles.tableToolbar}>
-        <SearchWidget
+        <AddStock
           portfolioId={portfolioId}
           addStock={handleAddStock}
-        ></SearchWidget>
+        ></AddStock>
         <Button
           variant='light'
           className='ms-1 text-muted d-flex align-items-center'

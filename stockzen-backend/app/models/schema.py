@@ -130,6 +130,13 @@ class Stock(db.Model):
         cascade="all, delete, delete-orphan",
     )
 
+    price_alert = relationship(
+        "PriceAlert",
+        backref=backref("stock", lazy="select"),
+        lazy="select",
+        cascade="all, delete, delete-orphan",
+    )
+
     # Unique Constraints (multiple column)
     UniqueConstraint(user_id, portfolio_id, stock_page_id)
 
@@ -198,3 +205,14 @@ class History(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     stock_page_id = Column(Integer, ForeignKey("stock_pages.id"), nullable=False)
     history = Column(String, nullable=False)
+
+class PriceAlert(db.Model):
+    __tablename__ = "price_alerts"
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    stock_id = Column(Integer, ForeignKey("stocks.id"), nullable=False, unique=True)
+    high_threshold = Column(Float)
+    low_threshold = Column(Float)
+    user_save_time = Column(DateTime)
+    is_high_threshold_alerted = Column(Boolean)
+    is_low_threshold_alerted = Column(Boolean)
+    last_check_time = Column(DateTime)
