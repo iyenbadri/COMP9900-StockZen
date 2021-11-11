@@ -201,7 +201,7 @@ const StockPage = (props: any) => {
                 >
                   <CartesianGrid strokeDasharray='3 3' />
                   <XAxis dataKey='date' tick={{ fontSize: 12 }} />
-                  <YAxis dataKey='close' tick={{ fontSize: 12 }} />
+                  <YAxis dataKey='close' tick={{ fontSize: 12 }} domain={['auto', 'auto']} />
                   <Tooltip content={<CustomTooltip />} />
                   <Line type='monotone' dataKey='close' stroke={'#5bc0be'} dot={false} />
                   <Line type='monotone' dataKey='open' strokeWidth={0} dot={false} />
