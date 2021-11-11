@@ -18,7 +18,7 @@ const Stock: FC = () => {
         </Col>
         <Col xs={12} lg={8}>
           <Switch>
-            <ProtectedRoute exact path={`${path}`} component={StockPage} />
+            <ProtectedRoute path={`${path}/:stockPageId`} component={StockPage} />
           </Switch>
         </Col>
       </Row>

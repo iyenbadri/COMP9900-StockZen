@@ -122,7 +122,6 @@ class StockPageCRUD(Resource):
 
         if stock_page_item == Status.FAIL:
             return abort(404, "Stock page could not be found")
-
         return stock_page_item, 200
 
 
