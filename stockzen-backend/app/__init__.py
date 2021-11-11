@@ -4,6 +4,7 @@ from sqlite3 import Connection as SQLite3Connection
 from flask import Flask
 from flask_executor import Executor
 from flask_login import LoginManager
+from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
@@ -12,6 +13,7 @@ from sqlalchemy.engine import Engine
 db = SQLAlchemy()
 login_manager = LoginManager()
 executor = Executor()
+mail = Mail()
 
 
 def create_app(test_config=None):
@@ -59,9 +61,12 @@ def create_app(test_config=None):
     # ==========================================================================
     # Custom CLI Commands
     # ==========================================================================
-
+    mail.init_app(app)
+    from app.commands import price_alert
+    price_alert.init_app(app)
+    
     from app.scripts import challenge_script
-
     challenge_script.init_app(app)
+    
 
     return app
