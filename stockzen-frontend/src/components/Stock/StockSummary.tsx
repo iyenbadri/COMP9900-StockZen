@@ -1,6 +1,6 @@
 import questionIcon from 'assets/icon-outlines/outline-question-circle.svg';
 import React, { FC } from 'react';
-import { intFormatter, numberFormatter } from 'utils/Utilities';
+import { bigNumberFormatter, intFormatter, numberFormatter } from 'utils/Utilities';
 import styles from './StockSummary.module.css';
 
 const StockSummary: FC<IStockPageResponse> = (prop) => {
@@ -78,7 +78,7 @@ const StockSummary: FC<IStockPageResponse> = (prop) => {
               Market Cap
             </div>
             <div className={styles.infoValue}>
-              {intFormatter.format(prop.marketCap)}
+              {bigNumberFormatter.format(prop.marketCap)}
             </div>
           </div>
           <div className={styles.infoRow}>

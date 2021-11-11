@@ -136,7 +136,13 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
                   <span className={styles.optionSymbol}>
                     {/* TODO: Will fix the nested `a` tag bug later. Have to find a way to fix it first */}
                     <Link
-                      to={`/stock/${option.stockPageId}`}
+                      to={{
+                        pathname: `/stock/${option.stockPageId}`,
+                        state: {
+                          code: option.code,
+                          name: option.description
+                        }
+                      }}
                       onClick={() => {
                         endSearch();
                       }}

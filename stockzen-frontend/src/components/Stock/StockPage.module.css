@@ -1,5 +1,11 @@
 @import 'variables.css';
 
+.spinner {
+  text-align: center;
+  height: 30px;
+  margin: 10%;
+}
+
 .stockHeader {
   display: flex;
   flex-direction: column;
@@ -14,6 +20,10 @@
 .stockCode {
   margin-top: 0;
   font-weight: bold;
+}
+
+.stockWrapper {
+  height: 280px;
 }
 
 .stockSummmary {
