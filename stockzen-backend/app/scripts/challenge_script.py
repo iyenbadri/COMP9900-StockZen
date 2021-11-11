@@ -27,7 +27,9 @@ def start_challenge():
                 break
         print("Submission period has ended.")
 
-        challenge = Challenge.query.filter_by(start_date=start_date).one()
+        challenge = (
+            Challenge.query.filter_by(is_open=True).order_by(Challenge.id.desc()).first()
+        )
         challenge_id = challenge.id
         db_utils.update_item_columns(
             Challenge,

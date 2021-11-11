@@ -466,7 +466,7 @@ def get_performance_summary() -> Status:
 
 
 def get_leaderboard_results() -> Union[Dict, Status]:
-    """Return dict list of best performing user portfolios during current challenge period"""
+    """Return dict list of best performing user portfolios during last challenge period"""
     try:
         leaderboard = []
 
