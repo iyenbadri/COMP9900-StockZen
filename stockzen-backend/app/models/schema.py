@@ -129,7 +129,6 @@ class Stock(db.Model):
         lazy="select",
         cascade="all, delete, delete-orphan",
     )
-
     price_alert = relationship(
         "PriceAlert",
         backref=backref("stock", lazy="select"),
@@ -205,6 +204,10 @@ class History(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     stock_page_id = Column(Integer, ForeignKey("stock_pages.id"), nullable=False)
     history = Column(String, nullable=False)
+    
+# ------------------------------------------------------------------------------
+# Price Alert tables
+# ------------------------------------------------------------------------------
 
 class PriceAlert(db.Model):
     __tablename__ = "price_alerts"
@@ -216,3 +219,48 @@ class PriceAlert(db.Model):
     is_high_threshold_alerted = Column(Boolean)
     is_low_threshold_alerted = Column(Boolean)
     last_check_time = Column(DateTime)
+
+# ------------------------------------------------------------------------------
+# Portfolio Challenge tables
+# ------------------------------------------------------------------------------
+
+# Holds Portfolio Challenge round info
+class Challenge(db.Model):
+    __tablename__ = "challenges"
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    start_date = Column(DateTime, nullable=False, default=datetime.now())
+    is_active = Column(
+        Boolean, default=False
+    )  # whether challenge is active (end_date not reached yet)
+    is_open = Column(
+        Boolean, default=False
+    )  # whether submissions are open (is_active == True and start_date not reached yet)
+
+    # Relationships
+    # one-to-many challenges:entries
+    entries = relationship(
+        "ChallengeEntry",
+        backref=backref("challenges", lazy="select"),
+        lazy="select",
+        cascade="all, delete, delete-orphan",
+    )
+
+
+# Holds Portfolio Challenge entries
+class ChallengeEntry(db.Model):
+    __tablename__ = "challenge_entries"
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    challenge_id = Column(Integer, ForeignKey("challenges.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    stock_page_id = Column(Integer, ForeignKey("stock_pages.id"), nullable=False)
+    code = Column(String)  # stock symbol
+    start_price = Column(Float)
+    end_price = Column(Float)
+    perc_change = Column(Float)
+
+    # Unique Constraints (multiple column)
+    UniqueConstraint(challenge_id, user_id, stock_page_id)
+    # NOTE: challenge_id and user_id unique constraint is enforced in the CRUD function
+    # to allow for a more informative error message to the frontend
+
+

@@ -7,7 +7,10 @@ const Footer = () => {
 
   return (
     <footer className={isAuthenticated ? styles.userAuthenticated : ''}>
-      &copy; StockZen 2021. All Rights Reserved.
+      <div>&copy; StockZen 2021. All Rights Reserved.</div>
+      <div className={styles.currency}>
+        All price shown on the website are in USD.
+      </div>
     </footer>
   );
 };
