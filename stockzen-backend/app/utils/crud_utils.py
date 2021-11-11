@@ -584,14 +584,11 @@ def add_challenge_stocks(stocks, challenge_id: int) -> Status:
 
             except:
                 for stock_page_id in stocks:
-                    stock = StockPage.query.filter_by(
-                        id=stock_page_id["stockPageId"]
-                    ).one()
                     new_stock = ChallengeEntry(
                         challenge_id=challenge_id,
                         user_id=current_user.id,
-                        stock_page_id=stock_page_id["stockPageId"],
-                        code=stock.code,
+                        stock_page_id=stock_page_id,
+                        code=utils.id_to_code(stock_page_id),
                     )
                     db_utils.insert_item(new_stock)
                 return Status.SUCCESS

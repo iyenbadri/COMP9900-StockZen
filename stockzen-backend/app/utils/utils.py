@@ -99,6 +99,7 @@ def bulk_challenge_fetch(await_all: bool = False):
         .all()
     )
     unique_stock_ids = [tuple[0] for tuple in unique_stock_ids]
+    print(f"Fetching challenge data for stockPageIds: {unique_stock_ids}")
 
     # concurrently fetch api data to update stock page over the Challenge period
     from stockzen import app
