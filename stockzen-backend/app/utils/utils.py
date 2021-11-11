@@ -1,12 +1,12 @@
 import inspect
 import os
 from itertools import repeat
-from typing import Sequence
+from typing import Sequence, Union
 
-import app.utils.calc_utils as calc
 from app import executor
 from app.config import TOP_STOCKS_INTERVAL
-from app.models.schema import StockPage
+from app.models.schema import Challenge, ChallengeEntry, StockPage
+from app.utils import api_utils
 from sqlalchemy.orm import load_only
 
 # ==============================================================================
@@ -38,6 +38,11 @@ def id_to_code(stock_page_id: int):
         debug_exception(e)
 
 
+# ------------------------------------------------------------------------------
+# Bulk Fetch Utils
+# ------------------------------------------------------------------------------
+
+
 def bulk_stock_fetch(sym_list: Sequence[str], await_all: bool = False):
     """Update all stocks from a list of symbols"""
     # convert symbol list to stock_page_id list
@@ -51,7 +56,49 @@ def bulk_stock_fetch(sym_list: Sequence[str], await_all: bool = False):
 
     # concurrently fetch api data to update each stock page
     # pass longer update interval so app does not request bulk from yfinance too often
-    results = executor.map(calc.api_request, id_list, repeat(TOP_STOCKS_INTERVAL))
+    results = executor.map(
+        api_utils.api_stock_request, id_list, repeat(TOP_STOCKS_INTERVAL)
+    )
     if await_all:
         list(results)  # use the result to force program to wait before continuing
         print("All concurrent results returned, continuing...")
+
+
+def get_open_challenge():
+    """Return id and start date of open challenge, or None if not exist"""
+    challenge = Challenge.query.filter_by(is_open=True).one()
+    if not challenge:
+        return None, None
+    return challenge.id, challenge.start_date
+
+
+def get_prev_challenge():
+    """Return id and start date of previous challenge, or None if not exist"""
+    challenge = (
+        Challenge.query.filter_by(is_active=False).order_by(Challenge.id.desc()).first()
+    )
+    if not challenge:
+        return None, None
+    return challenge.id, challenge.start_date
+
+
+def bulk_challenge_fetch(await_all: bool = False):
+    """Function for challenge script to call that caches perc_change for all challenge stocks"""
+
+    prev_challenge_id, prev_start_date = get_prev_challenge()
+
+    unique_stock_ids = (
+        ChallengeEntry.query.filter(ChallengeEntry.challenge_id == prev_challenge_id)
+        .with_entities(ChallengeEntry.stock_page_id)
+        .distinct(ChallengeEntry.stock_page_id)
+        .all()
+    )
+    unique_stock_ids = [tuple[0] for tuple in unique_stock_ids]
+
+    # concurrently fetch api data to update stock page over the Challenge period
+    results = executor.map(
+        api_utils.api_history_request, unique_stock_ids, repeat(prev_start_date)
+    )
+    if await_all:
+        list(results)  # use the result to force program to wait before continuing
+        print("All concurrent Challenge results returned, continuing...")

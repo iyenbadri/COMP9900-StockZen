@@ -9,15 +9,9 @@ EXECUTOR_MAX_WORKERS = 8  # max concurrents
 EXECUTOR_PROPAGATE_EXCEPTIONS = True  # don't swallow exceptions
 SEARCH_LIMIT = 30
 
-MAIL_SERVER = "smtp.mailtrap.io"
-MAIL_PORT = 2525
-MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
-MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
-MAIL_USE_TLS = True
-MAIL_USE_SSL = False
-MAIL_SENDER = "alert@stockzen.com"
-MAIL_DEBUG = False
-
+# ------------------------------------------------------------------------------
+# Top Stocks
+# ------------------------------------------------------------------------------
 STALENESS_INTERVAL = 90  # min seconds before a stock page is considered stale
 TOP_STOCKS_INTERVAL = (
     3600  # min seconds before a top performance stock is considered stale
@@ -45,3 +39,20 @@ TOP_COMPANIES = [
     "NFLX",
     "PYPL",
 ]  # ref: https://www.investopedia.com/ask/answers/08/find-stocks-in-sp500.asp
+
+# ------------------------------------------------------------------------------
+# Price Alerts
+# ------------------------------------------------------------------------------
+MAIL_SERVER = "smtp.mailtrap.io"
+MAIL_PORT = 2525
+MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
+MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
+MAIL_USE_TLS = True
+MAIL_USE_SSL = False
+MAIL_SENDER = "alert@stockzen.com"
+MAIL_DEBUG = False
+
+# ------------------------------------------------------------------------------
+# Portfolio Challenge
+# ------------------------------------------------------------------------------
+CHALLENGE_PERIOD = 7 * 24 * 60 * 60  # length of each challenge round in seconds

@@ -3,8 +3,10 @@ from datetime import datetime, timedelta
 from typing import Dict, Mapping, Sequence, Union
 
 import app.utils.calc_utils as calc
-from app.config import N_TOP_PERFORMERS, TOP_STOCKS_INTERVAL
+from app.config import CHALLENGE_PERIOD, N_TOP_PERFORMERS, TOP_STOCKS_INTERVAL
 from app.models.schema import (
+    Challenge,
+    ChallengeEntry,
     History,
     LotBought,
     LotSold,
@@ -15,6 +17,7 @@ from app.models.schema import (
 )
 from app.utils.enums import LotType, Status
 from flask_login import current_user
+from sqlalchemy import desc, func
 from sqlalchemy.orm import load_only
 
 from . import api_utils as api
@@ -420,7 +423,7 @@ def delete_lot(type: LotType, lot_id: int) -> Status:
         return Status.FAIL
 
 
-def fetch_lot(type: LotType, lot_id: int) -> Union[Stock, Status]:
+def fetch_lot(type: LotType, lot_id: int) -> Union[Dict, Status]:
     """Get existing lot by id, return item or success status"""
     try:
         table = LotBought if type == LotType.BUY else LotSold
@@ -455,3 +458,114 @@ def get_performance_summary() -> Status:
     holdings, today, overall = calc.calc_summary()
 
     return {"holdings": holdings, "today": today, "overall": overall}
+
+
+# ==============================================================================
+# Challenge Utils
+# ==============================================================================
+
+
+def get_leaderboard_results() -> Union[Dict, Status]:
+    """Return dict list of best performing user portfolios during current challenge period"""
+    try:
+        leaderboard = []
+
+        prev_challenge_id, _ = utils.get_prev_challenge()
+        if not prev_challenge_id:
+            return Status.NOT_EXIST
+
+        # Get a ranked list of users and their avg perc_changes
+        result_tuples = (
+            ChallengeEntry.query.join(Challenge)
+            .join(User)
+            .filter(Challenge.id == prev_challenge_id)
+            .with_entities(
+                ChallengeEntry.user_id,
+                User.first_name,
+                User.last_name,
+                func.avg(ChallengeEntry.perc_change).label("avg_change"),
+            )
+            .group_by(ChallengeEntry.user_id)
+            .order_by(desc("avg_change"))
+            .all()
+        )
+        results_list = result_tuples[:10]  # limit to first 10
+
+        # generator expression to find user's rank and portfolio
+        user_tuple = ()
+        try:
+            user_i = next(
+                (
+                    i
+                    for i, tuple in enumerate(result_tuples)
+                    if tuple[0] == current_user.id
+                ),
+                None,
+            )
+            user_tuple = result_tuples[user_i]
+            results_list.append(user_tuple)  # process user row as well
+        except:
+            pass
+
+        # Append each user's stock codes and names to the results
+        for user_id, first_name, last_name, avg_change in results_list:
+            # process stock codes/syms
+            stock_codes = (
+                ChallengeEntry.query.join(Challenge)
+                .filter(
+                    Challenge.id == prev_challenge_id, ChallengeEntry.user_id == user_id
+                )
+                .order_by(ChallengeEntry.perc_change.desc())
+                .with_entities(ChallengeEntry.code)
+                .all()
+            )
+            stock_codes = [tuple[0] for tuple in stock_codes]
+
+            # concat names
+            user_name = ""
+            try:
+                user_name = " ".join([first_name, last_name])
+            except:
+                pass
+
+            leaderboard.append(
+                {
+                    "user_id": user_id,
+                    "user_name": user_name,
+                    "perc_change": avg_change,
+                    "stock_codes": stock_codes,
+                }
+            )
+
+        user_row = leaderboard.pop()  # remove user row after processing
+
+        # Get challenge start and end dates
+        start_date = (
+            Challenge.query.filter(Challenge.id == prev_challenge_id).one().start_date
+        )
+        end_date = start_date + timedelta(seconds=CHALLENGE_PERIOD)
+
+        return {
+            "start_date": start_date,
+            "end_date": end_date,
+            "leaderboard": leaderboard,
+            "user_row": user_row,  # include User's rank/portfolio
+        }
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+        return Status.FAIL
+
+
+def get_leaderboard_status():
+    """Return active and open status of the last challenge"""
+    try:
+        challenge = Challenge.query.order_by(Challenge.id.desc()).first()
+        return to_dict(challenge)
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+        return Status.FAIL
+
+
+def add_challenge_stocks(stocks, challenge_id: int) -> Status:
+
+    return
