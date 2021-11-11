@@ -116,7 +116,7 @@ const PortfolioPageSummary: FC<IPortfolioPageSummaryProp> = (props) => {
                     : numberFormatter.format(summaryData.changePercent)}
                   %
                 </div>
-                <div>{numberFormatter.format(summaryData.change)}</div>
+                <div>{usdFormatter.format(summaryData.change)}</div>
               </>
             )}
           </div>
@@ -135,7 +135,7 @@ const PortfolioPageSummary: FC<IPortfolioPageSummaryProp> = (props) => {
                     : numberFormatter.format(summaryData.totalGainPercent)}
                   %
                 </div>
-                <div>{numberFormatter.format(summaryData.totalGain)}</div>
+                <div>{usdFormatter.format(summaryData.totalGain)}</div>
               </>
             )}
           </div>
