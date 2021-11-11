@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 TESTING = False
 APP_DB_PATH = "database/app.sqlite"
@@ -44,4 +44,10 @@ TOP_COMPANIES = [
 # ------------------------------------------------------------------------------
 # Portfolio Challenge
 # ------------------------------------------------------------------------------
-CHALLENGE_PERIOD = timedelta(weeks=1)  # length of each challenge round in seconds
+SLEEP_INTERVAL = 15 * 60  # while loop sleep interval for challenge script
+CHALLENGE_PERIOD = timedelta(
+    weeks=1
+)  # length of each challenge round (after submission phase) in seconds
+CHALLENGE_START = datetime.now() + timedelta(
+    hours=1
+)  # datetime when the challenge evaluation period starts

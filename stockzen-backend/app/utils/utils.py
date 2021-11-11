@@ -2,7 +2,7 @@ import inspect
 import os
 from datetime import datetime
 from itertools import repeat
-from typing import Sequence, Union
+from typing import Sequence
 
 from app import executor
 from app.config import TOP_STOCKS_INTERVAL
@@ -101,9 +101,13 @@ def bulk_challenge_fetch(await_all: bool = False):
     unique_stock_ids = [tuple[0] for tuple in unique_stock_ids]
 
     # concurrently fetch api data to update stock page over the Challenge period
-    results = executor.map(
-        api_utils.api_history_request, unique_stock_ids, repeat(prev_start_date)
-    )
+    from stockzen import app
+
+    with app.test_request_context():  # workaround to allow for requests outside the app context
+        results = executor.map(
+            api_utils.api_history_request, unique_stock_ids, repeat(prev_start_date)
+        )
+
     if await_all:
         list(results)  # use the result to force program to wait before continuing
         print("All concurrent Challenge results returned, continuing...")

@@ -56,4 +56,12 @@ def create_app(test_config=None):
 
     all_apis.init_app(app, validate=True)  # validation flag for all api.models
 
+    # ==========================================================================
+    # Custom CLI Commands
+    # ==========================================================================
+
+    from app.scripts import challenge_script
+
+    challenge_script.init_app(app)
+
     return app

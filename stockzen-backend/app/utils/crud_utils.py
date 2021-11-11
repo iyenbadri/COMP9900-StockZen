@@ -4,8 +4,17 @@ from typing import Dict, Mapping, Sequence, Union
 
 import app.utils.calc_utils as calc
 from app.config import CHALLENGE_PERIOD, N_TOP_PERFORMERS, TOP_STOCKS_INTERVAL
-from app.models.schema import (Challenge, ChallengeEntry, History, LotBought,
-                               LotSold, Portfolio, Stock, StockPage, User)
+from app.models.schema import (
+    Challenge,
+    ChallengeEntry,
+    History,
+    LotBought,
+    LotSold,
+    Portfolio,
+    Stock,
+    StockPage,
+    User,
+)
 from app.utils.enums import LotType, Status
 from flask_login import current_user
 from sqlalchemy import desc, func
@@ -587,8 +596,8 @@ def add_challenge_stocks(stocks, challenge_id: int) -> Status:
                     db_utils.insert_item(new_stock)
                 return Status.SUCCESS
         else:
-            return Status.FAIL
+            return Status.INVALID
 
     except Exception as e:
         utils.debug_exception(e, suppress=True)
-        return Status.NOT_EXIST
+        return Status.FAIL
