@@ -118,20 +118,33 @@ Week 8
 
 • Planned  : Finish (1)stock page (including bug fix) 
                     (2)fundamental tab in portfolio page
-• Achieved : (1) Done, (2) In progress
+• Achieved : (1) Done, (2) 50% Done 
+  (*Could not complete task(2) all as I tried refactoring which took
+  too much time)
 
 - Did PR reviews for:
   · PR#78_Refresh functionality (Rittisak)
-  · 
 - Wrote codes for:
   · stock search widget in header
-  · Tabifying portfolio page ('My Holdings' and 'Fundamental')
-  · 
-- 
+  · tabifying portfolio page ('My Holdings' and 'Fundamental')
+  · FundamentalRow which displays fundamental info for each stock
 
 ========================================================================================
 
 Week 9
+
+• Planned  : Finish (1)fundamental tab
+                    (2)overall bug fix and documentation of codes
+                    (3)modal in leaderboard
+             by Friday night
+• Achieved : (1) Done (2)-(3) In progress
+
+- Had meeting with Rittisak to get some advice on fixing Promise issue 
+- Wrote codes for:
+  · remaining fundamental tab contents 
+  · bug fix in fundamental tab / stock page / (... to be added further)
+  · 
+
 
 ========================================================================================
 
