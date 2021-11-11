@@ -248,17 +248,18 @@ G 1
 ============================================
 Week 9
 
-# Planned:      Implement the leaderboard functionality. Add documentation.
-# Finished:     Price alert functionality.
+# Planned:      Implement the leaderboard functionality. Add documentation. Add the currency
+                symbol to money related data. Wire up the leaderboard UI.
+# Finished:     Price alert functionality. Fix the bug in the top performance widget.
 # Issue:        -
 # Unfinished:   -
 # Next:         -
 
 
 
-K (TODO)
-J (TODO)
-G (TODO)
+K 1
+J 1
+G 1
 B (TODO)
 
 -----------------------------------------------------------------------------------------
