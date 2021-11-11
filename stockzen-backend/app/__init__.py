@@ -63,10 +63,11 @@ def create_app(test_config=None):
     # ==========================================================================
     mail.init_app(app)
     from app.commands import price_alert
+
     price_alert.init_app(app)
-    
-    from app.scripts import challenge_script
-    challenge_script.init_app(app)
-    
+
+    from app.commands import portfolio_challenge
+
+    portfolio_challenge.init_app(app)
 
     return app

@@ -120,7 +120,7 @@ class PortfolioCRUD(Resource):
 @api.route("/list/summary")
 class PortfolioCRUD(Resource):
     @login_required
-    @api.marshal_list_with(portfolio_summary_response)
+    @api.marshal_with(portfolio_summary_response)
     @api.response(200, "Successfully retrieved summary")
     def get(self):
         """Return portfolio performance summary"""
