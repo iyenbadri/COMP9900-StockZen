@@ -2,6 +2,7 @@ import { arrayMoveImmutable } from 'array-move';
 import orderDown from 'assets/icon-outlines/outline-chevron-down-small.svg';
 import orderUp from 'assets/icon-outlines/outline-chevron-up-small.svg';
 import refreshIcon from 'assets/icon-outlines/outline-refresh-small.svg';
+import loadSpinner from 'assets/load_spinner.svg';
 import axios from 'axios';
 import { RefreshContext } from 'contexts/RefreshContext';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
@@ -11,7 +12,7 @@ import {
   DragDropContext,
   Droppable,
   DropResult,
-  ResponderProvided,
+  ResponderProvided
 } from 'react-beautiful-dnd';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -86,17 +87,21 @@ const PortfolioPage = () => {
   const [deletingStockId, setDeletingStockId] = useState(0);
   const [deletingStockName, setDeletingStockName] = useState('');
 
-  /* Retrieving data from backend 
-    (1) List of holding stocks with summary data -- stocks
-    (2) List of holding stocks with fundamental information -- stockInfo
-  */
-  // List of stock
-  const [stocks, _setStocks] = useState<IStock[]>([]);
+  // States for loading 
+  const [isLoading, setIsLoading] = useState(false);
 
-  // List of stock fundamental info
+  /* Retrieving data from backend 
+    - Data to retrieve:
+      (1) stocks : list of holding stocks with summary data
+      (2) stockInfos : list of holding stocks with fundamental information
+    - Related functions:
+      (1) mapStockList / mapStockInfoList : map response from backend to frontend object
+      (2) setStocks / setStockInfos : do the sorting in MyHoldings / Fundamentals table
+                                      (Used the same logic as in PortfolioList)
+  */
+  const [stocks, _setStocks] = useState<IStock[]>([]);
   const [stockInfos, _setStockInfos] = useState<IStockFundamental[]>([]);
 
-  // The function to map response from backend to frontend object
   const mapStockList = useCallback(
     (data: IStockResponse[]): IStock[] => {
       return data.map((stock) => {
@@ -126,26 +131,25 @@ const PortfolioPage = () => {
   const mapStockInfoList = useCallback((data: IStockResponse[]): any => {
     return data.map(async (stock) => {
       try {
-        return axios.get(`/stock-page/${stock.stockPageId}`).then((res) => {
-          const infoRes = res.data;
-          const fundamentalInfo: IStockFundamental = {
-            stockId: stock.id,
-            stockPageId: stock.stockPageId,
-            draggableId: `stock-${stock.id}`,
-            ordering: stock.order,
-            symbol: stock.code,
-            name: stock.stockName,
-            dayLow: infoRes.dayLow,
-            dayHigh: infoRes.dayHigh,
-            fiftyTwoWeekLow: infoRes.fiftyTwoWeekLow,
-            fiftyTwoWeekHigh: infoRes.fiftyTwoWeekHigh,
-            volume: infoRes.volume,
-            avgVolume: infoRes.avgVolume,
-            marketCap: infoRes.marketCap,
-            beta: infoRes.beta,
-          };
-          return fundamentalInfo;
-        });
+        let res = await axios.get(`/stock-page/${stock.stockPageId}`);
+        const infoRes = res.data;
+        const fundamentalInfo: IStockFundamental = {
+          stockId: stock.id,
+          stockPageId: stock.stockPageId,
+          draggableId: `stock-${stock.id}`,
+          ordering: stock.order,
+          symbol: stock.code,
+          name: stock.stockName,
+          dayLow: infoRes.dayLow,
+          dayHigh: infoRes.dayHigh,
+          fiftyTwoWeekLow: infoRes.fiftyTwoWeekLow,
+          fiftyTwoWeekHigh: infoRes.fiftyTwoWeekHigh,
+          volume: infoRes.volume,
+          avgVolume: infoRes.avgVolume,
+          marketCap: infoRes.marketCap,
+          beta: infoRes.beta,
+        };
+        return fundamentalInfo;
       } catch (e: any) {
         const blankFundamentalInfo: IStockFundamental = {
           stockId: stock.id,
@@ -166,50 +170,8 @@ const PortfolioPage = () => {
         return blankFundamentalInfo;
       }
     });
-    // const res = await axios.get(`/stock-page/${stock.stockPageId}`);
-    // if (res.status === 200) {
-    //   const infoRes = res.data;
-    //   const fundamentalInfo: IStockFundamental = {
-    //     stockId: stock.id,
-    //     stockPageId: stock.stockPageId,
-    //     draggableId: `stock-${stock.id}`,
-    //     ordering: stock.order,
-    //     symbol: stock.code,
-    //     name: stock.stockName,
-    //     dayLow: infoRes.dayLow,
-    //     dayHigh: infoRes.dayHigh,
-    //     fiftyTwoWeekLow: infoRes.fiftyTwoWeekLow,
-    //     fiftyTwoWeekHigh: infoRes.fiftyTwoWeekHigh,
-    //     volume: infoRes.volume,
-    //     avgVolume: infoRes.avgVolume,
-    //     marketCap: infoRes.marketCap,
-    //     beta: infoRes.beta,
-    //   };
-    //   return fundamentalInfo;
-    // } else {
-    //   const blankFundamentalInfo: IStockFundamental = {
-    //     stockId: stock.id,
-    //     stockPageId: stock.stockPageId,
-    //     draggableId: `stock-${stock.id}`,
-    //     ordering: stock.order,
-    //     symbol: stock.code,
-    //     name: stock.stockName,
-    //     dayLow: null,
-    //     dayHigh: null,
-    //     fiftyTwoWeekLow: null,
-    //     fiftyTwoWeekHigh: null,
-    //     volume: null,
-    //     avgVolume: null,
-    //     marketCap: null,
-    //     beta: null,
-    //   };
-    //   return blankFundamentalInfo;
-    // }
-    // })
   }, []);
 
-  // A function to do the sorting in MyHoldings table
-  // (Used the same logic as in PortfolioList)
   const setStocks = useCallback(
     (
       stocks: IStock[],
@@ -241,7 +203,6 @@ const PortfolioPage = () => {
     [_setStocks]
   );
 
-  // A function to do the sorting in Fundamental table
   const setStockInfos = useCallback(
     async (
       stockInfos: Promise<IStockFundamental>[],
@@ -271,6 +232,8 @@ const PortfolioPage = () => {
       }
 
       _setStockInfos(infos);
+      setIsLoading(false);
+
     },
     [_setStockInfos]
   );
@@ -291,9 +254,10 @@ const PortfolioPage = () => {
     ordering: Ordering.Unknown,
   });
 
-  // A function to load the stocks list
+  // A function to load the stocks & stockInfos list
   const reloadStockList = useCallback(
     (forceRefresh: boolean) => {
+      setIsLoading(true);
       // Call the API
       axios
         .get(`/stock/list/${portfolioId}?refresh=${forceRefresh ? '1' : '0'}`)
@@ -301,6 +265,7 @@ const PortfolioPage = () => {
           // Map the response and then set it.
           setStocks(mapStockList(response.data), holdingsTableOrdering);
           setStockInfos(mapStockInfoList(response.data), infoTableOrdering);
+          // setIsLoading(false);
         });
     },
     [
@@ -326,7 +291,7 @@ const PortfolioPage = () => {
 
   // Handler when the drag end
   const handleDragEnd = (result: DropResult, provided: ResponderProvided) => {
-    // Set isDragging to faslse
+    // Set isDragging to false
     setIsDragging(false);
 
     // If user drop it in the list
@@ -433,6 +398,7 @@ const PortfolioPage = () => {
 
       // Load the stock list from backend.
       reloadStockList(false);
+
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -647,9 +613,8 @@ const PortfolioPage = () => {
           </div>
           {/* Wrapper to enable/disable hightlight when dragging */}
           <div
-            className={`${isDragging ? styles.dragging : styles.notDragging} ${
-              holdingsTableOrdering.column !== '' ? styles.tempSort : ''
-            }`}
+            className={`${isDragging ? styles.dragging : styles.notDragging} ${holdingsTableOrdering.column !== '' ? styles.tempSort : ''
+              }`}
           >
             <DragDropContext
               onDragEnd={handleDragEnd}
@@ -659,7 +624,6 @@ const PortfolioPage = () => {
                 {(provided, snapshot) => (
                   <div ref={provided.innerRef} {...provided.droppableProps}>
                     {stocks.map((stock, index) => {
-                      console.log(stocks);
                       return (
                         <PortfolioPageRow
                           key={stock.stockId}
@@ -682,158 +646,170 @@ const PortfolioPage = () => {
         </TabPanel>
         {/* --- Tab(2) Fundamentals --- */}
         <TabPanel>
-          <div className={styles.sideScrollWrapper}>
-            <div className={styles.sdieScrollContainer}>
-              <div className={styles.tableHeader}>
-                <span className={styles.rowStockInfo}>
-                  <span className={styles.rowHandle}></span>
-                  <span className={styles.rowCode}>
-                    <Button
-                      variant='transparent'
-                      size={'sm'}
-                      onClick={() => handleFundamentalTempSort('symbol')}
-                    >
-                      Code
-                      <OrderingIndicator
-                        target='symbol'
-                        ordering={infoTableOrdering}
-                      ></OrderingIndicator>
-                    </Button>
-                  </span>
-                  <span className={`${styles.rowName} d-none d-xxl-block`}>
-                    <Button
-                      variant='transparent'
-                      size={'sm'}
-                      onClick={() => handleFundamentalTempSort('name')}
-                    >
-                      Name
-                      <OrderingIndicator
-                        target='name'
-                        ordering={infoTableOrdering}
-                      ></OrderingIndicator>
-                    </Button>
-                  </span>
-                  <span className={styles.rowInfo}>
-                    <Button
-                      variant='transparent'
-                      size={'sm'}
-                      onClick={() => handleFundamentalTempSort('dayLow')}
-                    >
-                      DayLow
-                      <OrderingIndicator
-                        target='dayLow'
-                        ordering={infoTableOrdering}
-                      ></OrderingIndicator>
-                    </Button>
-                  </span>
-                  <span className={styles.rowInfo}>
-                    <Button
-                      variant='transparent'
-                      size={'sm'}
-                      onClick={() => handleFundamentalTempSort('dayHigh')}
-                    >
-                      DayHigh
-                      <OrderingIndicator
-                        target='dayHigh'
-                        ordering={infoTableOrdering}
-                      ></OrderingIndicator>
-                    </Button>
-                  </span>
-                  <span
-                    className={`${styles.rowLongInfo} d-block d-lg-none  d-xl-block`}
-                  >
-                    <Button
-                      variant='transparent'
-                      size={'sm'}
-                      onClick={() =>
-                        handleFundamentalTempSort('fiftyTwoWeekLow')
-                      }
-                    >
-                      52Wk Low
-                      <OrderingIndicator
-                        target='fiftyTwoWeekLow'
-                        ordering={infoTableOrdering}
-                      ></OrderingIndicator>
-                    </Button>
-                  </span>
-                  <span
-                    className={`${styles.rowLongInfo} d-block d-lg-none  d-xl-block`}
-                  >
-                    <Button
-                      variant='transparent'
-                      size={'sm'}
-                      onClick={() =>
-                        handleFundamentalTempSort('fiftyTwoWeekHigh')
-                      }
-                    >
-                      52Wk High
-                      <OrderingIndicator
-                        target='fiftyTwoWeekHigh'
-                        ordering={infoTableOrdering}
-                      ></OrderingIndicator>
-                    </Button>
-                  </span>
-                  <span className={styles.rowLongInfo}>
-                    <Button
-                      variant='transparent'
-                      size={'sm'}
-                      onClick={() => handleFundamentalTempSort('avgVolume')}
-                    >
-                      Avg Volume
-                      <OrderingIndicator
-                        target='avgVolume'
-                        ordering={infoTableOrdering}
-                      ></OrderingIndicator>
-                    </Button>
-                  </span>
-                  <span className={styles.rowLongInfo}>
-                    <Button
-                      variant='transparent'
-                      size={'sm'}
-                      onClick={() => handleFundamentalTempSort('marketCap')}
-                    >
-                      Market Cap
-                      <OrderingIndicator
-                        target='marketCap'
-                        ordering={infoTableOrdering}
-                      ></OrderingIndicator>
-                    </Button>
-                  </span>
-                  <span className={styles.rowShortInfo}>
-                    <Button
-                      variant='transparent'
-                      size={'sm'}
-                      onClick={() => handleFundamentalTempSort('beta')}
-                    >
-                      Beta
-                      <OrderingIndicator
-                        target='beta'
-                        ordering={infoTableOrdering}
-                      ></OrderingIndicator>
-                    </Button>
-                  </span>
-                </span>
-                <span className={styles.rowDelete}></span>
-              </div>
+          {isLoading && (
+            <div className='text-center'>
+              <img
+                src={loadSpinner}
+                alt='loading spinner'
+                className={styles.spinner}
+              />
             </div>
-          </div>
-          <div>
-            {stockInfos.map((stock, index) => {
-              console.log(stockInfos);
-              return (
-                <PortfolioFundamentalRow
-                  key={stock.stockId}
-                  index={index}
-                  stock={stock}
-                  showDeleteModal={(stockId: number, name: string) => {
-                    setDeletingStockId(stockId);
-                    setDeletingStockName(name);
-                    setShowDeleteStockModal(true);
-                  }}
-                ></PortfolioFundamentalRow>
-              );
-            })}
-          </div>
+          )}
+          {!isLoading && (
+            <>
+              <div className={styles.sideScrollWrapper}>
+                <div className={styles.sdieScrollContainer}>
+                  <div className={styles.tableHeader}>
+                    <span className={styles.rowStockInfo}>
+                      <span className={styles.rowHandle}></span>
+                      <span className={styles.rowCode}>
+                        <Button
+                          variant='transparent'
+                          size={'sm'}
+                          onClick={() => handleFundamentalTempSort('symbol')}
+                        >
+                          Code
+                          <OrderingIndicator
+                            target='symbol'
+                            ordering={infoTableOrdering}
+                          ></OrderingIndicator>
+                        </Button>
+                      </span>
+                      <span className={`${styles.rowName} d-none d-xxl-block`}>
+                        <Button
+                          variant='transparent'
+                          size={'sm'}
+                          onClick={() => handleFundamentalTempSort('name')}
+                        >
+                          Name
+                          <OrderingIndicator
+                            target='name'
+                            ordering={infoTableOrdering}
+                          ></OrderingIndicator>
+                        </Button>
+                      </span>
+                      <span className={styles.rowInfo}>
+                        <Button
+                          variant='transparent'
+                          size={'sm'}
+                          onClick={() => handleFundamentalTempSort('dayLow')}
+                        >
+                          DayLow
+                          <OrderingIndicator
+                            target='dayLow'
+                            ordering={infoTableOrdering}
+                          ></OrderingIndicator>
+                        </Button>
+                      </span>
+                      <span className={styles.rowInfo}>
+                        <Button
+                          variant='transparent'
+                          size={'sm'}
+                          onClick={() => handleFundamentalTempSort('dayHigh')}
+                        >
+                          DayHigh
+                          <OrderingIndicator
+                            target='dayHigh'
+                            ordering={infoTableOrdering}
+                          ></OrderingIndicator>
+                        </Button>
+                      </span>
+                      <span
+                        className={`${styles.rowLongInfo} d-none d-xxl-block`}
+                      >
+                        <Button
+                          variant='transparent'
+                          size={'sm'}
+                          onClick={() =>
+                            handleFundamentalTempSort('fiftyTwoWeekLow')
+                          }
+                        >
+                          52Wk Low
+                          <OrderingIndicator
+                            target='fiftyTwoWeekLow'
+                            ordering={infoTableOrdering}
+                          ></OrderingIndicator>
+                        </Button>
+                      </span>
+                      <span
+                        className={`${styles.rowLongInfo} d-none d-xxl-block`}
+                      >
+                        <Button
+                          variant='transparent'
+                          size={'sm'}
+                          onClick={() =>
+                            handleFundamentalTempSort('fiftyTwoWeekHigh')
+                          }
+                        >
+                          52Wk High
+                          <OrderingIndicator
+                            target='fiftyTwoWeekHigh'
+                            ordering={infoTableOrdering}
+                          ></OrderingIndicator>
+                        </Button>
+                      </span>
+                      <span className={styles.rowLongInfo}>
+                        <Button
+                          variant='transparent'
+                          size={'sm'}
+                          onClick={() => handleFundamentalTempSort('avgVolume')}
+                        >
+                          Avg Volume
+                          <OrderingIndicator
+                            target='avgVolume'
+                            ordering={infoTableOrdering}
+                          ></OrderingIndicator>
+                        </Button>
+                      </span>
+                      <span className={styles.rowLongInfo}>
+                        <Button
+                          variant='transparent'
+                          size={'sm'}
+                          onClick={() => handleFundamentalTempSort('marketCap')}
+                        >
+                          Market Cap
+                          <OrderingIndicator
+                            target='marketCap'
+                            ordering={infoTableOrdering}
+                          ></OrderingIndicator>
+                        </Button>
+                      </span>
+                      <span className={styles.rowShortInfo}>
+                        <Button
+                          variant='transparent'
+                          size={'sm'}
+                          onClick={() => handleFundamentalTempSort('beta')}
+                        >
+                          Beta
+                          <OrderingIndicator
+                            target='beta'
+                            ordering={infoTableOrdering}
+                          ></OrderingIndicator>
+                        </Button>
+                      </span>
+                    </span>
+                    <span className={styles.rowDelete}></span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                {stockInfos.map((stock, index) => {
+                  return (
+                    <PortfolioFundamentalRow
+                      key={stock.stockId}
+                      index={index}
+                      stock={stock}
+                      showDeleteModal={(stockId: number, name: string) => {
+                        setDeletingStockId(stockId);
+                        setDeletingStockName(name);
+                        setShowDeleteStockModal(true);
+                      }}
+                    ></PortfolioFundamentalRow>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </TabPanel>
       </Tabs>
     </>

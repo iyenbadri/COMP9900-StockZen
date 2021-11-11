@@ -1,7 +1,7 @@
 import crossIcon from 'assets/icon-outlines/outline-cross.svg';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { numberFormatter } from 'utils/Utilities';
+import { bigNumberFormatter, numberFormatter } from 'utils/Utilities';
 import styles from './PortfolioPage.module.css';
 
 interface PortfolioPageRowProp {
@@ -46,6 +46,7 @@ const PortfolioFundamentalRow: FC<PortfolioPageRowProp> = (props) => {
             setShowPanel(!showPanel);
           }}
         >
+          <span className={styles.rowHandle} />
           <span className={styles.rowCode}>
             <Link
               to={`/stock/${stock.stockPageId}`}
@@ -71,25 +72,25 @@ const PortfolioFundamentalRow: FC<PortfolioPageRowProp> = (props) => {
               ? '-'
               : numberFormatter.format(stock.dayHigh)}
           </span>
-          <span className={`${styles.rowLongInfo} d-block d-lg-none  d-xl-block`}>
+          <span className={`${styles.rowLongInfo} d-none d-xxl-block`}>
             {stock.fiftyTwoWeekLow == null
               ? '-'
               : numberFormatter.format(stock.fiftyTwoWeekLow)}
           </span>
-          <span className={`${styles.rowLongInfo} d-block d-lg-none  d-xl-block`}>
+          <span className={`${styles.rowLongInfo} d-none d-xxl-block`}>
             {stock.fiftyTwoWeekHigh == null
               ? '-'
               : numberFormatter.format(stock.fiftyTwoWeekHigh)}
           </span>
-          <span className={styles.rowValue}>
+          <span className={styles.rowLongInfo}>
             {stock.avgVolume == null
               ? '-'
-              : numberFormatter.format(stock.avgVolume)}
+              : bigNumberFormatter.format(stock.avgVolume)}
           </span>
-          <span className={styles.rowValue}>
+          <span className={styles.rowLongInfo}>
             {stock.marketCap == null
               ? '-'
-              : numberFormatter.format(stock.marketCap)}
+              : bigNumberFormatter.format(stock.marketCap)}
           </span>
           <span className={styles.rowShortInfo}>
             {stock.beta == null
