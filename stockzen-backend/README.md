@@ -41,13 +41,18 @@ Please remember to do this after you install any additional `pip` dependencies, 
 We use `.flaskenv` to keep track of environment variables. Please do the following:
 
 1. Add your Alpha Vantage API key as `AV_API_KEY=<your-key>`
-2. `POPULATE_NEW_DB=True` flag will populate your db with dummy data to get you up and running. You can change this to `False` to keep the db tables completely empty. Please delete db and rerun the backend whenever any changes are made to the db tables to ensure the schema is always consistent.
+2. Add your email configs.
+3. `POPULATE_NEW_DB=True` flag will populate your db with dummy data to get you up and running. You can change this to `False` to keep the db tables completely empty. Please delete db and rerun the backend whenever any changes are made to the db tables to ensure the schema is always consistent.
 
 ### How it runs:
 
 - `flask run` calls `stockzen.py`, which calls `app/__init__.py` which calls `app/apis/__init__.py`
 - `apis/__init__.py`'s only job is to consolidate all the backend APIs into the main app
   - this allows us to define separate API namespaces cleanly
+
+### Scripts
+
+- Run `flask price-alert run` to price alert script.
 
 ## Architecture
 
@@ -58,11 +63,10 @@ We use `.flaskenv` to keep track of environment variables. Please do the followi
     - SQLite
     - SQLALchemy ORM
     - Flask-Login
+    - Flask-Mail
     - Flask-Executor
 
-**Others:**
-    - faker
-    - python-dotenv (for environment variable access)
+**Others:** - faker - python-dotenv (for environment variable access)
 
 ## Tests
 

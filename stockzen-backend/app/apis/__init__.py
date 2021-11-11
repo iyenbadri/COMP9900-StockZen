@@ -18,6 +18,7 @@ from .search import api as ns4
 from .stock import api as ns5
 from .stock_page import api as ns6
 from .user import api as ns7
+from .price_alert import api as ns8
 
-for ns in [ns1, ns2, ns3, ns4, ns5, ns6, ns7]:
+for ns in [ns1, ns2, ns3, ns4, ns5, ns6, ns7, ns8]:
     all_apis.add_namespace(ns)
