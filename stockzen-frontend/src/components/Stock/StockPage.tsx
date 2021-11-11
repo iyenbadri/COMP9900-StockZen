@@ -155,7 +155,13 @@ const StockPage = (props: any) => {
         <>
           <div className={styles.stockWrapper}>
             <div className={styles.stockSummmary}>
-              <div className={`${styles.stockPrice} outerStroke`}>{stockData?.price ? `$${numberFormatter.format(stockData.price)}` : ''}</div>
+              {stockData?.price ?
+                <div>
+                  <span className={`${styles.stockPrice} outerStroke`}>${numberFormatter.format(stockData.price)}</span>
+                  <span className={styles.stockCurrency}>USD</span>
+                </div>
+                : ''
+              }
               <div
                 className={`${styles.stockChange} ${stockData?.change ? gainLossClass(stockData?.change) : ''}`}
               >

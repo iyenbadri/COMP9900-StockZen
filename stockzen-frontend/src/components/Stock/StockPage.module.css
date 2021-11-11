@@ -39,6 +39,12 @@
   flex: 0 0 content;
   font-size: 1.2rem;
   font-weight: bold;
+  padding: 0px 8px 0px 0px;
+}
+
+.stockCurrency {
+  font-size: 0.9rem;
+  font-weight: bold;
   padding: 0px 15px 0px 0px;
 }
 
