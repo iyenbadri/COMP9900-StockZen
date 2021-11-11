@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import os
 
 TESTING = False
@@ -55,4 +56,10 @@ MAIL_DEBUG = False
 # ------------------------------------------------------------------------------
 # Portfolio Challenge
 # ------------------------------------------------------------------------------
-CHALLENGE_PERIOD = 7 * 24 * 60 * 60  # length of each challenge round in seconds
+SLEEP_INTERVAL = 15 * 60  # while loop sleep interval for challenge script
+CHALLENGE_PERIOD = timedelta(
+    weeks=1
+)  # length of each challenge round (after submission phase) in seconds
+CHALLENGE_START = datetime.now() + timedelta(
+    hours=1
+)  # datetime when the challenge evaluation period starts

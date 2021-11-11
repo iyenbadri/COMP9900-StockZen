@@ -58,10 +58,15 @@ def create_app(test_config=None):
 
     all_apis.init_app(app, validate=True)  # validation flag for all api.models
 
+    # ==========================================================================
+    # Custom CLI Commands
+    # ==========================================================================
     mail.init_app(app)
-
-
-    from .commands import price_alert
+    from app.commands import price_alert
     price_alert.init_app(app)
+    
+    from app.scripts import challenge_script
+    challenge_script.init_app(app)
+    
 
     return app

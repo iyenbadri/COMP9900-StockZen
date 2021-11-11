@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from app.utils import crud_utils, utils
 from app.utils.enums import Status
 from flask import request
@@ -145,7 +147,8 @@ class ChallengeCRUD(Resource):
     def post(self):
         """Submits a user's challenge portfolio to the database"""
 
-        stock_list = marshal(request.json, challenge_entry_request)
+        json_list = marshal(request.json, challenge_entry_request)
+        stock_list = [item["stockPageId"] for item in json_list]
 
         challenge_id, _ = utils.get_open_challenge()
 

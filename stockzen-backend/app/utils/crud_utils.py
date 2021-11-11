@@ -466,7 +466,7 @@ def get_performance_summary() -> Status:
 
 
 def get_leaderboard_results() -> Union[Dict, Status]:
-    """Return dict list of best performing user portfolios during current challenge period"""
+    """Return dict list of best performing user portfolios during last challenge period"""
     try:
         leaderboard = []
 
@@ -543,7 +543,7 @@ def get_leaderboard_results() -> Union[Dict, Status]:
         start_date = (
             Challenge.query.filter(Challenge.id == prev_challenge_id).one().start_date
         )
-        end_date = start_date + timedelta(seconds=CHALLENGE_PERIOD)
+        end_date = start_date + CHALLENGE_PERIOD
 
         return {
             "start_date": start_date,
@@ -567,5 +567,34 @@ def get_leaderboard_status():
 
 
 def add_challenge_stocks(stocks, challenge_id: int) -> Status:
+    """adds a user portfolio for challenge"""
+    try:
+        valid = utils.is_valid_challenge(challenge_id)
+        if valid == Status.VALID:
+            try:
+                (
+                    ChallengeEntry.query.join(Challenge)
+                    .filter(
+                        Challenge.id == challenge_id,
+                        ChallengeEntry.user_id == current_user.id,
+                    )
+                    .one()
+                )
+                return Status.FAIL
 
-    return
+            except:
+                for stock_page_id in stocks:
+                    new_stock = ChallengeEntry(
+                        challenge_id=challenge_id,
+                        user_id=current_user.id,
+                        stock_page_id=stock_page_id,
+                        code=utils.id_to_code(stock_page_id),
+                    )
+                    db_utils.insert_item(new_stock)
+                return Status.SUCCESS
+        else:
+            return Status.INVALID
+
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+        return Status.FAIL

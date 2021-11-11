@@ -1,13 +1,16 @@
 import inspect
 import os
+from datetime import datetime
 from itertools import repeat
-from typing import Sequence, Union
+from typing import Sequence
 
 from app import executor
 from app.config import TOP_STOCKS_INTERVAL
 from app.models.schema import Challenge, ChallengeEntry, StockPage
 from app.utils import api_utils
 from sqlalchemy.orm import load_only
+
+from .enums import Status
 
 # ==============================================================================
 # For generic or shared helper functions
@@ -65,8 +68,10 @@ def bulk_stock_fetch(sym_list: Sequence[str], await_all: bool = False):
 
 
 def get_open_challenge():
-    """Return id and start date of open challenge, or None if not exist"""
-    challenge = Challenge.query.filter_by(is_open=True).one()
+    """Return id and start date of active challenge, or None if not exist"""
+    challenge = (
+        Challenge.query.filter_by(is_open=True).order_by(Challenge.id.desc()).first()
+    )
     if not challenge:
         return None, None
     return challenge.id, challenge.start_date
@@ -94,11 +99,26 @@ def bulk_challenge_fetch(await_all: bool = False):
         .all()
     )
     unique_stock_ids = [tuple[0] for tuple in unique_stock_ids]
+    print(f"Fetching challenge data for stockPageIds: {unique_stock_ids}")
 
     # concurrently fetch api data to update stock page over the Challenge period
-    results = executor.map(
-        api_utils.api_history_request, unique_stock_ids, repeat(prev_start_date)
-    )
+    from stockzen import app
+
+    with app.test_request_context():  # workaround to allow for requests outside the app context
+        results = executor.map(
+            api_utils.api_history_request, unique_stock_ids, repeat(prev_start_date)
+        )
+
     if await_all:
         list(results)  # use the result to force program to wait before continuing
         print("All concurrent Challenge results returned, continuing...")
+
+
+def is_valid_challenge(challenge_id) -> Status:
+    try:
+        challenge = Challenge.query.filter_by(id=challenge_id).one()
+        if datetime.now() < challenge.start_date and challenge.is_open == True:
+            return Status.VALID
+    except Exception as e:
+        debug_exception(e, suppress=True)
+        return Status.FAIL
