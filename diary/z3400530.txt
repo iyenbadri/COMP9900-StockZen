@@ -236,6 +236,10 @@ Add flask.cli to challenge script
 Bugfixes for challenge script for wire up section and datetime issues
 Implement Portfolio row ML Prediction frontend: arrow and indicator
 PR for ML Prediction arrow and indicator
+
+Planned work: Get all remaining tickets to Code Review stage so that we can focus on Documentation and Report
+Achieved: Great progress, all tickets either in progress or code review, should be done by Friday Standup and can focus on report
+
 ===========================================================================
 Week 10
 ===========================================================================
