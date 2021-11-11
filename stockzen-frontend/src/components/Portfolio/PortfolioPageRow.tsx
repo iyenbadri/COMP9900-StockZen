@@ -1,5 +1,7 @@
 import crossIcon from 'assets/icon-outlines/outline-cross.svg';
 import handleIcon from 'assets/icon-outlines/outline-drag-handle.svg';
+import downArrowIcon from 'assets/ml-down-arrow.svg';
+import upArrowIcon from 'assets/ml-up-arrow.svg';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { Link } from 'react-router-dom';
@@ -49,6 +51,18 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
       return styles.moneyGain;
     } else {
       return '';
+    }
+  };
+
+  // convert fractional accuracy to a colour variable name
+  const accuracyColour = (accu: number): string => {
+    switch (true) {
+      case accu > 0.5:
+        return '--ml-high-green';
+      case accu > 0.25:
+        return '--ml-med-yellow';
+      default:
+        return '--ml-low-red';
     }
   };
 
@@ -140,7 +154,32 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                     ? '-'
                     : numberFormatter.format(stock.value)}
                 </span>
-                <span className={styles.rowPredict}>+</span>
+                <span className={styles.rowPredict}>
+                  {stock.prediction > 0 ? (
+                    <img src={upArrowIcon} alt='prediction up arrow icon' />
+                  ) : stock.prediction < 0 ? (
+                    <img src={downArrowIcon} alt='prediction down arrow icon' />
+                  ) : (
+                    '-'
+                  )}
+                  {stock.prediction && stock.confidence ? (
+                    <div className={styles.indicatorContainer}>
+                      <div className={styles.indicatorOutline}>
+                        <div
+                          className={styles.indicatorLevel}
+                          style={{
+                            height: `${stock.confidence * 100}%`,
+                            backgroundColor: `var(${accuracyColour(
+                              stock.confidence
+                            )})`,
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                </span>
               </div>
 
               <div
