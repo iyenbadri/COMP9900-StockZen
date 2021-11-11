@@ -45,12 +45,12 @@ def test_stock_history_endpoints(auth_client):
     # Stock History endpoint
     # --------------------------------------------------------------------------
     utils.net_blocker(block=True)
-    response = client.get("/stock-page/17/history")
+    response = client.get("/stock-page/14/history")
     # Fail to retrieve if no network and no cached data
     assert response.status_code == 500
     utils.net_blocker(block=False)
 
-    response = client.get("/stock-page/17/history")
+    response = client.get("/stock-page/14/history")
     # should retrieve from yfinance (and then cache the data)
     assert response.status_code == 200
     history = response.json
@@ -59,7 +59,7 @@ def test_stock_history_endpoints(auth_client):
     assert history[0]["date"] != None  # date is provided
 
     utils.net_blocker(block=True)
-    response = client.get("/stock-page/17/history")
+    response = client.get("/stock-page/14/history")
     # no network, should retrieve from cache
     assert response.status_code == 200
     assert response.json == history  # cached data should be the same

@@ -50,12 +50,12 @@ non_stock = {"stockPageId": -1}
 new_stock_1 = {
     "stockPageId": 1,
     "code": "A",
-    "stockName": "Agilent Technologies, Inc.",
+    "stockName": "Agilent Technologies Inc.",
 }
 new_stock_2 = {
-    "stockPageId": 6876,
+    "stockPageId": 5214,
     "code": "TSLA",
-    "stockName": "Tesla, Inc.",
+    "stockName": "Tesla Inc.",
 }
 
 
@@ -85,7 +85,7 @@ def stock_details(id, stock, order=0):
 new_stock_page_1 = {
     "id": 1,
     "code": "A",
-    "stockName": "Agilent Technologies, Inc.",
+    "stockName": "Agilent Technologies Inc.",
     "exchange": "NYQ",
 }
 uncached_stock_page = {
