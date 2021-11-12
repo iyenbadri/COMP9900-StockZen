@@ -1,11 +1,11 @@
 import plusIcon from 'assets/icon-outlines/outline-plus-small.svg';
 import axios, { AxiosResponse } from 'axios';
-import { Prop } from "components/Portfolio/AddStock";
+import { Prop } from 'components/Portfolio/AddStock';
 import { SearchContext } from 'contexts/SearchContext';
 import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import { AsyncTypeahead, Menu, MenuItem } from "react-bootstrap-typeahead";
-import { Link } from 'react-router-dom';
+import { AsyncTypeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
+import { useHistory } from 'react-router-dom';
 import styles from './SearchWidgetModal.module.css';
 
 interface TypeaheadOption {
@@ -25,7 +25,11 @@ interface SearchResponse {
 
 const SearchWidgetModal: FC<Prop> = (prop) => {
   const { portfolioId, addStock } = prop;
-  const { showSearchInput, searchAtHeader, endSearch, endAddStock } = useContext(SearchContext);
+  const { showSearchInput, searchAtHeader, endSearch, endAddStock } =
+    useContext(SearchContext);
+
+  const history = useHistory();
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [options, setOptions] = useState<TypeaheadOption[]>([]);
 
@@ -54,6 +58,14 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
       });
   }, [portfolioId, setAddedStockIds]);
 
+  const _addStock = (option: TypeaheadOption) => {
+    // Call add stock
+    addStock!(option.code, option.stockPageId);
+
+    // Add it to the added stocks
+    setAddedStockIds([...addedStockPageIds, option.stockPageId]);
+  };
+
   return (
     <Modal
       show={showSearchInput}
@@ -78,6 +90,16 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
         placeholder='Begin typing stock symbol or name'
         onBlur={() => {
           //setShowSearchInput(false);
+        }}
+        onChange={(selected) => {
+          if (searchAtHeader) {
+            history.push(`/stock/${selected[0].stockPageId}`);
+          } else {
+            _addStock(selected[0]);
+          }
+
+          endSearch();
+          endAddStock();
         }}
         onSearch={(query) => {
           query = query.toLowerCase();
@@ -110,39 +132,36 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
                 <div className={styles.searchOption}>
                   <span className={styles.optionAdd}>
                     {/* Render the add button if it is not added */}
-                    {(!addedStockPageIds.includes(option.stockPageId)
-                      && (!searchAtHeader)
-                    ) && (
+                    {!addedStockPageIds.includes(option.stockPageId) &&
+                      !searchAtHeader && (
                         <Button
                           variant='transparent'
                           onClick={(ev) => {
                             ev.preventDefault();
                             ev.stopPropagation();
 
-                            // Call add stock
-                            addStock!(option.code, option.stockPageId);
-
-                            // Add it to the added stocks
-                            setAddedStockIds([
-                              ...addedStockPageIds,
-                              option.stockPageId,
-                            ]);
+                            _addStock(option);
                           }}
                         >
-                          <img src={plusIcon} alt='add' />
+                          <img
+                            src={plusIcon}
+                            className={styles.addButtonIcon}
+                            alt='add'
+                          />
                         </Button>
                       )}
                   </span>
                   <span className={styles.optionSymbol}>
-                    {/* TODO: Will fix the nested `a` tag bug later. Have to find a way to fix it first */}
-                    <Link
+                    {option.code}
+                    {/* <Link
                       to={`/stock/${option.stockPageId}`}
                       onClick={() => {
                         endSearch();
                       }}
+                      target={searchAtHeader ? '' : '_blank'}
                     >
-                      {option.code}
-                    </Link>
+                      
+                    </Link> */}
                   </span>
                   <span className={styles.optionDescription}>
                     <div>{option.description}</div>
@@ -152,11 +171,10 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
               </MenuItem>
             ))}
           </Menu>
-        )
-        }
-      ></AsyncTypeahead >
-    </Modal >
-  )
-}
+        )}
+      ></AsyncTypeahead>
+    </Modal>
+  );
+};
 
 export default SearchWidgetModal;
