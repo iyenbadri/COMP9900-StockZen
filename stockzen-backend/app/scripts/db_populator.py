@@ -167,7 +167,7 @@ def generate_dummy_challenges(n_users):
                 entry = ChallengeEntry(
                     challenge_id=n_users,
                     user_id=i_users,
-                    stock_page_id=i,
+                    stock_page_id=i + i_users,  # for stock variety
                     code=id_to_code(i),
                     start_price=None,
                     end_price=None,
