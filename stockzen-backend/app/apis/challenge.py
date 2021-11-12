@@ -69,6 +69,12 @@ challenge_status_response = api.model(
         "challengeId": fields.Integer(
             attribute="id", required=True, description="challenge id"
         ),
+        "startDate": fields.DateTime(
+            attribute="start_date", required=True, description="challenge start datetime"
+        ),
+        "endDate": fields.DateTime(
+            attribute="end_date", required=True, description="challenge end datetime"
+        ),
         "isActive": fields.Boolean(
             attribute="is_active",
             required=True,
@@ -104,10 +110,6 @@ class ChallengeCRUD(Resource):
     @api.response(404, "No challenge found")
     def get(self):
         """Return data for the Portfolio Challenge Leaderboard"""
-
-        # TODO: MOVE TO SCRIPT
-        # update all challenge stocks
-        # utils.bulk_challenge_fetch(await_all=True)
 
         # get leaderboard date for last challenge period
         result = crud_utils.get_leaderboard_results()
