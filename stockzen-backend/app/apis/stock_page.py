@@ -84,8 +84,9 @@ top_performers_response = api.model(
         "stockPageId": fields.Integer(
             attribute="id", required=True, description="stock page id"
         ),
-        "symbol": fields.String(
-            attribute="code", required=True, description="stock symbol"
+        "code": fields.String(required=True, description="stock symbol"),
+        "stockName": fields.String(
+            attribute="stock_name", required=True, description="stock name"
         ),
         "price": fields.Float(required=True, description="stock price"),
         "percChange": fields.Float(

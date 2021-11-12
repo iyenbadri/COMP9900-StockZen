@@ -342,6 +342,7 @@ def fetch_top_stocks() -> Union[Dict, Status]:
                 load_only(
                     StockPage.id,
                     StockPage.code,
+                    StockPage.stock_name,
                     StockPage.price,
                     StockPage.perc_change,
                     StockPage.last_updated,
