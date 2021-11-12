@@ -22,22 +22,22 @@ export const UserContext = createContext<IUserContext>(contextDefaultValues);
 
 const UserProvider: FC = ({ children }): any => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
-    localStorage.getItem('isAuthenticated') === '1'
+    sessionStorage.getItem('isAuthenticated') === '1'
   );
 
   const markAsLoggedIn = () => {
     setIsAuthenticated(true);
-    localStorage.setItem('isAuthenticated', '1');
+    sessionStorage.setItem('isAuthenticated', '1');
     //document.body.style.backgroundColor = '#5bc0be';
   };
 
   const markAsLoggedOut = () => {
     setIsAuthenticated(false);
-    localStorage.setItem('isAuthenticated', '0');
+    sessionStorage.setItem('isAuthenticated', '0');
     // Remove user info from local storage
-    localStorage.removeItem('firstName');
-    localStorage.removeItem('lastName');
-    localStorage.removeItem('email');
+    sessionStorage.removeItem('firstName');
+    sessionStorage.removeItem('lastName');
+    sessionStorage.removeItem('email');
     //document.body.style.backgroundColor = '#1c2541';
   };
 
@@ -52,6 +52,12 @@ const UserProvider: FC = ({ children }): any => {
       .post('/user/logout')
       .then(res => {
         if (res.status === 200) {
+          markAsLoggedOut();
+        }
+      })
+      // If user is already unauthorised from backend server, implement logout
+      .catch(function (err) {
+        if (err.response.status === 401) {
           markAsLoggedOut();
         }
       })
