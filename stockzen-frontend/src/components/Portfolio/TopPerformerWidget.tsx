@@ -108,7 +108,10 @@ const TopPerformerWidget: FC = (props) => {
               return (
                 <tr key={stock.symbol} className={styles.symbolRow}>
                   <td className={styles.symbol}>
-                    <Link to={'/stock/' + stock.stockPageId.toString()}>
+                    <Link
+                      to={'/stock/' + stock.stockPageId.toString()}
+                      title={stock.name}
+                    >
                       {stock.symbol}
                     </Link>
                   </td>

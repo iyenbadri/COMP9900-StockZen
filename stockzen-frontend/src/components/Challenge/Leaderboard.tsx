@@ -1,18 +1,21 @@
-import { TopPerformerContext } from 'contexts/TopPerformerContext';
-import React, { useContext, useEffect, useState } from 'react';
-import refresh from 'assets/icon-outlines/outline-refresh-small.svg';
-import Button from 'react-bootstrap/Button';
-import styles from './Leaderboard.module.css';
 import varticalDot from 'assets/icon-outlines/outline-menu-vertical.svg';
+import refreshIcon from 'assets/icon-outlines/outline-refresh-small.svg';
+import loadingIcon from 'assets/load_spinner.svg';
 import medal1 from 'assets/medal_1.png';
 import medal2 from 'assets/medal_2.png';
 import medal3 from 'assets/medal_3.png';
 import axios from 'axios';
+import { RefreshContext } from 'contexts/RefreshContext';
+import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import moment, { Moment } from 'moment';
+import React, { useContext, useEffect, useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import styles from './Leaderboard.module.css';
 
 interface LeaderboardResultResponse {
   userId: number;
   userName: string;
+  rank: number;
   percChange: number;
   stocks: string[];
 }
@@ -35,6 +38,7 @@ interface ChallengeResponse {
 interface LeaderboardResult {
   userId: number;
   userName: string;
+  rank: number;
   percChange: number;
   stocks: string[];
 }
@@ -77,38 +81,57 @@ const getLeaderboardStyle = (index: number) => {
 const Leaderboard = () => {
   // Get the setShowPortfolioSummary from context
   const { setShowPortfolioSummary } = useContext(TopPerformerContext);
+  const { refresh, subscribe, unsubscribe } = useContext(RefreshContext);
 
   const [leaderboard, setLeaderboard] = useState<Leaderboard | null>(null);
   const [nextChallenge, setNextChallenge] = useState<Challenge | null>(null);
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const reloadLeaderboard = async () => {
+    var leaderboard = await axios.get<LeaderboardResponse>(
+      '/challenge/leaderboard'
+    );
+
+    setLeaderboard({
+      ...leaderboard.data,
+      startDate: moment(leaderboard.data.startDate),
+      endDate: moment(leaderboard.data.endDate),
+      isUserInTop: leaderboard.data.leaderboard.some(
+        (x) => x.userId === leaderboard.data.userRow.userId
+      ),
+    });
+  };
+
+  const reloadNextChallenge = async () => {
+    var summary = await axios.get<ChallengeResponse>('/challenge/status');
+
+    setNextChallenge({
+      ...summary.data,
+      startDate: moment(summary.data.startDate),
+      endDate: moment(summary.data.endDate),
+    });
+  };
 
   useEffect(
     () => {
       setShowPortfolioSummary(true);
 
-      (async () => {
-        var leaderboard = await axios.get<LeaderboardResponse>(
-          '/challenge/leaderboard'
-        );
+      const reload = () => {
+        setIsLoading(true);
 
-        setLeaderboard({
-          ...leaderboard.data,
-          startDate: moment(leaderboard.data.startDate),
-          endDate: moment(leaderboard.data.endDate),
-          isUserInTop: leaderboard.data.leaderboard.some(
-            (x) => x.userId === leaderboard.data.userRow.userId
-          ),
+        Promise.all([reloadLeaderboard(), reloadNextChallenge()]).then(() => {
+          setIsLoading(false);
         });
-      })();
+      };
 
-      (async () => {
-        var summary = await axios.get<ChallengeResponse>('/challenge/status');
+      reload();
 
-        setNextChallenge({
-          ...summary.data,
-          startDate: moment(summary.data.startDate),
-          endDate: moment(summary.data.endDate),
-        });
-      })();
+      subscribe(reload);
+
+      return () => {
+        unsubscribe(reload);
+      };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -118,25 +141,33 @@ const Leaderboard = () => {
     <>
       <h2 className={styles.pageHeader}>Portfolio Challenge</h2>
       <div className={styles.contentPadder}>
-        <div>
+        <div className='mb-3'>
           <span className={styles.leaderboardTitle}>Leaderboard</span>{' '}
           <Button
             variant='light'
             className='ms-1 text-muted d-flex-inline align-items-center'
+            onClick={() => {
+              refresh();
+            }}
           >
-            <img src={refresh} alt='refresh' style={{ opacity: 0.5 }} />
+            <img src={refreshIcon} alt='refresh' style={{ opacity: 0.5 }} />
             Refresh
           </Button>
         </div>
 
-        {leaderboard != null && (
+        {isLoading && (
+          <div className='text-center'>
+            <img src={loadingIcon} alt='loading' />
+          </div>
+        )}
+
+        {!isLoading && leaderboard != null && (
           <>
             <div className={styles.challengeDateMessage}>
-              Current challenge:
-              {leaderboard?.startDate.format('HH:mm')}{' '}
+              Current challenge: {leaderboard?.startDate.format('HH:mm')}{' '}
               <span className={styles.challengeDate}>
                 {leaderboard?.startDate.format('DD/MM/YYYY')}
-              </span>
+              </span>{' '}
               - {leaderboard?.endDate.format('HH:mm')}{' '}
               <span className={styles.challengeDate}>
                 {leaderboard?.endDate.format('DD/MM/YYYY')}
@@ -164,11 +195,15 @@ const Leaderboard = () => {
                   )}`}
                 >
                   <div className={styles.rowRank}>
-                    <img
-                      src={getMedalIcon(index + 1)}
-                      alt={(index + 1).toString()}
-                      height='35'
-                    />
+                    {index < 3 ? (
+                      <img
+                        src={getMedalIcon(index + 1)}
+                        alt={(index + 1).toString()}
+                        height='35'
+                      />
+                    ) : (
+                      index + 1
+                    )}
                   </div>
                   <div className={styles.rowUser}>{x.userName}</div>
                   <div className={styles.rowGain}>
@@ -189,9 +224,11 @@ const Leaderboard = () => {
                 </div>
 
                 <div className={styles.leaderboardTableRow}>
-                  <div className={styles.rowYou}></div>
+                  <div className={styles.rowYou}>You</div>
                   <div className={`${styles.rowInfo}`}>
-                    <div className={styles.rowRank}></div>
+                    <div className={styles.rowRank}>
+                      {leaderboard.userRow.rank}
+                    </div>
                     <div className={styles.rowUser}>
                       {leaderboard?.userRow.userName}
                     </div>
@@ -212,32 +249,43 @@ const Leaderboard = () => {
       <hr />
 
       <div className={styles.contentPadder}>
-        <div
-          className={`${styles.challengeDateMessage} ${styles.nextChallengeMessage}`}
-        >
-          Next challenge:{' '}
-          {nextChallenge != null && (
-            <>
-              {nextChallenge?.startDate.format('HH:mm')}{' '}
-              <span className={styles.challengeDate}>
-                {nextChallenge?.startDate.format('DD/MM/YYYY')}
-              </span>{' '}
-              - {nextChallenge?.endDate.format('HH:mm')}{' '}
-              <span className={styles.challengeDate}>
-                {nextChallenge?.endDate.format('DD/MM/YYYY')}
-              </span>
-            </>
-          )}
-          {nextChallenge == null && '-'}
-        </div>
+        {isLoading && (
+          <div className='text-center'>
+            <img src={loadingIcon} alt='loading' />
+          </div>
+        )}
 
-        <div>
-          You have not submitted a portfolio for the next challenge period yet.
-          <br />
-          <Button variant='transparent' className={styles.submitPortfolio}>
-            Submit Portfolio
-          </Button>
-        </div>
+        {!isLoading && (
+          <>
+            <div
+              className={`${styles.challengeDateMessage} ${styles.nextChallengeMessage}`}
+            >
+              Next challenge:{' '}
+              {nextChallenge != null && (
+                <>
+                  {nextChallenge?.startDate.format('HH:mm')}{' '}
+                  <span className={styles.challengeDate}>
+                    {nextChallenge?.startDate.format('DD/MM/YYYY')}
+                  </span>{' '}
+                  - {nextChallenge?.endDate.format('HH:mm')}{' '}
+                  <span className={styles.challengeDate}>
+                    {nextChallenge?.endDate.format('DD/MM/YYYY')}
+                  </span>
+                </>
+              )}
+              {nextChallenge == null && '-'}
+            </div>
+
+            <div>
+              You have not submitted a portfolio for the next challenge period
+              yet.
+              <br />
+              <Button variant='transparent' className={styles.submitPortfolio}>
+                Submit Portfolio
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </>
   );
