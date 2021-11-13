@@ -30,9 +30,9 @@ const LoginForm: FC<IProps> = (props) => {
       let response = await axios.post('/user/login', payload);
       if (response.status === 200) {
         // If user is authenticated, save user info in local storage
-        sessionStorage.setItem('firstName', response.data.firstName);
-        sessionStorage.setItem('lastName', response.data.lastName);
-        sessionStorage.setItem('email', data.email);
+        localStorage.setItem('firstName', response.data.firstName);
+        localStorage.setItem('lastName', response.data.lastName);
+        localStorage.setItem('email', data.email);
 
         props.onLoginSuccess(data.email);
       }

@@ -22,22 +22,22 @@ export const UserContext = createContext<IUserContext>(contextDefaultValues);
 
 const UserProvider: FC = ({ children }): any => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
-    sessionStorage.getItem('isAuthenticated') === '1'
+    localStorage.getItem('isAuthenticated') === '1'
   );
 
   const markAsLoggedIn = () => {
     setIsAuthenticated(true);
-    sessionStorage.setItem('isAuthenticated', '1');
+    localStorage.setItem('isAuthenticated', '1');
     //document.body.style.backgroundColor = '#5bc0be';
   };
 
   const markAsLoggedOut = () => {
     setIsAuthenticated(false);
-    sessionStorage.setItem('isAuthenticated', '0');
+    localStorage.setItem('isAuthenticated', '0');
     // Remove user info from local storage
-    sessionStorage.removeItem('firstName');
-    sessionStorage.removeItem('lastName');
-    sessionStorage.removeItem('email');
+    localStorage.removeItem('firstName');
+    localStorage.removeItem('lastName');
+    localStorage.removeItem('email');
     //document.body.style.backgroundColor = '#1c2541';
   };
 
