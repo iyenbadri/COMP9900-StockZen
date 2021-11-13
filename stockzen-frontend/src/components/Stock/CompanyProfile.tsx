@@ -27,8 +27,10 @@ const CompanyProfile: FC<IStockPageResponse> = (prop) => {
             )}
           </div>
           <Row className={`mb-2`}>
-            <Col><b>Industry: </b>{prop.industry}</Col>
-            <Col><b>Sector: </b>{prop.sector}</Col>
+            <Col className={styles.industry}><b>Industry: </b></Col>
+            <Col className={styles.industryValue}>{prop.industry}</Col>
+            <Col className={styles.sector}><b>Sector: </b></Col>
+            <Col className={styles.sectorValue}>{prop.sector}</Col>
           </Row>
           <div className={`mb-1`}><b>Business Summary</b></div>
           <div className={`${styles.description}`}>{prop.longBusinessSummary}</div>
