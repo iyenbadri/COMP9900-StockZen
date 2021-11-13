@@ -18,7 +18,7 @@
 }
 
 .appContent {
-  margin-bottom: var(--footer-height);
+  min-height: calc(100vh - var(--footer-height) - var(--header-height));
 }
 
 /** GLOBALS: 
