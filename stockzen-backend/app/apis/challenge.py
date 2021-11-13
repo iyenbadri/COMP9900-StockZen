@@ -24,6 +24,7 @@ challenge_leaderboard = api.model(
         "userName": fields.String(
             attribute="user_name", required=True, description="user's concatenated name"
         ),
+        "rank": fields.Integer(required=True, description="user's portfolio ranking"),
         "percChange": fields.Float(
             attribute="perc_change",
             required=True,

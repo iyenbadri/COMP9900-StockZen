@@ -12,13 +12,15 @@ import React, {
 interface ITopPerformer {
   stockPageId: number;
   symbol: string;
+  name: string;
   price: number;
   changePercent: number;
 }
 
 interface ITopPerformerResponse {
   stockPageId: number;
-  symbol: string;
+  code: string;
+  stockName: string;
   price: number;
   percChange: number;
 }
@@ -58,7 +60,8 @@ export const TopPerformerContext =
 
 const mapTopPerformer = (x: ITopPerformerResponse): ITopPerformer => ({
   stockPageId: x.stockPageId,
-  symbol: x.symbol,
+  symbol: x.code,
+  name: x.stockName,
   price: x.price,
   changePercent: x.percChange / 100,
 });
