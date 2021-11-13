@@ -3,11 +3,26 @@ from datetime import datetime, timedelta
 from typing import Dict, Mapping, Sequence, Union
 
 import app.utils.calc_utils as calc
-from app.config import CHALLENGE_PERIOD, N_TOP_PERFORMERS, TOP_STOCKS_INTERVAL
-from app.models.schema import (Challenge, ChallengeEntry, History, LotBought,
-                               LotSold, Portfolio, Stock, StockPage, User)
+from app.config import (
+    CHALLENGE_PERIOD,
+    N_TOP_PERFORMERS,
+    TOP_COMPANIES,
+    TOP_STOCKS_INTERVAL,
+)
+from app.models.schema import (
+    Challenge,
+    ChallengeEntry,
+    History,
+    LotBought,
+    LotSold,
+    Portfolio,
+    Stock,
+    StockPage,
+    User,
+)
 from app.utils.enums import LotType, Status
 from flask_login import current_user
+from predict import results
 from sqlalchemy import desc, func
 from sqlalchemy.orm import load_only
 
@@ -241,6 +256,7 @@ def delete_stock(stock_id: int) -> Status:
 def update_stock_page(stock_page_id: int) -> Status:
     """Update a stock page on the database, return success status"""
     try:
+
         sym = utils.id_to_code(stock_page_id)
         print(f"Fetching stock: {sym}")
 
@@ -249,7 +265,13 @@ def update_stock_page(stock_page_id: int) -> Status:
         # force fail if price is None so that we don't overwrite last good value
         if not price:
             raise ValueError("Stock price not found, aborting stock_page update")
-
+        if sym in TOP_COMPANIES:
+            conf = json.loads(results)
+            confidence = conf[sym]["confidence"]
+            prediction = conf[sym]["prediction"]
+        else:
+            confidence = 0
+            prediction = 0
         info_json = json.dumps(info)  # store info as serialised json string
 
         db_utils.update_item_columns(
@@ -262,6 +284,8 @@ def update_stock_page(stock_page_id: int) -> Status:
                 "prev_close": prev_close,
                 "info": info_json,
                 "last_updated": datetime.now(),  # update with current timestamp
+                "prediction": prediction,
+                "confidence": confidence,
             },
         )
         return Status.SUCCESS
