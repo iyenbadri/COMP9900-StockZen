@@ -1,13 +1,21 @@
-from datetime import datetime, timedelta
 import os
+from datetime import datetime, timedelta
+
+# ------------------------------------------------------------------------------
+# Flask Config
+# ------------------------------------------------------------------------------
 
 TESTING = False
 APP_DB_PATH = "database/app.sqlite"
+RESTX_ERROR_404_HELP = False
+
 SQLALCHEMY_DATABASE_URI = f"sqlite:///{APP_DB_PATH}"
 SQLALCHEMY_TRACK_MODIFICATIONS = False  # silence deprecation warning
+
 EXECUTOR_TYPE = "thread"  # flask-executor thread or processes
 EXECUTOR_MAX_WORKERS = 8  # max concurrents
 EXECUTOR_PROPAGATE_EXCEPTIONS = True  # don't swallow exceptions
+
 SEARCH_LIMIT = 30
 
 # ------------------------------------------------------------------------------
