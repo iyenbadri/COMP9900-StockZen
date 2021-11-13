@@ -342,6 +342,7 @@ def fetch_top_stocks() -> Union[Dict, Status]:
                 load_only(
                     StockPage.id,
                     StockPage.code,
+                    StockPage.stock_name,
                     StockPage.price,
                     StockPage.perc_change,
                     StockPage.last_updated,
@@ -560,7 +561,11 @@ def get_leaderboard_status():
     """Return active and open status of the last challenge"""
     try:
         challenge = Challenge.query.order_by(Challenge.id.desc()).first()
-        return to_dict(challenge)
+        challenge_dict = to_dict(challenge)
+
+        end_date = challenge_dict["start_date"] + CHALLENGE_PERIOD
+        challenge_dict["end_date"] = end_date
+        return challenge_dict
     except Exception as e:
         utils.debug_exception(e, suppress=True)
         return Status.FAIL
