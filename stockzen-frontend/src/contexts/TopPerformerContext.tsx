@@ -18,7 +18,7 @@ interface ITopPerformer {
 
 interface ITopPerformerResponse {
   stockPageId: number;
-  symbol: string;
+  code: string;
   price: number;
   percChange: number;
 }
@@ -52,7 +52,7 @@ export const TopPerformerContext =
 
 const mapTopPerformer = (x: ITopPerformerResponse): ITopPerformer => ({
   stockPageId: x.stockPageId,
-  symbol: x.symbol,
+  symbol: x.code,
   price: x.price,
   changePercent: x.percChange / 100,
 });
