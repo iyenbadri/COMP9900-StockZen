@@ -5,11 +5,10 @@ import upArrowIcon from 'assets/ml-up-arrow.svg';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { Link } from 'react-router-dom';
-import { numberFormatter } from 'utils/Utilities';
+import { numberFormatter, usdFormatter } from 'utils/Utilities';
 import PortfolioPageAlert from './PortfolioPage-Alert';
 import PortfolioPageLots from './PortfolioPage-Lots';
 import styles from './PortfolioPage.module.css';
-import { usdFormatter } from 'utils/Utilities';
 
 interface PortfolioPageRowProp {
   readonly stock: IStock;
@@ -61,15 +60,15 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
         return '--ml-low-red';
     }
   };
-  stock.prediction = 1;
-  stock.confidence = 0.6;
+
   return (
     <Draggable draggableId={stock.draggableId} index={props.index}>
       {(provided, snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps}>
           <div
-            className={`${styles.stockWrapper} ${showPanel ? styles.panelVisible : styles.panelHidden
-              }`}
+            className={`${styles.stockWrapper} ${
+              showPanel ? styles.panelVisible : styles.panelHidden
+            }`}
           >
             <div className={styles.tableRow}>
               <div
