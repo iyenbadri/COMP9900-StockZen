@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 TESTING = False
 APP_DB_PATH = "database/app.sqlite"
-ERROR_404_HELP = False
+RESTX_ERROR_404_HELP = False
 
 SQLALCHEMY_DATABASE_URI = f"sqlite:///{APP_DB_PATH}"
 SQLALCHEMY_TRACK_MODIFICATIONS = False  # silence deprecation warning

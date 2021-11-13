@@ -16,4 +16,8 @@
 
   --loss-red: #e26b6b;
   --gain-green: #5bc07d;
+
+  --ml-low-red: #de1d2e;
+  --ml-med-yellow: #eab12e;
+  --ml-high-green: var(--gain-green);
 }
