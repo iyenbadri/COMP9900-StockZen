@@ -5,11 +5,10 @@ import upArrowIcon from 'assets/ml-up-arrow.svg';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { Link } from 'react-router-dom';
-import { numberFormatter } from 'utils/Utilities';
+import { numberFormatter, usdFormatter } from 'utils/Utilities';
 import PortfolioPageAlert from './PortfolioPage-Alert';
 import PortfolioPageLots from './PortfolioPage-Lots';
 import styles from './PortfolioPage.module.css';
-import { usdFormatter } from 'utils/Utilities';
 
 interface PortfolioPageRowProp {
   readonly stock: IStock;
@@ -93,13 +92,13 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                     to={{
                       pathname: `/stock/${stock.stockPageId}`,
                       state: {
-                        code: stock.symbol,
+                        code: stock.code,
                         name: stock.name,
                       }
                     }}
                     className={styles.rowStockLink}
                   >
-                    {stock.symbol}
+                    {stock.code}
                   </Link>
                 </span>
                 <div className={`${styles.rowName} d-none d-xxl-block`}>

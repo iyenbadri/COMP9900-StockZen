@@ -30,7 +30,7 @@ interface RouteRarams {
 
 // List of sortable columns in tab(1) MyHoldings
 type HoldingsColumn =
-  | 'symbol'
+  | 'code'
   | 'name'
   | 'price'
   | 'change'
@@ -41,7 +41,7 @@ type HoldingsColumn =
 
 // List of sortable columns in tab(2) Fundamentals
 type FundamentalColumn =
-  | 'symbol'
+  | 'code'
   | 'name'
   | 'dayLow'
   | 'dayHigh'
@@ -110,7 +110,7 @@ const PortfolioPage = () => {
           stockPageId: stock.stockPageId,
           draggableId: `stock-${stock.id}`,
           ordering: stock.order,
-          symbol: stock.code,
+          code: stock.code,
           name: stock.stockName,
           price: stock.price,
           change: stock.change,
@@ -138,7 +138,7 @@ const PortfolioPage = () => {
           stockPageId: stock.stockPageId,
           draggableId: `stock-${stock.id}`,
           ordering: stock.order,
-          symbol: stock.code,
+          code: stock.code,
           name: stock.stockName,
           dayLow: infoRes.dayLow,
           dayHigh: infoRes.dayHigh,
@@ -156,7 +156,7 @@ const PortfolioPage = () => {
           stockPageId: stock.stockPageId,
           draggableId: `stock-${stock.id}`,
           ordering: stock.order,
-          symbol: stock.code,
+          code: stock.code,
           name: stock.stockName,
           dayLow: null,
           dayHigh: null,
@@ -417,7 +417,7 @@ const PortfolioPage = () => {
   }, []);
 
   // Handler of add stock
-  const handleAddStock = (symbol: string, stockPageId: number) => {
+  const handleAddStock = (code: string, stockPageId: number) => {
     // Call the API
     axios
       .post(`/stock/${portfolioId}`, { stockPageId: stockPageId })
@@ -504,11 +504,11 @@ const PortfolioPage = () => {
                     <Button
                       variant='transparent'
                       size={'sm'}
-                      onClick={() => handleHoldingsTempSort('symbol')}
+                      onClick={() => handleHoldingsTempSort('code')}
                     >
                       Code
                       <OrderingIndicator
-                        target='symbol'
+                        target='code'
                         ordering={holdingsTableOrdering}
                       ></OrderingIndicator>
                     </Button>
@@ -666,11 +666,11 @@ const PortfolioPage = () => {
                         <Button
                           variant='transparent'
                           size={'sm'}
-                          onClick={() => handleFundamentalTempSort('symbol')}
+                          onClick={() => handleFundamentalTempSort('code')}
                         >
                           Code
                           <OrderingIndicator
-                            target='symbol'
+                            target='code'
                             ordering={infoTableOrdering}
                           ></OrderingIndicator>
                         </Button>

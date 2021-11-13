@@ -6,19 +6,21 @@ import React, {
   FC,
   useContext,
   useEffect,
-  useState,
+  useState
 } from 'react';
 
 interface ITopPerformer {
   stockPageId: number;
-  symbol: string;
+  code: string;
+  stockName: string;
   price: number;
   changePercent: number;
 }
 
 interface ITopPerformerResponse {
   stockPageId: number;
-  symbol: string;
+  code: string;
+  stockName: string;
   price: number;
   percChange: number;
 }
@@ -40,7 +42,7 @@ interface ITopPerformerContext {
 
 const contextDefaultValues: ITopPerformerContext = {
   showPortfolioSummary: false,
-  setShowPortfolioSummary: (show: boolean) => {},
+  setShowPortfolioSummary: (show: boolean) => { },
   topPerformers: [],
   isLoading: true,
   lastUpdateDate: null,
@@ -52,7 +54,8 @@ export const TopPerformerContext =
 
 const mapTopPerformer = (x: ITopPerformerResponse): ITopPerformer => ({
   stockPageId: x.stockPageId,
-  symbol: x.symbol,
+  code: x.code,
+  stockName: x.stockName,
   price: x.price,
   changePercent: x.percChange / 100,
 });
@@ -90,7 +93,7 @@ const TopPerformerProvider: FC = ({ children }): any => {
         setTopPerformers(topPerformers.data.map(mapTopPerformer));
 
         setIsLoading(false);
-      } catch {}
+      } catch { }
     }
   };
 

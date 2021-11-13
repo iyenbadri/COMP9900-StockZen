@@ -52,13 +52,13 @@ const PortfolioFundamentalRow: FC<PortfolioPageRowProp> = (props) => {
               to={{
                 pathname: `/stock/${stock.stockPageId}`,
                 state: {
-                  code: stock.symbol,
+                  code: stock.code,
                   name: stock.name,
                 }
               }}
               className={styles.rowStockLink}
             >
-              {stock.symbol}
+              {stock.code}
             </Link>
           </span>
           <div className={`${styles.rowName} d-none d-xxl-block`}>

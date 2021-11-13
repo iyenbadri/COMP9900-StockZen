@@ -1,8 +1,7 @@
 import refreshIcon from 'assets/icon-outlines/outline-refresh-small.svg';
 import loadSpinner from 'assets/load_spinner.svg';
 import axios from 'axios';
-import { TopPerformerContext } from 'contexts/TopPerformerContext';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Col, Modal, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
@@ -16,11 +15,6 @@ import StockSummary from './StockSummary';
 
 interface RouteParams {
   stockPageId: string;
-}
-
-interface IStock {
-  code: string;
-  name: string;
 }
 
 const ShowSpinner = () => {
@@ -38,8 +32,6 @@ const ShowSpinner = () => {
 const StockPage = (props: any) => {
   const { stockPageId } = useParams<RouteParams>();
   const { code, name } = props.location.state;
-
-  const { setShowPortfolioSummary } = useContext(TopPerformerContext);
 
   const [stockData, setStockData] = useState<IStockPageResponse>();
   const [chartData, setChartData] = useState<IStockHistoryResponse[]>([]);

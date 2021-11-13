@@ -66,8 +66,8 @@ const TopPerformerWidget: FC = (props) => {
             {portfolioSummary == null
               ? '-'
               : percentFormatter.format(
-                  portfolioSummary?.todayChangePercent ?? 0
-                )}
+                portfolioSummary?.todayChangePercent ?? 0
+              )}
           </div>
           <div className={styles.summaryTitle}>Overall</div>
           <div className={`${styles.summaryValue} outerStroke`}>
@@ -75,8 +75,8 @@ const TopPerformerWidget: FC = (props) => {
             {portfolioSummary == null
               ? '-'
               : percentFormatter.format(
-                  portfolioSummary?.overallChangePercent ?? 0
-                )}
+                portfolioSummary?.overallChangePercent ?? 0
+              )}
           </div>
           <hr className={styles.separatorLine} />
         </>
@@ -85,7 +85,7 @@ const TopPerformerWidget: FC = (props) => {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th className={styles.symbol}>Symbol</th>
+            <th className={styles.code}>code</th>
             <th className={styles.price}>Price</th>
             <th className={styles.gain}>Change</th>
           </tr>
@@ -106,10 +106,16 @@ const TopPerformerWidget: FC = (props) => {
           {!isLoading &&
             topPerformers.map((stock, index) => {
               return (
-                <tr key={stock.symbol} className={styles.symbolRow}>
-                  <td className={styles.symbol}>
-                    <Link to={'/stock/' + stock.stockPageId.toString()}>
-                      {stock.symbol}
+                <tr key={stock.code} className={styles.codeRow}>
+                  <td className={styles.code}>
+                    <Link to={{
+                      pathname: '/stock/' + stock.stockPageId.toString(),
+                      state: {
+                        code: stock.code,
+                        name: stock.stockName,
+                      }
+                    }}>
+                      {stock.code}
                     </Link>
                   </td>
                   <td className={styles.price}>
