@@ -25,17 +25,17 @@ const Header = () => {
           </Col>
           {isAuthenticated && (
             <Col md={7} lg={8} xl={7} className={styles.tabs}>
-              <Link to="/portfolio">
+              <Link to='/portfolio'>
                 <Button
-                  variant='trnasparent'
+                  variant='transparent'
                   className={styles.tab}
                 >
                   My Portfolios
                 </Button>
               </Link>
-              <Link to="/portfolio">
+              <Link to='/challenge'>
                 <Button
-                  variant='trnasparent'
+                  variant='transparent'
                   className={styles.tab}
                 >
                   Challenge
@@ -64,7 +64,7 @@ const Header = () => {
             )}
           </Col>
         </Row>
-      </Container>
+      </Container >
     </header >
   );
 };
