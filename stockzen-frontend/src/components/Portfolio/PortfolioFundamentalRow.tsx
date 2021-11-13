@@ -1,5 +1,5 @@
 import crossIcon from 'assets/icon-outlines/outline-cross.svg';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { bigNumberFormatter, numberFormatter } from 'utils/Utilities';
 import styles from './PortfolioPage.module.css';
@@ -13,22 +13,6 @@ interface PortfolioPageRowProp {
 const PortfolioFundamentalRow: FC<PortfolioPageRowProp> = (props) => {
   const { stock } = props;
 
-  const ref = useRef<HTMLDivElement>(null);
-  const [contentHeight, setContentHeight] = useState<number>();
-
-  useEffect(() => {
-    const listener = () => {
-      setContentHeight(ref.current?.scrollHeight ?? 0);
-    };
-
-    window.addEventListener('resize', listener);
-    listener();
-
-    return () => {
-      window.removeEventListener('resize', listener);
-    };
-  }, []);
-
   const [showPanel, setShowPanel] = useState(false);
 
   return (
@@ -40,9 +24,6 @@ const PortfolioFundamentalRow: FC<PortfolioPageRowProp> = (props) => {
         <div
           className={styles.rowStockInfo}
           onClick={() => {
-            setContentHeight(
-              (height) => ref.current?.scrollHeight ?? height
-            );
             setShowPanel(!showPanel);
           }}
         >
