@@ -28,7 +28,7 @@ const PortfolioFundamentalRow: FC<PortfolioPageRowProp> = (props) => {
           }}
         >
           <span className={styles.rowHandle} />
-          <span className={styles.rowCode}>
+          <span className={styles.infoRowCode}>
             <Link
               to={`/stock/${stock.stockPageId}`}
               className={styles.rowStockLink}
@@ -36,7 +36,7 @@ const PortfolioFundamentalRow: FC<PortfolioPageRowProp> = (props) => {
               {stock.symbol}
             </Link>
           </span>
-          <div className={`${styles.rowName} d-none d-xxl-block`}>
+          <div className={`${styles.infoRowName} d-none d-xxl-block`}>
             <div
               style={{ textOverflow: 'ellipsis', overflowX: 'hidden' }}
             >

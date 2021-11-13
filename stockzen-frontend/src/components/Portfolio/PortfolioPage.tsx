@@ -662,7 +662,7 @@ const PortfolioPage = () => {
                   <div className={styles.tableHeader}>
                     <span className={styles.rowStockInfo}>
                       <span className={styles.rowHandle}></span>
-                      <span className={styles.rowCode}>
+                      <span className={styles.infoRowCode}>
                         <Button
                           variant='transparent'
                           size={'sm'}
@@ -675,7 +675,7 @@ const PortfolioPage = () => {
                           ></OrderingIndicator>
                         </Button>
                       </span>
-                      <span className={`${styles.rowName} d-none d-xxl-block`}>
+                      <span className={`${styles.infoRowName} d-none d-xxl-block`}>
                         <Button
                           variant='transparent'
                           size={'sm'}
