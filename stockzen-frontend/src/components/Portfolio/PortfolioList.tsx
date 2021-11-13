@@ -227,9 +227,6 @@ const PortfolioList = () => {
     });
   };
 
-  // // Add new portfolio to the PortfolioList
-  const [newPortfolioName, setNewPortfolioName] = useState('');
-
   // Handler of portfolio creation
   const createPortfolio = async (data: any) => {
     let givenPortfolioName = data.name;
