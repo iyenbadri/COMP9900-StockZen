@@ -33,6 +33,13 @@ $font-family-sans-serif: 'Rubik', system-ui, -apple-system, 'Segoe UI', Roboto,
 @import '~bootstrap/scss/bootstrap.scss';
 @import '~bootstrap/scss/bootstrap-utilities.scss';
 
+a {
+  transition: color 0.2s ease-in-out;
+}
+a:hover {
+  color: #478a9a !important;
+}
+
 .btn-transparent:active,
 .btn-transparent:active:focus,
 .btn-transparent:hover,
