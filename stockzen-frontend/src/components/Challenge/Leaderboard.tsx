@@ -88,6 +88,9 @@ const Leaderboard = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const [isUserPortfolioSubmitted, setIsUserPortfolioSubmitted] =
+    useState<boolean>(true);
+
   const reloadLeaderboard = async () => {
     var leaderboard = await axios.get<LeaderboardResponse>(
       '/challenge/leaderboard'
@@ -98,7 +101,9 @@ const Leaderboard = () => {
       startDate: moment(leaderboard.data.startDate),
       endDate: moment(leaderboard.data.endDate),
       isUserInTop: leaderboard.data.leaderboard.some(
-        (x) => x.userId === leaderboard.data.userRow.userId
+        (x) =>
+          leaderboard.data.userRow != null &&
+          x.userId === leaderboard.data.userRow.userId
       ),
     });
   };
@@ -113,6 +118,18 @@ const Leaderboard = () => {
     });
   };
 
+  const reloadUserSubmission = async () => {
+    try {
+      var summary = await axios.get<{ hasSubmission: boolean }>(
+        '/challenge/status/user'
+      );
+
+      setIsUserPortfolioSubmitted(summary.data.hasSubmission);
+    } catch {
+      setIsUserPortfolioSubmitted(true);
+    }
+  };
+
   useEffect(
     () => {
       setShowPortfolioSummary(true);
@@ -120,7 +137,11 @@ const Leaderboard = () => {
       const reload = () => {
         setIsLoading(true);
 
-        Promise.all([reloadLeaderboard(), reloadNextChallenge()]).then(() => {
+        Promise.all([
+          reloadLeaderboard(),
+          reloadNextChallenge(),
+          reloadUserSubmission(),
+        ]).then(() => {
           setIsLoading(false);
         });
       };
@@ -214,35 +235,42 @@ const Leaderboard = () => {
               </div>
             ))}
 
-            {!leaderboard?.isUserInTop && (
-              <>
-                <div className={styles.leaderboardTableRow}>
-                  <div className={styles.rowYou}></div>
-                  <div className={styles.rowMore}>
-                    <img src={varticalDot} alt='more' />
+            {!leaderboard?.isUserInTop &&
+              leaderboard.userRow != null &&
+              leaderboard.userRow.userId != null && (
+                <>
+                  <div className={styles.leaderboardTableRow}>
+                    <div className={styles.rowYou}></div>
+                    <div className={styles.rowMore}>
+                      <img src={varticalDot} alt='more' />
+                    </div>
                   </div>
-                </div>
 
-                <div className={styles.leaderboardTableRow}>
-                  <div className={styles.rowYou}>You</div>
-                  <div className={`${styles.rowInfo}`}>
-                    <div className={styles.rowRank}>
-                      {leaderboard.userRow.rank}
-                    </div>
-                    <div className={styles.rowUser}>
-                      {leaderboard?.userRow.userName}
-                    </div>
-                    <div className={styles.rowGain}>
-                      {leaderboard != null &&
-                        percentFormatter.format(leaderboard.userRow.percChange)}
-                    </div>
-                    <div className={styles.rowTopStock}>
-                      {leaderboard?.userRow.stocks[0]}
+                  <div className={styles.leaderboardTableRow}>
+                    <div className={styles.rowYou}>You</div>
+                    <div className={`${styles.rowInfo}`}>
+                      <div className={styles.rowRank}>
+                        {leaderboard.userRow.rank}
+                      </div>
+                      <div className={styles.rowUser}>
+                        {leaderboard?.userRow.userName}
+                      </div>
+                      <div className={styles.rowGain}>
+                        {leaderboard != null &&
+                          percentFormatter.format(
+                            leaderboard.userRow.percChange
+                          )}
+                      </div>
+                      <div className={styles.rowTopStock}>
+                        {leaderboard.userRow != null &&
+                          leaderboard.userRow.stocks != null &&
+                          leaderboard.userRow.stocks.length > 0 &&
+                          leaderboard?.userRow.stocks[0]}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </>
-            )}
+                </>
+              )}
           </>
         )}
       </div>
@@ -257,33 +285,53 @@ const Leaderboard = () => {
 
         {!isLoading && (
           <>
-            <div
-              className={`${styles.challengeDateMessage} ${styles.nextChallengeMessage}`}
-            >
-              Next challenge:{' '}
-              {nextChallenge != null && (
-                <>
-                  {nextChallenge?.startDate.format('HH:mm')}{' '}
-                  <span className={styles.challengeDate}>
-                    {nextChallenge?.startDate.format('DD/MM/YYYY')}
-                  </span>{' '}
-                  - {nextChallenge?.endDate.format('HH:mm')}{' '}
-                  <span className={styles.challengeDate}>
-                    {nextChallenge?.endDate.format('DD/MM/YYYY')}
-                  </span>
-                </>
-              )}
-              {nextChallenge == null && '-'}
-            </div>
+            {!nextChallenge?.isOpen && (
+              <div className='text-center'>
+                There is currently no scheduled Portfolio Challenge upcoming.
+              </div>
+            )}
+            {nextChallenge?.isOpen && (
+              <>
+                <div
+                  className={`${styles.challengeDateMessage} ${styles.nextChallengeMessage}`}
+                >
+                  Next challenge:{' '}
+                  {nextChallenge != null && (
+                    <>
+                      {nextChallenge?.startDate.format('HH:mm')}{' '}
+                      <span className={styles.challengeDate}>
+                        {nextChallenge?.startDate.format('DD/MM/YYYY')}
+                      </span>{' '}
+                      - {nextChallenge?.endDate.format('HH:mm')}{' '}
+                      <span className={styles.challengeDate}>
+                        {nextChallenge?.endDate.format('DD/MM/YYYY')}
+                      </span>
+                    </>
+                  )}
+                  {nextChallenge == null && '-'}
+                </div>
 
-            <div>
-              You have not submitted a portfolio for the next challenge period
-              yet.
-              <br />
-              <Button variant='transparent' className={styles.submitPortfolio}>
-                Submit Portfolio
-              </Button>
-            </div>
+                {isUserPortfolioSubmitted && (
+                  <div className={'text-center'}>
+                    You have submitted the portfolio for the upcoming Portfolio
+                    Challenge
+                  </div>
+                )}
+                {!isUserPortfolioSubmitted && (
+                  <div>
+                    You have not submitted a portfolio for the next challenge
+                    period yet.
+                    <br />
+                    <Button
+                      variant='transparent'
+                      className={styles.submitPortfolio}
+                    >
+                      Submit Portfolio
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
           </>
         )}
       </div>
