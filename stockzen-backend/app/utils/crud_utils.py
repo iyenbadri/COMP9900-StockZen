@@ -496,9 +496,10 @@ def get_leaderboard_results() -> Union[Dict, Status]:
 
         # generator expression to find user's rank and portfolio
         user_tuple = ()
+        user_i = None
         try:
             user_i = next(
-                (i for i, tuple in enumerate(result_list) if tuple[0] == current_user.id),
+                (i for i, tuple in enumerate(result_list) if tuple[1] == current_user.id),
                 None,
             )
             user_tuple = result_list[user_i]
@@ -537,8 +538,11 @@ def get_leaderboard_results() -> Union[Dict, Status]:
                 }
             )
 
+        user_row = None
         try:
-            user_row = leaderboard.pop()  # remove user row after processing
+            if user_i is not None:
+                # remove user row after processing (if found)
+                user_row = leaderboard.pop()
         except:
             raise ValueError("Previous challenge leaderboard is empty")
 
@@ -568,6 +572,27 @@ def get_leaderboard_status():
         end_date = challenge_dict["start_date"] + CHALLENGE_PERIOD
         challenge_dict["end_date"] = end_date
         return challenge_dict
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+        return Status.FAIL
+
+
+def get_submission_status():
+    """Return if a user has submitted a portfolio for the currently open challenge"""
+    try:
+        challenge = Challenge.query.order_by(Challenge.id.desc()).first()
+        if not challenge.is_open:
+            return Status.NOT_FOUND
+
+        has_submission = (
+            ChallengeEntry.query.filter(
+                ChallengeEntry.user_id == current_user.id,
+                ChallengeEntry.challenge_id == challenge.id,
+            ).first()
+            is not None
+        )
+
+        return {"has_submission": has_submission}
     except Exception as e:
         utils.debug_exception(e, suppress=True)
         return Status.FAIL

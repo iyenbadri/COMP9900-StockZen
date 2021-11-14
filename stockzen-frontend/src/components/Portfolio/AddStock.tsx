@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 
 export interface Prop {
   portfolioId?: string;
-  addStock?: (symbol: string, stockPageId: number) => void;
+  addStock?: (code: string, stockPageId: number) => void;
 }
 
 const AddStock: FC<Prop> = (prop) => {

@@ -18,6 +18,22 @@
   transform: translate(-15%, -10%) scale(80%);
 }
 
+.industry {
+  max-width: 85px;
+}
+
+.industryValue {
+  max-width: 370px;
+}
+
+.sector {
+  max-width: 72px;
+}
+
+.sectorValue {
+  max-width: 370px;
+}
+
 .description {
   overflow: auto;
 }

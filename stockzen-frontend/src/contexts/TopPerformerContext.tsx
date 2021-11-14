@@ -6,13 +6,13 @@ import React, {
   FC,
   useContext,
   useEffect,
-  useState,
+  useState
 } from 'react';
 
 interface ITopPerformer {
   stockPageId: number;
-  symbol: string;
-  name: string;
+  code: string;
+  stockName: string;
   price: number;
   changePercent: number;
 }
@@ -48,7 +48,7 @@ interface ITopPerformerContext {
 
 const contextDefaultValues: ITopPerformerContext = {
   showPortfolioSummary: false,
-  setShowPortfolioSummary: (show: boolean) => {},
+  setShowPortfolioSummary: (show: boolean) => { },
   topPerformers: [],
   isLoading: true,
   lastUpdateDate: null,
@@ -60,8 +60,8 @@ export const TopPerformerContext =
 
 const mapTopPerformer = (x: ITopPerformerResponse): ITopPerformer => ({
   stockPageId: x.stockPageId,
-  symbol: x.code,
-  name: x.stockName,
+  code: x.code,
+  stockName: x.stockName,
   price: x.price,
   changePercent: x.percChange / 100,
 });
@@ -95,7 +95,7 @@ const TopPerformerProvider: FC = ({ children }): any => {
           todayChangePercent: summary.data.today / 100,
           overallChangePercent: summary.data.overall / 100,
         });
-      } catch {}
+      } catch { }
 
       try {
         const topPerformers = await axios.get<ITopPerformerResponse[]>(
@@ -105,7 +105,7 @@ const TopPerformerProvider: FC = ({ children }): any => {
         setTopPerformers(topPerformers.data.map(mapTopPerformer));
 
         setIsLoading(false);
-      } catch {}
+      } catch { }
     }
   };
 
