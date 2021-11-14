@@ -65,23 +65,23 @@ def run_epoch(dataloader, is_training=False):
     lr = scheduler.get_last_lr()[0]
 
     return epoch_loss, lr
-
 random_seed = 7
 torch.manual_seed(random_seed)
 results = {}
 for symbol in TOP_COMPANIES:
 
+    """Import data from Yfinance"""
     df = utils.fetch_time_series(symbol)
     data_close = np.array(df["Close"])
 
-    # normalize
+    """normalize data to define standard dev and mean"""
+
     scaler = utils.Normalizer()
     normalized_data_close_price = scaler.fit_transform(data_close)
-
+    """dividng data in training, val and test"""
     data_x, data_x_unseen = utils.prepare_data_x(
         normalized_data_close_price, window_size=config["data"]["window_size"]
     )
-    print(data_x_unseen)
     data_y = utils.prepare_data_y(
         normalized_data_close_price, window_size=config["data"]["window_size"]
     )
@@ -91,6 +91,7 @@ for symbol in TOP_COMPANIES:
     data_x_val = data_x[split_index:]
     data_y_train = data_y[:split_index]
     data_y_val = data_y[split_index:]
+
 
     dataset_train = utils.TimeSeriesDataset(data_x_train, data_y_train)
     dataset_val = utils.TimeSeriesDataset(data_x_val, data_y_val)
@@ -112,6 +113,7 @@ for symbol in TOP_COMPANIES:
         output_size=1,
         dropout=config["model"]["dropout"],
     )
+
     model = model.to(config["training"]["device"])
 
     criterion = nn.MSELoss()
@@ -136,12 +138,29 @@ for symbol in TOP_COMPANIES:
             )
         )
 
-    torch.save(model, f=f"predict/models/{symbol}.pt")
 
-    # predict the closing price of the next trading day
 
-    new_model = torch.load(f"predict/models/{symbol}.pt")
-    new_model.eval()
+    """ Model evaluation """
+
+    train_dataloader = DataLoader(
+        dataset_train, batch_size=config["training"]["batch_size"], shuffle=False
+    )
+    val_dataloader = DataLoader(
+        dataset_val, batch_size=config["training"]["batch_size"], shuffle=False
+    )
+    
+    model.eval()
+
+# predict on the training data, to see how well the model managed to learn and memorize
+
+    predicted_train = np.array([])
+
+    for idx, (x, y) in enumerate(train_dataloader):
+        x = x.to(config["training"]["device"])
+        out = model(x)
+        out = out.cpu().detach().numpy()
+        predicted_train = np.concatenate((predicted_train, out))
+    # predict on the validation data, to see how the model does
 
     predicted_val = np.array([])
 
@@ -151,38 +170,27 @@ for symbol in TOP_COMPANIES:
         out = out.cpu().detach().numpy()
         predicted_val = np.concatenate((predicted_val, out))
 
-    x = (
-        torch.tensor(data_x_unseen)
-        .float()
-        .to(config["training"]["device"])
-        .unsqueeze(0)
-        .unsqueeze(2)
-    )  # this is the data type and shape required, [batch, sequence, feature]
-    prediction = new_model(x)
-    prediction = prediction.cpu().detach().numpy()
     limit = 292
     data_y_test = np.zeros(limit)
     data_y_val_pred = np.zeros(limit)
     data_y_test_pred = np.zeros(limit)
-    data_y_test[: limit - 1] = scaler.inverse_transform(data_y_val)[-limit + 1 :]
-    data_y_val_pred[: limit - 1] = scaler.inverse_transform(predicted_val)[-limit + 1 :]
-    data_y_test_pred[limit - 1] = scaler.inverse_transform(prediction)
+    data_y_test = scaler.inverse_transform(data_y_val)
+    data_y_val_pred= scaler.inverse_transform(predicted_val)
 
-    next_closing_pred = data_y_test_pred[limit - 1]
-    print(next_closing_pred)
+   
 
     y_true = data_y_test.tolist()
     y_pred = data_y_val_pred.tolist()
-    true_res = [x - y_true[i - 1] for i, x in enumerate(y_true)][1:]
+    true_res = [x - y_true[i - 1] for i, x in enumerate(y_true)]
     true_results = []
-
+    
     for i in true_res:
         if i > 0:
             true_results.append("Positive")
         else:
             true_results.append("Negative")
 
-    pred_res = [x - y_pred[i - 1] for i, x in enumerate(y_pred)][1:]
+    pred_res = [x - y_pred[i - 1] for i, x in enumerate(y_pred)]
     pred_results = []
     for i in pred_res:
         if i > 0:
@@ -192,8 +200,10 @@ for symbol in TOP_COMPANIES:
 
     accuracy = utils.accuracy_score(true_results, pred_results)
     print(accuracy)
-    results[symbol] = {"confidence": accuracy}
-    
+    results[symbol] = accuracy
 
-with open("predict/results.json", "w+", encoding="utf-8") as f:
+    torch.save(model, f=f"predict/models/{symbol}.pt")
+
+
+with open("predict/accuracy.json", "w+", encoding="utf-8") as f:
     json.dump(results, f, ensure_ascii=False, indent=4)

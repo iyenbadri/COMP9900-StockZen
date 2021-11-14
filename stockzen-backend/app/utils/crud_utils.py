@@ -266,7 +266,7 @@ def update_stock_page(stock_page_id: int) -> Status:
         if not price:
             raise ValueError("Stock price not found, aborting stock_page update")
         if sym in TOP_COMPANIES:
-            with open('predict/results.json','r') as myfile:
+            with open('predict/accuracy.json','r') as myfile:
                 results=myfile.read()
             conf = json.loads(results)
             confidence = float(str(conf[sym]))

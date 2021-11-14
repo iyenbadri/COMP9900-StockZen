@@ -64,7 +64,7 @@ class Normalizer:
 
     def inverse_transform(self, x):
         return (x * self.sd) + self.mu
-
+        
 class TimeSeriesDataset(Dataset):
     def __init__(self, x, y):
         x = np.expand_dims(
@@ -129,5 +129,9 @@ class LSTMModel(nn.Module):
 
 
 def accuracy_score(y_true, y_pred):
-    # Compute accuracy
-    return (y_true == y_pred).sum()
+    acc = 0
+    for i in range(len(y_true)-1):
+        if(y_true[i]==y_pred[i]):
+            acc= acc+1
+       
+    return acc/len(y_true)

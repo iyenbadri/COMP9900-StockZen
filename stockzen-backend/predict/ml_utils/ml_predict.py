@@ -28,14 +28,12 @@ def prediction(symbols):
     # normalize
     scaler = utils.Normalizer()
     normalized_data_close_price = scaler.fit_transform(data_close)
-
     data_x, data_x_unseen = utils.prepare_data_x(
         normalized_data_close_price, window_size=config["data"]["window_size"]
     )
 
     new_model = torch.load(f"predict/models/{symbols}.pt")
     new_model.eval()
-
     x = (
         torch.tensor(data_x_unseen)
         .float()
@@ -46,6 +44,10 @@ def prediction(symbols):
     prediction = new_model(x)
     prediction = prediction.cpu().detach().numpy()
 
-    next_closing_pred = scaler.inverse_transform(prediction)
-    return next_closing_pred[0]
+    next_closing_pred = scaler.inverse_transform(prediction)[0]
+    print(next_closing_pred)
+    if next_closing_pred > data_close[-1]:
+        return 1
+    else: 
+        return 0
 
