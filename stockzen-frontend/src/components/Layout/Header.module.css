@@ -60,7 +60,7 @@ header.userAuthenticated {
   size: large;
   outline: none;
   font-weight: bold;
-  color: var(--zen-2);
+  color: var(--zen-3);
   padding: 0;
   margin-right: 15px;
 }
