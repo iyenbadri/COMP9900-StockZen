@@ -8,17 +8,13 @@ Original file is located at
 """
 
 import json
-
 import numpy as np
-import pandas as pd
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import yfinance as yf
 from app.config import TOP_COMPANIES
-from sklearn.metrics import accuracy_score
-from torch.utils.data import DataLoader, Dataset
-
+from torch.utils.data import DataLoader
+from predict.ml_utils import utils
 config = {
     "data": {
         "window_size": 20,
@@ -38,129 +34,6 @@ config = {
         "scheduler_step_size": 60,
     },
 }
-
-
-def getTimeseries(sym):
-    current_price = stockTimeSeries(sym)
-    return current_price
-
-
-def stockTimeSeries(sym):
-    stock = yf.Ticker(sym)
-    price = stock.history(start="2016-01-01")
-    price["Stock"] = sym
-    return price
-
-
-def get_yest_price(sym):
-    current_price = stock_price_yesterday(sym)
-    return current_price
-
-
-def stock_price_yesterday(sym):
-    stock = yf.Ticker(sym)
-    price = stock.history("1d")
-    price["Stock"] = sym
-    return price["Close"]
-
-
-random_seed = 7
-torch.manual_seed(random_seed)
-
-
-class Normalizer:
-    def __init__(self):
-        self.mu = None
-        self.sd = None
-
-    def fit_transform(self, x):
-        self.mu = np.mean(x, axis=(0), keepdims=True)
-        self.sd = np.std(x, axis=(0), keepdims=True)
-        normalized_x = (x - self.mu) / self.sd
-        return normalized_x
-
-    def inverse_transform(self, x):
-        return (x * self.sd) + self.mu
-
-
-def prepare_data_x(x, window_size):
-
-    # perform windowing
-    n_row = x.shape[0] - window_size + 1
-    output = np.lib.stride_tricks.as_strided(
-        x, shape=(n_row, window_size), strides=(x.strides[0], x.strides[0])
-    )
-    return output[:-1], output[-1]
-
-
-def prepare_data_y(x, window_size):
-
-    # use the next day as label
-    output = x[window_size:]
-    return output
-
-
-class TimeSeriesDataset(Dataset):
-    def __init__(self, x, y):
-        x = np.expand_dims(
-            x, 2
-        )  # in our case, we have only 1 feature, so we need to convert `x` into [batch, sequence, features] for LSTM
-        self.x = x.astype(np.float32)
-        self.y = y.astype(np.float32)
-
-    def __len__(self):
-        return len(self.x)
-
-    def __getitem__(self, idx):
-        return (self.x[idx], self.y[idx])
-
-
-class LSTMModel(nn.Module):
-    def __init__(
-        self, input_size=1, hidden_layer_size=32, num_layers=2, output_size=1, dropout=0.2
-    ):
-        super().__init__()
-        self.hidden_layer_size = hidden_layer_size
-
-        self.linear_1 = nn.Linear(input_size, hidden_layer_size)
-        self.relu = nn.ReLU()
-        self.lstm = nn.LSTM(
-            hidden_layer_size,
-            hidden_size=self.hidden_layer_size,
-            num_layers=num_layers,
-            batch_first=True,
-        )
-        self.dropout = nn.Dropout(dropout)
-        self.linear_2 = nn.Linear(num_layers * hidden_layer_size, output_size)
-
-        self.init_weights()
-
-    def init_weights(self):
-        for name, param in self.lstm.named_parameters():
-            if "bias" in name:
-                nn.init.constant_(param, 0.0)
-            elif "weight_ih" in name:
-                nn.init.kaiming_normal_(param)
-            elif "weight_hh" in name:
-                nn.init.orthogonal_(param)
-
-    def forward(self, x):
-        batchsize = x.shape[0]
-
-        # layer 1
-        x = self.linear_1(x)
-        x = self.relu(x)
-
-        # LSTM layer
-        lstm_out, (h_n, c_n) = self.lstm(x)
-
-        # reshape output from hidden cell into [batch, features] for `linear_2`
-        x = h_n.permute(1, 0, 2).reshape(batchsize, -1)
-
-        # layer 2
-        x = self.dropout(x)
-        predictions = self.linear_2(x)
-        return predictions[:, -1]
 
 
 def run_epoch(dataloader, is_training=False):
@@ -193,24 +66,23 @@ def run_epoch(dataloader, is_training=False):
 
     return epoch_loss, lr
 
-
+random_seed = 7
+torch.manual_seed(random_seed)
+results = {}
 for symbol in TOP_COMPANIES:
 
-    df_test = pd.DataFrame()
-    ticker = symbol
-    df = getTimeseries(ticker)
-
+    df = utils.fetch_time_series(symbol)
     data_close = np.array(df["Close"])
-    data_date = df.index.to_list
 
     # normalize
-    scaler = Normalizer()
+    scaler = utils.Normalizer()
     normalized_data_close_price = scaler.fit_transform(data_close)
 
-    data_x, data_x_unseen = prepare_data_x(
+    data_x, data_x_unseen = utils.prepare_data_x(
         normalized_data_close_price, window_size=config["data"]["window_size"]
     )
-    data_y = prepare_data_y(
+    print(data_x_unseen)
+    data_y = utils.prepare_data_y(
         normalized_data_close_price, window_size=config["data"]["window_size"]
     )
 
@@ -220,8 +92,8 @@ for symbol in TOP_COMPANIES:
     data_y_train = data_y[:split_index]
     data_y_val = data_y[split_index:]
 
-    dataset_train = TimeSeriesDataset(data_x_train, data_y_train)
-    dataset_val = TimeSeriesDataset(data_x_val, data_y_val)
+    dataset_train = utils.TimeSeriesDataset(data_x_train, data_y_train)
+    dataset_val = utils.TimeSeriesDataset(data_x_val, data_y_val)
 
     print("Train data shape", dataset_train.x.shape, dataset_train.y.shape)
     print("Validation data shape", dataset_val.x.shape, dataset_val.y.shape)
@@ -233,7 +105,7 @@ for symbol in TOP_COMPANIES:
         dataset_val, batch_size=config["training"]["batch_size"], shuffle=True
     )
 
-    model = LSTMModel(
+    model = utils.LSTMModel(
         input_size=config["model"]["input_size"],
         hidden_layer_size=config["model"]["lstm_size"],
         num_layers=config["model"]["num_lstm_layers"],
@@ -254,7 +126,7 @@ for symbol in TOP_COMPANIES:
     )
 
     for epoch in range(config["training"]["num_epoch"]):
-        loss_train, lr_train = run_epoch(train_dataloader, is_training=True)
+        loss_train, lr_train = run_epoch(train_dataloader,is_training=True)
         loss_val, lr_val = run_epoch(val_dataloader)
         scheduler.step()
 
@@ -288,18 +160,15 @@ for symbol in TOP_COMPANIES:
     )  # this is the data type and shape required, [batch, sequence, feature]
     prediction = new_model(x)
     prediction = prediction.cpu().detach().numpy()
+    limit = 292
+    data_y_test = np.zeros(limit)
+    data_y_val_pred = np.zeros(limit)
+    data_y_test_pred = np.zeros(limit)
+    data_y_test[: limit - 1] = scaler.inverse_transform(data_y_val)[-limit + 1 :]
+    data_y_val_pred[: limit - 1] = scaler.inverse_transform(predicted_val)[-limit + 1 :]
+    data_y_test_pred[limit - 1] = scaler.inverse_transform(prediction)
 
-    ranges = 292
-    data_y_test = np.zeros(ranges)
-    data_y_val_pred = np.zeros(ranges)
-    data_y_test_pred = np.zeros(ranges)
-
-    data_y_test[: ranges - 1] = scaler.inverse_transform(data_y_val)[-ranges + 1 :]
-    data_y_val_pred[: ranges - 1] = scaler.inverse_transform(predicted_val)[-ranges + 1 :]
-
-    data_y_test_pred[ranges - 1] = scaler.inverse_transform(prediction)
-
-    next_closing_pred = data_y_test_pred[ranges - 1]
+    next_closing_pred = data_y_test_pred[limit - 1]
     print(next_closing_pred)
 
     y_true = data_y_test.tolist()
@@ -321,10 +190,10 @@ for symbol in TOP_COMPANIES:
         else:
             pred_results.append("Negative")
 
-    accuracy = accuracy_score(true_results, pred_results)
+    accuracy = utils.accuracy_score(true_results, pred_results)
     print(accuracy)
+    results[symbol] = {"confidence": accuracy}
+    
 
-    results = {symbol: [{"prediction": next_closing_pred}, {"confidence": accuracy}]}
-
-    with open("results.json", "a+", encoding="utf-8") as f:
-        json.dump(results, f, ensure_ascii=False, indent=4)
+with open("predict/results.json", "w+", encoding="utf-8") as f:
+    json.dump(results, f, ensure_ascii=False, indent=4)

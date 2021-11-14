@@ -20,9 +20,9 @@ from app.models.schema import (
     StockPage,
     User,
 )
+from predict.ml_utils import ml_predict as pred
 from app.utils.enums import LotType, Status
 from flask_login import current_user
-from predict import results
 from sqlalchemy import desc, func
 from sqlalchemy.orm import load_only
 
@@ -266,12 +266,15 @@ def update_stock_page(stock_page_id: int) -> Status:
         if not price:
             raise ValueError("Stock price not found, aborting stock_page update")
         if sym in TOP_COMPANIES:
+            with open('predict/results.json','r') as myfile:
+                results=myfile.read()
             conf = json.loads(results)
-            confidence = conf[sym]["confidence"]
-            prediction = conf[sym]["prediction"]
+            confidence = float(str(conf[sym]))
+            prediction = pred.prediction(sym)
+            
         else:
-            confidence = 0
-            prediction = 0
+            confidence = None
+            prediction = None
         info_json = json.dumps(info)  # store info as serialised json string
 
         db_utils.update_item_columns(
