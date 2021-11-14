@@ -476,7 +476,7 @@ def get_leaderboard_results() -> Union[Dict, Status]:
             return Status.NOT_EXIST
 
         # Get a ranked list of users and their avg perc_changes
-        result_tuples = (
+        result_list = (
             ChallengeEntry.query.join(Challenge)
             .join(User)
             .filter(Challenge.id == prev_challenge_id)
@@ -490,26 +490,25 @@ def get_leaderboard_results() -> Union[Dict, Status]:
             .order_by(desc("avg_change"))
             .all()
         )
-        results_list = result_tuples[:10]  # limit to first 10
+        # add rank to each result and limit to top 10
+        result_list = [(rank + 1, *item) for rank, item in enumerate(result_list)]
+        ranked_list = result_list[:10]  # limit to first 10
 
         # generator expression to find user's rank and portfolio
         user_tuple = ()
+        user_i = None
         try:
             user_i = next(
-                (
-                    i
-                    for i, tuple in enumerate(result_tuples)
-                    if tuple[0] == current_user.id
-                ),
+                (i for i, tuple in enumerate(result_list) if tuple[1] == current_user.id),
                 None,
             )
-            user_tuple = result_tuples[user_i]
-            results_list.append(user_tuple)  # process user row as well
+            user_tuple = result_list[user_i]
+            ranked_list.append(user_tuple)  # process user row as well
         except:
             pass
 
         # Append each user's stock codes and names to the results
-        for user_id, first_name, last_name, avg_change in results_list:
+        for rank, user_id, first_name, last_name, avg_change in ranked_list:
             # process stock codes/syms
             stock_codes = (
                 ChallengeEntry.query.join(Challenge)
@@ -533,12 +532,19 @@ def get_leaderboard_results() -> Union[Dict, Status]:
                 {
                     "user_id": user_id,
                     "user_name": user_name,
+                    "rank": rank,
                     "perc_change": avg_change,
                     "stock_codes": stock_codes,
                 }
             )
 
-        user_row = leaderboard.pop()  # remove user row after processing
+        user_row = None
+        try:
+            if user_i is not None:
+                # remove user row after processing (if found)
+                user_row = leaderboard.pop()
+        except:
+            raise ValueError("Previous challenge leaderboard is empty")
 
         # Get challenge start and end dates
         start_date = (
@@ -566,6 +572,27 @@ def get_leaderboard_status():
         end_date = challenge_dict["start_date"] + CHALLENGE_PERIOD
         challenge_dict["end_date"] = end_date
         return challenge_dict
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+        return Status.FAIL
+
+
+def get_submission_status():
+    """Return if a user has submitted a portfolio for the currently open challenge"""
+    try:
+        challenge = Challenge.query.order_by(Challenge.id.desc()).first()
+        if not challenge.is_open:
+            return Status.NOT_FOUND
+
+        has_submission = (
+            ChallengeEntry.query.filter(
+                ChallengeEntry.user_id == current_user.id,
+                ChallengeEntry.challenge_id == challenge.id,
+            ).first()
+            is not None
+        )
+
+        return {"has_submission": has_submission}
     except Exception as e:
         utils.debug_exception(e, suppress=True)
         return Status.FAIL
