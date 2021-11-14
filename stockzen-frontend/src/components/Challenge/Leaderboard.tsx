@@ -9,8 +9,9 @@ import { RefreshContext } from 'contexts/RefreshContext';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import moment, { Moment } from 'moment';
 import React, { useContext, useEffect, useState } from 'react';
-import Button from 'react-bootstrap/Button';
+import { Button, CloseButton, Modal } from 'react-bootstrap';
 import styles from './Leaderboard.module.css';
+import SubmissionModal from './SubmissionModal';
 
 interface LeaderboardResultResponse {
   userId: number;
@@ -85,6 +86,7 @@ const Leaderboard = () => {
 
   const [leaderboard, setLeaderboard] = useState<Leaderboard | null>(null);
   const [nextChallenge, setNextChallenge] = useState<Challenge | null>(null);
+  const [submit, setSubmit] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -168,12 +170,37 @@ const Leaderboard = () => {
             variant='light'
             className='ms-1 text-muted d-flex-inline align-items-center'
             onClick={() => {
-              refresh();
+              // refresh();
+              setSubmit(true)
             }}
           >
             <img src={refreshIcon} alt='refresh' style={{ opacity: 0.5 }} />
             Refresh
           </Button>
+          {/* FOR TESTING MODAL ONLY: 159-169 */}
+          <Modal
+            centered
+            show={submit}
+            className={styles.modal}
+            size='xl'
+            // styles={{ maxWidth: '800px', width: '80%' }}
+            onHide={() => setSubmit(false)}
+          >
+            <Modal.Header
+              className={`mt-3 mb-0 ${styles.modalHeader}`}
+              onClick={() => setSubmit(false)}
+            >
+              <h4 className='text-center'>Submit your portfolio</h4>
+              <p className={styles.description}>
+                Pick between 5 stocks to be added to your public portfolio.<br />
+                Over the next 2 weeks, you can see how you are performing on the leaderboard.<br />
+              </p>
+              <CloseButton className={styles.closeButton}></CloseButton>
+            </Modal.Header>
+            <Modal.Body className={'mt-0'}>
+              <SubmissionModal />
+            </Modal.Body>
+          </Modal>
         </div>
 
         {isLoading && (
@@ -325,9 +352,22 @@ const Leaderboard = () => {
                     <Button
                       variant='transparent'
                       className={styles.submitPortfolio}
+                      onClick={() => setSubmit(true)}
                     >
                       Submit Portfolio
                     </Button>
+                    <Modal
+                      centered
+                      show={submit}
+                      className={styles.modal}
+                      onHide={() => setSubmit(false)}
+                    >
+
+                      <Modal.Header>
+                        <h4>Submit your portfolio</h4>
+                      </Modal.Header>
+                      <SubmissionModal />
+                    </Modal>
                   </div>
                 )}
               </>

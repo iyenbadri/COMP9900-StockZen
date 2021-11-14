@@ -132,3 +132,12 @@ interface OrderingIndicatorProp {
     target: string;
     ordering: TableOrdering<string>;
 }
+
+// Typeahead for stock search
+interface TypeaheadOption {
+    stockPageId: number;
+    code: string;
+    description: string;
+    market: string;
+    searchLabel: string;
+}
