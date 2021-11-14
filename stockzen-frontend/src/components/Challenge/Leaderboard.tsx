@@ -88,6 +88,9 @@ const Leaderboard = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const [isUserPortfolioSubmitted, setIsUserPortfolioSubmitted] =
+    useState<boolean>(true);
+
   const reloadLeaderboard = async () => {
     var leaderboard = await axios.get<LeaderboardResponse>(
       '/challenge/leaderboard'
@@ -115,6 +118,18 @@ const Leaderboard = () => {
     });
   };
 
+  const reloadUserSubmission = async () => {
+    try {
+      var summary = await axios.get<{ hasSubmission: boolean }>(
+        '/challenge/status/user'
+      );
+
+      setIsUserPortfolioSubmitted(summary.data.hasSubmission);
+    } catch {
+      setIsUserPortfolioSubmitted(true);
+    }
+  };
+
   useEffect(
     () => {
       setShowPortfolioSummary(true);
@@ -122,7 +137,11 @@ const Leaderboard = () => {
       const reload = () => {
         setIsLoading(true);
 
-        Promise.all([reloadLeaderboard(), reloadNextChallenge()]).then(() => {
+        Promise.all([
+          reloadLeaderboard(),
+          reloadNextChallenge(),
+          reloadUserSubmission(),
+        ]).then(() => {
           setIsLoading(false);
         });
       };
@@ -292,17 +311,25 @@ const Leaderboard = () => {
                   {nextChallenge == null && '-'}
                 </div>
 
-                <div>
-                  You have not submitted a portfolio for the next challenge
-                  period yet.
-                  <br />
-                  <Button
-                    variant='transparent'
-                    className={styles.submitPortfolio}
-                  >
-                    Submit Portfolio
-                  </Button>
-                </div>
+                {isUserPortfolioSubmitted && (
+                  <div className={'text-center'}>
+                    You have submitted the portfolio for the upcoming Portfolio
+                    Challenge
+                  </div>
+                )}
+                {!isUserPortfolioSubmitted && (
+                  <div>
+                    You have not submitted a portfolio for the next challenge
+                    period yet.
+                    <br />
+                    <Button
+                      variant='transparent'
+                      className={styles.submitPortfolio}
+                    >
+                      Submit Portfolio
+                    </Button>
+                  </div>
+                )}
               </>
             )}
           </>
