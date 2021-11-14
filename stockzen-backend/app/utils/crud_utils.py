@@ -540,7 +540,7 @@ def get_leaderboard_results() -> Union[Dict, Status]:
 
         user_row = None
         try:
-            if user_i:
+            if user_i is not None:
                 # remove user row after processing (if found)
                 user_row = leaderboard.pop()
         except:
