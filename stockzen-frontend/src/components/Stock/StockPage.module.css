@@ -74,6 +74,7 @@
   padding: 5px 10px;
   margin-right: 5px;
   font-weight: 300;
+  transition: all 0.1s ease-in-out;
 }
 
 .tableBar .activeTab {
@@ -82,11 +83,13 @@
   cursor: pointer;
   border: 2px solid;
   border-radius: 5px 5px 0px 0px;
-  border-color: var(--zen-4);
+  border-color: var(--zen-3);
+  color: var(--zen-3);
+  opacity: 0.85;
   background-color: #d1d1d1;
   padding: 5px 10px;
   margin-right: 5px;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .moneyGain {
