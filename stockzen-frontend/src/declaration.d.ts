@@ -31,7 +31,7 @@ interface IStock {
     stockId: number;
     stockPageId: number;
     draggableId: string;
-    symbol: string;
+    code: string;
     name: string;
     price: number;
     change: number;
@@ -69,7 +69,7 @@ interface IStockFundamental {
     stockId: number;
     stockPageId: number;
     draggableId: string;
-    symbol: string;
+    code: string;
     name: string;
     dayHigh: number | null;
     dayLow: number | null;

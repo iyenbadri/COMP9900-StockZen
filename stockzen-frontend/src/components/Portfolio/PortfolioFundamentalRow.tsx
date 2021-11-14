@@ -30,10 +30,16 @@ const PortfolioFundamentalRow: FC<PortfolioPageRowProp> = (props) => {
           <span className={styles.rowHandle} />
           <span className={styles.infoRowCode}>
             <Link
-              to={`/stock/${stock.stockPageId}`}
+              to={{
+                pathname: `/stock/${stock.stockPageId}`,
+                state: {
+                  code: stock.code,
+                  name: stock.name,
+                }
+              }}
               className={styles.rowStockLink}
             >
-              {stock.symbol}
+              {stock.code}
             </Link>
           </span>
           <div className={`${styles.infoRowName} d-none d-xxl-block`}>
