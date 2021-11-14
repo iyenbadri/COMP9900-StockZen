@@ -55,6 +55,12 @@ const UserProvider: FC = ({ children }): any => {
           markAsLoggedOut();
         }
       })
+      // If user is already unauthorised from backend server, implement logout
+      .catch(function (err) {
+        if (err.response.status === 401) {
+          markAsLoggedOut();
+        }
+      })
   };
 
   const recheckAuthenticationStatus = () => {

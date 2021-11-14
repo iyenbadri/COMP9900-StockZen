@@ -291,6 +291,43 @@
   padding-top: 10px;
 }
 
+.tableHeader .infoRowCode button {
+  justify-content: center;
+}
+
+.tableHeader .infoRowName button {
+  justify-content: center;
+}
+
+.tableHeader .rowShortInfo button {
+  justify-content: center;
+  padding-left: 15px;
+}
+
+.infoRowCode {
+  flex-grow: 0.2;
+  flex-shrink: 0;
+  flex-basis: 55px;
+  text-align: center;
+
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.infoRowName {
+  flex-grow: 0.2;
+  flex-basis: 85px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  padding-left: 10px;
+  white-space: nowrap;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
 .rowInfo {
   text-align: right;
   flex-basis: 70px;
@@ -357,6 +394,7 @@
 
 /* .tableRow .rowPortfolio, */
 .tableRow .rowName,
+.tableRow .infoRowName,
 .tableRow .rowPrice,
 .tableRow .rowChange,
 .tableRow .rowAveragePrice,

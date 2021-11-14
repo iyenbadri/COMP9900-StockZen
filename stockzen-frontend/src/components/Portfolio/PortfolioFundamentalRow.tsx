@@ -1,5 +1,5 @@
 import crossIcon from 'assets/icon-outlines/outline-cross.svg';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { bigNumberFormatter, numberFormatter } from 'utils/Utilities';
 import styles from './PortfolioPage.module.css';
@@ -13,22 +13,6 @@ interface PortfolioPageRowProp {
 const PortfolioFundamentalRow: FC<PortfolioPageRowProp> = (props) => {
   const { stock } = props;
 
-  const ref = useRef<HTMLDivElement>(null);
-  const [contentHeight, setContentHeight] = useState<number>();
-
-  useEffect(() => {
-    const listener = () => {
-      setContentHeight(ref.current?.scrollHeight ?? 0);
-    };
-
-    window.addEventListener('resize', listener);
-    listener();
-
-    return () => {
-      window.removeEventListener('resize', listener);
-    };
-  }, []);
-
   const [showPanel, setShowPanel] = useState(false);
 
   return (
@@ -40,14 +24,11 @@ const PortfolioFundamentalRow: FC<PortfolioPageRowProp> = (props) => {
         <div
           className={styles.rowStockInfo}
           onClick={() => {
-            setContentHeight(
-              (height) => ref.current?.scrollHeight ?? height
-            );
             setShowPanel(!showPanel);
           }}
         >
           <span className={styles.rowHandle} />
-          <span className={styles.rowCode}>
+          <span className={styles.infoRowCode}>
             <Link
               to={{
                 pathname: `/stock/${stock.stockPageId}`,
@@ -61,7 +42,7 @@ const PortfolioFundamentalRow: FC<PortfolioPageRowProp> = (props) => {
               {stock.code}
             </Link>
           </span>
-          <div className={`${styles.rowName} d-none d-xxl-block`}>
+          <div className={`${styles.infoRowName} d-none d-xxl-block`}>
             <div
               style={{ textOverflow: 'ellipsis', overflowX: 'hidden' }}
             >
