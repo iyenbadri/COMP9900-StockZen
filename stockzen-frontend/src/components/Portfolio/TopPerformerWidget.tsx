@@ -85,7 +85,7 @@ const TopPerformerWidget: FC = (props) => {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th className={styles.code}>code</th>
+            <th className={styles.code}>Code</th>
             <th className={styles.price}>Price</th>
             <th className={styles.gain}>Change</th>
           </tr>
