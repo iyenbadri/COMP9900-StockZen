@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { intFormatter, numberFomatter } from 'utils/Utilities';
+import { intFormatter, numberFormatter } from 'utils/Utilities';
 import styles from './StockHistory.module.css';
 
 interface History {
@@ -19,16 +19,16 @@ const StockHistory: FC<History> = (prop) => {
           {prop.date}
         </div>
         <div className={styles.history}>
-          {typeof prop.open === 'number' ? numberFomatter.format(prop.open) : ''}
+          {typeof prop.open === 'number' ? numberFormatter.format(prop.open) : ''}
         </div>
         <div className={styles.history}>
-          {typeof prop.high === 'number' ? numberFomatter.format(prop.high) : ''}
+          {typeof prop.high === 'number' ? numberFormatter.format(prop.high) : ''}
         </div>
         <div className={styles.history}>
-          {typeof prop.low === 'number' ? numberFomatter.format(prop.low) : ''}
+          {typeof prop.low === 'number' ? numberFormatter.format(prop.low) : ''}
         </div>
         <div className={styles.history}>
-          {typeof prop.close === 'number' ? numberFomatter.format(prop.close) : ''}
+          {typeof prop.close === 'number' ? numberFormatter.format(prop.close) : ''}
         </div>
         <div className={styles.history}>
           {typeof prop.volume === 'number' ? intFormatter.format(prop.volume) : ''}

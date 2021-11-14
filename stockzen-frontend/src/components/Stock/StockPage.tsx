@@ -6,7 +6,7 @@ import { Button, Col, Modal, Row, Spinner } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { intFormatter, numberFomatter } from 'utils/Utilities';
+import { intFormatter, numberFormatter } from 'utils/Utilities';
 import CompanyProfile from './CompanyProfile';
 import StockHistory from './StockHistory';
 import styles from './StockPage.module.css';
@@ -75,22 +75,22 @@ const StockPage = () => {
           <Row className={styles.index}>
             <Col className={styles.indexTitle}>Open</Col>
             <Col className={styles.sep}>:</Col>
-            <Col className={styles.indexValue}>{numberFomatter.format(payload[1].value)}</Col>
+            <Col className={styles.indexValue}>{numberFormatter.format(payload[1].value)}</Col>
           </Row>
           <Row className={styles.index}>
             <Col className={styles.indexTitle}>Close</Col>
             <Col className={styles.sep}>:</Col>
-            <Col className={styles.indexValue}>{numberFomatter.format(payload[0].value)}</Col>
+            <Col className={styles.indexValue}>{numberFormatter.format(payload[0].value)}</Col>
           </Row>
           <Row className={styles.index}>
             <Col className={styles.indexTitle}>High</Col>
             <Col className={styles.sep}>:</Col>
-            <Col className={styles.indexValue}>{numberFomatter.format(payload[2].value)}</Col>
+            <Col className={styles.indexValue}>{numberFormatter.format(payload[2].value)}</Col>
           </Row>
           <Row className={styles.index}>
             <Col className={styles.indexTitle}>Low</Col>
             <Col className={styles.sep}>:</Col>
-            <Col className={styles.indexValue}>{numberFomatter.format(payload[3].value)}</Col>
+            <Col className={styles.indexValue}>{numberFormatter.format(payload[3].value)}</Col>
           </Row>
           <Row className={styles.index}>
             <Col className={styles.indexTitle}>Volume</Col>
@@ -131,18 +131,18 @@ const StockPage = () => {
             <div className={styles.stockCode}>({stockData?.code})</div>
           </div>
           <div className={styles.stockSummmary}>
-            <div className={`${styles.stockPrice} outerStroke`}>{stockData?.price ? `$${numberFomatter.format(stockData.price)}` : ''}</div>
+            <div className={`${styles.stockPrice} outerStroke`}>{stockData?.price ? `$${numberFormatter.format(stockData.price)}` : ''}</div>
             <div
               className={`${styles.stockChange} ${stockData?.change ? gainLossClass(stockData?.change) : ''}`}
             >
               {(stockData?.change! > 0) ? '+' : ''}
               {(stockData?.change! < 0) ? '-' : ''}
-              {stockData?.change ? numberFomatter.format(stockData.change) : ''}
+              {stockData?.change ? numberFormatter.format(stockData.change) : ''}
             </div>
             <div
               className={`${styles.stockPercChange} ${stockData?.change ? gainLossClass(stockData?.change) : ''}`}
             >
-              {stockData?.percChange ? `(${numberFomatter.format(stockData.percChange)}%)` : ''}
+              {stockData?.percChange ? `(${numberFormatter.format(stockData.percChange)}%)` : ''}
             </div>
             <div className={styles.update}>
               <Button

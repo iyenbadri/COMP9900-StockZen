@@ -23,7 +23,7 @@ const Logout: FC = () => {
       </h3>
       <Row className='mb-4 text-center'>
         <Col>
-          See you next time <img src={smileIcon} />
+          See you next time <img src={smileIcon} alt='smile face' />
         </Col>
       </Row>
       <Row className='text-center'>
