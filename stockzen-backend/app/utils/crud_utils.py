@@ -577,6 +577,27 @@ def get_leaderboard_status():
         return Status.FAIL
 
 
+def get_submission_status():
+    """Return if a user has submitted a portfolio for the currently open challenge"""
+    try:
+        challenge = Challenge.query.order_by(Challenge.id.desc()).first()
+        if not challenge.is_open:
+            return Status.NOT_FOUND
+
+        has_submission = (
+            ChallengeEntry.query.filter(
+                ChallengeEntry.user_id == current_user.id,
+                ChallengeEntry.challenge_id == challenge.id,
+            ).first()
+            is not None
+        )
+
+        return {"has_submission": has_submission}
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+        return Status.FAIL
+
+
 def add_challenge_stocks(stocks, challenge_id: int) -> Status:
     """adds a user portfolio for challenge"""
     try:
