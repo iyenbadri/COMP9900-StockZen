@@ -1,6 +1,7 @@
 import time
 from datetime import datetime
 
+import click
 from app.config import CHALLENGE_PERIOD, CHALLENGE_START, SLEEP_INTERVAL
 from app.models.schema import Challenge
 from app.utils import db_utils, utils
@@ -11,12 +12,15 @@ user_cli = AppGroup("challenge")
 
 # Command to run in the server
 @user_cli.command("run")
-def start_challenge():
+@click.argument("env")
+# do "flask challenge run dev" during testing to avoid adding a new challenge row
+def start_challenge(env):
     """Schedule a challenge according to CHALLENGE_START config parameter"""
     start_date = CHALLENGE_START
     try:
         new_challenge = Challenge(start_date=start_date, is_active=True, is_open=True)
-        db_utils.insert_item(new_challenge)
+        if env != "dev":
+            db_utils.insert_item(new_challenge)
 
         print("Now accepting challenge submissions.")
         while datetime.now() < start_date:

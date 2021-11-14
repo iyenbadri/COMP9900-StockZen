@@ -496,9 +496,10 @@ def get_leaderboard_results() -> Union[Dict, Status]:
 
         # generator expression to find user's rank and portfolio
         user_tuple = ()
+        user_i = None
         try:
             user_i = next(
-                (i for i, tuple in enumerate(result_list) if tuple[0] == current_user.id),
+                (i for i, tuple in enumerate(result_list) if tuple[1] == current_user.id),
                 None,
             )
             user_tuple = result_list[user_i]
@@ -537,8 +538,11 @@ def get_leaderboard_results() -> Union[Dict, Status]:
                 }
             )
 
+        user_row = None
         try:
-            user_row = leaderboard.pop()  # remove user row after processing
+            if user_i:
+                # remove user row after processing (if found)
+                user_row = leaderboard.pop()
         except:
             raise ValueError("Previous challenge leaderboard is empty")
 
