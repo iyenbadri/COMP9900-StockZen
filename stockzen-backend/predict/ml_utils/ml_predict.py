@@ -23,7 +23,7 @@ config = {
 
 
 def prediction(symbols):
-    df = utils.fetch_time_series(symbols)
+    df = utils.fetch_time_series(symbols, "20d")
     data_close = np.array(df["Close"])
     # normalize
     scaler = utils.Normalizer()
@@ -45,7 +45,8 @@ def prediction(symbols):
     prediction = prediction.cpu().detach().numpy()
 
     next_closing_pred = scaler.inverse_transform(prediction)[0]
-    print(next_closing_pred)
+    print("predicted price",next_closing_pred)
+    print("closing price", data_close[-1])
     if next_closing_pred > data_close[-1]:
         return 1
     else: 

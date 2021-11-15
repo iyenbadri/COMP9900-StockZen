@@ -15,8 +15,6 @@ def debug_exception(error, suppress=False):
     if not suppress:
         raise error
 
-
-
 def fetch_time_series(
     sym: str,
     period: str = "max",
@@ -35,6 +33,8 @@ def fetch_time_series(
         debug_exception(e, suppress=True)
 
 
+"""Data preparation Utils""" 
+
 def prepare_data_x(x, window_size):
 
     # perform windowing
@@ -51,6 +51,7 @@ def prepare_data_y(x, window_size):
     output = x[window_size:]
     return output
 
+""" Deep learning Utils"""
 class Normalizer:
     def __init__(self):
         self.mu = None
@@ -69,7 +70,7 @@ class TimeSeriesDataset(Dataset):
     def __init__(self, x, y):
         x = np.expand_dims(
             x, 2
-        )  # in our case, we have only 1 feature, so we need to convert `x` into [batch, sequence, features] for LSTM
+        )
         self.x = x.astype(np.float32)
         self.y = y.astype(np.float32)
 
@@ -128,6 +129,7 @@ class LSTMModel(nn.Module):
         return predictions[:, -1]
 
 
+"""Accuracy Utils"""
 def accuracy_score(y_true, y_pred):
     acc = 0
     for i in range(len(y_true)-1):
@@ -135,3 +137,27 @@ def accuracy_score(y_true, y_pred):
             acc= acc+1
        
     return acc/len(y_true)
+
+
+def accuracy(data_y_true, data_y_pred):
+    y_true = data_y_true.tolist()
+    y_pred = data_y_pred.tolist()
+    true_res = [x - y_true[i - 1] for i, x in enumerate(y_true)]
+    true_results = []
+    
+    for i in true_res:
+        if i > 0:
+            true_results.append("Positive")
+        else:
+            true_results.append("Negative")
+
+    pred_res = [x - y_pred[i - 1] for i, x in enumerate(y_pred)]
+    pred_results = []
+    for i in pred_res:
+        if i > 0:
+            pred_results.append("Positive")
+        else:
+            pred_results.append("Negative")
+
+    accuracy = accuracy_score(true_results, pred_results)
+    return accuracy

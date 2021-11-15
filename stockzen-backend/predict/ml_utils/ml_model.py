@@ -21,16 +21,16 @@ config = {
         "train_split_size": 0.80,
     },
     "model": {
-        "input_size": 1,  # since we are only using 1 feature, close price
+        "input_size": 1, 
         "num_lstm_layers": 2,
-        "lstm_size": 32,
-        "dropout": 0.2,
+        "lstm_size": 64,
+        "dropout": 0.4,
     },
     "training": {
-        "device": "cpu",  # "cuda" or "cpu"
-        "batch_size": 64,
-        "num_epoch": 100,
-        "learning_rate": 0.01,
+        "device": "cpu",
+        "batch_size": 128,
+        "num_epoch": 150,
+        "learning_rate": 0.02,
         "scheduler_step_size": 60,
     },
 }
@@ -63,22 +63,27 @@ def run_epoch(dataloader, is_training=False):
         epoch_loss += loss.detach().item() / batchsize
 
     lr = scheduler.get_last_lr()[0]
-
     return epoch_loss, lr
 random_seed = 7
 torch.manual_seed(random_seed)
 results = {}
-for symbol in TOP_COMPANIES:
 
+for symbol in TOP_COMPANIES:
+    
+    random_seed = 7
+    torch.manual_seed(random_seed)
     """Import data from Yfinance"""
-    df = utils.fetch_time_series(symbol)
+
+    df = utils.fetch_time_series(symbol,"10y")
     data_close = np.array(df["Close"])
 
     """normalize data to define standard dev and mean"""
 
     scaler = utils.Normalizer()
     normalized_data_close_price = scaler.fit_transform(data_close)
-    """dividng data in training, val and test"""
+
+    """Splitting data in training, val and test"""
+
     data_x, data_x_unseen = utils.prepare_data_x(
         normalized_data_close_price, window_size=config["data"]["window_size"]
     )
@@ -92,7 +97,6 @@ for symbol in TOP_COMPANIES:
     data_y_train = data_y[:split_index]
     data_y_val = data_y[split_index:]
 
-
     dataset_train = utils.TimeSeriesDataset(data_x_train, data_y_train)
     dataset_val = utils.TimeSeriesDataset(data_x_val, data_y_val)
 
@@ -105,6 +109,8 @@ for symbol in TOP_COMPANIES:
     val_dataloader = DataLoader(
         dataset_val, batch_size=config["training"]["batch_size"], shuffle=True
     )
+
+    """LSTM Model Training"""
 
     model = utils.LSTMModel(
         input_size=config["model"]["input_size"],
@@ -120,8 +126,8 @@ for symbol in TOP_COMPANIES:
     optimizer = optim.Adam(
         model.parameters(),
         lr=config["training"]["learning_rate"],
-        betas=(0.9, 0.98),
-        eps=1e-9,
+        betas=(0.9, 0.9),
+        eps=1e-8,
     )
     scheduler = optim.lr_scheduler.StepLR(
         optimizer, step_size=config["training"]["scheduler_step_size"], gamma=0.1
@@ -139,7 +145,6 @@ for symbol in TOP_COMPANIES:
         )
 
 
-
     """ Model evaluation """
 
     train_dataloader = DataLoader(
@@ -151,8 +156,6 @@ for symbol in TOP_COMPANIES:
     
     model.eval()
 
-# predict on the training data, to see how well the model managed to learn and memorize
-
     predicted_train = np.array([])
 
     for idx, (x, y) in enumerate(train_dataloader):
@@ -160,8 +163,6 @@ for symbol in TOP_COMPANIES:
         out = model(x)
         out = out.cpu().detach().numpy()
         predicted_train = np.concatenate((predicted_train, out))
-    # predict on the validation data, to see how the model does
-
     predicted_val = np.array([])
 
     for idx, (x, y) in enumerate(val_dataloader):
@@ -170,37 +171,12 @@ for symbol in TOP_COMPANIES:
         out = out.cpu().detach().numpy()
         predicted_val = np.concatenate((predicted_val, out))
 
-    limit = 292
-    data_y_test = np.zeros(limit)
-    data_y_val_pred = np.zeros(limit)
-    data_y_test_pred = np.zeros(limit)
-    data_y_test = scaler.inverse_transform(data_y_val)
-    data_y_val_pred= scaler.inverse_transform(predicted_val)
+    """Accuracy Calculation"""
 
-   
+    data_y_true = scaler.inverse_transform(data_y_val)
+    data_y_pred= scaler.inverse_transform(predicted_val)
 
-    y_true = data_y_test.tolist()
-    y_pred = data_y_val_pred.tolist()
-    true_res = [x - y_true[i - 1] for i, x in enumerate(y_true)]
-    true_results = []
-    
-    for i in true_res:
-        if i > 0:
-            true_results.append("Positive")
-        else:
-            true_results.append("Negative")
-
-    pred_res = [x - y_pred[i - 1] for i, x in enumerate(y_pred)]
-    pred_results = []
-    for i in pred_res:
-        if i > 0:
-            pred_results.append("Positive")
-        else:
-            pred_results.append("Negative")
-
-    accuracy = utils.accuracy_score(true_results, pred_results)
-    print(accuracy)
-    results[symbol] = accuracy
+    results[symbol] = utils.accuracy(data_y_true,data_y_pred)
 
     torch.save(model, f=f"predict/models/{symbol}.pt")
 
