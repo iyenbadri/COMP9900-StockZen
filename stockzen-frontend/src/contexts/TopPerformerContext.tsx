@@ -12,15 +12,23 @@ import React, {
 interface ITopPerformer {
   stockPageId: number;
   symbol: string;
+  name: string;
   price: number;
   changePercent: number;
 }
 
 interface ITopPerformerResponse {
   stockPageId: number;
-  symbol: string;
+  code: string;
+  stockName: string;
   price: number;
   percChange: number;
+}
+
+interface IPortfolioPerformanceResponse {
+  holdings: number;
+  today: number;
+  overall: number;
 }
 
 interface IPortfolioPerformance {
@@ -52,7 +60,8 @@ export const TopPerformerContext =
 
 const mapTopPerformer = (x: ITopPerformerResponse): ITopPerformer => ({
   stockPageId: x.stockPageId,
-  symbol: x.symbol,
+  symbol: x.code,
+  name: x.stockName,
   price: x.price,
   changePercent: x.percChange / 100,
 });
@@ -76,11 +85,17 @@ const TopPerformerProvider: FC = ({ children }): any => {
     if (isAuthenticated) {
       setLastUpdateDate(new Date());
 
-      setPortfolioSummary({
-        holding: Math.random() * 2000,
-        todayChangePercent: (Math.random() * 10 - 5) / 100,
-        overallChangePercent: (Math.random() * 10 - 5) / 100,
-      });
+      try {
+        const summary = await axios.get<IPortfolioPerformanceResponse>(
+          '/portfolio/list/summary'
+        );
+
+        setPortfolioSummary({
+          holding: summary.data.holdings,
+          todayChangePercent: summary.data.today / 100,
+          overallChangePercent: summary.data.overall / 100,
+        });
+      } catch {}
 
       try {
         const topPerformers = await axios.get<ITopPerformerResponse[]>(
