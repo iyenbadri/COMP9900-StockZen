@@ -6,17 +6,10 @@ import React, {
   FC,
   useContext,
   useEffect,
-  useState
+  useState,
 } from 'react';
 
-interface ITopPerformer {
-  stockPageId: number;
-  code: string;
-  stockName: string;
-  price: number;
-  changePercent: number;
-}
-
+// Responses from backend
 interface ITopPerformerResponse {
   stockPageId: number;
   code: string;
@@ -29,6 +22,14 @@ interface IPortfolioPerformanceResponse {
   holdings: number;
   today: number;
   overall: number;
+}
+
+interface ITopPerformer {
+  stockPageId: number;
+  code: string;
+  stockName: string;
+  price: number;
+  changePercent: number;
 }
 
 interface IPortfolioPerformance {
@@ -48,7 +49,7 @@ interface ITopPerformerContext {
 
 const contextDefaultValues: ITopPerformerContext = {
   showPortfolioSummary: false,
-  setShowPortfolioSummary: (show: boolean) => { },
+  setShowPortfolioSummary: (show: boolean) => {},
   topPerformers: [],
   isLoading: true,
   lastUpdateDate: null,
@@ -58,6 +59,7 @@ const contextDefaultValues: ITopPerformerContext = {
 export const TopPerformerContext =
   createContext<ITopPerformerContext>(contextDefaultValues);
 
+// Function to map the top perfomer response
 const mapTopPerformer = (x: ITopPerformerResponse): ITopPerformer => ({
   stockPageId: x.stockPageId,
   code: x.code,
@@ -66,10 +68,13 @@ const mapTopPerformer = (x: ITopPerformerResponse): ITopPerformer => ({
   changePercent: x.percChange / 100,
 });
 
+// Top Performer context provider
 const TopPerformerProvider: FC = ({ children }): any => {
+  // Get context
   const { subscribe, unsubscribe } = useContext(RefreshContext);
   const { isAuthenticated } = useContext(UserContext);
 
+  // Display/hide the portfolio summary
   const [showPortfolioSummary, setShowPortfolioSummary] =
     useState<boolean>(false);
 
@@ -81,6 +86,7 @@ const TopPerformerProvider: FC = ({ children }): any => {
   const [portfolioSummary, setPortfolioSummary] =
     useState<IPortfolioPerformance | null>(null);
 
+  // Function to load the top performer data
   const reloadTopPerformer = async () => {
     if (isAuthenticated) {
       setLastUpdateDate(new Date());
@@ -95,7 +101,7 @@ const TopPerformerProvider: FC = ({ children }): any => {
           todayChangePercent: summary.data.today / 100,
           overallChangePercent: summary.data.overall / 100,
         });
-      } catch { }
+      } catch {}
 
       try {
         const topPerformers = await axios.get<ITopPerformerResponse[]>(
@@ -105,15 +111,20 @@ const TopPerformerProvider: FC = ({ children }): any => {
         setTopPerformers(topPerformers.data.map(mapTopPerformer));
 
         setIsLoading(false);
-      } catch { }
+      } catch {}
     }
   };
 
   // Reload when isAuthenticated is changed.
-  useEffect(() => {
-    reloadTopPerformer();
-  }, [isAuthenticated]);
+  useEffect(
+    () => {
+      reloadTopPerformer();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isAuthenticated]
+  );
 
+  // Set up the refresh functionality
   useEffect(
     () => {
       reloadTopPerformer();

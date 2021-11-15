@@ -7,6 +7,9 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import bellIcon from 'assets/icon-outlines/outline-bell.svg';
 
+// **************************************************************
+// Component to display the price alert
+// **************************************************************
 const PortfolioPageAlert: FC<IProps> = (props) => {
   const { stockId } = props;
 
@@ -14,7 +17,7 @@ const PortfolioPageAlert: FC<IProps> = (props) => {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isDirty },
+    formState: { isDirty },
   } = useForm({
     defaultValues: {
       low: '',
@@ -22,12 +25,14 @@ const PortfolioPageAlert: FC<IProps> = (props) => {
     },
   });
 
+  // States
   const [lowThresholdAlerted, setLowThresholdAlerted] =
     useState<boolean>(false);
 
   const [highThresholdAlerted, setHighThresholdAlerted] =
     useState<boolean>(false);
 
+  // Component setup
   useEffect(
     () => {
       (async () => {
@@ -36,9 +41,11 @@ const PortfolioPageAlert: FC<IProps> = (props) => {
           '/price-alert/' + stockId.toString()
         );
 
+        // Set the states
         setLowThresholdAlerted(response.data.isLowThresholdAlerted ?? true);
         setHighThresholdAlerted(response.data.isHighThresholdAlerted ?? true);
 
+        // Set the form values
         reset({
           low: response.data.low == null ? '' : response.data.low.toString(),
           high: response.data.high == null ? '' : response.data.high.toString(),
@@ -49,7 +56,9 @@ const PortfolioPageAlert: FC<IProps> = (props) => {
     []
   );
 
+  // Function to save the thresholds
   const saveThresholds = async (data: any) => {
+    // Payload
     const payload = {
       high: data.high === '' ? null : parseFloat(data.high),
       low: data.low === '' ? null : parseFloat(data.low),
@@ -58,15 +67,18 @@ const PortfolioPageAlert: FC<IProps> = (props) => {
     // Wire up the API call
     await axios.post('/price-alert/' + stockId.toString(), payload);
 
+    // Set the form data
     reset({
       low: data.low,
       high: data.high,
     });
 
+    // Set the state
     setLowThresholdAlerted(data.low === '');
     setHighThresholdAlerted(data.high === '');
   };
 
+  // Render
   return (
     <div style={{ margin: '10px 20px' }}>
       <Form onSubmit={handleSubmit(saveThresholds)}>
@@ -74,6 +86,7 @@ const PortfolioPageAlert: FC<IProps> = (props) => {
           <div className={styles.headerText}>ALERTS</div>
         </div>
         <div className={styles.alertThresholds}>
+          {/* High limit */}
           <Form.Label>High limit:</Form.Label>
           <InputGroup className={styles.alertThresholdInputGroup}>
             <Form.Control
@@ -92,6 +105,7 @@ const PortfolioPageAlert: FC<IProps> = (props) => {
             </InputGroup.Text>
           </InputGroup>
 
+          {/* Low limit */}
           <Form.Label>Low limit:</Form.Label>
           <InputGroup className={styles.alertThresholdInputGroup}>
             <Form.Control
@@ -112,6 +126,7 @@ const PortfolioPageAlert: FC<IProps> = (props) => {
           </InputGroup>
         </div>
 
+        {/* Save button */}
         <div className='text-center mt-4'>
           <Button
             variant={isDirty ? 'primary' : 'disabled'}

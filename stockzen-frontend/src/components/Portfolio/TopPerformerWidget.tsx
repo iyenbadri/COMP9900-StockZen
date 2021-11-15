@@ -8,21 +8,16 @@ import { Link } from 'react-router-dom';
 import { usdFormatter } from 'utils/Utilities';
 import styles from './TopPerformerWidget.module.css';
 
-// interface IProps {
-//   firstName: string;
-//   lastName: string;
-// }
-
-// does not show any img if no change
+// Function to get the arrow for gain/loss
 const gainLossArrow = (change: number) => {
   if (change > 0)
     return <img src={gainArrow} alt='up green arrow' width={30} height={30} />;
   else if (change < 0)
     return <img src={lossArrow} alt='down red arrow' width={30} height={30} />;
-  else return <></>;
+  else return <></>; // does not show any img if no change
 };
 
-// Number formatter
+// Number formatters
 const changeFormatter = new Intl.NumberFormat('en-US', {
   style: 'percent',
   maximumFractionDigits: 2,
@@ -36,6 +31,9 @@ const percentFormatter = new Intl.NumberFormat('en-US', {
   minimumFractionDigits: 2,
 });
 
+// **************************************************************
+// Component to display the top performer widget
+// **************************************************************
 const TopPerformerWidget: FC = (props) => {
   const {
     showPortfolioSummary,
@@ -45,13 +43,17 @@ const TopPerformerWidget: FC = (props) => {
     isLoading,
   } = useContext(TopPerformerContext);
 
+  // Render
   return (
     <div className={styles.widget}>
+      {/* Date */}
       <div className={styles.date}>
         {lastUpdateDate == null
           ? '-'
           : moment(lastUpdateDate).format('dddd Do MMMM h:mma')}
       </div>
+
+      {/* The portfolio summary */}
       {showPortfolioSummary && (
         <>
           <div className={styles.summaryTitle}>My Holdings</div>
@@ -66,8 +68,8 @@ const TopPerformerWidget: FC = (props) => {
             {portfolioSummary == null
               ? '-'
               : percentFormatter.format(
-                portfolioSummary?.todayChangePercent ?? 0
-              )}
+                  portfolioSummary?.todayChangePercent ?? 0
+                )}
           </div>
           <div className={styles.summaryTitle}>Overall</div>
           <div className={`${styles.summaryValue} outerStroke`}>
@@ -75,12 +77,14 @@ const TopPerformerWidget: FC = (props) => {
             {portfolioSummary == null
               ? '-'
               : percentFormatter.format(
-                portfolioSummary?.overallChangePercent ?? 0
-              )}
+                  portfolioSummary?.overallChangePercent ?? 0
+                )}
           </div>
           <hr className={styles.separatorLine} />
         </>
       )}
+
+      {/* Top performers */}
       <div className={styles.title}>Today's top performers</div>
       <table className={styles.table}>
         <thead>
@@ -108,13 +112,15 @@ const TopPerformerWidget: FC = (props) => {
               return (
                 <tr key={stock.code} className={styles.codeRow}>
                   <td className={styles.code}>
-                    <Link to={{
-                      pathname: '/stock/' + stock.stockPageId.toString(),
-                      state: {
-                        code: stock.code,
-                        name: stock.stockName,
-                      }
-                    }}>
+                    <Link
+                      to={{
+                        pathname: '/stock/' + stock.stockPageId.toString(),
+                        state: {
+                          code: stock.code,
+                          name: stock.stockName,
+                        },
+                      }}
+                    >
                       {stock.code}
                     </Link>
                   </td>

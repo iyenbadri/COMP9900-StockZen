@@ -1,36 +1,38 @@
 import axios from 'axios';
 import React, { createContext, FC, useState } from 'react';
-// import api from '../../api';
 
 interface IUserContext {
   isAuthenticated: boolean;
   authenticate: () => void;
   logout: () => void;
   recheckAuthenticationStatus: () => void;
-  checkEmailUnique: (email: string) => boolean;
 }
 
 const contextDefaultValues: IUserContext = {
   isAuthenticated: false,
-  authenticate: () => { },
-  logout: () => { },
-  recheckAuthenticationStatus: () => { },
-  checkEmailUnique: (email: string) => true,
+  authenticate: () => {},
+  logout: () => {},
+  recheckAuthenticationStatus: () => {},
 };
 
 export const UserContext = createContext<IUserContext>(contextDefaultValues);
 
+// **************************************************************
+// User Context Provider
+// **************************************************************
 const UserProvider: FC = ({ children }): any => {
+  // Is user authenticated state
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
     localStorage.getItem('isAuthenticated') === '1'
   );
 
+  // Mark user as logged in
   const markAsLoggedIn = () => {
     setIsAuthenticated(true);
     localStorage.setItem('isAuthenticated', '1');
-    //document.body.style.backgroundColor = '#5bc0be';
   };
 
+  // Mark user as logged out
   const markAsLoggedOut = () => {
     setIsAuthenticated(false);
     localStorage.setItem('isAuthenticated', '0');
@@ -38,11 +40,9 @@ const UserProvider: FC = ({ children }): any => {
     localStorage.removeItem('firstName');
     localStorage.removeItem('lastName');
     localStorage.removeItem('email');
-    //document.body.style.backgroundColor = '#1c2541';
   };
 
   const authenticate = () => {
-    // TODO call API to do the login
     markAsLoggedIn();
   };
 
@@ -50,7 +50,7 @@ const UserProvider: FC = ({ children }): any => {
     // Call API to do the logout
     axios
       .post('/user/logout')
-      .then(res => {
+      .then((res) => {
         if (res.status === 200) {
           markAsLoggedOut();
         }
@@ -60,9 +60,10 @@ const UserProvider: FC = ({ children }): any => {
         if (err.response.status === 401) {
           markAsLoggedOut();
         }
-      })
+      });
   };
 
+  // Check wheather user is authenticated
   const recheckAuthenticationStatus = () => {
     axios
       .get('/user/details')
@@ -74,10 +75,6 @@ const UserProvider: FC = ({ children }): any => {
       });
   };
 
-  const checkEmailUnique = (email: string) => {
-    return false;
-  };
-
   return (
     <UserContext.Provider
       value={{
@@ -85,7 +82,6 @@ const UserProvider: FC = ({ children }): any => {
         authenticate,
         logout,
         recheckAuthenticationStatus,
-        checkEmailUnique,
       }}
     >
       {children}

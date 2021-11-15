@@ -2,7 +2,11 @@ import { UserContext } from 'contexts/UserContext';
 import React, { useContext } from 'react';
 import styles from './Footer.module.css';
 
+// **************************************************************
+// Component to display the footer
+// **************************************************************
 const Footer = () => {
+  // Get the state of user to change the style
   const { isAuthenticated } = useContext(UserContext);
 
   return (

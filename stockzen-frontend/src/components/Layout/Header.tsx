@@ -10,6 +10,9 @@ import Row from 'react-bootstrap/Row';
 import { Link } from 'react-router-dom';
 import styles from './Header.module.css';
 
+// **************************************************************
+// Component to display the header
+// **************************************************************
 const Header = () => {
   const { isAuthenticated } = useContext(UserContext);
 
@@ -18,26 +21,26 @@ const Header = () => {
       <Container className={styles.headerContainer}>
         <Row>
           <Col md={3} lg={2} className='text-start'>
+            {/* Logo */}
             <Link to={isAuthenticated ? '/portfolio' : '/'}>
               {isAuthenticated && <img src={logo_light} alt='StockZen' />}
               {!isAuthenticated && <img src={logo_dark} alt='StockZen' />}
             </Link>
           </Col>
+
+          {/* Menu */}
           {isAuthenticated && (
             <Col md={7} lg={8} xl={7} className={styles.tabs}>
+              {/* My Portoflios */}
               <Link to='/portfolio'>
-                <Button
-                  variant='transparent'
-                  className={styles.tab}
-                >
+                <Button variant='transparent' className={styles.tab}>
                   My Portfolios
                 </Button>
               </Link>
+
+              {/* Challenge */}
               <Link to='/challenge'>
-                <Button
-                  variant='transparent'
-                  className={styles.tab}
-                >
+                <Button variant='transparent' className={styles.tab}>
                   Challenge
                 </Button>
               </Link>
@@ -46,6 +49,8 @@ const Header = () => {
               </div>
             </Col>
           )}
+
+          {/* Login/Logout button */}
           <Col className='text-end'>
             {!isAuthenticated && (
               <>
@@ -64,8 +69,8 @@ const Header = () => {
             )}
           </Col>
         </Row>
-      </Container >
-    </header >
+      </Container>
+    </header>
   );
 };
 

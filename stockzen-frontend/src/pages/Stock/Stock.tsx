@@ -7,6 +7,9 @@ import Row from 'react-bootstrap/Row';
 import { Switch, useRouteMatch } from 'react-router-dom';
 import ProtectedRoute from 'utils/ProtectedRoute';
 
+// **************************************************************
+// Page to display the stock info
+// **************************************************************
 const Stock: FC = () => {
   const { path } = useRouteMatch();
 
@@ -18,7 +21,10 @@ const Stock: FC = () => {
         </Col>
         <Col xs={12} lg={8}>
           <Switch>
-            <ProtectedRoute path={`${path}/:stockPageId`} component={StockPage} />
+            <ProtectedRoute
+              path={`${path}/:stockPageId`}
+              component={StockPage}
+            />
           </Switch>
         </Col>
       </Row>

@@ -15,6 +15,7 @@ import { Button, CloseButton, Modal } from 'react-bootstrap';
 import styles from './Leaderboard.module.css';
 import SubmissionModal from './SubmissionModal';
 
+/* Reponses from backend */
 interface LeaderboardResultResponse {
   userId: number;
   userName: string;
@@ -38,6 +39,7 @@ interface ChallengeResponse {
   endDate: Date;
 }
 
+/** Data used in this component */
 interface LeaderboardResult {
   userId: number;
   userName: string;
@@ -46,7 +48,7 @@ interface LeaderboardResult {
   stocks: string[];
 }
 
-interface Leaderboard {
+interface LeaderboardData {
   startDate: Moment;
   endDate: Moment;
   leaderboard: LeaderboardResult[];
@@ -63,12 +65,14 @@ interface Challenge {
   endDate: Moment;
 }
 
+// Number formatter
 const percentFormatter = new Intl.NumberFormat('en-US', {
   style: 'percent',
   maximumFractionDigits: 2,
   minimumFractionDigits: 2,
 });
 
+// Helpers to get the icon/style for rank
 const getMedalIcon = (index: number) => {
   if (index === 1) return medal1;
   if (index === 2) return medal2;
@@ -81,23 +85,28 @@ const getLeaderboardStyle = (index: number) => {
   if (index === 3) return styles.rank3;
 };
 
+// **************************************************************
+// Component to display the leaderboard and next challenger info
+// **************************************************************
 const Leaderboard = () => {
   // Get the setShowPortfolioSummary from context
   const { setShowPortfolioSummary } = useContext(TopPerformerContext);
+
+  // Get functions for refresh functionalities
   const { refresh, subscribe, unsubscribe } = useContext(RefreshContext);
 
   // Get submission result from context
-  const { submit, setSubmit, submissionSuccess, setSubmissionSuccess }
-    = useContext(SubmissionContext);
+  const { submit, setSubmit, submissionSuccess, setSubmissionSuccess } =
+    useContext(SubmissionContext);
 
-  const [leaderboard, setLeaderboard] = useState<Leaderboard | null>(null);
+  // States
+  const [leaderboard, setLeaderboard] = useState<LeaderboardData | null>(null);
   const [nextChallenge, setNextChallenge] = useState<Challenge | null>(null);
-
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
   const [isUserPortfolioSubmitted, setIsUserPortfolioSubmitted] =
     useState<boolean>(true);
 
+  // Function to load the leaderboard data
   const reloadLeaderboard = async () => {
     var leaderboard = await axios.get<LeaderboardResponse>(
       '/challenge/leaderboard'
@@ -115,6 +124,7 @@ const Leaderboard = () => {
     });
   };
 
+  // Function to load the next challenge data
   const reloadNextChallenge = async () => {
     var summary = await axios.get<ChallengeResponse>('/challenge/status');
 
@@ -125,6 +135,7 @@ const Leaderboard = () => {
     });
   };
 
+  // Function to load the user sumbission data
   const reloadUserSubmission = async () => {
     try {
       var summary = await axios.get<{ hasSubmission: boolean }>(
@@ -137,10 +148,13 @@ const Leaderboard = () => {
     }
   };
 
+  // Component setup
   useEffect(
     () => {
+      // Set to display the portfolio summary
       setShowPortfolioSummary(true);
 
+      // Load and set the refresh functionality
       const reload = () => {
         setIsLoading(true);
 
@@ -183,10 +197,15 @@ const Leaderboard = () => {
           Good Luck! <img src={smileIcon} alt='smile face' />
         </Modal.Body>
       </Modal>
+
+      {/* Header */}
       <h2 className={styles.pageHeader}>Portfolio Challenge</h2>
+
+      {/* Leaderboard */}
       <div className={styles.contentPadder}>
         <div className='mb-3'>
           <span className={styles.leaderboardTitle}>Leaderboard</span>{' '}
+          {/* Refresh button */}
           <Button
             variant='light'
             className='ms-1 text-muted d-flex-inline align-items-center'
@@ -199,6 +218,7 @@ const Leaderboard = () => {
           </Button>
         </div>
 
+        {/* Show the loading button when loading */}
         {isLoading && (
           <div className='text-center'>
             <img src={loadingIcon} alt='loading' />
@@ -207,6 +227,7 @@ const Leaderboard = () => {
 
         {!isLoading && leaderboard != null && (
           <>
+            {/* Current challenge data */}
             <div className={styles.challengeDateMessage}>
               Current challenge: {leaderboard?.startDate.format('HH:mm')}{' '}
               <span className={styles.challengeDate}>
@@ -218,6 +239,7 @@ const Leaderboard = () => {
               </span>
             </div>
 
+            {/* Table header */}
             <div className={styles.leaderboardTable}>
               <div className={styles.leaderboardTableHeader}>
                 <div className={styles.rowYou}></div>
@@ -228,6 +250,7 @@ const Leaderboard = () => {
               </div>
             </div>
 
+            {/* Ranks */}
             {leaderboard.leaderboard.map((x, index) => (
               <div className={styles.leaderboardTableRow}>
                 <div className={styles.rowYou}>
@@ -258,6 +281,7 @@ const Leaderboard = () => {
               </div>
             ))}
 
+            {/* If user is not in top 10 */}
             {!leaderboard?.isUserInTop &&
               leaderboard.userRow != null &&
               leaderboard.userRow.userId != null && (
@@ -299,6 +323,7 @@ const Leaderboard = () => {
       </div>
       <hr />
 
+      {/* Next challenge */}
       <div className={styles.contentPadder}>
         {isLoading && (
           <div className='text-center'>
@@ -352,6 +377,7 @@ const Leaderboard = () => {
                     >
                       Submit Portfolio
                     </Button>
+                    {/* Submission modal */}
                     <Modal
                       centered
                       show={submit}
@@ -366,10 +392,16 @@ const Leaderboard = () => {
                       >
                         <h4 className='text-center'>Submit your portfolio</h4>
                         <p className={styles.description}>
-                          Pick between 5 stocks to be added to your public portfolio.<br />
-                          Over the next 2 weeks, you can see how you are performing on the leaderboard.<br />
+                          Pick between 5 stocks to be added to your public
+                          portfolio.
+                          <br />
+                          Over the next 2 weeks, you can see how you are
+                          performing on the leaderboard.
+                          <br />
                         </p>
-                        <CloseButton className={styles.closeButton}></CloseButton>
+                        <CloseButton
+                          className={styles.closeButton}
+                        ></CloseButton>
                       </Modal.Header>
                       <Modal.Body className={'mt-0'}>
                         <SubmissionModal />

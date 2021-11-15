@@ -12,6 +12,9 @@ interface IProps {
   onRegisterSuccess: (firstName: string, lastName: string) => void;
 }
 
+// **************************************************************
+// Component to display the register form
+// **************************************************************
 const RegisterForm: FC<IProps> = (props) => {
   // Form validation helpers
   const {

@@ -10,19 +10,24 @@ import styles from './PortfolioList.module.css';
 
 interface IPortfolioListRow {
   isTempSort?: boolean;
-  updatePortfolioName?: (id: number, name: string) => void;
-  showDeleteModal?: (id: number, name: string) => void;
   index: number;
   port: IPortfolio;
+  updatePortfolioName?: (id: number, name: string) => void;
+  showDeleteModal?: (id: number, name: string) => void;
 }
 
+// **************************************************************
+// Component to display the row in the portfolio list
+// **************************************************************
 const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
-  const { port } = prop;
+  const { port: portfolio } = prop;
   const { path } = useRouteMatch();
 
-  const [portfolioName, setPortfolioName] = useState<string>(port.name);
+  // State
+  const [portfolioName, setPortfolioName] = useState<string>(portfolio.name);
   const [isEditingName, setIsEditingName] = useState<boolean>(false);
 
+  // Class of gain/loss
   const gainLossClass = (val: number | null): string => {
     if (val == null) {
       return '';
@@ -35,22 +40,25 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
     }
   };
 
+  // Function to update the portfolio name
   const updatePortfolioName = () => {
     if (prop.updatePortfolioName != null) {
       if (portfolioName.length > 0 && portfolioName.length <= 50) {
-        prop.updatePortfolioName(port.portfolioId, portfolioName);
+        prop.updatePortfolioName(portfolio.portfolioId, portfolioName);
       }
     }
     setIsEditingName(false);
   };
 
+  // Render
   return (
-    <Draggable draggableId={port.draggableId} index={prop.index}>
+    <Draggable draggableId={portfolio.draggableId} index={prop.index}>
       {(provided, snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps}>
           <div className={styles.tableRow}>
             <div className={styles.rowPortInfo}>
               <div className={styles.rowHandle}>
+                {/* DnD Handle */}
                 <img
                   src={handleIcon}
                   alt='handle'
@@ -58,7 +66,10 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
                   {...provided.dragHandleProps}
                 />
               </div>
+
+              {/* Portfolio Name */}
               <div className={styles.rowPortfolio}>
+                {/* Show the input when editing */}
                 {isEditingName ? (
                   <Form.Control
                     value={portfolioName}
@@ -81,14 +92,17 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
                     }}
                   />
                 ) : (
+                  // Show the link
                   <Link
-                    to={`${path}/${port.portfolioId}`}
+                    to={`${path}/${portfolio.portfolioId}`}
                     className={styles.rowPortfolioLink}
                   >
-                    {port.name}
+                    {portfolio.name}
                   </Link>
                 )}
               </div>
+
+              {/* Edit button */}
               <div className={styles.rowEditButton}>
                 <button
                   type='button'
@@ -100,49 +114,60 @@ const PortfolioListRow: FC<IPortfolioListRow> = (prop) => {
                   <img src={editIcon} alt='edit' width={18} />
                 </button>
               </div>
-              <div className={styles.rowStocks}>{port.stockCount}</div>
+
+              <div className={styles.rowStocks}>{portfolio.stockCount}</div>
+
+              {/* Market value */}
               <div className={styles.rowMarketValue}>
-                {port.marketValue == null
+                {portfolio.marketValue == null
                   ? '-'
-                  : usdFormatter.format(port.marketValue)}
+                  : usdFormatter.format(portfolio.marketValue)}
               </div>
+
+              {/* Change */}
               <div
-                className={`${styles.rowChange} ${gainLossClass(port.change)}`}
+                className={`${styles.rowChange} ${gainLossClass(
+                  portfolio.change
+                )}`}
               >
-                {port.change == null ? (
+                {portfolio.change == null ? (
                   '-'
                 ) : (
                   <>
                     <div className={styles.percent}>
-                      {percFormatter.format(port.changePercent || 0)}%
+                      {percFormatter.format(portfolio.changePercent || 0)}%
                     </div>
-                    <div>{usdFormatter.format(port.change)}</div>
+                    <div>{usdFormatter.format(portfolio.change)}</div>
                   </>
                 )}
               </div>
+
+              {/* Gain/Loss */}
               <div
                 className={`${styles.rowTotalGain} ${gainLossClass(
-                  port.totalGain
+                  portfolio.totalGain
                 )}`}
               >
-                {port.totalGain == null ? (
+                {portfolio.totalGain == null ? (
                   '-'
                 ) : (
                   <>
                     <div className={styles.percent}>
-                      {percFormatter.format(port.totalGainPercent || 0)}%
+                      {percFormatter.format(portfolio.totalGainPercent || 0)}%
                     </div>
-                    <div>{usdFormatter.format(port.totalGain)}</div>
+                    <div>{usdFormatter.format(portfolio.totalGain)}</div>
                   </>
                 )}
               </div>
             </div>
+
+            {/* Delete button */}
             <div className={styles.rowDelete}>
               <button
                 className={`p-0 ${styles.deleteButton}`}
                 onClick={() => {
                   if (prop.showDeleteModal != null) {
-                    prop.showDeleteModal(port.portfolioId, port.name);
+                    prop.showDeleteModal(portfolio.portfolioId, portfolio.name);
                   }
                 }}
               >

@@ -3,6 +3,9 @@ import React, { FC } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import styles from './Landing.module.css';
 
+// **************************************************************
+// Page to display the home page
+// **************************************************************
 const Landing: FC = () => {
   return (
     <>

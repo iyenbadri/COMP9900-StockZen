@@ -4,6 +4,7 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import { usdFormatter } from 'utils/Utilities';
 import styles from './PortfolioPageSummary.module.css';
 
+// Number formatter
 const numberFormatter = new Intl.NumberFormat('en-US', {
   style: 'decimal',
   maximumFractionDigits: 2,
@@ -24,6 +25,9 @@ interface PortfolioSummary {
   totalGainPercent: number | null;
 }
 
+// **************************************************************
+// Component to display the summary of the portfolio page
+// **************************************************************
 const PortfolioPageSummary: FC<IPortfolioPageSummaryProp> = (props) => {
   const { portfolioId } = props;
   const { subscribe, unsubscribe } = useContext(RefreshContext);
@@ -38,6 +42,7 @@ const PortfolioPageSummary: FC<IPortfolioPageSummaryProp> = (props) => {
     totalGainPercent: null,
   });
 
+  // Setup the component
   useEffect(
     () => {
       let refresh = async () => {
@@ -68,6 +73,7 @@ const PortfolioPageSummary: FC<IPortfolioPageSummaryProp> = (props) => {
     []
   );
 
+  // Function to get the class of gain/loss
   const gainLossClass = (val: number | null): string => {
     if (val == null) {
       return '';
@@ -80,6 +86,7 @@ const PortfolioPageSummary: FC<IPortfolioPageSummaryProp> = (props) => {
     }
   };
 
+  // Render
   return (
     <>
       <div className={styles.portfolioName}>
@@ -96,11 +103,15 @@ const PortfolioPageSummary: FC<IPortfolioPageSummaryProp> = (props) => {
 
         <div className={styles.summaryRow}>
           <div className={styles.rowStocks}>{summaryData.stocks}</div>
+
+          {/* Market value */}
           <div className={styles.rowMarketValue}>
             {summaryData.holdings == null
               ? '-'
               : usdFormatter.format(summaryData.holdings)}
           </div>
+
+          {/* Change */}
           <div
             className={`${styles.rowChange} ${gainLossClass(
               summaryData.change
@@ -120,6 +131,8 @@ const PortfolioPageSummary: FC<IPortfolioPageSummaryProp> = (props) => {
               </>
             )}
           </div>
+
+          {/* Total gain */}
           <div
             className={`${styles.rowTotalGain} ${gainLossClass(
               summaryData.totalGain

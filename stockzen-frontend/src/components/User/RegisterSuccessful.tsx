@@ -8,6 +8,9 @@ interface IProps {
   lastName: string;
 }
 
+// **************************************************************
+// Component to display the register successfull message
+// **************************************************************
 const RegisterSuccessful: FC<IProps> = (props) => {
   return (
     <>

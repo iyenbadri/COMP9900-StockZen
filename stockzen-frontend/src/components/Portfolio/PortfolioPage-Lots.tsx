@@ -21,6 +21,7 @@ const numberFormatter = new Intl.NumberFormat('en-US', {
   minimumFractionDigits: 2,
 });
 
+// Functions to map the response to data
 const mapBoughtLotResponse = (lot: ILotBoughtResponse): ILotBought => ({
   lotId: lot.id,
   tradeDate: moment(lot.tradeDate, 'YYYY-MM-DD'),
@@ -35,6 +36,9 @@ const mapSoldLotResponse = (lot: ILotSoldResponse): ILotSold => ({
   unitPrice: lot.unitPrice,
 });
 
+// **************************************************************
+// Component to display the lots in portfolio page
+// **************************************************************
 const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
   // Deconstruct the properties
   const { stockId, currentPrice, priceChange, onSizeChanged } = props;

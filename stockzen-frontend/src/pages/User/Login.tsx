@@ -3,6 +3,9 @@ import { UserContext } from 'contexts/UserContext';
 import React, { FC, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 
+// **************************************************************
+// Page to display the login form
+// **************************************************************
 const Login: FC = () => {
   const { authenticate } = useContext(UserContext);
 
