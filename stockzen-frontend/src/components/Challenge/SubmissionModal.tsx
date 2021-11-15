@@ -16,7 +16,7 @@ interface SearchResponse {
 }
 
 const SubmissionModal = () => {
-  const { selectedStockPageIds, selectedStocks, addSelectedStock,
+  const { setSubmit, selectedStockPageIds, selectedStocks, addSelectedStock,
     submissionError, setSubmissionSuccess, setSubmissionError }
     = useContext(SubmissionContext);
   const [selectionError, setSelectionError] = useState<boolean>(false);
@@ -51,8 +51,8 @@ const SubmissionModal = () => {
     try {
       let response = await axios.post('/challenge/submit', selectedStockPageIds);
       if (response.status === 200) {
+        setSubmit(false);
         setSubmissionSuccess(true);
-        console.log('success');
       }
     } catch (e: any) {
       setSubmissionError(true);

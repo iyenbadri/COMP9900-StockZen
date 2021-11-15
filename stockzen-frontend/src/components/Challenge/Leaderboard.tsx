@@ -87,11 +87,11 @@ const Leaderboard = () => {
   const { refresh, subscribe, unsubscribe } = useContext(RefreshContext);
 
   // Get submission result from context
-  const { submissionSuccess, setSubmissionSuccess } = useContext(SubmissionContext);
+  const { submit, setSubmit, submissionSuccess, setSubmissionSuccess }
+    = useContext(SubmissionContext);
 
   const [leaderboard, setLeaderboard] = useState<Leaderboard | null>(null);
   const [nextChallenge, setNextChallenge] = useState<Challenge | null>(null);
-  const [submit, setSubmit] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 

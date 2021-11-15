@@ -5,6 +5,8 @@ interface addedStockPageIds {
 }
 
 interface ISubmission {
+  submit: boolean;
+  setSubmit: (submit: boolean) => void;
   selectedStocks: ISelectedStock[];
   selectedStockPageIds: addedStockPageIds[];
   addSelectedStock: (stock: ISelectedStock) => void;
@@ -16,6 +18,8 @@ interface ISubmission {
 }
 
 const submissionDefaultValues: ISubmission = {
+  submit: false,
+  setSubmit: (submit: boolean) => { },
   selectedStocks: [],
   selectedStockPageIds: [],
   addSelectedStock: (stock: ISelectedStock) => { },
@@ -30,6 +34,7 @@ export const SubmissionContext =
   createContext<ISubmission>(submissionDefaultValues);
 
 const SubmissionProvider: FC = ({ children }): any => {
+  const [submit, setSubmit] = useState<boolean>(false);
   const [selectedStocks, setSelectedStocks] = useState<ISelectedStock[]>([]);
   const [selectedStockPageIds, setSelectedstockPageIds] = useState<addedStockPageIds[]>([]);
   const [submissionSuccess, setSubmissionSuccess] = useState<boolean>(false);
@@ -55,6 +60,8 @@ const SubmissionProvider: FC = ({ children }): any => {
   return (
     <SubmissionContext.Provider
       value={{
+        submit,
+        setSubmit,
         selectedStocks,
         selectedStockPageIds,
         addSelectedStock,
