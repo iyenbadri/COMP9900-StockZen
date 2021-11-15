@@ -40,7 +40,7 @@ const SubmissionProvider: FC = ({ children }): any => {
       stockPageId: stock.stockPageId
     }
     setSelectedStocks([...selectedStocks, stock]);
-    setSelectedstockPageIds([...selectedStockPageIds, stock]);
+    setSelectedstockPageIds([...selectedStockPageIds, newStockPageId]);
   }
 
   const deleteSelectedStock = (stockId: number) => {
