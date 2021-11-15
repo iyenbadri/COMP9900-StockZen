@@ -48,9 +48,8 @@ const SubmissionModal = () => {
   };
 
   const makeSubmission = async () => {
-    let payload = selectedStockPageIds.map((id) => ({ 'stockPageId': id }));
     try {
-      let response = await axios.post('/challenge/submit', payload);
+      let response = await axios.post('/challenge/submit', selectedStockPageIds);
       if (response.status === 200) {
         setSubmissionSuccess(true);
         console.log('success');
