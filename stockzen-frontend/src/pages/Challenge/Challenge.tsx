@@ -1,5 +1,5 @@
-import TopPerformerWidget from 'components/Portfolio/TopPerformerWidget';
 import Leaderboard from 'components/Challenge/Leaderboard';
+import TopPerformerWidget from 'components/Portfolio/TopPerformerWidget';
 import React, { FC } from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';

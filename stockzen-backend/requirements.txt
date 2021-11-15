@@ -4,6 +4,7 @@ aniso8601==9.0.1
 async-timeout==3.0.1
 attrs==21.2.0
 black==21.9b0
+blinker==1.4
 certifi==2021.5.30
 chardet==4.0.0
 charset-normalizer==2.0.6
