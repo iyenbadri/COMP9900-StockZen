@@ -3,12 +3,13 @@ import Footer from 'components/Layout/Footer';
 import Header from 'components/Layout/Header';
 import RefreshProvider from 'contexts/RefreshContext';
 import SearchProvider from 'contexts/SearchContext';
+import SubmissionProvider from 'contexts/SubmissionContext';
 import TopPerformerProvider from 'contexts/TopPerformerContext';
 import UserProvider, { UserContext } from 'contexts/UserContext';
+import Challenge from 'pages/Challenge';
 import Landing from 'pages/Landing';
 import Portfolio from 'pages/Portfolio';
 import Stock from 'pages/Stock';
-import Challenge from 'pages/Challenge';
 import User from 'pages/User';
 import React, { useContext } from 'react';
 import { Container } from 'react-bootstrap';
@@ -25,9 +26,8 @@ function App() {
         <Header></Header>
         <Container
           fluid
-          className={`${styles.appContent} ${
-            !isAuthenticated ? styles.hero : ''
-          }`}
+          className={`${styles.appContent} ${!isAuthenticated ? styles.hero : ''
+            }`}
         >
           <Switch>
             <GuestRoute exact path={'/'} component={Landing} />
@@ -48,7 +48,9 @@ const WrappedApp = () => (
     <UserProvider>
       <SearchProvider>
         <TopPerformerProvider>
-          <App />
+          <SubmissionProvider>
+            <App />
+          </SubmissionProvider>
         </TopPerformerProvider>
       </SearchProvider>
     </UserProvider>

@@ -141,3 +141,10 @@ interface TypeaheadOption {
     market: string;
     searchLabel: string;
 }
+
+// Selected stocks for portfolio challenge submission
+interface ISelectedStock {
+    stockPageId: number;
+    code: string;
+    stockName: string;
+}

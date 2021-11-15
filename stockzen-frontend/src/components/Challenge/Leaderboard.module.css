@@ -4,6 +4,30 @@
   --content-padding: 70px;
 }
 
+.successModal {
+  min-width: 400px;
+  max-width: 30%;
+  position: fixed;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.successModal :global(.modal-content) {
+  background-color: rgba(220, 220, 220, 0.9);
+}
+
+.successModalHeader {
+  border-bottom: 0;
+}
+
+.successModalBody {
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 25px;
+}
+
 .pageHeader {
   font-weight: 800;
   margin-top: 40px;
@@ -132,9 +156,6 @@
 
 .nextChallengeMessage {
   margin: 20px 0px 10px;
-}
-
-.modal {
 }
 
 
