@@ -25,7 +25,7 @@
 }
 
 .contentPadder {
-  margin: 0 var(--content-padding);
+  margin: 0 var(--content-padding) 25px;
 }
 
 .leaderboardTable {
