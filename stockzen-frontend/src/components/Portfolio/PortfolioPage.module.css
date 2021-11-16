@@ -86,7 +86,7 @@
   flex-grow: 1;
   flex-basis: auto;
   border-radius: 10px;
-  background-color: rgba(var(--row-gray-rgb), 0.6);
+  background-color: rgba(var(--row-gray-rgb), 0.7);
 }
 
 .tableHeader button {
