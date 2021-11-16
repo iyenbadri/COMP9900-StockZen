@@ -112,6 +112,7 @@
 }
 
 .stockWrapper {
+  margin-right: -25px;
   padding-bottom: 7px;
   display: flex;
 }
