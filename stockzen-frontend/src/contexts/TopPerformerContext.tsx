@@ -6,7 +6,7 @@ import React, {
   FC,
   useContext,
   useEffect,
-  useState
+  useState,
 } from 'react';
 
 interface ITopPerformer {
@@ -48,7 +48,7 @@ interface ITopPerformerContext {
 
 const contextDefaultValues: ITopPerformerContext = {
   showPortfolioSummary: false,
-  setShowPortfolioSummary: (show: boolean) => { },
+  setShowPortfolioSummary: (show: boolean) => {},
   topPerformers: [],
   isLoading: true,
   lastUpdateDate: null,
@@ -105,7 +105,7 @@ const TopPerformerProvider: FC = ({ children }): any => {
         setTopPerformers(topPerformers.data.map(mapTopPerformer));
 
         setIsLoading(false);
-      } catch { }
+      } catch {}
     }
   };
 

@@ -86,7 +86,7 @@
   flex-grow: 1;
   flex-basis: auto;
   border-radius: 10px;
-  background-color: rgba(var(--row-gray-rgb), 0.6);
+  background-color: rgba(var(--row-gray-rgb), 0.7);
 }
 
 .tableHeader button {
@@ -112,6 +112,7 @@
 }
 
 .stockWrapper {
+  margin-right: -25px;
   padding-bottom: 7px;
   display: flex;
 }
@@ -275,7 +276,7 @@
 .indicatorOutline {
   display: flex;
   border-radius: 3px;
-  outline: 1px solid var(--theme-darkened);
+  outline: 1px solid rgba(58, 80, 107, 0.7);
   padding: 1px 1px;
   width: 100%;
   height: 100%;
