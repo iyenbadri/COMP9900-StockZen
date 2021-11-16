@@ -95,7 +95,7 @@ const TopPerformerProvider: FC = ({ children }): any => {
           todayChangePercent: summary.data.today / 100,
           overallChangePercent: summary.data.overall / 100,
         });
-      } catch {}
+      } catch { }
 
       try {
         const topPerformers = await axios.get<ITopPerformerResponse[]>(

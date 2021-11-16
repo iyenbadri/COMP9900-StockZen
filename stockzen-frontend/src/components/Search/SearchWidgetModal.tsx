@@ -8,14 +8,6 @@ import { AsyncTypeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
 import { useHistory } from 'react-router-dom';
 import styles from './SearchWidgetModal.module.css';
 
-interface TypeaheadOption {
-  stockPageId: number;
-  code: string;
-  description: string;
-  market: string;
-  searchLabel: string;
-}
-
 interface SearchResponse {
   id: number;
   code: string;
