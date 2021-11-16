@@ -66,8 +66,8 @@ const TopPerformerWidget: FC = (props) => {
             {portfolioSummary == null
               ? '-'
               : percentFormatter.format(
-                portfolioSummary?.todayChangePercent ?? 0
-              )}
+                  portfolioSummary?.todayChangePercent ?? 0
+                )}
           </div>
           <div className={styles.summaryTitle}>Overall</div>
           <div className={`${styles.summaryValue} outerStroke`}>
@@ -75,8 +75,8 @@ const TopPerformerWidget: FC = (props) => {
             {portfolioSummary == null
               ? '-'
               : percentFormatter.format(
-                portfolioSummary?.overallChangePercent ?? 0
-              )}
+                  portfolioSummary?.overallChangePercent ?? 0
+                )}
           </div>
           <hr className={styles.separatorLine} />
         </>
@@ -108,13 +108,15 @@ const TopPerformerWidget: FC = (props) => {
               return (
                 <tr key={stock.code} className={styles.codeRow}>
                   <td className={styles.code}>
-                    <Link to={{
-                      pathname: '/stock/' + stock.stockPageId.toString(),
-                      state: {
-                        code: stock.code,
-                        name: stock.stockName,
-                      }
-                    }}>
+                    <Link
+                      to={{
+                        pathname: '/stock/' + stock.stockPageId.toString(),
+                        state: {
+                          code: stock.code,
+                          name: stock.stockName,
+                        },
+                      }}
+                    >
                       {stock.code}
                     </Link>
                   </td>

@@ -6,7 +6,7 @@ import React, {
   FC,
   useContext,
   useEffect,
-  useState
+  useState,
 } from 'react';
 
 interface ITopPerformer {
@@ -23,6 +23,12 @@ interface ITopPerformerResponse {
   stockName: string;
   price: number;
   percChange: number;
+}
+
+interface IPortfolioPerformanceResponse {
+  holdings: number;
+  today: number;
+  overall: number;
 }
 
 interface IPortfolioPerformance {
@@ -42,7 +48,7 @@ interface ITopPerformerContext {
 
 const contextDefaultValues: ITopPerformerContext = {
   showPortfolioSummary: false,
-  setShowPortfolioSummary: (show: boolean) => { },
+  setShowPortfolioSummary: (show: boolean) => {},
   topPerformers: [],
   isLoading: true,
   lastUpdateDate: null,
@@ -79,11 +85,17 @@ const TopPerformerProvider: FC = ({ children }): any => {
     if (isAuthenticated) {
       setLastUpdateDate(new Date());
 
-      setPortfolioSummary({
-        holding: Math.random() * 2000,
-        todayChangePercent: (Math.random() * 10 - 5) / 100,
-        overallChangePercent: (Math.random() * 10 - 5) / 100,
-      });
+      try {
+        const summary = await axios.get<IPortfolioPerformanceResponse>(
+          '/portfolio/list/summary'
+        );
+
+        setPortfolioSummary({
+          holding: summary.data.holdings,
+          todayChangePercent: summary.data.today / 100,
+          overallChangePercent: summary.data.overall / 100,
+        });
+      } catch {}
 
       try {
         const topPerformers = await axios.get<ITopPerformerResponse[]>(
@@ -93,7 +105,7 @@ const TopPerformerProvider: FC = ({ children }): any => {
         setTopPerformers(topPerformers.data.map(mapTopPerformer));
 
         setIsLoading(false);
-      } catch { }
+      } catch {}
     }
   };
 

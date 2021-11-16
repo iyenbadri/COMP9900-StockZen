@@ -8,6 +8,7 @@ import UserProvider, { UserContext } from 'contexts/UserContext';
 import Landing from 'pages/Landing';
 import Portfolio from 'pages/Portfolio';
 import Stock from 'pages/Stock';
+import Challenge from 'pages/Challenge';
 import User from 'pages/User';
 import React, { useContext } from 'react';
 import { Container } from 'react-bootstrap';
@@ -26,12 +27,13 @@ function App() {
           fluid
           className={`${styles.appContent} ${
             !isAuthenticated ? styles.hero : ''
-            }`}
+          }`}
         >
           <Switch>
             <GuestRoute exact path={'/'} component={Landing} />
             <Route path={'/user'} component={User} />
             <Route path={'/portfolio'} component={Portfolio} />
+            <Route path={'/challenge'} component={Challenge} />
             <Route path={'/stock'} component={Stock} />
           </Switch>
         </Container>
