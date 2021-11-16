@@ -26,18 +26,12 @@ const Header = () => {
           {isAuthenticated && (
             <Col md={7} lg={8} xl={7} className={styles.tabs}>
               <Link to='/portfolio'>
-                <Button
-                  variant='transparent'
-                  className={styles.tab}
-                >
+                <Button variant='transparent' className={styles.tab}>
                   My Portfolios
                 </Button>
               </Link>
-              <Link to='/challenge'>
-                <Button
-                  variant='transparent'
-                  className={styles.tab}
-                >
+              <Link to='/portfolio'>
+                <Button variant='transparent' className={styles.tab}>
                   Challenge
                 </Button>
               </Link>
@@ -64,8 +58,8 @@ const Header = () => {
             )}
           </Col>
         </Row>
-      </Container >
-    </header >
+      </Container>
+    </header>
   );
 };
 

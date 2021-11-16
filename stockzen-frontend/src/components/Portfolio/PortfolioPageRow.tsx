@@ -60,15 +60,15 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
         return '--ml-low-red';
     }
   };
-  stock.prediction = 1;
-  stock.confidence = 0.6;
+
   return (
     <Draggable draggableId={stock.draggableId} index={props.index}>
       {(provided, snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps}>
           <div
-            className={`${styles.stockWrapper} ${showPanel ? styles.panelVisible : styles.panelHidden
-              }`}
+            className={`${styles.stockWrapper} ${
+              showPanel ? styles.panelVisible : styles.panelHidden
+            }`}
           >
             <div className={styles.tableRow}>
               <div

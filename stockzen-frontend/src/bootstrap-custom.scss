@@ -33,11 +33,20 @@ $font-family-sans-serif: 'Rubik', system-ui, -apple-system, 'Segoe UI', Roboto,
 @import '~bootstrap/scss/bootstrap.scss';
 @import '~bootstrap/scss/bootstrap-utilities.scss';
 
+// Link hover state
+a {
+  transition: color 0.2s ease-in-out;
+}
+a:hover:not(.btn) {
+  color: #478a9a !important;
+}
+
+// Transparent buttons
 .btn-transparent:active,
 .btn-transparent:active:focus,
 .btn-transparent:hover,
 .btn-transparent:focus {
-  color: $zen-3;
+  color: $zen-2;
   background-color: transparent;
   border-color: transparent;
   box-shadow: none;
