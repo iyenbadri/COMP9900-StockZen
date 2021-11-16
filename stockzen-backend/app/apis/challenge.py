@@ -24,6 +24,7 @@ challenge_leaderboard = api.model(
         "userName": fields.String(
             attribute="user_name", required=True, description="user's concatenated name"
         ),
+        "rank": fields.Integer(required=True, description="user's portfolio ranking"),
         "percChange": fields.Float(
             attribute="perc_change",
             required=True,
@@ -88,6 +89,17 @@ challenge_status_response = api.model(
     },
 )
 
+user_submitted_response = api.model(
+    "Response: User challenge submission status",
+    {
+        "hasSubmission": fields.Boolean(
+            attribute="has_submission",
+            required=True,
+            description="whether user has already submitted a portfolio for the current open challenge",
+        ),
+    },
+)
+
 challenge_entry_request = api.model(
     "Request: Submit a portfolio challenge entry ",
     {
@@ -138,6 +150,25 @@ class ChallengeCRUD(Resource):
             return abort(404, "Challenge status not found")
 
         return challenge_status
+
+
+@api.route("/status/user")
+class ChallengeCRUD(Resource):
+    @login_required
+    @api.marshal_with(user_submitted_response)
+    @api.response(200, "User submission status found")
+    @api.response(404, "No open challenge found")
+    def get(self):
+        """Return if a user has submitted a portfolio for the currently open challenge"""
+
+        submission_status = crud_utils.get_submission_status()
+
+        if submission_status == Status.NOT_FOUND:
+            return abort(404, "No open challenge found")
+        if submission_status == Status.FAIL:
+            return abort(500, "Unable to get user submission status")
+
+        return submission_status
 
 
 @api.route("/submit")

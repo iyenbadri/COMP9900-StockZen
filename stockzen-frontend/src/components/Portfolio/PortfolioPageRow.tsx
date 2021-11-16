@@ -89,10 +89,16 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                 </span>
                 <span className={styles.rowCode}>
                   <Link
-                    to={`/stock/${stock.stockPageId}`}
+                    to={{
+                      pathname: `/stock/${stock.stockPageId}`,
+                      state: {
+                        code: stock.code,
+                        name: stock.name,
+                      }
+                    }}
                     className={styles.rowStockLink}
                   >
-                    {stock.symbol}
+                    {stock.code}
                   </Link>
                 </span>
                 <div className={`${styles.rowName} d-none d-xxl-block`}>

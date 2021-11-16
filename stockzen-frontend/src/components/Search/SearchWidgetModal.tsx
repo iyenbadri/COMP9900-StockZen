@@ -93,7 +93,13 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
         }}
         onChange={(selected) => {
           if (searchAtHeader) {
-            history.push(`/stock/${selected[0].stockPageId}`);
+            history.push({
+              pathname: `/stock/${selected[0].stockPageId}`,
+              state: {
+                code: selected[0].code,
+                name: selected[0].description,
+              }
+            });
           } else {
             _addStock(selected[0]);
           }
