@@ -221,6 +221,7 @@ const Leaderboard = () => {
                         src={getMedalIcon(index + 1)}
                         alt={(index + 1).toString()}
                         height='35'
+                        className={styles.medal}
                       />
                     ) : (
                       index + 1
