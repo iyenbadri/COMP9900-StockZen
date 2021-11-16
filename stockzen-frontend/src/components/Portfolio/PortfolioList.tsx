@@ -4,20 +4,21 @@ import orderUp from 'assets/icon-outlines/outline-chevron-up-small.svg';
 import plusIcon from 'assets/icon-outlines/outline-plus-circle.svg';
 import refreshIcon from 'assets/icon-outlines/outline-refresh-small.svg';
 import axios from 'axios';
-import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import { RefreshContext } from 'contexts/RefreshContext';
+import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import { Ordering } from 'enums';
 import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import {
   DragDropContext,
   Droppable,
   DropResult,
-  ResponderProvided,
+  ResponderProvided
 } from 'react-beautiful-dnd';
-import Button from 'react-bootstrap/Button';
+import { Button, CloseButton } from 'react-bootstrap';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import { useForm } from 'react-hook-form';
 import styles from './PortfolioList.module.css';
 import PortfolioListRow from './PortfolioListRow';
 import PortfolioListSummary from './PortfolioListSummary';
@@ -41,8 +42,8 @@ const OrderingIndicator: FC<OrderingIndicatorProp> = (props) => {
       {/* Show if the sorting column is the same as current column */}
       {target === ordering.column && (
         <img
-          width={24}
-          height={24}
+          width={20}
+          height={20}
           src={ordering.ordering === Ordering.Ascending ? orderUp : orderDown}
           alt='order-indicator'
         />
@@ -74,6 +75,13 @@ const PortfolioList = () => {
   // States for create portfolio
   const [showCreatePortfolioModal, setShowCreatePortfolioModal] =
     useState<boolean>(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm();
 
   // State for sorting.
   const [tableOrdering, setTableOrdering] = useState<
@@ -219,24 +227,21 @@ const PortfolioList = () => {
     });
   };
 
-  // Add new portfolio to the PortfolioList
-  const [newPortfolioName, setNewPortfolioName] = useState('');
-
   // Handler of portfolio creation
-  const createPortfolio = (ev: any) => {
-    ev.preventDefault();
+  const createPortfolio = async (data: any) => {
+    let givenPortfolioName = data.name;
 
     // Call the API
-    axios.post('/portfolio', { portfolioName: newPortfolioName }).then(() => {
-      // Clear the portfolio name from modal.
-      setNewPortfolioName('');
-
+    axios.post('/portfolio', { portfolioName: givenPortfolioName }).then(() => {
       // Reload the portfolio list
       reloadPortfolioList();
     });
 
     // Hide the modal
     setShowCreatePortfolioModal(false);
+
+    // Clear the portfolio name from modal.
+    reset();
   };
 
   // Handler of drag start
@@ -346,26 +351,39 @@ const PortfolioList = () => {
       {/* Create portfolio Modal */}
       <Modal
         show={showCreatePortfolioModal}
-        onHide={() => setShowCreatePortfolioModal(false)}
+        onHide={() => {
+          setShowCreatePortfolioModal(false);
+          reset();
+        }}
         className={styles.modalWapper}
       >
-        <Modal.Header closeButton>
+        <Modal.Header>
           <Modal.Title className={styles.modalTitle}>
             Create portfolio
           </Modal.Title>
+          <CloseButton
+            className={styles.close}
+            onClick={() => {
+              reset()
+              setShowCreatePortfolioModal(false);
+            }}
+          />
         </Modal.Header>
-        <Form onSubmit={createPortfolio}>
+        <Form onSubmit={handleSubmit(createPortfolio)}>
           <Modal.Body>
             Please enter a name of portfolio to create.
             <Form.Control
-              value={newPortfolioName}
-              type='text'
+              type='name'
+              {...register('name', {
+                required: true,
+              })}
               placeholder='Portfolio name'
               className={`my-2 ${styles.rowPortfolio}`}
               style={{ width: '70%', margin: '0 auto' }}
-              maxLength={50}
-              onChange={(ev) => setNewPortfolioName(ev.target.value)}
             />
+            <Form.Text className={styles.errorMessage}>
+              {errors.name?.type === 'required' && 'Portfolio name is required'}
+            </Form.Text>
           </Modal.Body>
           <Modal.Footer>
             <Col xs={12}>
@@ -374,7 +392,10 @@ const PortfolioList = () => {
               </Button>{' '}
               <Button
                 variant={'secondary'}
-                onClick={(ev) => setShowCreatePortfolioModal(false)}
+                onClick={(ev) => {
+                  reset();
+                  setShowCreatePortfolioModal(false);
+                }}
               >
                 Cancel
               </Button>
@@ -494,9 +515,8 @@ const PortfolioList = () => {
 
       {/* A wrapper to enable/disable hightlight */}
       <div
-        className={`${isDragging ? styles.dragging : styles.notDragging} ${
-          tableOrdering.column !== '' ? styles.tempSort : ''
-        }`}
+        className={`${isDragging ? styles.dragging : styles.notDragging} ${tableOrdering.column !== '' ? styles.tempSort : ''
+          }`}
       >
         <DragDropContext
           onDragEnd={handleDragEnd}

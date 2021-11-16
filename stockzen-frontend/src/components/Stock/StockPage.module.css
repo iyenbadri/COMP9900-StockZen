@@ -1,5 +1,11 @@
 @import 'variables.css';
 
+.spinner {
+  text-align: center;
+  height: 30px;
+  margin: 10%;
+}
+
 .stockHeader {
   display: flex;
   flex-direction: column;
@@ -16,12 +22,16 @@
   font-weight: bold;
 }
 
+.stockWrapper {
+  height: 280px;
+}
+
 .stockSummmary {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  font-size: 1.0rem;
+  font-size: 1rem;
   margin: 0px 15px 5px 0px;
 }
 
@@ -29,13 +39,19 @@
   flex: 0 0 content;
   font-size: 1.2rem;
   font-weight: bold;
+  padding: 0px 8px 0px 0px;
+}
+
+.stockCurrency {
+  font-size: 0.9rem;
+  font-weight: bold;
   padding: 0px 15px 0px 0px;
 }
 
 .stockChange {
   flex: 0 0 content;
   font-size: large;
-  padding: 0px 15px 0px 0px;
+  padding: 0px 8px 0px 0px;
 }
 
 .stockPercChange {
@@ -52,17 +68,6 @@
   background-color: transparent;
   border: none;
   color: var(--row-gray-rgb);
-}
-
-.chartPlaceholder {
-  display: grid;
-  height: 250px;
-  text-align: center;
-  background-color: #f7f8fa;
-  border-style: dashed;
-  border-color:var(--row-gray-rgb);
-  border-width: 0.1rem;
-  margin-bottom: 15px;
 }
 
 .tableBar {
@@ -85,6 +90,7 @@
   padding: 5px 10px;
   margin-right: 5px;
   font-weight: 300;
+  transition: all 0.1s ease-in-out;
 }
 
 .tableBar .activeTab {
@@ -93,11 +99,13 @@
   cursor: pointer;
   border: 2px solid;
   border-radius: 5px 5px 0px 0px;
-  border-color: var(--zen-4);
+  border-color: var(--zen-3);
+  color: var(--zen-3);
+  opacity: 0.85;
   background-color: #d1d1d1;
   padding: 5px 10px;
   margin-right: 5px;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .moneyGain {
@@ -106,4 +114,72 @@
 
 .moneyLoss {
   color: var(--loss-red);
+}
+
+.tooltip {
+  background-color: white;
+  border: 1px solid var(--zen-5);
+  width: 140%;
+  height: 100%;
+  padding: 5px 0px 5px 10px;
+  font-size: small;
+}
+
+.tooltip .index {
+  width: 100%;
+}
+
+.tooltip .index .indexTitle {
+  max-width: 44%;
+  float: left;
+  font-weight: bold;
+}
+
+.tooltip .index .sep {
+  max-width: 1%;
+  float: left;
+  font-weight: bold;
+  margin-right: 1px;
+  padding: 0;
+}
+
+.tooltip .index .indexValue {
+  max-width: 55%;
+  float: left;
+  text-align: right;
+  padding: 0;
+}
+
+.modalWrapper {
+  min-width: 300px;
+  max-width: 30%;
+  position: fixed;
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.errormsg {
+  border: 0;
+  text-align: center;
+}
+
+.historyTable {
+  width: 100%;
+  margin: 5px;
+  padding: 5px;
+}
+
+.historyTitle {
+  width: 100%;
+  height: 30px;
+  border-bottom: 2px solid var(--zen-3);
+}
+
+.historyTitle .title {
+  width: 16%;
+  font-weight: bold;
+  float: left;
+  text-align: center;
 }

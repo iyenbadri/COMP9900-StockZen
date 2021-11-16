@@ -1,9 +1,10 @@
 import 'bootstrap-custom.scss';
 import Footer from 'components/Layout/Footer';
 import Header from 'components/Layout/Header';
+import RefreshProvider from 'contexts/RefreshContext';
+import SearchProvider from 'contexts/SearchContext';
 import TopPerformerProvider from 'contexts/TopPerformerContext';
 import UserProvider, { UserContext } from 'contexts/UserContext';
-import RefreshProvider from 'contexts/RefreshContext';
 import Landing from 'pages/Landing';
 import Portfolio from 'pages/Portfolio';
 import Stock from 'pages/Stock';
@@ -25,13 +26,13 @@ function App() {
           fluid
           className={`${styles.appContent} ${
             !isAuthenticated ? styles.hero : ''
-          }`}
+            }`}
         >
           <Switch>
             <GuestRoute exact path={'/'} component={Landing} />
             <Route path={'/user'} component={User} />
             <Route path={'/portfolio'} component={Portfolio} />
-            <Route path={'/stock/:stockPageId'} component={Stock} />
+            <Route path={'/stock'} component={Stock} />
           </Switch>
         </Container>
         <Footer></Footer>
@@ -43,9 +44,11 @@ function App() {
 const WrappedApp = () => (
   <RefreshProvider>
     <UserProvider>
-      <TopPerformerProvider>
-        <App />
-      </TopPerformerProvider>
+      <SearchProvider>
+        <TopPerformerProvider>
+          <App />
+        </TopPerformerProvider>
+      </SearchProvider>
     </UserProvider>
   </RefreshProvider>
 );

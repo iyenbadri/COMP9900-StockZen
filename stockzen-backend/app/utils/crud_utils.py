@@ -20,9 +20,9 @@ from app.models.schema import (
     StockPage,
     User,
 )
-from predict.ml_utils import ml_predict as pred
 from app.utils.enums import LotType, Status
 from flask_login import current_user
+from predict.ml_utils import ml_predict as pred
 from sqlalchemy import desc, func
 from sqlalchemy.orm import load_only
 
@@ -266,12 +266,12 @@ def update_stock_page(stock_page_id: int) -> Status:
         if not price:
             raise ValueError("Stock price not found, aborting stock_page update")
         if sym in TOP_COMPANIES:
-            with open('predict/accuracy.json','r') as myfile:
-                results=myfile.read()
+            with open("predict/accuracy.json", "r") as myfile:
+                results = myfile.read()
             conf = json.loads(results)
             confidence = float(str(conf[sym]))
             prediction = pred.prediction(sym)
-            
+
         else:
             confidence = None
             prediction = None
@@ -360,6 +360,7 @@ def fetch_top_stocks() -> Union[Dict, Status]:
                 load_only(
                     StockPage.id,
                     StockPage.code,
+                    StockPage.stock_name,
                     StockPage.price,
                     StockPage.perc_change,
                     StockPage.last_updated,
@@ -484,7 +485,7 @@ def get_performance_summary() -> Status:
 
 
 def get_leaderboard_results() -> Union[Dict, Status]:
-    """Return dict list of best performing user portfolios during current challenge period"""
+    """Return dict list of best performing user portfolios during last challenge period"""
     try:
         leaderboard = []
 
@@ -493,7 +494,7 @@ def get_leaderboard_results() -> Union[Dict, Status]:
             return Status.NOT_EXIST
 
         # Get a ranked list of users and their avg perc_changes
-        result_tuples = (
+        result_list = (
             ChallengeEntry.query.join(Challenge)
             .join(User)
             .filter(Challenge.id == prev_challenge_id)
@@ -507,26 +508,25 @@ def get_leaderboard_results() -> Union[Dict, Status]:
             .order_by(desc("avg_change"))
             .all()
         )
-        results_list = result_tuples[:10]  # limit to first 10
+        # add rank to each result and limit to top 10
+        result_list = [(rank + 1, *item) for rank, item in enumerate(result_list)]
+        ranked_list = result_list[:10]  # limit to first 10
 
         # generator expression to find user's rank and portfolio
         user_tuple = ()
+        user_i = None
         try:
             user_i = next(
-                (
-                    i
-                    for i, tuple in enumerate(result_tuples)
-                    if tuple[0] == current_user.id
-                ),
+                (i for i, tuple in enumerate(result_list) if tuple[1] == current_user.id),
                 None,
             )
-            user_tuple = result_tuples[user_i]
-            results_list.append(user_tuple)  # process user row as well
+            user_tuple = result_list[user_i]
+            ranked_list.append(user_tuple)  # process user row as well
         except:
             pass
 
         # Append each user's stock codes and names to the results
-        for user_id, first_name, last_name, avg_change in results_list:
+        for rank, user_id, first_name, last_name, avg_change in ranked_list:
             # process stock codes/syms
             stock_codes = (
                 ChallengeEntry.query.join(Challenge)
@@ -550,12 +550,19 @@ def get_leaderboard_results() -> Union[Dict, Status]:
                 {
                     "user_id": user_id,
                     "user_name": user_name,
+                    "rank": rank,
                     "perc_change": avg_change,
                     "stock_codes": stock_codes,
                 }
             )
 
-        user_row = leaderboard.pop()  # remove user row after processing
+        user_row = None
+        try:
+            if user_i is not None:
+                # remove user row after processing (if found)
+                user_row = leaderboard.pop()
+        except:
+            raise ValueError("Previous challenge leaderboard is empty")
 
         # Get challenge start and end dates
         start_date = (
@@ -578,7 +585,32 @@ def get_leaderboard_status():
     """Return active and open status of the last challenge"""
     try:
         challenge = Challenge.query.order_by(Challenge.id.desc()).first()
-        return to_dict(challenge)
+        challenge_dict = to_dict(challenge)
+
+        end_date = challenge_dict["start_date"] + CHALLENGE_PERIOD
+        challenge_dict["end_date"] = end_date
+        return challenge_dict
+    except Exception as e:
+        utils.debug_exception(e, suppress=True)
+        return Status.FAIL
+
+
+def get_submission_status():
+    """Return if a user has submitted a portfolio for the currently open challenge"""
+    try:
+        challenge = Challenge.query.order_by(Challenge.id.desc()).first()
+        if not challenge.is_open:
+            return Status.NOT_FOUND
+
+        has_submission = (
+            ChallengeEntry.query.filter(
+                ChallengeEntry.user_id == current_user.id,
+                ChallengeEntry.challenge_id == challenge.id,
+            ).first()
+            is not None
+        )
+
+        return {"has_submission": has_submission}
     except Exception as e:
         utils.debug_exception(e, suppress=True)
         return Status.FAIL
@@ -602,20 +634,17 @@ def add_challenge_stocks(stocks, challenge_id: int) -> Status:
 
             except:
                 for stock_page_id in stocks:
-                    stock = StockPage.query.filter_by(
-                        id=stock_page_id["stockPageId"]
-                    ).one()
                     new_stock = ChallengeEntry(
                         challenge_id=challenge_id,
                         user_id=current_user.id,
-                        stock_page_id=stock_page_id["stockPageId"],
-                        code=stock.code,
+                        stock_page_id=stock_page_id,
+                        code=utils.id_to_code(stock_page_id),
                     )
                     db_utils.insert_item(new_stock)
                 return Status.SUCCESS
         else:
-            return Status.FAIL
+            return Status.INVALID
 
     except Exception as e:
         utils.debug_exception(e, suppress=True)
-        return Status.NOT_EXIST
+        return Status.FAIL

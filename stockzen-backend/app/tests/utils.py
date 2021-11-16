@@ -48,7 +48,8 @@ def populate_top_stocks():
         expected_res.append(
             {
                 "stockPageId": stock_page.id,
-                "symbol": str(i),
+                "stockName": f"test_{i}",
+                "code": str(i),
                 "price": float(i * 1000),
                 "percChange": float(changes[i]),
             }

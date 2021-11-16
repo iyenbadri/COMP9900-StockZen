@@ -31,7 +31,7 @@ interface IStock {
     stockId: number;
     stockPageId: number;
     draggableId: string;
-    symbol: string;
+    code: string;
     name: string;
     price: number;
     change: number;
@@ -63,6 +63,24 @@ interface IStockResponse {
     confidence: number;
 }
 
+// The stock data for fundamental tab in portfolio page
+interface IStockFundamental {
+    ordering: number;
+    stockId: number;
+    stockPageId: number;
+    draggableId: string;
+    code: string;
+    name: string;
+    dayHigh: number | null;
+    dayLow: number | null;
+    fiftyTwoWeekHigh: number | null;
+    fiftyTwoWeekLow: number | null;
+    volume: number | null;
+    avgVolume: number | null;
+    marketCap: number | null;
+    beta: number | null;
+}
+
 interface IStockPageResponse {
     id: number;
     code: string;
@@ -92,6 +110,16 @@ interface IStockPageResponse {
     longBusinessSummary: string;
     prediction: number;
     confidence: number;
+}
+
+interface IStockHistoryResponse {
+    stockPageId: number;
+    date: string;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+    volume: number;
 }
 
 // Temp sort parameters

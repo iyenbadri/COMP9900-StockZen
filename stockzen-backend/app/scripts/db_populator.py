@@ -156,7 +156,7 @@ def generate_dummy_challenges(n_users):
             db_utils.insert_item(challenge)
             print("Challenge added")
         challenge = Challenge(
-            start_date=datetime.now() - timedelta(weeks=1), is_active=True, is_open=False
+            start_date=datetime.now() - timedelta(weeks=1), is_active=True, is_open=True
         )
         db_utils.insert_item(challenge)
         print("Challenge added")
@@ -165,9 +165,9 @@ def generate_dummy_challenges(n_users):
         for i_users in range(1, n_users + 1):
             for i in range(1, 6):
                 entry = ChallengeEntry(
-                    challenge_id=n_users - 1,
+                    challenge_id=n_users,
                     user_id=i_users,
-                    stock_page_id=i,
+                    stock_page_id=i + i_users,  # for stock variety
                     code=id_to_code(i),
                     start_price=None,
                     end_price=None,

@@ -27,6 +27,44 @@
   color: #e26b6b;
 }
 
+.tableBar {
+  display: flex;
+  height: 10%;
+  border-bottom: 2px solid;
+  border-color: #c4c0c0;
+  padding: 0;
+  margin-bottom: 8px;
+  list-style-type: none;
+}
+
+.tableBar .tabs {
+  width: auto;
+  height: 10%;
+  cursor: pointer;
+  border: 2px solid;
+  border-radius: 5px 5px 0px 0px;
+  border-color: var(--zen-4);
+  padding: 5px 10px;
+  margin-right: 5px;
+  font-weight: 300;
+  transition: all 0.1s;
+}
+
+.tableBar .activeTab {
+  width: auto;
+  height: 10%;
+  cursor: pointer;
+  border: 2px solid;
+  border-radius: 5px 5px 0px 0px;
+  border-color: var(--zen-3);
+  color: var(--zen-3);
+  opacity: 0.85;
+  background-color: #d1d1d1;
+  padding: 5px 10px;
+  margin-right: 5px;
+  font-weight: 600;
+}
+
 .sideScrollWrapper {
   max-width: 100vw;
   overflow-x: auto;
@@ -217,9 +255,36 @@
 .rowPredict {
   text-align: right;
   flex-basis: 88px;
-  text-align: right;
   flex-shrink: 0;
   flex-grow: 0.1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.predictArrow {
+  height: 23px;
+}
+
+.indicatorContainer {
+  height: 20px;
+  width: 8px;
+  margin-left: 2px;
+}
+
+.indicatorOutline {
+  display: flex;
+  border-radius: 3px;
+  outline: 1px solid var(--theme-darkened);
+  padding: 1px 1px;
+  width: 100%;
+  height: 100%;
+}
+
+.indicatorLevel {
+  align-self: flex-end;
+  border-radius: 2px 2px 2px 2px;
+  width: 100%;
 }
 
 .rowDelete {
@@ -227,6 +292,64 @@
   text-align: right;
   flex-shrink: 0;
   padding-top: 10px;
+}
+
+.tableHeader .infoRowCode button {
+  justify-content: center;
+}
+
+.tableHeader .infoRowName button {
+  justify-content: center;
+}
+
+.tableHeader .rowShortInfo button {
+  justify-content: center;
+  padding-left: 15px;
+}
+
+.infoRowCode {
+  flex-grow: 0.2;
+  flex-shrink: 0;
+  flex-basis: 55px;
+  text-align: center;
+
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.infoRowName {
+  flex-grow: 0.2;
+  flex-basis: 85px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  padding-left: 10px;
+  white-space: nowrap;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.rowInfo {
+  text-align: right;
+  flex-basis: 70px;
+  flex-shrink: 0;
+  flex-grow: 0.1;
+}
+
+.rowShortInfo {
+  text-align: right;
+  flex-basis: 65px;
+  flex-shrink: 0;
+  flex-grow: 0.1;
+}
+
+.rowLongInfo {
+  text-align: right;
+  flex-basis: 100px;
+  flex-shrink: 0;
+  flex-grow: 0.1;
 }
 
 .deleteButton {
@@ -274,12 +397,22 @@
 
 /* .tableRow .rowPortfolio, */
 .tableRow .rowName,
+.tableRow .infoRowName,
 .tableRow .rowPrice,
 .tableRow .rowChange,
 .tableRow .rowAveragePrice,
 .tableRow .rowProfit,
-.tableRow .rowValue {
+.tableRow .rowValue,
+.tableRow .rowInfo,
+.tableRow .rowLongInfo,
+.tableRow .rowShortInfo {
   font-size: 0.8em;
+}
+
+.spinner {
+  text-align: center;
+  height: 30px;
+  margin: 5px;
 }
 
 /*   

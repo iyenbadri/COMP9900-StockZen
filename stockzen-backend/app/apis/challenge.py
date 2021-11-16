@@ -24,6 +24,7 @@ challenge_leaderboard = api.model(
         "userName": fields.String(
             attribute="user_name", required=True, description="user's concatenated name"
         ),
+        "rank": fields.Integer(required=True, description="user's portfolio ranking"),
         "percChange": fields.Float(
             attribute="perc_change",
             required=True,
@@ -69,6 +70,12 @@ challenge_status_response = api.model(
         "challengeId": fields.Integer(
             attribute="id", required=True, description="challenge id"
         ),
+        "startDate": fields.DateTime(
+            attribute="start_date", required=True, description="challenge start datetime"
+        ),
+        "endDate": fields.DateTime(
+            attribute="end_date", required=True, description="challenge end datetime"
+        ),
         "isActive": fields.Boolean(
             attribute="is_active",
             required=True,
@@ -78,6 +85,17 @@ challenge_status_response = api.model(
             attribute="is_open",
             required=True,
             description="whether challenge submissions are open",
+        ),
+    },
+)
+
+user_submitted_response = api.model(
+    "Response: User challenge submission status",
+    {
+        "hasSubmission": fields.Boolean(
+            attribute="has_submission",
+            required=True,
+            description="whether user has already submitted a portfolio for the current open challenge",
         ),
     },
 )
@@ -104,10 +122,6 @@ class ChallengeCRUD(Resource):
     @api.response(404, "No challenge found")
     def get(self):
         """Return data for the Portfolio Challenge Leaderboard"""
-
-        # TODO: MOVE TO SCRIPT
-        # update all challenge stocks
-        # utils.bulk_challenge_fetch(await_all=True)
 
         # get leaderboard date for last challenge period
         result = crud_utils.get_leaderboard_results()
@@ -138,6 +152,25 @@ class ChallengeCRUD(Resource):
         return challenge_status
 
 
+@api.route("/status/user")
+class ChallengeCRUD(Resource):
+    @login_required
+    @api.marshal_with(user_submitted_response)
+    @api.response(200, "User submission status found")
+    @api.response(404, "No open challenge found")
+    def get(self):
+        """Return if a user has submitted a portfolio for the currently open challenge"""
+
+        submission_status = crud_utils.get_submission_status()
+
+        if submission_status == Status.NOT_FOUND:
+            return abort(404, "No open challenge found")
+        if submission_status == Status.FAIL:
+            return abort(500, "Unable to get user submission status")
+
+        return submission_status
+
+
 @api.route("/submit")
 class ChallengeCRUD(Resource):
     @login_required
@@ -147,7 +180,8 @@ class ChallengeCRUD(Resource):
     def post(self):
         """Submits a user's challenge portfolio to the database"""
 
-        stock_list = marshal(request.json, challenge_entry_request)
+        json_list = marshal(request.json, challenge_entry_request)
+        stock_list = [item["stockPageId"] for item in json_list]
 
         challenge_id, _ = utils.get_open_challenge()
 

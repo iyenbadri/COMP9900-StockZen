@@ -44,6 +44,7 @@
 .tableRow {
   display: flex;
   align-items: center;
+  white-space: nowrap;
 }
 
 .tableRow {
@@ -153,6 +154,19 @@
 
 .modalTitle {
   width: 100%;
+  text-align: center;
+  padding-left: 18px;
+}
+
+.close {
+  transform: scale(0.9);
+}
+
+.errorMessage {
+  text-align: center;
+  margin: 0;
+  font-style: italic;
+  color: var(--loss-red);
 }
 
 @media (any-hover: hover) {

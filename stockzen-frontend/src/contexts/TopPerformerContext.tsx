@@ -1,23 +1,26 @@
 import axios from 'axios';
 import { RefreshContext } from 'contexts/RefreshContext';
+import { UserContext } from 'contexts/UserContext';
 import React, {
   createContext,
   FC,
   useContext,
   useEffect,
-  useState,
+  useState
 } from 'react';
 
 interface ITopPerformer {
   stockPageId: number;
-  symbol: string;
+  code: string;
+  stockName: string;
   price: number;
   changePercent: number;
 }
 
 interface ITopPerformerResponse {
   stockPageId: number;
-  symbol: string;
+  code: string;
+  stockName: string;
   price: number;
   percChange: number;
 }
@@ -39,7 +42,7 @@ interface ITopPerformerContext {
 
 const contextDefaultValues: ITopPerformerContext = {
   showPortfolioSummary: false,
-  setShowPortfolioSummary: (show: boolean) => {},
+  setShowPortfolioSummary: (show: boolean) => { },
   topPerformers: [],
   isLoading: true,
   lastUpdateDate: null,
@@ -51,13 +54,15 @@ export const TopPerformerContext =
 
 const mapTopPerformer = (x: ITopPerformerResponse): ITopPerformer => ({
   stockPageId: x.stockPageId,
-  symbol: x.symbol,
+  code: x.code,
+  stockName: x.stockName,
   price: x.price,
   changePercent: x.percChange / 100,
 });
 
 const TopPerformerProvider: FC = ({ children }): any => {
   const { subscribe, unsubscribe } = useContext(RefreshContext);
+  const { isAuthenticated } = useContext(UserContext);
 
   const [showPortfolioSummary, setShowPortfolioSummary] =
     useState<boolean>(false);
@@ -70,17 +75,17 @@ const TopPerformerProvider: FC = ({ children }): any => {
   const [portfolioSummary, setPortfolioSummary] =
     useState<IPortfolioPerformance | null>(null);
 
-  useEffect(
-    () => {
-      const reloadTopPerformar = async () => {
-        setLastUpdateDate(new Date());
+  const reloadTopPerformer = async () => {
+    if (isAuthenticated) {
+      setLastUpdateDate(new Date());
 
-        setPortfolioSummary({
-          holding: Math.random() * 2000,
-          todayChangePercent: (Math.random() * 10 - 5) / 100,
-          overallChangePercent: (Math.random() * 10 - 5) / 100,
-        });
+      setPortfolioSummary({
+        holding: Math.random() * 2000,
+        todayChangePercent: (Math.random() * 10 - 5) / 100,
+        overallChangePercent: (Math.random() * 10 - 5) / 100,
+      });
 
+      try {
         const topPerformers = await axios.get<ITopPerformerResponse[]>(
           '/stock-page/top'
         );
@@ -88,14 +93,23 @@ const TopPerformerProvider: FC = ({ children }): any => {
         setTopPerformers(topPerformers.data.map(mapTopPerformer));
 
         setIsLoading(false);
-      };
+      } catch { }
+    }
+  };
 
-      reloadTopPerformar();
+  // Reload when isAuthenticated is changed.
+  useEffect(() => {
+    reloadTopPerformer();
+  }, [isAuthenticated]);
 
-      subscribe(reloadTopPerformar);
+  useEffect(
+    () => {
+      reloadTopPerformer();
+
+      subscribe(reloadTopPerformer);
 
       return () => {
-        unsubscribe(reloadTopPerformar);
+        unsubscribe(reloadTopPerformer);
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
