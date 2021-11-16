@@ -34,7 +34,7 @@ function App() {
             <Route path={'/user'} component={User} />
             <Route path={'/portfolio'} component={Portfolio} />
             <Route path={'/challenge'} component={Challenge} />
-            <Route path={'/stock/:stockPageId'} component={Stock} />
+            <Route path={'/stock'} component={Stock} />
           </Switch>
         </Container>
         <Footer></Footer>
