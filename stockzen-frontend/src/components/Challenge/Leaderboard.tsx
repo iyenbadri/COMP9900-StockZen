@@ -236,7 +236,7 @@ const Leaderboard = () => {
                 </div>
 
                 {leaderboard.leaderboard.map((x, index) => (
-                  <div className={styles.leaderboardTableRow}>
+                  <div className={styles.leaderboardTableRow} key={x.userId}>
                     <div className={styles.rowYou}>
                       {leaderboard.userRow.userId === x.userId ? 'You' : ''}
                     </div>
