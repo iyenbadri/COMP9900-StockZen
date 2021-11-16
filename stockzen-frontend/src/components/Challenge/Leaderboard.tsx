@@ -228,7 +228,7 @@ const Leaderboard = () => {
                   </div>
                   <div className={styles.rowUser}>{x.userName}</div>
                   <div className={styles.rowGain}>
-                    {percentFormatter.format(x.percChange)}
+                    {percentFormatter.format(x.percChange / 100)}
                   </div>
                   <div className={styles.rowTopStock}>{x.stocks[0]}</div>
                 </div>
@@ -258,7 +258,7 @@ const Leaderboard = () => {
                       <div className={styles.rowGain}>
                         {leaderboard != null &&
                           percentFormatter.format(
-                            leaderboard.userRow.percChange
+                            leaderboard.userRow.percChange / 100
                           )}
                       </div>
                       <div className={styles.rowTopStock}>
