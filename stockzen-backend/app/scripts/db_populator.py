@@ -151,7 +151,7 @@ def generate_dummy_challenges(n_users):
             challenge = Challenge(
                 start_date=datetime.now() - timedelta(weeks=2),
                 is_active=False,
-                is_open=False,
+                is_open=True,
             )
             db_utils.insert_item(challenge)
             print("Challenge added")

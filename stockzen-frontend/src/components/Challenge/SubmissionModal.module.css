@@ -217,17 +217,6 @@
     width: 75px;
     max-width: 75px;
   }
-
-  /* Config in case hiding stock names */
-  /* .selectedStockCode {
-    flex-basis: 80px;
-    margin-left: 40px;
-  }
-
-  .selectedStockName {
-    width: 0px;
-    max-width: 0px;
-  } */
 }
 
 @media (max-width: 768px) {

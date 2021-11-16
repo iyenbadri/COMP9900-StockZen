@@ -37,16 +37,6 @@ const SubmissionModal = () => {
     []
   );
 
-  const selectStock = (option: TypeaheadOption) => {
-    const stock: ISelectedStock = {
-      stockPageId: option.stockPageId,
-      code: option.code,
-      stockName: option.description
-    };
-
-    addSelectedStock(stock);
-  };
-
   const makeSubmission = async () => {
     try {
       let response = await axios.post('/challenge/submit', selectedStockPageIds);
@@ -56,18 +46,34 @@ const SubmissionModal = () => {
       }
     } catch (e: any) {
       setSubmissionError(true);
+      // Server error response
+      setErrorMessage('An error occurred. Please try again later.')
     }
   }
 
-  const handleClick = () => {
-    // Error if selected stock list have 0 or more than 5 stocks
-    if (selectedStockPageIds.length > 5 || !(selectedStockPageIds.length)) {
+  const handleClick = (ev: any, option: TypeaheadOption) => {
+    const stock: ISelectedStock = {
+      stockPageId: option.stockPageId,
+      code: option.code,
+      stockName: option.description
+    };
+
+    ev.preventDefault();
+    ev.stopPropagation();
+    if (selectedStockPageIds.length > 5) {
       setSelectionError(true);
-      setErrorMessage('Please select between 5 stocks')
+    } else {
+      addSelectedStock(stock);
+    }
+  }
+
+  const handleSubmit = () => {
+    // Error if selected stock list doesn't have 5 stocks
+    if (selectedStockPageIds.length !== 5) {
+      setSelectionError(true);
+      setErrorMessage('Please select 5 stocks')
     } else {
       makeSubmission();
-      // Server error response
-      setErrorMessage('An error occurred. Please try again later.')
     }
   }
 
@@ -119,9 +125,7 @@ const SubmissionModal = () => {
                       position={index}
                       style={{ pointerEvents: selectedStockPageIds.some(x => x.stockPageId === option.stockPageId) ? 'none' : 'auto' }}
                       onClick={(ev) => {
-                        ev.preventDefault();
-                        ev.stopPropagation();
-                        selectStock(option);
+                        handleClick(ev, option);
                         if (typeaheadRef.current !== null) {
                           typeaheadRef.current.clear();
                         }
@@ -133,9 +137,7 @@ const SubmissionModal = () => {
                             <Button
                               variant='transparent'
                               onClick={(ev) => {
-                                ev.preventDefault();
-                                ev.stopPropagation();
-                                selectStock(option);
+                                handleClick(ev, option);
                                 if (typeaheadRef.current !== null) {
                                   typeaheadRef.current.clear();
                                 }
@@ -182,7 +184,7 @@ const SubmissionModal = () => {
             type='button'
             className={`mb-2 ${styles.submitButton}`}
             onClick={(ev) => {
-              handleClick();
+              handleSubmit();
             }}>
             Submit
           </Button>

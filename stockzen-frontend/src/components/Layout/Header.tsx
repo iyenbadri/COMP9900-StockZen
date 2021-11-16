@@ -30,7 +30,7 @@ const Header = () => {
                   My Portfolios
                 </Button>
               </Link>
-              <Link to='/portfolio'>
+              <Link to='/challenge'>
                 <Button variant='transparent' className={styles.tab}>
                   Challenge
                 </Button>

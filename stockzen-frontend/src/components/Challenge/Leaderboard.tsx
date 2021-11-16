@@ -366,7 +366,7 @@ const Leaderboard = () => {
                       >
                         <h4 className='text-center'>Submit your portfolio</h4>
                         <p className={styles.description}>
-                          Pick between 5 stocks to be added to your public portfolio.<br />
+                          Pick 5 stocks to be added to your public portfolio.<br />
                           Over the next 2 weeks, you can see how you are performing on the leaderboard.<br />
                         </p>
                         <CloseButton className={styles.closeButton}></CloseButton>
