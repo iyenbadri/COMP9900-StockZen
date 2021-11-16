@@ -94,7 +94,7 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                       state: {
                         code: stock.code,
                         name: stock.name,
-                      }
+                      },
                     }}
                     className={styles.rowStockLink}
                   >
@@ -154,13 +154,13 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                   {stock.value == null ? '-' : usdFormatter.format(stock.value)}
                 </span>
                 <span className={styles.rowPredict}>
-                  {stock.prediction > 0 ? (
+                  {stock.prediction === 1 ? (
                     <img
                       src={upArrowIcon}
                       alt='prediction up arrow icon'
                       className={styles.predictArrow}
                     />
-                  ) : stock.prediction < 0 ? (
+                  ) : stock.prediction === 0 ? (
                     <img
                       src={downArrowIcon}
                       alt='prediction down arrow icon'
@@ -169,7 +169,7 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                   ) : (
                     '-'
                   )}
-                  {stock.prediction && stock.confidence ? (
+                  {stock.prediction !== null && stock.confidence ? (
                     <div className={styles.indicatorContainer}>
                       <div className={styles.indicatorOutline}>
                         <div
