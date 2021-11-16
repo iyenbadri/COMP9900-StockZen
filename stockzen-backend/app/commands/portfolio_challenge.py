@@ -52,12 +52,13 @@ def start_challenge(env):
                 break
         print("Challenge period ended.")
 
+        stop_challenge()
+
         db_utils.update_item_columns(
             Challenge,
             challenge_id,
             {"is_active": False},
         )
-        stop_challenge()
         return Status.SUCCESS
 
     except Exception as e:
