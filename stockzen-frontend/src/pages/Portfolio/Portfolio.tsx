@@ -13,7 +13,7 @@ const Portfolio: FC = () => {
 
   return (
     <Container>
-      <Row className='justify-content-evenly'>
+      <Row className='justify-content-evenly pb-5'>
         <Col lg={3} className='d-none d-lg-block'>
           <TopPerformerWidget></TopPerformerWidget>
         </Col>
