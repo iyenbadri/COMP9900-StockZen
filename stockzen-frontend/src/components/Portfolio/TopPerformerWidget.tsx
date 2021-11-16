@@ -85,7 +85,7 @@ const TopPerformerWidget: FC = (props) => {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th className={styles.symbol}>Symbol</th>
+            <th className={styles.code}>Code</th>
             <th className={styles.price}>Price</th>
             <th className={styles.gain}>Change</th>
           </tr>
@@ -106,13 +106,18 @@ const TopPerformerWidget: FC = (props) => {
           {!isLoading &&
             topPerformers.map((stock, index) => {
               return (
-                <tr key={stock.symbol} className={styles.symbolRow}>
-                  <td className={styles.symbol}>
+                <tr key={stock.code} className={styles.codeRow}>
+                  <td className={styles.code}>
                     <Link
-                      to={'/stock/' + stock.stockPageId.toString()}
-                      title={stock.name}
+                      to={{
+                        pathname: '/stock/' + stock.stockPageId.toString(),
+                        state: {
+                          code: stock.code,
+                          name: stock.stockName,
+                        },
+                      }}
                     >
-                      {stock.symbol}
+                      {stock.code}
                     </Link>
                   </td>
                   <td className={styles.price}>

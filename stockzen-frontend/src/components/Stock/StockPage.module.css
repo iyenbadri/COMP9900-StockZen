@@ -1,5 +1,11 @@
 @import 'variables.css';
 
+.spinner {
+  text-align: center;
+  height: 30px;
+  margin: 10%;
+}
+
 .stockHeader {
   display: flex;
   flex-direction: column;
@@ -16,6 +22,10 @@
   font-weight: bold;
 }
 
+.stockWrapper {
+  height: 280px;
+}
+
 .stockSummmary {
   display: flex;
   flex-direction: row;
@@ -28,6 +38,12 @@
 .stockPrice {
   flex: 0 0 content;
   font-size: 1.2rem;
+  font-weight: bold;
+  padding: 0px 8px 0px 0px;
+}
+
+.stockCurrency {
+  font-size: 0.9rem;
   font-weight: bold;
   padding: 0px 15px 0px 0px;
 }
@@ -74,6 +90,7 @@
   padding: 5px 10px;
   margin-right: 5px;
   font-weight: 300;
+  transition: all 0.1s ease-in-out;
 }
 
 .tableBar .activeTab {
@@ -82,11 +99,13 @@
   cursor: pointer;
   border: 2px solid;
   border-radius: 5px 5px 0px 0px;
-  border-color: var(--zen-4);
+  border-color: var(--zen-3);
+  color: var(--zen-3);
+  opacity: 0.85;
   background-color: #d1d1d1;
   padding: 5px 10px;
   margin-right: 5px;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .moneyGain {
@@ -132,9 +151,17 @@
 }
 
 .modalWrapper {
+  min-width: 300px;
   max-width: 30%;
   position: fixed;
-  transform: translate(120%, 30%);
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.errormsg {
+  border: 0;
   text-align: center;
 }
 

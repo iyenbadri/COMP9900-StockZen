@@ -31,7 +31,7 @@ interface IStock {
     stockId: number;
     stockPageId: number;
     draggableId: string;
-    symbol: string;
+    code: string;
     name: string;
     price: number;
     change: number;
@@ -69,7 +69,7 @@ interface IStockFundamental {
     stockId: number;
     stockPageId: number;
     draggableId: string;
-    symbol: string;
+    code: string;
     name: string;
     dayHigh: number | null;
     dayLow: number | null;
@@ -131,4 +131,20 @@ interface TableOrdering<T extends string> {
 interface OrderingIndicatorProp {
     target: string;
     ordering: TableOrdering<string>;
+}
+
+// Typeahead for stock search
+interface TypeaheadOption {
+    stockPageId: number;
+    code: string;
+    description: string;
+    market: string;
+    searchLabel: string;
+}
+
+// Selected stocks for portfolio challenge submission
+interface ISelectedStock {
+    stockPageId: number;
+    code: string;
+    stockName: string;
 }

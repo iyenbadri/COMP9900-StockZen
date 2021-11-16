@@ -1,3 +1,4 @@
+import smileIcon from 'assets/icon-outlines/outline-emotxd-smile.svg';
 import varticalDot from 'assets/icon-outlines/outline-menu-vertical.svg';
 import refreshIcon from 'assets/icon-outlines/outline-refresh-small.svg';
 import loadingIcon from 'assets/load_spinner.svg';
@@ -6,11 +7,13 @@ import medal2 from 'assets/medal_2.png';
 import medal3 from 'assets/medal_3.png';
 import axios from 'axios';
 import { RefreshContext } from 'contexts/RefreshContext';
+import { SubmissionContext } from 'contexts/SubmissionContext';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import moment, { Moment } from 'moment';
 import React, { useContext, useEffect, useState } from 'react';
-import Button from 'react-bootstrap/Button';
+import { Button, CloseButton, Modal } from 'react-bootstrap';
 import styles from './Leaderboard.module.css';
+import SubmissionModal from './SubmissionModal';
 
 interface LeaderboardResultResponse {
   userId: number;
@@ -82,6 +85,10 @@ const Leaderboard = () => {
   // Get the setShowPortfolioSummary from context
   const { setShowPortfolioSummary } = useContext(TopPerformerContext);
   const { refresh, subscribe, unsubscribe } = useContext(RefreshContext);
+
+  // Get submission result from context
+  const { submit, setSubmit, submissionSuccess, setSubmissionSuccess } =
+    useContext(SubmissionContext);
 
   const [leaderboard, setLeaderboard] = useState<Leaderboard | null>(null);
   const [nextChallenge, setNextChallenge] = useState<Challenge | null>(null);
@@ -160,6 +167,22 @@ const Leaderboard = () => {
 
   return (
     <>
+      {/* Shows message if submission successful */}
+      <Modal
+        centered
+        show={submissionSuccess}
+        onHide={() => setSubmissionSuccess(false)}
+        className={styles.successModal}
+      >
+        <Modal.Header
+          className={styles.successModalHeader}
+          closeButton
+        ></Modal.Header>
+        <Modal.Body className={styles.successModalBody}>
+          <h5>Submission Successful</h5>
+          Good Luck! <img src={smileIcon} alt='smile face' />
+        </Modal.Body>
+      </Modal>
       <h2 className={styles.pageHeader}>Portfolio Challenge</h2>
       <div className={styles.contentPadder}>
         <div className='mb-3'>
@@ -185,7 +208,7 @@ const Leaderboard = () => {
         {!isLoading && leaderboard != null && (
           <>
             <div className={styles.challengeDateMessage}>
-              Current challenge: {leaderboard?.startDate.format('HH:mm')}{' '}
+              Previous challenge: {leaderboard?.startDate.format('HH:mm')}{' '}
               <span className={styles.challengeDate}>
                 {leaderboard?.startDate.format('DD/MM/YYYY')}
               </span>{' '}
@@ -195,83 +218,91 @@ const Leaderboard = () => {
               </span>
             </div>
 
-            <div className={styles.leaderboardTable}>
-              <div className={styles.leaderboardTableHeader}>
-                <div className={styles.rowYou}></div>
-                <div className={styles.rowRank}>Rank</div>
-                <div className={styles.rowUser}>User</div>
-                <div className={styles.rowGain}>Portfolio Gain</div>
-                <div className={styles.rowTopStock}>Top Stock</div>
+            {leaderboard.leaderboard.length === 0 &&
+            leaderboard.userRow.userId == null ? (
+              <div className='text-center'>
+                There were no submissions for the previous Portfolio Challenge
               </div>
-            </div>
-
-            {leaderboard.leaderboard.map((x, index) => (
-              <div className={styles.leaderboardTableRow}>
-                <div className={styles.rowYou}>
-                  {leaderboard.userRow.userId === x.userId ? 'You' : ''}
-                </div>
-                <div
-                  className={`${styles.rowInfo} ${getLeaderboardStyle(
-                    index + 1
-                  )}`}
-                >
-                  <div className={styles.rowRank}>
-                    {index < 3 ? (
-                      <img
-                        src={getMedalIcon(index + 1)}
-                        alt={(index + 1).toString()}
-                        height='35'
-                        className={styles.medal}
-                      />
-                    ) : (
-                      index + 1
-                    )}
-                  </div>
-                  <div className={styles.rowUser}>{x.userName}</div>
-                  <div className={styles.rowGain}>
-                    {percentFormatter.format(x.percChange)}
-                  </div>
-                  <div className={styles.rowTopStock}>{x.stocks[0]}</div>
-                </div>
-              </div>
-            ))}
-
-            {!leaderboard?.isUserInTop &&
-              leaderboard.userRow != null &&
-              leaderboard.userRow.userId != null && (
-                <>
-                  <div className={styles.leaderboardTableRow}>
+            ) : (
+              <>
+                <div className={styles.leaderboardTable}>
+                  <div className={styles.leaderboardTableHeader}>
                     <div className={styles.rowYou}></div>
-                    <div className={styles.rowMore}>
-                      <img src={varticalDot} alt='more' />
-                    </div>
+                    <div className={styles.rowRank}>Rank</div>
+                    <div className={styles.rowUser}>User</div>
+                    <div className={styles.rowGain}>Portfolio Gain</div>
+                    <div className={styles.rowTopStock}>Top Stock</div>
                   </div>
+                </div>
 
+                {leaderboard.leaderboard.map((x, index) => (
                   <div className={styles.leaderboardTableRow}>
-                    <div className={styles.rowYou}>You</div>
-                    <div className={`${styles.rowInfo}`}>
+                    <div className={styles.rowYou}>
+                      {leaderboard.userRow.userId === x.userId ? 'You' : ''}
+                    </div>
+                    <div
+                      className={`${styles.rowInfo} ${getLeaderboardStyle(
+                        index + 1
+                      )}`}
+                    >
                       <div className={styles.rowRank}>
-                        {leaderboard.userRow.rank}
+                        {index < 3 ? (
+                          <img
+                            src={getMedalIcon(index + 1)}
+                            alt={(index + 1).toString()}
+                            height='35'
+                          />
+                        ) : (
+                          index + 1
+                        )}
                       </div>
-                      <div className={styles.rowUser}>
-                        {leaderboard?.userRow.userName}
-                      </div>
+                      <div className={styles.rowUser}>{x.userName}</div>
                       <div className={styles.rowGain}>
-                        {leaderboard != null &&
-                          percentFormatter.format(
-                            leaderboard.userRow.percChange
-                          )}
+                        {percentFormatter.format(x.percChange / 100)}
                       </div>
-                      <div className={styles.rowTopStock}>
-                        {leaderboard.userRow != null &&
-                          leaderboard.userRow.stocks != null &&
-                          leaderboard.userRow.stocks.length > 0 &&
-                          leaderboard?.userRow.stocks[0]}
-                      </div>
+                      <div className={styles.rowTopStock}>{x.stocks[0]}</div>
                     </div>
                   </div>
-                </>
-              )}
+                ))}
+
+                {!leaderboard?.isUserInTop &&
+                  leaderboard.userRow != null &&
+                  leaderboard.userRow.userId != null && (
+                    <>
+                      <div className={styles.leaderboardTableRow}>
+                        <div className={styles.rowYou}></div>
+                        <div className={styles.rowMore}>
+                          <img src={varticalDot} alt='more' />
+                        </div>
+                      </div>
+
+                      <div className={styles.leaderboardTableRow}>
+                        <div className={styles.rowYou}>You</div>
+                        <div className={`${styles.rowInfo}`}>
+                          <div className={styles.rowRank}>
+                            {leaderboard.userRow.rank}
+                          </div>
+                          <div className={styles.rowUser}>
+                            {leaderboard?.userRow.userName}
+                          </div>
+                          <div className={styles.rowGain}>
+                            {leaderboard != null &&
+                              percentFormatter.format(
+                                leaderboard.userRow.percChange / 100
+                              )}
+                          </div>
+                          <div className={styles.rowTopStock}>
+                            {leaderboard.userRow != null &&
+                              leaderboard.userRow.stocks != null &&
+                              leaderboard.userRow.stocks.length > 0 &&
+                              leaderboard?.userRow.stocks[0]}
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+              </>
+            )}
           </>
         )}
       </div>
@@ -326,9 +357,38 @@ const Leaderboard = () => {
                     <Button
                       variant='transparent'
                       className={styles.submitPortfolio}
+                      onClick={() => setSubmit(true)}
                     >
                       Submit Portfolio
                     </Button>
+                    <Modal
+                      centered
+                      show={submit}
+                      className={styles.modal}
+                      size='xl'
+                      // styles={{ maxWidth: '800px', width: '80%' }}
+                      onHide={() => setSubmit(false)}
+                    >
+                      <Modal.Header
+                        className={`mt-3 mb-0 ${styles.modalHeader}`}
+                        onClick={() => setSubmit(false)}
+                      >
+                        <h4 className='text-center'>Submit your portfolio</h4>
+                        <p className={styles.description}>
+                          Pick 5 stocks to be added to your public portfolio.
+                          <br />
+                          Over the next 2 weeks, you can see how you are
+                          performing on the leaderboard.
+                          <br />
+                        </p>
+                        <CloseButton
+                          className={styles.closeButton}
+                        ></CloseButton>
+                      </Modal.Header>
+                      <Modal.Body className={'mt-0'}>
+                        <SubmissionModal />
+                      </Modal.Body>
+                    </Modal>
                   </div>
                 )}
               </>

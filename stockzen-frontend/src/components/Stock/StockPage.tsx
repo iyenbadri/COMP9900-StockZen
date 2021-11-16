@@ -1,8 +1,8 @@
 import refreshIcon from 'assets/icon-outlines/outline-refresh-small.svg';
+import loadSpinner from 'assets/load_spinner.svg';
 import axios from 'axios';
-import { TopPerformerContext } from 'contexts/TopPerformerContext';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Button, Col, Modal, Row, Spinner } from 'react-bootstrap';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Button, Col, Modal, Row } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
@@ -12,20 +12,33 @@ import StockHistory from './StockHistory';
 import styles from './StockPage.module.css';
 import StockSummary from './StockSummary';
 
+
 interface RouteParams {
   stockPageId: string;
 }
 
-const StockPage = () => {
-  const { stockPageId } = useParams<RouteParams>();
+const ShowSpinner = () => {
+  return (
+    <div className='text-center'>
+      <img
+        src={loadSpinner}
+        alt='loading spinner'
+        className={styles.spinner}
+      />
+    </div>
+  )
+}
 
-  const { setShowPortfolioSummary } = useContext(TopPerformerContext);
+const StockPage = (props: any) => {
+  const { stockPageId } = useParams<RouteParams>();
+  const { code, name } = props.location.state;
 
   const [stockData, setStockData] = useState<IStockPageResponse>();
   const [chartData, setChartData] = useState<IStockHistoryResponse[]>([]);
   const [historyData, setHistoryData] = useState<IStockHistoryResponse[]>([]);
 
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
+  const [isHistoryLoading, setIsHistoryLoading] = useState<boolean>(false);
   const [fetchError, setFetchError] = useState<boolean>(false);
 
   const [activeTab, setActiveTab] = useState(0);
@@ -34,27 +47,42 @@ const StockPage = () => {
 
   // Retrieve backend response data
   const getStockData = useCallback(async () => {
+    setIsPageLoading(true);
     try {
       let stock = await axios.get(`/stock-page/${stockPageId}`);
-      let history = await axios.get(`/stock-page/${stockPageId}/history`)
-      if (stock.status === 200 && history.status === 200) {
+      if (stock.status === 200) {
         setStockData(stock.data);
+        setIsPageLoading(false);
+      }
+    } catch (e: any) {
+      return;
+    }
+  }, [stockPageId, setStockData, setChartData]
+  );
+
+  const getHistoryData = useCallback(async () => {
+    setIsHistoryLoading(true);
+    try {
+      let history = await axios.get(`/stock-page/${stockPageId}/history`)
+      if (history.status === 200) {
         setChartData(history.data);
         const data = [...history.data].reverse();
         setHistoryData(data);
-        setLoading(false);
+        setIsHistoryLoading(false);
       }
     } catch (e: any) {
       setFetchError(true);
     }
-  }, [stockPageId, setStockData, setChartData, setHistoryData]
+  }, [stockPageId, setChartData, setHistoryData]
   );
+
 
   useEffect(
     () => {
       getStockData();
+      getHistoryData();
     },
-    [stockPageId, getStockData]
+    [stockPageId, getStockData, getHistoryData]
   );
 
   const gainLossClass = (change: number): string => {
@@ -106,150 +134,165 @@ const StockPage = () => {
 
   return (
     <>
-      {(loading && !(fetchError)) && (
-        <>
-          <Modal
-            key={stockPageId}
-            show={loading}
-            onHide={() => setLoading(false)}
-            className={styles.modalWrapper}
-          >
-            <Modal.Body>
-              <Spinner animation='border' className='text-center' />
-              <div>
-                Loading Data... Please wait
-              </div>
-            </Modal.Body>
-          </Modal>
-        </>
+      <div className={styles.stockHeader}>
+        <h5 className={styles.stockName}>{name}</h5>
+        <div className={styles.stockCode}>({code})</div>
+      </div>
+      {isPageLoading && (
+        <div className={styles.stockWrapper}>
+          <ShowSpinner />
+        </div>
       )}
-      {(!(loading) && !(fetchError)) && (
+      {(!isPageLoading && !fetchError) && (
         <>
-          {/* <PortfolioListSummary></PortfolioListSummary> */}
-          <div className={styles.stockHeader}>
-            <h5 className={styles.stockName}>{stockData?.stockName}</h5>
-            <div className={styles.stockCode}>({stockData?.code})</div>
-          </div>
-          <div className={styles.stockSummmary}>
-            <div className={`${styles.stockPrice} outerStroke`}>{stockData?.price ? `$${numberFormatter.format(stockData.price)}` : ''}</div>
-            <div
-              className={`${styles.stockChange} ${stockData?.change ? gainLossClass(stockData?.change) : ''}`}
-            >
-              {(stockData?.change! > 0) ? '+' : ''}
-              {(stockData?.change! < 0) ? '-' : ''}
-              {stockData?.change ? numberFormatter.format(stockData.change) : ''}
-            </div>
-            <div
-              className={`${styles.stockPercChange} ${stockData?.change ? gainLossClass(stockData?.change) : ''}`}
-            >
-              {stockData?.percChange ? `(${numberFormatter.format(stockData.percChange)}%)` : ''}
-            </div>
-            <div className={styles.update}>
-              <Button
-                className={styles.updateButton}
-                variant={'light'}
-                onClick={getStockData}
-              >
-                <img
-                  src={refreshIcon}
-                  alt='refresh'
-                  style={{ opacity: 0.5 }}
-                />
-                Refresh
-              </Button>
-            </div>
-          </div>
-          <ResponsiveContainer width='100%' height={240}>
-            <LineChart
-              data={chartData}
-              margin={{
-                top: 5,
-                right: 50,
-                left: 0,
-                bottom: 10,
-              }}
-            >
-              <CartesianGrid strokeDasharray='3 3' />
-              <XAxis dataKey='date' tick={{ fontSize: 12 }} />
-              <YAxis dataKey='close' tick={{ fontSize: 12 }} />
-              <Tooltip content={<CustomTooltip />} />
-              <Line type='monotone' dataKey='close' stroke={'#5bc0be'} dot={false} />
-              <Line type='monotone' dataKey='open' strokeWidth={0} dot={false} />
-              <Line type='monotone' dataKey='high' strokeWidth={0} dot={false} />
-              <Line type='monotone' dataKey='low' strokeWidth={0} dot={false} />
-              <Line type='monotone' dataKey='volume' strokeWidth={0} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
-          <Tabs
-            selectedIndex={activeTab}
-            onSelect={idx => setActiveTab(idx)}
-          >
-            <TabList className={styles.tableBar}>
-              <Tab
-                className={`${activeTab === 0 ? styles.activeTab : styles.tabs}`}
-              >
-                Summary
-              </Tab>
-              <Tab
-                className={`${activeTab === 1 ? styles.activeTab : styles.tabs}`}
-              >
-                Historical Data
-              </Tab>
-              <Tab
-                className={`${activeTab === 2 ? styles.activeTab : styles.tabs}`}
-              >
-                Profile
-              </Tab>
-            </TabList>
-            <TabPanel>
-              <StockSummary
-                {...stockData!}
-              ></StockSummary>
-            </TabPanel>
-            <TabPanel>
-              <div className={styles.historyTable}>
-                <div className={styles.historyTitle}>
-                  <div className={styles.title}>Date</div>
-                  <div className={styles.title}>Open</div>
-                  <div className={styles.title}>High</div>
-                  <div className={styles.title}>Low</div>
-                  <div className={styles.title}>Close</div>
-                  <div className={styles.title}>Volume</div>
-                  <div></div>
+          <div className={styles.stockWrapper}>
+            <div className={styles.stockSummmary}>
+              {stockData?.price ?
+                <div>
+                  <span className={`${styles.stockPrice} outerStroke`}>${numberFormatter.format(stockData.price)}</span>
+                  <span className={styles.stockCurrency}>USD</span>
                 </div>
-                {historyData!.map((history, index) => {
-                  return (
-                    <StockHistory
-                      date={history.date}
-                      open={history.open}
-                      high={history.high}
-                      low={history.low}
-                      close={history.close}
-                      volume={history.volume}
-                    ></StockHistory>
-                  );
-                })}
+                : ''
+              }
+              <div
+                className={`${styles.stockChange} ${stockData?.change ? gainLossClass(stockData?.change) : ''}`}
+              >
+                {(stockData?.change! > 0) ? '+' : ''}
+                {stockData?.change ? numberFormatter.format(stockData.change) : ''}
               </div>
-            </TabPanel>
-            <TabPanel>
-              <CompanyProfile {...stockData!}
-              ></CompanyProfile>
-            </TabPanel>
-          </Tabs>
+              <div
+                className={`${styles.stockPercChange} ${stockData?.change ? gainLossClass(stockData?.change) : ''}`}
+              >
+                {stockData?.percChange ? `(${numberFormatter.format(stockData.percChange)}%)` : ''}
+              </div>
+              <div className={styles.update}>
+                <Button
+                  className={styles.updateButton}
+                  variant={'light'}
+                  onClick={getStockData}
+                >
+                  <img
+                    src={refreshIcon}
+                    alt='refresh'
+                    style={{ opacity: 0.5 }}
+                  />
+                  Refresh
+                </Button>
+              </div>
+            </div>
+            <div>
+              <ResponsiveContainer width='100%' height={240}>
+                <LineChart
+                  data={chartData}
+                  margin={{
+                    top: 5,
+                    right: 50,
+                    left: 0,
+                    bottom: 10,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray='3 3' />
+                  <XAxis dataKey='date' tick={{ fontSize: 12 }} />
+                  <YAxis dataKey='close' tick={{ fontSize: 12 }} domain={['auto', 'auto']} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Line type='monotone' dataKey='close' stroke={'#5bc0be'} dot={false} />
+                  <Line type='monotone' dataKey='open' strokeWidth={0} dot={false} />
+                  <Line type='monotone' dataKey='high' strokeWidth={0} dot={false} />
+                  <Line type='monotone' dataKey='low' strokeWidth={0} dot={false} />
+                  <Line type='monotone' dataKey='volume' strokeWidth={0} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </>
       )}
-      {(fetchError) && (
+      <Tabs
+        selectedIndex={activeTab}
+        onSelect={idx => setActiveTab(idx)}
+      >
+        <TabList className={styles.tableBar}>
+          <Tab
+            className={`${activeTab === 0 ? styles.activeTab : styles.tabs}`}
+          >
+            Summary
+          </Tab>
+          <Tab
+            className={`${activeTab === 1 ? styles.activeTab : styles.tabs}`}
+          >
+            Historical Data
+          </Tab>
+          <Tab
+            className={`${activeTab === 2 ? styles.activeTab : styles.tabs}`}
+          >
+            Profile
+          </Tab>
+        </TabList>
+        <TabPanel>
+          {isPageLoading && (
+            <ShowSpinner />
+          )}
+          {!isPageLoading && (
+            <StockSummary
+              {...stockData!}
+            ></StockSummary>
+          )}
+        </TabPanel>
+        <TabPanel>
+          {isHistoryLoading && (
+            <ShowSpinner />
+          )}
+          {!isHistoryLoading && (
+            <div className={styles.historyTable}>
+              <div className={styles.historyTitle}>
+                <div className={styles.title}>Date</div>
+                <div className={styles.title}>Open</div>
+                <div className={styles.title}>High</div>
+                <div className={styles.title}>Low</div>
+                <div className={styles.title}>Close</div>
+                <div className={styles.title}>Volume</div>
+                <div></div>
+              </div>
+              {historyData!.map((history, index) => {
+                return (
+                  <StockHistory
+                    date={history.date}
+                    open={history.open}
+                    high={history.high}
+                    low={history.low}
+                    close={history.close}
+                    volume={history.volume}
+                  ></StockHistory>
+                );
+              })}
+            </div>
+          )}
+        </TabPanel>
+        <TabPanel>
+          {isPageLoading && (
+            <ShowSpinner />
+          )}
+          {!isPageLoading && (
+            <CompanyProfile {...stockData!} />
+          )}
+        </TabPanel>
+      </Tabs>
+      {fetchError && (
         <>
           <Modal
             show={fetchError}
-            onHide={() => setFetchError(false)}
+            onHide={() => {
+              setFetchError(false);
+              history.goBack();
+            }}
             className={styles.modalWrapper}
           >
-            <Modal.Body>
-              <div className={'mt-3'}>
-                Sorry. Data you required does not exist.<br />
+            <Modal.Header className={`${styles.errormsg} my-0`} closeButton />
+            <Modal.Body className={`${styles.errormsg} mt-0`}>
+              <div className={'mt-0'}>
+                <h4 className={'mb-1'}>Sorry.</h4>
+                <div className={styles.msg}>Data you required does not exist.<br /></div>
               </div>
-              <div className={'my-3'}>
+              <div className={'my-4'}>
                 <Button
                   variant={'zen-4'}
                   onClick={(ev) => {
