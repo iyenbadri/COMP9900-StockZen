@@ -150,15 +150,12 @@ const RegisterForm: FC<IProps> = (props) => {
             {...register('password', {
               required: true,
               minLength: 8,
-              validate:
-                !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
-                  ? {}
-                  : {
-                      lower: (val) => /[a-z]/.test(val),
-                      upper: (val) => /[A-Z]/.test(val),
-                      number: (val) => /[0-9]/.test(val),
-                      symbol: (val) => /[^a-zA-Z0-9]/.test(val),
-                    },
+              validate: {
+                lower: (val) => /[a-z]/.test(val),
+                upper: (val) => /[A-Z]/.test(val),
+                number: (val) => /[0-9]/.test(val),
+                symbol: (val) => /[^a-zA-Z0-9]/.test(val),
+              },
             })}
           ></Form.Control>
           <Form.Text className={styles.errorMessage}>
