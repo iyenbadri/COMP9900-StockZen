@@ -33,6 +33,9 @@ const submissionDefaultValues: ISubmission = {
 export const SubmissionContext =
   createContext<ISubmission>(submissionDefaultValues);
 
+// **************************************************************
+// Submission context provider
+// **************************************************************
 const SubmissionProvider: FC = ({ children }): any => {
   const [submit, setSubmit] = useState<boolean>(false);
   const [selectedStocks, setSelectedStocks] = useState<ISelectedStock[]>([]);
