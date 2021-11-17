@@ -32,7 +32,7 @@ function App() {
           fluid
           className={`${styles.appContent} ${
             !isAuthenticated ? styles.hero : ''
-            }`}
+          }`}
         >
           <Switch>
             <GuestRoute exact path={'/'} component={Landing} />
