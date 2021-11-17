@@ -12,7 +12,7 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis
+  YAxis,
 } from 'recharts';
 import { intFormatter, numberFormatter } from 'utils/Utilities';
 import CompanyProfile from './CompanyProfile';
@@ -179,8 +179,9 @@ const StockPage = (props: any) => {
                 ''
               )}
               <div
-                className={`${styles.stockChange} ${stockData?.change ? gainLossClass(stockData?.change) : ''
-                  }`}
+                className={`${styles.stockChange} ${
+                  stockData?.change ? gainLossClass(stockData?.change) : ''
+                }`}
               >
                 {stockData?.change! > 0 ? '+' : ''}
                 {stockData?.change
@@ -188,8 +189,9 @@ const StockPage = (props: any) => {
                   : ''}
               </div>
               <div
-                className={`${styles.stockPercChange} ${stockData?.change ? gainLossClass(stockData?.change) : ''
-                  }`}
+                className={`${styles.stockPercChange} ${
+                  stockData?.change ? gainLossClass(stockData?.change) : ''
+                }`}
               >
                 {stockData?.percChange
                   ? `(${numberFormatter.format(stockData.percChange)}%)`
