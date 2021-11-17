@@ -11,6 +11,9 @@ interface History {
   volume?: number;
 }
 
+// **************************************************************
+// Component to display the Historical data tab in stock page
+// **************************************************************
 const StockHistory: FC<History> = (prop) => {
   return (
     <>
