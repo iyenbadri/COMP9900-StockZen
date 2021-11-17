@@ -31,7 +31,7 @@ const SubmissionModal = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [options, setOptions] = useState<TypeaheadOption[]>([]);
 
-  // Access DOM element to reset and set focus on input field of search in modal
+  // Get Typeahead ref to reset and set focus on input field of search in modal
   const typeaheadRef = useRef<AsyncTypeahead<TypeaheadOption>>(null);
 
   // Map backend search response to options in search 
