@@ -39,15 +39,6 @@
   text-align: right;
 }
 
-/* .summaryContainer {
-  
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  margin: 20px auto 0;
-  max-width: 550px;
-} */
-
 .summaryWrapper {
   text-align: center;
 }

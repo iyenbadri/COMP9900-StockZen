@@ -79,10 +79,6 @@
   border-radius: 5px;
 }
 
-/* .tempSort .dragHandle {
-  display: none;
-} */
-
 .rowHandle {
   color: var(--zen-3);
 }
