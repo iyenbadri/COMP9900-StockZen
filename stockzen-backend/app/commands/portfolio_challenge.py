@@ -12,15 +12,18 @@ user_cli = AppGroup("challenge")
 
 # Command to run in the server
 @user_cli.command("run")
-@click.argument("env")
+@click.argument("env", default="prod")
 # do "flask challenge run dev" during testing to avoid adding a new challenge row
 def start_challenge(env):
     """Schedule a challenge according to CHALLENGE_START config parameter"""
     start_date = CHALLENGE_START
     try:
         new_challenge = Challenge(start_date=start_date, is_active=True, is_open=True)
-        if env != "dev":
+        if env == "prod":
             db_utils.insert_item(new_challenge)
+        elif env != "dev":
+            print("Invalid environment specified. Please provide 'prod' or 'dev'.")
+            exit(1)
 
         print("Now accepting challenge submissions.")
         while datetime.now() < start_date:
@@ -49,12 +52,13 @@ def start_challenge(env):
                 break
         print("Challenge period ended.")
 
+        stop_challenge()
+
         db_utils.update_item_columns(
             Challenge,
             challenge_id,
             {"is_active": False},
         )
-        stop_challenge()
         return Status.SUCCESS
 
     except Exception as e:

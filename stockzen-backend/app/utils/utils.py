@@ -87,10 +87,22 @@ def get_prev_challenge():
     return challenge.id, challenge.start_date
 
 
+def get_closing_challenge():
+    """Return id and start date of challenge that is_active but not is_open, or None if not exist"""
+    challenge = (
+        Challenge.query.filter_by(is_active=True, is_open=False)
+        .order_by(Challenge.id.desc())
+        .first()
+    )
+    if not challenge:
+        return None, None
+    return challenge.id, challenge.start_date
+
+
 def bulk_challenge_fetch(await_all: bool = False):
     """Function for challenge script to call that caches perc_change for all challenge stocks"""
 
-    prev_challenge_id, prev_start_date = get_prev_challenge()
+    prev_challenge_id, prev_start_date = get_closing_challenge()
 
     unique_stock_ids = (
         ChallengeEntry.query.filter(ChallengeEntry.challenge_id == prev_challenge_id)

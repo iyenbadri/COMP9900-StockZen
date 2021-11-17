@@ -1,6 +1,11 @@
 import numpy as np
 import torch
 from predict.ml_utils import utils
+
+"""
+Referenced from: https://www.alphavantage.co/academy/#lstm-for-finance
+"""
+
 config = {
     "data": {
         "window_size": 20,
@@ -45,10 +50,9 @@ def prediction(symbols):
     prediction = prediction.cpu().detach().numpy()
 
     next_closing_pred = scaler.inverse_transform(prediction)[0]
-    print("predicted price",next_closing_pred)
+    print("predicted price", next_closing_pred)
     print("closing price", data_close[-1])
     if next_closing_pred > data_close[-1]:
         return 1
-    else: 
+    else:
         return 0
-

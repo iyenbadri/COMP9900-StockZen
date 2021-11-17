@@ -163,7 +163,7 @@ def notify_high_threshold(history, stock_alert):
 
         # Construct and send the mail
         alert_date = alert_row.name.strftime("%d %B %H:%M")
-        msg = f"""The high price alert for {price_alert.code} in portfolio {price_alert.portfolio_name} has bean reached on {alert_date} with the price of {alert_row['High']:.2f}."""
+        msg = f"""The high price alert for {price_alert.code} in portfolio {price_alert.portfolio_name} has been reached on {alert_date} with the price of {alert_row['High']:.2f}."""
 
         message = Message(
             f"[Stockzen] High price alert for stock {price_alert.code}",
@@ -175,7 +175,9 @@ def notify_high_threshold(history, stock_alert):
         mail.send(message)
 
         # Log the message
-        print(f"High price alert of {price_alert.code} has been sent to {price_alert.email}")
+        print(
+            f"High price alert for {price_alert.code} has been sent to {price_alert.email}"
+        )
 
         # Update the price_alert so that it's marked as alerted
         stmt = (
@@ -233,10 +235,9 @@ def notify_low_threshold(history, stock_alert):
 
         alert_row = alert_row.iloc[0]
 
-
         # Construct and send the mail
         alert_date = alert_row.name.strftime("%d %B %H:%M")
-        msg = f"""The low price alert for {price_alert.code} in portfolio {price_alert.portfolio_name} has bean reached on {alert_date} with the price of {alert_row['Low']:.2f}."""
+        msg = f"""The low price alert for {price_alert.code} in portfolio {price_alert.portfolio_name} has been reached on {alert_date} with the price of {alert_row['Low']:.2f}."""
 
         message = Message(
             f"[Stockzen] Low price alert for stock {price_alert.code}",
@@ -248,8 +249,9 @@ def notify_low_threshold(history, stock_alert):
         mail.send(message)
 
         # Log the message
-        print(f"Low price alert of {price_alert.code} has been sent to {price_alert.email}")
-
+        print(
+            f"Low price alert for {price_alert.code} has been sent to {price_alert.email}"
+        )
 
         # Update the price_alert so that it's marked as alerted
         stmt = (

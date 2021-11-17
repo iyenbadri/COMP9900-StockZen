@@ -2,6 +2,7 @@ import smileIcon from 'assets/icon-outlines/outline-emotxd-smile.svg';
 import varticalDot from 'assets/icon-outlines/outline-menu-vertical.svg';
 import refreshIcon from 'assets/icon-outlines/outline-refresh-small.svg';
 import loadingIcon from 'assets/load_spinner.svg';
+// Reference: This page has been designed using resources from Flaticon.com
 import medal1 from 'assets/medal_1.png';
 import medal2 from 'assets/medal_2.png';
 import medal3 from 'assets/medal_3.png';
@@ -87,8 +88,8 @@ const Leaderboard = () => {
   const { refresh, subscribe, unsubscribe } = useContext(RefreshContext);
 
   // Get submission result from context
-  const { submit, setSubmit, submissionSuccess, setSubmissionSuccess }
-    = useContext(SubmissionContext);
+  const { submit, setSubmit, submissionSuccess, setSubmissionSuccess } =
+    useContext(SubmissionContext);
 
   const [leaderboard, setLeaderboard] = useState<Leaderboard | null>(null);
   const [nextChallenge, setNextChallenge] = useState<Challenge | null>(null);
@@ -236,7 +237,7 @@ const Leaderboard = () => {
                 </div>
 
                 {leaderboard.leaderboard.map((x, index) => (
-                  <div className={styles.leaderboardTableRow}>
+                  <div className={styles.leaderboardTableRow} key={x.userId}>
                     <div className={styles.rowYou}>
                       {leaderboard.userRow.userId === x.userId ? 'You' : ''}
                     </div>
@@ -375,10 +376,15 @@ const Leaderboard = () => {
                       >
                         <h4 className='text-center'>Submit your portfolio</h4>
                         <p className={styles.description}>
-                          Pick 5 stocks to be added to your public portfolio.<br />
-                          Over the next 2 weeks, you can see how you are performing on the leaderboard.<br />
+                          Pick 5 stocks to be added to your public portfolio.
+                          <br />
+                          Over the next 2 weeks, you can see how you are
+                          performing on the leaderboard.
+                          <br />
                         </p>
-                        <CloseButton className={styles.closeButton}></CloseButton>
+                        <CloseButton
+                          className={styles.closeButton}
+                        ></CloseButton>
                       </Modal.Header>
                       <Modal.Body className={'mt-0'}>
                         <SubmissionModal />

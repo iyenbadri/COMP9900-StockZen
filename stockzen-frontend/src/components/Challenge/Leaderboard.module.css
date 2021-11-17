@@ -49,7 +49,7 @@
 }
 
 .contentPadder {
-  margin: 0 var(--content-padding);
+  margin: 0 var(--content-padding) 25px;
 }
 
 .leaderboardTable {
@@ -82,19 +82,31 @@
   background-image: linear-gradient(
     to right,
     #ffd70080,
-    #ecc700ff,
-    #ffb800ff,
-    #ffd700ff,
-    #ffd700bf
+    #ffb800ee 30% 50%,
+    #ffd70080
   );
 }
 
 .rowInfo.rank2 {
-  background-image: linear-gradient(to right, #ffffffbb, #cccccc66, #ffffffbb);
+  background-image: linear-gradient(
+    to right,
+    #cccccc77,
+    #a3a3a3bb 30% 50%,
+    #cccccc77
+  );
 }
 
 .rowInfo.rank3 {
-  background-image: linear-gradient(to right, #cd7f32bb, #ff800080, #cd7f32bb);
+  background-image: linear-gradient(
+    to right,
+    #ff800060,
+    #cd8032dd 30% 50%,
+    #ff800060
+  );
+}
+
+.medal {
+  background: radial-gradient(#00000066 40%, transparent 58%);
 }
 
 .leaderboardTableRow:hover .rowInfo {
