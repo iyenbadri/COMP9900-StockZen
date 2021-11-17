@@ -13,6 +13,7 @@ import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import moment, { Moment } from 'moment';
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, CloseButton, Modal } from 'react-bootstrap';
+import { percFormatter } from 'utils/Utilities';
 import styles from './Leaderboard.module.css';
 import SubmissionModal from './SubmissionModal';
 
@@ -65,13 +66,6 @@ interface Challenge {
   startDate: Moment;
   endDate: Moment;
 }
-
-// Number formatter
-const percentFormatter = new Intl.NumberFormat('en-US', {
-  style: 'percent',
-  maximumFractionDigits: 2,
-  minimumFractionDigits: 2,
-});
 
 // Helpers to get the icon/style for rank
 const getMedalIcon = (index: number) => {
@@ -241,7 +235,7 @@ const Leaderboard = () => {
             </div>
 
             {leaderboard.leaderboard.length === 0 &&
-            leaderboard.userRow.userId == null ? (
+              leaderboard.userRow.userId == null ? (
               <div className='text-center'>
                 There were no submissions for the previous Portfolio Challenge
               </div>
@@ -282,7 +276,7 @@ const Leaderboard = () => {
                       </div>
                       <div className={styles.rowUser}>{x.userName}</div>
                       <div className={styles.rowGain}>
-                        {percentFormatter.format(x.percChange / 100)}
+                        {percFormatter.format(x.percChange / 100)}
                       </div>
                       <div className={styles.rowTopStock}>{x.stocks[0]}</div>
                     </div>
@@ -312,7 +306,7 @@ const Leaderboard = () => {
                           </div>
                           <div className={styles.rowGain}>
                             {leaderboard != null &&
-                              percentFormatter.format(
+                              percFormatter.format(
                                 leaderboard.userRow.percChange / 100
                               )}
                           </div>

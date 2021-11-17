@@ -1,15 +1,8 @@
 import axios from 'axios';
 import { RefreshContext } from 'contexts/RefreshContext';
 import React, { FC, useContext, useEffect, useState } from 'react';
-import { usdFormatter } from 'utils/Utilities';
+import { numberFormatter, usdFormatter } from 'utils/Utilities';
 import styles from './PortfolioPageSummary.module.css';
-
-// Number formatter
-const numberFormatter = new Intl.NumberFormat('en-US', {
-  style: 'decimal',
-  maximumFractionDigits: 2,
-  minimumFractionDigits: 2,
-});
 
 interface IPortfolioPageSummaryProp {
   portfolioId: string;

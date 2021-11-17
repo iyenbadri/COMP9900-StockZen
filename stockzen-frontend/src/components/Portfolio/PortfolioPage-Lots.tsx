@@ -11,15 +11,8 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Modal from 'react-bootstrap/Modal';
 import { useForm } from 'react-hook-form';
-import { usdFormatter } from 'utils/Utilities';
+import { numberFormatter, usdFormatter } from 'utils/Utilities';
 import styles from './PortfolioPage-Panel.module.css';
-
-// Number formatter
-const numberFormatter = new Intl.NumberFormat('en-US', {
-  style: 'decimal',
-  maximumFractionDigits: 2,
-  minimumFractionDigits: 2,
-});
 
 // Functions to map the response to data
 const mapBoughtLotResponse = (lot: ILotBoughtResponse): ILotBought => ({
