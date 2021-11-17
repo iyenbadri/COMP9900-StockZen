@@ -2,6 +2,7 @@ import smileIcon from 'assets/icon-outlines/outline-emotxd-smile.svg';
 import varticalDot from 'assets/icon-outlines/outline-menu-vertical.svg';
 import refreshIcon from 'assets/icon-outlines/outline-refresh-small.svg';
 import loadingIcon from 'assets/load_spinner.svg';
+// Reference: This page has been designed using resources from Flaticon.com
 import medal1 from 'assets/medal_1.png';
 import medal2 from 'assets/medal_2.png';
 import medal3 from 'assets/medal_3.png';
