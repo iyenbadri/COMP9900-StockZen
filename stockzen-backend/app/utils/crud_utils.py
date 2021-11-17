@@ -333,7 +333,6 @@ def fetch_stock_history(stock_page_id: int, period: str = "1y") -> Union[Dict, S
             history_dicts = [json.loads(sqla_item.history) for sqla_item in sqla_items]
         else:
             # delete old cache and insert new items
-            # TODO: currently not optimised - will need to revisit
             db_utils.delete_items(History, **{"stock_page": stock_page_id})
             for dict in history_dicts:
                 history = History(stock_page_id=stock_page_id, history=json.dumps(dict))

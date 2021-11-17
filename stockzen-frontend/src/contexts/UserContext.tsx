@@ -12,9 +12,9 @@ interface IUserContext {
 
 const contextDefaultValues: IUserContext = {
   isAuthenticated: false,
-  authenticate: () => { },
-  logout: () => { },
-  recheckAuthenticationStatus: () => { },
+  authenticate: () => {},
+  logout: () => {},
+  recheckAuthenticationStatus: () => {},
   checkEmailUnique: (email: string) => true,
 };
 
@@ -42,7 +42,6 @@ const UserProvider: FC = ({ children }): any => {
   };
 
   const authenticate = () => {
-    // TODO call API to do the login
     markAsLoggedIn();
   };
 
@@ -50,7 +49,7 @@ const UserProvider: FC = ({ children }): any => {
     // Call API to do the logout
     axios
       .post('/user/logout')
-      .then(res => {
+      .then((res) => {
         if (res.status === 200) {
           markAsLoggedOut();
         }
@@ -60,7 +59,7 @@ const UserProvider: FC = ({ children }): any => {
         if (err.response.status === 401) {
           markAsLoggedOut();
         }
-      })
+      });
   };
 
   const recheckAuthenticationStatus = () => {

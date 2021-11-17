@@ -96,7 +96,7 @@ def calc_change(
             ]
 
             price = df_price[-1]
-            prev_close = df_price[0]  # TODO: THIS MIGHT NOT BE PREV DAY CLOSE
+            prev_close = df_price[0]
         finally:
             change = price - prev_close
             perc_change = change / prev_close * 100
