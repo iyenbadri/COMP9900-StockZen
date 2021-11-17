@@ -3,6 +3,7 @@ import SearchWidgetModal from 'components/Search/SearchWidgetModal';
 import { SearchContext } from 'contexts/SearchContext';
 import React, { FC, useContext } from 'react';
 import Button from 'react-bootstrap/Button';
+import styles from './PortfolioList.module.css';
 
 export interface Prop {
   portfolioId?: string;
@@ -23,7 +24,7 @@ const AddStock: FC<Prop> = (prop) => {
         onClick={() => {
           addStock();
         }}
-        className='d-flex align-items-center'
+        className={`d-flex align-items-center ${styles.toolbarCreateButton}`}
       >
         <img src={plusCircle} alt='plus' className='me-1' /> Add a stock
       </Button>

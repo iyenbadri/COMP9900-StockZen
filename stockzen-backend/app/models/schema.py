@@ -26,7 +26,7 @@ class User(UserMixin, db.Model):
     first_name = Column(String(40))
     last_name = Column(String(40))
     password_hash = Column(String(110))
-    validated = Column(Boolean, default=True)  # FIXME: placeholder for validation feature
+    validated = Column(Boolean, default=True)
 
     def set_password(self, password) -> None:
         self.password_hash = generate_password_hash(password)
@@ -204,10 +204,12 @@ class History(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     stock_page_id = Column(Integer, ForeignKey("stock_pages.id"), nullable=False)
     history = Column(String, nullable=False)
-    
+
+
 # ------------------------------------------------------------------------------
 # Price Alert tables
 # ------------------------------------------------------------------------------
+
 
 class PriceAlert(db.Model):
     __tablename__ = "price_alerts"
@@ -219,6 +221,7 @@ class PriceAlert(db.Model):
     is_high_threshold_alerted = Column(Boolean)
     is_low_threshold_alerted = Column(Boolean)
     last_check_time = Column(DateTime)
+
 
 # ------------------------------------------------------------------------------
 # Portfolio Challenge tables
@@ -262,5 +265,3 @@ class ChallengeEntry(db.Model):
     UniqueConstraint(challenge_id, user_id, stock_page_id)
     # NOTE: challenge_id and user_id unique constraint is enforced in the CRUD function
     # to allow for a more informative error message to the frontend
-
-

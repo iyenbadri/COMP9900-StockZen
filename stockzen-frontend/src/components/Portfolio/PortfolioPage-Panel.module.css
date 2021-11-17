@@ -46,10 +46,6 @@ img.alertAlerted {
   text-align: center;
 }
 
-.rowHeader {
-  /* text-decoration: underline; */
-}
-
 .rowHeader .lotTradeDate,
 .rowHeader .lotUnitPrice,
 .rowHeader .lotValue,
@@ -105,11 +101,7 @@ img.alertAlerted {
   text-align: center;
 }
 
-.totalTradeDate,
-.totalUnits,
-.totalUnitPrice,
-.totalValue,
-.totalChange {
+.totals {
   font-weight: 500;
 }
 

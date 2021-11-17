@@ -2,6 +2,7 @@ import smileIcon from 'assets/icon-outlines/outline-emotxd-smile.svg';
 import varticalDot from 'assets/icon-outlines/outline-menu-vertical.svg';
 import refreshIcon from 'assets/icon-outlines/outline-refresh-small.svg';
 import loadingIcon from 'assets/load_spinner.svg';
+// Reference: This page has been designed using resources from Flaticon.com
 import medal1 from 'assets/medal_1.png';
 import medal2 from 'assets/medal_2.png';
 import medal3 from 'assets/medal_3.png';
@@ -229,7 +230,7 @@ const Leaderboard = () => {
           <>
             {/* Current challenge data */}
             <div className={styles.challengeDateMessage}>
-              Current challenge: {leaderboard?.startDate.format('HH:mm')}{' '}
+              Previous challenge: {leaderboard?.startDate.format('HH:mm')}{' '}
               <span className={styles.challengeDate}>
                 {leaderboard?.startDate.format('DD/MM/YYYY')}
               </span>{' '}
@@ -239,85 +240,94 @@ const Leaderboard = () => {
               </span>
             </div>
 
-            {/* Table header */}
-            <div className={styles.leaderboardTable}>
-              <div className={styles.leaderboardTableHeader}>
-                <div className={styles.rowYou}></div>
-                <div className={styles.rowRank}>Rank</div>
-                <div className={styles.rowUser}>User</div>
-                <div className={styles.rowGain}>Portfolio Gain</div>
-                <div className={styles.rowTopStock}>Top Stock</div>
+            {leaderboard.leaderboard.length === 0 &&
+            leaderboard.userRow.userId == null ? (
+              <div className='text-center'>
+                There were no submissions for the previous Portfolio Challenge
               </div>
-            </div>
-
-            {/* Ranks */}
-            {leaderboard.leaderboard.map((x, index) => (
-              <div className={styles.leaderboardTableRow}>
-                <div className={styles.rowYou}>
-                  {leaderboard.userRow.userId === x.userId ? 'You' : ''}
-                </div>
-                <div
-                  className={`${styles.rowInfo} ${getLeaderboardStyle(
-                    index + 1
-                  )}`}
-                >
-                  <div className={styles.rowRank}>
-                    {index < 3 ? (
-                      <img
-                        src={getMedalIcon(index + 1)}
-                        alt={(index + 1).toString()}
-                        height='35'
-                      />
-                    ) : (
-                      index + 1
-                    )}
-                  </div>
-                  <div className={styles.rowUser}>{x.userName}</div>
-                  <div className={styles.rowGain}>
-                    {percentFormatter.format(x.percChange)}
-                  </div>
-                  <div className={styles.rowTopStock}>{x.stocks[0]}</div>
-                </div>
-              </div>
-            ))}
-
-            {/* If user is not in top 10 */}
-            {!leaderboard?.isUserInTop &&
-              leaderboard.userRow != null &&
-              leaderboard.userRow.userId != null && (
-                <>
-                  <div className={styles.leaderboardTableRow}>
+            ) : (
+              <>
+                {/* Table Header */}
+                <div className={styles.leaderboardTable}>
+                  <div className={styles.leaderboardTableHeader}>
                     <div className={styles.rowYou}></div>
-                    <div className={styles.rowMore}>
-                      <img src={varticalDot} alt='more' />
-                    </div>
+                    <div className={styles.rowRank}>Rank</div>
+                    <div className={styles.rowUser}>User</div>
+                    <div className={styles.rowGain}>Portfolio Gain</div>
+                    <div className={styles.rowTopStock}>Top Stock</div>
                   </div>
+                </div>
 
-                  <div className={styles.leaderboardTableRow}>
-                    <div className={styles.rowYou}>You</div>
-                    <div className={`${styles.rowInfo}`}>
+                {/* User ranks */}
+                {leaderboard.leaderboard.map((x, index) => (
+                  <div className={styles.leaderboardTableRow} key={x.userId}>
+                    <div className={styles.rowYou}>
+                      {leaderboard.userRow.userId === x.userId ? 'You' : ''}
+                    </div>
+                    <div
+                      className={`${styles.rowInfo} ${getLeaderboardStyle(
+                        index + 1
+                      )}`}
+                    >
                       <div className={styles.rowRank}>
-                        {leaderboard.userRow.rank}
+                        {index < 3 ? (
+                          <img
+                            src={getMedalIcon(index + 1)}
+                            alt={(index + 1).toString()}
+                            height='35'
+                          />
+                        ) : (
+                          index + 1
+                        )}
                       </div>
-                      <div className={styles.rowUser}>
-                        {leaderboard?.userRow.userName}
-                      </div>
+                      <div className={styles.rowUser}>{x.userName}</div>
                       <div className={styles.rowGain}>
-                        {leaderboard != null &&
-                          percentFormatter.format(
-                            leaderboard.userRow.percChange
-                          )}
+                        {percentFormatter.format(x.percChange / 100)}
                       </div>
-                      <div className={styles.rowTopStock}>
-                        {leaderboard.userRow != null &&
-                          leaderboard.userRow.stocks != null &&
-                          leaderboard.userRow.stocks.length > 0 &&
-                          leaderboard?.userRow.stocks[0]}
-                      </div>
+                      <div className={styles.rowTopStock}>{x.stocks[0]}</div>
                     </div>
                   </div>
-                </>
-              )}
+                ))}
+
+                {!leaderboard?.isUserInTop &&
+                  leaderboard.userRow != null &&
+                  leaderboard.userRow.userId != null && (
+                    <>
+                      <div className={styles.leaderboardTableRow}>
+                        <div className={styles.rowYou}></div>
+                        <div className={styles.rowMore}>
+                          <img src={varticalDot} alt='more' />
+                        </div>
+                      </div>
+
+                      {/* Current user rank */}
+                      <div className={styles.leaderboardTableRow}>
+                        <div className={styles.rowYou}>You</div>
+                        <div className={`${styles.rowInfo}`}>
+                          <div className={styles.rowRank}>
+                            {leaderboard.userRow.rank}
+                          </div>
+                          <div className={styles.rowUser}>
+                            {leaderboard?.userRow.userName}
+                          </div>
+                          <div className={styles.rowGain}>
+                            {leaderboard != null &&
+                              percentFormatter.format(
+                                leaderboard.userRow.percChange / 100
+                              )}
+                          </div>
+                          <div className={styles.rowTopStock}>
+                            {leaderboard.userRow != null &&
+                              leaderboard.userRow.stocks != null &&
+                              leaderboard.userRow.stocks.length > 0 &&
+                              leaderboard?.userRow.stocks[0]}
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+              </>
+            )}
           </>
         )}
       </div>
@@ -392,8 +402,7 @@ const Leaderboard = () => {
                       >
                         <h4 className='text-center'>Submit your portfolio</h4>
                         <p className={styles.description}>
-                          Pick between 5 stocks to be added to your public
-                          portfolio.
+                          Pick 5 stocks to be added to your public portfolio.
                           <br />
                           Over the next 2 weeks, you can see how you are
                           performing on the leaderboard.

@@ -301,7 +301,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
               autoComplete='off'
               onSubmit={handleSubmit(handleAddBoughtLot)}
             >
-              <h5 className='mb-4'>Add new lot: Bought</h5>
+              <h5 className='mb-4'>Add New Lot: Bought</h5>
 
               <Form.Group className='mb-4'>
                 <Form.Label>Trade Date</Form.Label>
@@ -372,7 +372,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
         >
           <Modal.Body>
             <Form autoComplete='off' onSubmit={handleSubmit(handleAddSoldLot)}>
-              <h5 className='mb-4'>Add new lot: Sold</h5>
+              <h5 className='mb-4'>Add New Lot: Sold</h5>
 
               <Form.Group className='mb-4'>
                 <Form.Label>Trade Date</Form.Label>
@@ -444,7 +444,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           <Modal.Body>
             <Form autoComplete='off' onSubmit={handleSubmit(handleEditLot)}>
               <h5 className='mb-4'>
-                Edit new lot:
+                Edit Lot:{' '}
                 {editingLotType === LotType.Bought ? 'Bought' : 'Sold'}
               </h5>
 
@@ -512,7 +512,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
               <div className='text-center mt-5'>
                 <Button type='submit' variant='zen-3'>
-                  OK
+                  Confirm
                 </Button>
               </div>
             </Form>
@@ -526,7 +526,7 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
           <Modal.Header closeButton>
             <Modal.Title>Delete Lot</Modal.Title>
           </Modal.Header>
-          <Modal.Body>Do you want to delete this list?</Modal.Body>
+          <Modal.Body>Are you sure you want to delete this lot?</Modal.Body>
           <Modal.Footer>
             <Button variant={'danger'} onClick={handleDeleteLot}>
               Yes
@@ -633,22 +633,20 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
         {/* Summary row of bought lots */}
         <div className={styles.lotRow}>
-          <div className={`${styles.lotTradeDate} ${styles.totalTradeDate}`}>
-            TOTAL
-          </div>
-          <div className={`${styles.lotUnits} ${styles.totalUnits}`}>
+          <div className={`${styles.lotTradeDate} ${styles.totals}`}>TOTAL</div>
+          <div className={`${styles.lotUnits} ${styles.totals}`}>
             {numberFormatter.format(boughtTotal.units)}
           </div>
-          <div className={styles.lotUnitPrice}>
+          <div className={`${styles.lotUnitPrice} ${styles.totals}`}>
             {usdFormatter.format(boughtTotal.unitPrice)}
           </div>
-          <div className={styles.lotValue}>
+          <div className={`${styles.lotValue} ${styles.totals}`}>
             {usdFormatter.format(boughtTotal.units * currentPrice)}
           </div>
-          <div className={styles.lotChange}>
+          <div className={`${styles.lotChange} ${styles.totals}`}>
             {usdFormatter.format(boughtTotal.units * priceChange)}
           </div>
-          <div className={styles.lotActions}></div>
+          <div className={`${styles.lotActions} ${styles.totals}`}></div>
         </div>
       </div>
 
@@ -746,19 +744,17 @@ const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
 
         {/* Summary row of sold lots */}
         <div className={styles.lotRow}>
-          <div className={`${styles.lotTradeDate} ${styles.totalTradeDate}`}>
-            TOTAL
-          </div>
-          <div className={`${styles.lotUnits} ${styles.totalUnits}`}>
+          <div className={`${styles.lotTradeDate} ${styles.totals}`}>TOTAL</div>
+          <div className={`${styles.lotUnits} ${styles.totals}`}>
             {numberFormatter.format(soldTotal.units)}
           </div>
-          <div className={styles.lotUnitPrice}>
+          <div className={`${styles.lotUnitPrice} ${styles.totals}`}>
             {usdFormatter.format(soldTotal.unitPrice)}
           </div>
-          <div className={styles.lotValue}>
+          <div className={`${styles.lotValue} ${styles.totals}`}>
             {usdFormatter.format(soldTotal.price)}
           </div>
-          <div className={styles.lotChange}>
+          <div className={`${styles.lotChange} ${styles.totals}`}>
             {usdFormatter.format(
               soldTotal.price - boughtTotal.unitPrice * soldTotal.units
             )}

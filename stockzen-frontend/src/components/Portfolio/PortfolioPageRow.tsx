@@ -69,10 +69,6 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
     }
   };
 
-  stock.prediction = 1;
-  stock.confidence = 0.6;
-
-  // Render
   return (
     <Draggable draggableId={stock.draggableId} index={props.index}>
       {(provided, snapshot) => (
@@ -183,13 +179,13 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
 
                 {/* Prediction */}
                 <span className={styles.rowPredict}>
-                  {stock.prediction > 0 ? (
+                  {stock.prediction === 1 ? (
                     <img
                       src={upArrowIcon}
                       alt='prediction up arrow icon'
                       className={styles.predictArrow}
                     />
-                  ) : stock.prediction < 0 ? (
+                  ) : stock.prediction === 0 ? (
                     <img
                       src={downArrowIcon}
                       alt='prediction down arrow icon'
@@ -198,7 +194,7 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                   ) : (
                     '-'
                   )}
-                  {stock.prediction && stock.confidence ? (
+                  {stock.prediction !== null && stock.confidence ? (
                     <div className={styles.indicatorContainer}>
                       <div className={styles.indicatorOutline}>
                         <div
