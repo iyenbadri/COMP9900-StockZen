@@ -38,7 +38,7 @@ _The following instructions assume UNIX-based OS. If you are on Windows, you nee
 
 ### Frontend
 
-1. Ensure your `node` (`v14.17.6` - latest LTS) is installed. Do not update `npm`.
+1. Ensure your `node` (`v10.19.0`) is installed. Do not update `npm`.
 
    Optional:
 
@@ -76,7 +76,7 @@ _The following instructions assume UNIX-based OS. If you are on Windows, you nee
 
 ### Backend
 
-1. Ensure you have `python3` (`v3.8.10`) installed/updated.
+1. Ensure you have `python3` (`v3.8.2`) installed/updated.
 
 2. Navigate into `./stockzen-backend` and set up a Python virtual environment with::
 
