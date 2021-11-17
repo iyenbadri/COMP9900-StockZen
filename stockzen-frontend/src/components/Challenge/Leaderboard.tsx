@@ -235,7 +235,7 @@ const Leaderboard = () => {
             </div>
 
             {leaderboard.leaderboard.length === 0 &&
-              leaderboard.userRow.userId == null ? (
+            leaderboard.userRow.userId == null ? (
               <div className='text-center'>
                 There were no submissions for the previous Portfolio Challenge
               </div>
