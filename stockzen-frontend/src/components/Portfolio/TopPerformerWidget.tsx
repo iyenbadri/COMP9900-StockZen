@@ -62,8 +62,8 @@ const TopPerformerWidget: FC = (props) => {
             {portfolioSummary == null
               ? '-'
               : percFormatter.format(
-                portfolioSummary?.todayChangePercent ?? 0
-              )}
+                  portfolioSummary?.todayChangePercent ?? 0
+                )}
           </div>
           <div className={styles.summaryTitle}>Overall</div>
           <div className={`${styles.summaryValue} outerStroke`}>
@@ -71,8 +71,8 @@ const TopPerformerWidget: FC = (props) => {
             {portfolioSummary == null
               ? '-'
               : percFormatter.format(
-                portfolioSummary?.overallChangePercent ?? 0
-              )}
+                  portfolioSummary?.overallChangePercent ?? 0
+                )}
           </div>
           <hr className={styles.separatorLine} />
         </>
