@@ -100,7 +100,7 @@ Please prefix all these scripts with the `bash` command to avoid permission issu
    ```
 6. Open a browser and navigate to http://localhost:3000/ to access the website.
 
-## Price Alert (Optional)
+## Price Alert Feature (Optional)
 
 To activate the price alert functionality, the variables **`MAIL_USERNAME`** and **`MAIL_PASSWORD`** must be set, and backend must be setup and working.
 
@@ -124,7 +124,7 @@ To activate the price alert functionality, the variables **`MAIL_USERNAME`** and
    ```
 4. To stop the script, press **Ctrl+C** when it shows 'Sleeping' in the terminal
 
-## Challenge (Optional)
+## Challenge Feature (Optional)
 
 1. Navigate to `stockzen-backend` folder
 2. Activate the virtualenv by running:
