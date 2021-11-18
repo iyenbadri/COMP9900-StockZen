@@ -25,7 +25,11 @@ with app.app_context():
     if not has_tables:
         populate_symbols(engine)
     # add dummy data if flag is set
-    if POPULATE_NEW_DB == "True" and not has_tables:
+    if (
+        os.environ.get("FLASK_ENV") == "development"
+        and POPULATE_NEW_DB == "True"
+        and not has_tables
+    ):
         generate_dummy_data()
 
 # ==============================================================================
