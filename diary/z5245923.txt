@@ -1,0 +1,172 @@
+========================================================================================
+
+Week 1
+
+- Team formation and project selection done on the first lab.
+- Researched Yahoo finance website and similar stock management web services to analyse 
+  existing functionalities and come up with novel ones.
+- On Sunday team meeting, had discussion about project objectives and technology stack.
+
+
+========================================================================================
+
+Week 2
+
+• Planned  : Project proposal work - system architecture part 
+• Achieved : Almost done, further detailed descriptions and UML diagram to be attached
+
+- Worked on system architecture part of project proposal: draft software design and 
+  descriptions about structure and user types. 
+- Went through several tutorials of React and Javascript for upcoming frontend coding.
+
+========================================================================================
+
+Week 3
+
+• Planned  : Final project proposal submission, start Sprint 1
+• Achieved : All I planned.
+  *But spent too much time on learning frontend dev -> Need to speed up learning process!
+
+- Completed project proposal's system architecture part including UML use case diagram.
+- Reviewed final proposal with some comments.
+- Set up GitHub and development environment.
+- Did PR reviews for:
+  · PR#3_Footer (Rittisak)
+  · PR#15_Registration_page (Rittisak)
+- Explored CSS, React, and TypeScript tutorials for upcoming frontend coding.
+- Got started on frontend login page layout.
+
+========================================================================================
+
+Week 4 
+
+• Planned  : Coding for (1)login page (2)responsive design (3)portfolio functionality
+• Achieved : Mostly done
+
+- Did PR reviews for:
+  · PR#17_Porfolio_list (Rittisak)
+  · PR#20_Landing_page (Khai)
+- Wrote codes and created PR for:
+  · login page layout and functionalities(error handling, user data storage)
+  · logout handling (user data deletion)
+  · portfolio creation functionality
+- Had meeting with Khai to discuss about implementation of login page
+
+========================================================================================
+
+Week 5 
+
+• Planned  : (1) Coding for logout page (2) Plan for stock page
+• Achieved : All done, but need to show more progress in stock page ASAP
+
+- Did PR reviews for:
+  · PR#28_Frontend_search_widget (Rittisak)
+  · PR#41_Fix_user_redirection (Rittisak)
+- Wrote codes and created PR for:
+  · logout handling (page layout modification, API wireup)
+- Had meeting with Khai to discuss about logout page layout
+- Did research, took related tutorials, studied Ken's code structures for 
+  upcoming stock page implementation
+
+========================================================================================
+
+Week 6 
+
+• Planned  : Stock page (except for API wire up)
+• Achieved : 30% done
+  (*Could not achieve 100% as I had to spend much time learning and rewriting the codes
+  through trial and error )
+
+- Did PR reviews for:
+  · PR#53_Bugfix for Portfolio API wire up (Rittisak)
+  · PR#54_Bugfix for top performer widget (Rittisak)
+  · PR#57_Bugfix for login page (Rittisak)
+  · PR#58_Portfolio list sort wire up (Rittisak)
+  · PR#64_Search API wire up (Rittisak)
+- Wrote codes and created PR for frontend's:
+  · stock page layout
+  · stock summary tab and table
+  · company profile tab and table
+- Had discussion with Rittisak to discuss get feedback on code style and 
+  structure of stock page
+- Did research on:
+  · yfinance documents to come up with appropriate schema of stock page data and
+    create mock data
+  · React's packages and libraries (e.g., react-tabs, react-table, etc.) for 
+    implementing tabs and tables in stock page 
+
+========================================================================================
+
+Week 7
+
+• Planned  : Complete stock page including API wire up
+• Achieved : 80% Done, still need some refinements over codes for PR
+
+- Did PR reviews for:
+  · PR#66_Portfolio page lots (Rittisak)
+- Wrote codes for stock page's:
+  · historical data tab and table
+  · 1 year history chart
+  · API wire up
+  · search widget
+- Refined the codes based on the feedbacks I got from PR 
+- Did test for stock page endpoints (partially reviewing Khai's code)
+
+========================================================================================
+
+Week 8
+
+• Planned  : Finish (1)stock page (including bug fix) 
+                    (2)fundamental tab in portfolio page
+• Achieved : (1) Done, (2) 50% Done 
+  (*Could not complete task(2) all as I tried refactoring which took
+  too much time)
+
+- Did PR reviews for:
+  · PR#78_Refresh functionality (Rittisak)
+- Wrote codes for:
+  · stock search widget in header
+  · tabifying portfolio page ('My Holdings' and 'Fundamental')
+  · FundamentalRow which displays fundamental info for each stock
+
+========================================================================================
+
+Week 9
+
+• Planned  : Finish (1)fundamental tab
+                    (2)overall bug fix and documentation of codes
+                    (3)modal in leaderboard
+             by Friday night
+• Achieved : (1) Done (2) Bug fix done (documentation yet) (3) Mostly done
+
+- Had meeting with Rittisak to get some advice on fixing Promise issue 
+- Wrote codes and PR for:
+  · remaining fundamental tab contents 
+  · bug fix in fundamental tab, stock page, logout logic
+
+========================================================================================
+
+Week 10
+• Planned  : Finish (1)modal in leaderboard (2)documentations
+• Achieved : All done
+
+- Wrote code and PR for leaderboard submission modal
+- Had meeting with Rittisak to get advice and feedback on some bugs and resolved together
+- Add documentation to codes, especially for stock page and leaderboard modal which lacked
+  documentation
+- Wrote architecture and implementation challenge part in final report.
+  For implementation challenge, team members wrote respective issue that they encountered.
+- Wrote script for final demo and prepared for it
+
+========================================================================================
+
+* Notes *
+
+- For team meetings we had over the project, i.e. regular standups / weekly big meeting / 
+  demo prep / retro / etc., I attended them all except for one standup in 29/10 that I 
+  replaced with text update
+- As I took part in frontend developement although I was beginner in that area, had to
+  put much time and efforts in learning whole languages from the scratch, which sadly led 
+  to way less code contribution. However, thanks to supportive team members, I could have
+  great opportunity to learn new things and keep it up. 
+  Nice team, valuable project experience! 

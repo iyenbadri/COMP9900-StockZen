@@ -1,0 +1,274 @@
+===========================================================================
+WEEK 1
+===========================================================================
+
+Group formation, created Jira account, still waiting on GitHub to be activated. Set up some Epics in Jira.
+
+Organised Teams meeting for 19th Sept to discuss project objectives, user stories, and tech stack/system architecture.
+
+Meeting: decided on 8 core/novel objectives, distributed research/investigation workloads.
+
+Initialised backlog creation and refinement process (Rittisak wrote initial user stories), writing of some Acceptance Criteria.
+
+===========================================================================
+WEEK 2
+===========================================================================
+
+Created epics for each objective, split objectives into User Stories.
+
+Set up slack channel with Teams and Jira integrations.
+
+Meeting 1: consensus on objectives, distributed workload for Proposal.
+
+Rittisak and I refined all the user stories and wrote the acceptance criteriaWe updated the project objectives accordingly
+We discussed options for frontend design and structure, and decided on our approach.
+
+Technical obstacle: Design and Storyboard
+While we initially wanted to go with a Balsamiq/Figma combo, Figma-only seemed to be a much better/ hi res option for wireframing, as it also provided a real life example for frontend devs to work on.
+I drafted up colour palette, font, and Figma designs; chose the project name and logo design. 
+Held a 1-hr design meeting with Gunjan to figure out the page flow.
+I continued design of pages in Figma, completing design of Landing, Login/Register, Home, Portfolio, Stock Page and other minor functionailites. I created an SVG image for the StockZen logo.
+
+I updated all sprint dates on Jira and reviewed all project objectives and made adjustments to user stories
+
+Meeting 2: Gunjan presented backend and AlphaVantage API, Jeehyun talked about system design, Rittisak and I talked about front end design. 
+
+Meeting 3: Separate meeting with Badri to catch up on designs and wireframes.
+
+Planned work: All proposal tasks, Devops setup
+Achieved: All mostly achieved, with some work redistribution to accommodate some members.
+
+===========================================================================
+Week 3
+===========================================================================
+
+Set up github classroom repo and project folder structure.
+Wrote a README file so that everyone could install and use the same dev environment in a consistent manner.
+Rittisak and I had a discussion around IDE tooling and git practises. I updated the formatting settings and include more instructions in the README.
+I set up some tooling and task shortcuts for running the dev environment.
+
+I continued on the Figma designs for the Challenge pages.
+
+Meeting 1: Presented Figma designs and PR / feature branching process on Teams Meeting. Sprint 1 started.
+
+Wrote up detailed process for branching and PR.
+
+Did PR review for Contexts use case in React.
+Did PR for Rittisak's branch on feat-f/register; merged branch into main.
+
+Wrote up the initial frontend / backend boilerplate code + some test code to confirm communications between front/backend.
+Developed feat-b/register, set up SQLAlchemy and researched password storage.
+Wrote backend registration endpoints and password hashing process.
+Submitted PR for this. 
+
+Searched for medal assets for challenge page.
+
+Compiled all sections into final proposal, including formatting. Rewrote several sections due to some mistakes, inaccuracies, missing parts, and for general improvements. Received feedback from Rittisak and made further changes.
+
+Planned work: finish proposal, start on Sprint 1
+Achieved: All mostly achieved - proposal delayed by 1 day, but sprint started early by 1 day. All good.
+
+Meeting: Set up standup meeting times, discussion around Jira issues and distribution of work
+
+Spent a few hours helping Badri and Gunjan set up their development environments - now fully working.
+
+Updated feat-b/register to incorporate new user details route and update login route. 
+Also tested authentication flow with Swagger. Submitted PR.
+
+Wrote user exists route and submitted PR.
+
+Backend Sharing session with Badri and Gunjan to get them up to speed with the current backend architecture
+
+
+===========================================================================
+Week 4
+===========================================================================
+Help team with envrionment issues
+PR for Rittisak
+PR for Gunjan
+Code for layout changes
+
+Meeting: Figure out AV API caching behaviour
+Finish additional styling for registration
+Finish code for Landing Page
+Call with Jeehyun for Login
+Call with Badri for Performance Summary Banner
+AV API caching and database architecture
+Code for Logout page
+SQLalchemy discussion for stock_lots and users tables with Badri
+A few more discussions with Badri about this
+
+Review Stock List Page PR
+Review portfolios/lots PR
+Making updates to the database structure, considering performance and updates scheme
+
+Updated Figma with new Lot Details Panel designs and added equations for all metrics
+Worked on the backend to 1. review Badri PR and correct mistakes 2. update the schema for new tables
+3. expand and refactor to cover endpoints for Portfolios, Stocks, Lots
+Meeting: progression check, API discussion
+Refactored backend utilities, added Fetch endpoints
+Group meeting about API - yfinance decided on.
+
+Bugfixes for backend schema
+PR review for Rittisak and Jeehyun
+Review demo plan with team
+===========================================================================
+Week 5
+===========================================================================
+PR for search function
+PR for portfolio pages
+Discuss data load script with Badri
+PR for logout function, research React Router
+Look into yfinance documentation
+Code for PortfolioListSummary component
+
+Discussion with Gunjan on yfinance and database
+Discussion with Badri on search database endpoint
+
+Styling fixup code for demo
+Demo preparation
+Database population script for user and portfolio
+
+Progress: The team is bit behind on Sprint 1 but have covered some bits for Sprint 2, hopefully we can catch up.
+
+Coded the backend for sorting endpoint, draft PR, bugfixes
+Look into testing frameworks for backend
+Research into drag and drop options
+PR for Rittisak for drag and drop
+Ran retrospective session and backlog review
+Wrote and formatted retrospective report
+
+===========================================================================
+Week 6
+===========================================================================
+Submitted retrospective report and emailed to tutor
+Research on SQLA deferreds, implemented load_only 
+Further fix up to search endpoint branch for querystring and file structure, submit PR
+Bugfixes from PR review, merged portfolio reordering endpoint
+Made changes to abort calls, modify backend schema to somewhat normalise the db
+Modified stock list logic to return relevant datapoints
+Research into pytest for backend, looking at refactoring entry point into factory function to enable instanced tests
+Write tests for Portfolio, Stock, User
+Meeting with Badri to discuss ML feature approach
+Review Gunjan's PR
+
+===========================================================================
+Week 7
+===========================================================================
+Write up Test suite PR for stocks and implement github actions script for automated tests on push
+Review options for database initialisation with symbols list
+Meeting with Gunjan to discuss changes to api utils
+Implemented auto db population script
+Submit PR for changes to api/crud utils 
+Implement stock page endpoint
+Bugfix for Stock getting single details
+Refactor row reordering backend logic
+Fix up stock symbols table
+Complete all Stock test suites
+Complete all Stock Page test suites including no-network checks
+Set up a PR for Stock page endpoints
+Merged PR for Stock page endpoints
+Implement Stock reordering endpoint
+Implemented Stock History endpoints
+Complete Stock History test suite
+Set up a PR for Stock History endpoints and Stock row reordering
+Merged PR for Stock History / Stock row reordering endpoints
+Implemented Buy Lots endpoints
+Implemented Sell Lots endpoints
+Set up a draft PR for Buy and Sell Lots endpoints
+Complete some of Buy Lot tests
+Begin reviewing frontend Lots PR
+Meet with Gunjan to discuss calculations approch
+Meet with Badri to discuss linear regression model
+
+Planned work: Finish as many endpoints as possible to unblock frontend work
+Achieved: Bit behind on calculations and lots, but we can catch up this weekend
+
+===========================================================================
+Week 8
+===========================================================================
+ML research on confidence/ prediction intervals
+Debug calculation code issues
+Review Gunjan's PR on backend-calculations
+Update PR on backend calcs
+Implement calculation cascade/propagation rules
+Update db populator for lots population
+Implement update interval feature for backend calcs
+Add concurrency feature to backend calcs with flask-executor
+Update/fix tests
+Review Rittisak's PR for Lots wireup
+Meeting: Demo discussion and planning
+PR and Merge backend calculations branch
+Demo testing and preparation on new branch
+Raise issue with load blocking
+Implemented Portfolio Performance Summary endpoint
+Implement Portfolio Performance Summary endpoint tests
+Provide feedback to Jeehyun on Stock Page
+Make CSS formatting changes for Demo2 branch
+Meeting: Demo runthrough
+Did Demo Presentation
+
+Implement Portfolio summary banner endpoint and logic
+Set up PR for Portfolio summary banner endpoint
+Implement Top performing stocks logic and endpoint
+Add testing mode for top performing stocks
+Add longer staleness flag for top performing stocks
+Set up PR for top performing stocks
+Bugfix for merge issues
+PR for Rittisak
+Update to do requests from within top performance fetch
+Meeting: Retro 2
+Meeting: Gunjan discuss Portfolio Challenge architecture
+
+
+===========================================================================
+Week 9
+===========================================================================
+Meeting: Badri discuss ML model accuracy
+Implement db schema and endpoints for portfolio challenge
+Implement leaderboard, status, submit
+Implement fixes for username response and user rank response
+Update portfolio challenge script, merge
+PR for Rittisak Price Alerts
+Bugfix PR review for Top Performer
+Meeting: Gunjan to discuss Challenge script
+Add flask.cli to challenge script
+Bugfixes for challenge script for wire up section and datetime issues
+Implement Portfolio row ML Prediction frontend: arrow and indicator
+PR for ML Prediction arrow and indicator
+
+Planned work: Get all remaining tickets to Code Review stage so that we can focus on Documentation and Report
+Achieved: Great progress, all tickets either in progress or code review, should be done by Friday Standup and can focus on report
+
+Merged portfolio challenge PRs
+Implement additional stockName in /top route
+Add rank attribute to challenge response 
+Create and Merge PRs
+Meeting: divide workload for presentation and report
+Create report template and structure
+Challenge user status endpoint branch
+
+===========================================================================
+Week 10
+===========================================================================
+Begin work on mapping functionalities to objectives 
+Bugfixes for leaderboard script
+PR review and changes for ML feature
+PR review for front-end Leaderboard feature
+Submit PR for leaderboard styling and bugfixes for Challenge feature
+Address some issues on github master todo list
+Write script for Challenge feature
+Continue work on mapping functionalities for the final report
+Complete functionality mapping
+Bugfixes for some typos and styling
+Complete third party library tables
+Complete licensing discussion
+Updates for implementation challenges section, write Flask CLI and Concurrency sections
+Rewrite ML challenges section
+Rewrite some of Overview section
+Changes to Architecture section
+Reformat references and table of contents
+Final PR reviews and merges
+
+Planned work: Finish all tickets by the weekend and complete report
+Achieved: Progress was slow and contributed quality of work for some areas was lacking. Still able to finish on time.

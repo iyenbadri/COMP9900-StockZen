@@ -1,0 +1,169 @@
+Week 01
+
+Browsing of course materials and checking of portfolios available to work on through the course.
+Selection of top 3 proejct topics to work on.
+In Lab discussion with peers for group formation and topic finalisation.
+Team communication set up and division of conceptual work amongst members: Backend .
+- 19/09/2021
+
+Week 02
+
+Set up Jira board for remote collaboration with team.
+Project topic discussion and feature mapping.
+Setting up of story boards and novel features of the system using Jira.
+Web layout design using Figma.
+Discussion of Project Proposal due at week 04.
+Division of task for Projec Proposal: User Stories.
+Set up of GitHub Classrooms and set up of backend development environments.
+- 26/09/2021
+
+Week 03 
+
+Planned Work:
+Working with SQLAlchemy and AlphaVantage API for setting up of databases for User Portfolios and stocks in Portfolios
+
+Self Study required:
+SQLAlchemy and AlphaVantage
+Time spent~ 3 hours
+
+Implemented work:
+Set up of databases for User stocks and Portfolios: Status- In review by Khai Liew
+
+Outstanding Work:
+User portfolio performance Banner routes
+Updated databse of stock prices, everytime a dev calls for the latest stock price.
+
+Meetings atended:
+Standup Meetings
+One on one with Khai for assistance working with SQLAlchemy an techical questions.
+- 07/10/2021
+
+Week 04:
+
+Issues:
+Week 04 Lab: Identified AV api won't be suitable for the project in terms of its scope and limitations, look for alternatives.
+Figuring out Stock page calculation on the chosen API to display results on the user's screen.
+
+Planned Work:
+Working collaboratively with Gunjan conducting market research on Alternative API and integration with our current build.
+Jira: Adding dummy User data to the databse for allowing for testing. Merged with changes made by Khai.
+Jira: Creating a stock search endpoint. Currently in Code review.
+
+Meetings Attended:
+Usual stand ups with Team to figure out the way forward and usual updates.
+Meeting with Gunjan: Discuss progress regarding Yahoo finance API.
+Meeting with Khai and Rittisak For implementing the stock search endpoint and detailed walk through of the acceptance criteria.
+
+Time spent: ~>10 hours
+- 14/10/2021
+
+Week 05:
+
+Stock search endpoint PR had some fixes necessary to be made due to which I had fix them up and implement changes to it- Successfully merged into the main branch.
+
+Meeting with Backend team; Khai and Gunjan for catching up on progress and the way ahead- better understanding of the situation we have at the backend.
+Skipped meeting with General for personal reasons, provided with updates on slack channel- Tuesday standup.
+
+Backend team; currently blocking a lot of progress at the frontend- need to prioritise the clean up of the tasks at the backlog ion order to allow for frontend to work seamlessly.
+
+Tasks for the week:
+Research on Machine Learning models for using in our stock prediction algorithm.
+Checking implementation of these models based on available data ion order to avoid pings to the Yfinance API.Self study on LSTM models as traditional ML models won’t solve the problem. 
+Time spent: ~5 hours
+
+Tasks ahead:
+Implementation and demo of the ML prediction also to be merged in to the main.
+
+- 22/10/2021
+
+Week 06 - 07:
+
+I have been focusing on the ML Prediction side of project which was due this sprint and focused on the research
+
+Meeting with Gunjan and hai over the week to discuss about the algorithm and methopd of deploying the code on to the production side of system.
+
+Research done on:
+LSTM models for stock prediction: Not feasible due to the scope of project and the need to predict all stocks.
+Focused on classifying the stocks using Linear regression as it would provide means to classify all stocks with a generic model.
+ 
+Time spent: ~>20 hours.
+
+Tasks ahead:
+
+Finish up the demo model and get a production read code which will sit on the stock predict section of backend.
+Gunjan and Khai have worked out the logics for the data fetch. I can now focus on the widgets and banner routes necessary to be deployed so that front end can connect these.
+
+Issues:
+- Slow progress due to other course commitments.
+- Unforeseen health issues faced in the past few dayas delayed the process of completing research on time.
+
+    - 28/10/2021
+
+Week 08:
+
+ML stock prediction model needed to be implemented using LSTM. 
+The issues in the Linear regression model has been obsereved and discarded due to its short comings.
+
+Worked on finalising the ML model and needs to be improved a bit to be incorporated into the backend.
+
+Figured out a way to save the model as a .sav file to reduce training nd load time.
+
+Issues:
+- Extensive research prevented to complete the task before the s]print.
+- Conflicting deadlines and poor health added the trouble.
+
+Pending:
+- Completing the ML backend tasks to work with Gunjan and Khai on other backend task.
+
+    -04/11/21
+
+Week 09:
+
+Accomplishments:
+- A working model with acceptable accuracy and justifiable methodology.
+- Worked on accuracy prediction for the ML model.
+- Logistics of handling the saving of model and loading the predicted results has been successfully completed.
+
+meetings attended:
+- Backend team meeting after Retro-B for ML and Lots logic discussion.
+- Meeting with Khai: Discussion of accuracy.
+
+research for the week:
+- Problem: With the current state and design of ML prediction model, the need to do an accuracy printing was imperative to print the confidence of the model to given users an understanding of the model accuracy. 
+- Calculating accuracy for LSTM models.
+- Traditional methods of accuracy printing does not fit the solution as our results are regression based.
+
+Time Spent: ~15 Hours 
+Pending Tasks:
+- Pickling of models and storing into files.
+- Addition: Saving of files into JSON to get single file contain gin all the predicted prices and the accuracies.
+
+    -11/11/21
+
+Week 10:
+
+Achievements:
+
+Model changed from Jupyter Noteboooks to a .py file along with installations of all dependencies for set up in the backend.
+Saved all trained models on the backend using a pickle library.
+Upon training the model, a .json file is returned based on the prediction given by the models for all the trained models.
+Worked on the report and presentations necessary to be conducting during the final demo for a successful submission.- Sections: Machine Learning (report and Presentation)
+Closed all Machine Learning user stories on Jira with complete integration with the project.
+
+Issues:
+
+Further trouble shooting of the model on the stockmen-backend was quite difficult due to local environment issues which prevented me to do testing and debugging any further (Encounter an issue where I was unable to import numpy and torch libraries while testing on local machine)
+Hence, I ensured to do a proper Knowledge transfer to Gunjan and he could take over the debugging and testing.
+
+Downside:
+
+Unable to show progress on Github by creating a PR based on the said machine learning sections, but Jira Board could attest to the progress.
+
+Overall takeaway:
+
+Extremely supportive and nurturing group; highly informative project with a huge learning curve. 
+Acknowledgement:
+
+less experience as compared to peers put me at a disadvantage of getting a head start and keeping up with the pace of the project progress.
+
+- 18/11/21

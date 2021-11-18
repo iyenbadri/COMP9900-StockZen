@@ -1,0 +1,299 @@
+===========================================
+Week 1
+
+# Planned:      I planned to form a group in week 1.
+# Finished:     I formed a group with Khai, Gunjan, Badrivishal, Jeehyun. We decided
+                to work on stock portfolio management system. We appointed Khai to be
+                our Scruum master.
+# Issue:        -
+# Unfinished:   -
+# Next:         We will devide out work on the proposal.
+
+I registered my Atlassian account, linked my GitHub account. I posted in the Team forum
+that I was seeking for a team.
+
+We formed a team in week 1 lab session. We decided to work on the stock portfolio
+project and we scheduled our next meeting to be 19 Sunday on what to do in the proposal.
+We appointed Khai as our team Scruum master as he has some experience on the method.
+
+============================================
+Week 2
+
+# Planned:      Finalise the user stories. Start working on the proposal.
+# Finished:     We have came up with 2 novelties functionalities and almost finalised the
+                user stories.
+# Issue:        -
+# Unfinished:   Setting up the GitHub as the GitHub classroom link is not provided yet.
+# Next:         I and Khai will discuss about the dev environment, tools to use.
+
+I worked with Khai to finalise the objectives and user stories. We also decided to use
+Slack as a communication tool and Team as a meeting platform.
+
+In the lab session, we ask some questions about the objective. After that we talk about
+how to implement the project.
+
+For the proposal, I and Khai were working on the objectives/user stories part. Jeehyun
+was working on the Use case and Artitechture diagram. Badri was working on the design
+and wireframe. Gunjan was working on the backgroud.
+
+Khai also supplied us with design of screens on Figma. The url is 
+https://www.figma.com/file/6mRp53T7zyFzjplBT84vtw/Stockzen?node-id=66%3A89
+
+K 1
+
+============================================
+Week 3
+
+# Planned:      We planned to finish and submit the proposal this week.
+# Finished:     We submitted out proposal this week. I and Khai setup the dev 
+                environement/communication channels.
+# Issue:        Gunjan, Jeehyun, Badrivishal encountered an issue while setting up
+                their backend environment. We also found that there is too many PR
+                if we create it for all subtask so we are finding the better solution
+                for this.
+# Unfinished:   -
+# Next:         We have assigned each member tasks in Jira. We will think of a way
+                to solve the AlphaVantage API rate limie. We might write a script
+                to query data from AlphaVantage and then cache the data in our database.
+
+On Sunday, we had a stand-up meeting which we told what have we done, what will we do
+and what's blocking us. Later that day I worked with Khai to assign a story point in
+all storis.
+
+I started implement the UI part including registration, login, logout. I and Khai worked
+together to setup the environment for development and for a smoothe experience. 
+
+We agreed to use pull request to review code before merge changes into main branch.
+
+We agree to finalise the proposal on Thurday, I took a look a gave some comments.
+
+I finished implement the UI of the user registration page along with the user registration
+success page. I customised the colors in Bootstrap to match out selected colors
+(https://coolors.co/0b132b-1c2541-3a506b-5bc0be-c2fff6).
+
+I have a discussion with Khai that we have to find a way to query data from AlphaVantage
+because there are limits on how many requests could be made in a period of time.
+
+After I finished some of the task, I requested a pull request to Jeehyun and Khai.
+The easy one I requested a review from Jeehyun and the complex one I requested a review
+from Khai.
+
+We had assign each member a user story to officially start our development process. I
+chose to work on the user registration story. Khai chose a responsive design story.
+Jeehyun chose the user login story. Gunjan chose the portfolio creation story. And
+Badrivishal chose portfolio rename/delete story.
+
+As there are so many tools used, I encountered a problem of too many tools to keep track.
+I will find a way to reduce the problem.
+
+K 2
+J 1
+G 1
+B 0.35
+
+============================================
+Week 4
+
+# Planned:      Implement the portfolio list, top performance widget.
+# Finished:     The portfolio list is implemented along with the rename/delete functionalities.
+                The stock search functionality is implemented using the cached listings (I'm 
+                awaiting for the endpoint.)
+# Issue:        The backend doesn't have endpoint to retrieve the data, rename the portfolio, or
+                delete it yet. Pretty much every endpoint is not developed or merged into the main
+                branch.
+# Unfinished:   Data persistant in the data base as there are no endpoints for that yet.
+# Next:         Wire up the frontend to the backend.
+
+On Sunday, I implemented the layout of the portfolio list (using dummy data as backend hasn't
+the endpoint yet.).
+
+On Wednesday, I implemented the funcitonalities of rename/delete of a portfolio.
+
+On Thurday, I reviewed the pull request from Jeehyun. She implemented the login page.
+
+On Friday, I implemented the stock searching functionality. I use a listing from a cached listing
+due to there is no endpoint available for me yet.
+
+K 1
+J 0.5
+G 0.5
+B 0.5
+
+
+============================================
+Week 5
+
+# Planned:      To finish wire up the Frontend to call Backend's endpoints.
+# Finished:     I took some of Khai's task (Portfolio Page) so that he could work on the backend.
+# Issue:        A lot of endpoints are not finished and bakcend is almost has no data on the stock.
+                I had an assessment from another course this week so I have to take a time off from
+                the project. I had done almost all of my tasks so it should be okay.
+# Unfinished:   The search widget as the backend endpoint is not available at all.
+# Next:         We prepared for the demo so a lot of unfinished works are frozen for it.
+
+
+Due to assessment from another course, I asked for a week-off. I think it's fair because I delivered
+a lot of work in the first sprint (registration page, portfolio list, portfolio rename, portfolio delete,
+portfolio page, top performer widget, stock search, stock add). I think I fall behind the term of
+progress in another course.
+
+This week I intended to use it to wire up the frontend to the backend. I finished wire up some of it
+due to most of the endpoints are not available/not finished.
+
+This week I mostly do a minor fix to my code.
+
+Gunjan did some work on loading the stock data but there is no endpoint for the frontend yet.
+
+Khai did a wonderful presentation in the demo this week.
+
+Personally I think Jeehyun, Badrivishal, Gunjan worked a bit too slow. Almost no progress during
+the week. And all of them never consult me on anything but they might talk with each other so
+I'm not sure. Gunjan and Badrivishal did a lot of research on the stock API but there is almost
+no data available to do the work. Jeehyun finished do a login/logout page, a portfolio creation page.
+I think I have to tell them that I intend to do peer review according to their contribution. I
+might give them a low score if their contribution is low or incomplete.
+
+K 1
+J 0.5
+G 0.3
+
+
+============================================
+Week 6
+
+# Planned:      Implement the sorting of portfolio list/portfolio page
+# Finished:     Fix a bug in the top performer widget. Implement the Add/remove/edit of the lots.
+                (This doesn't include API calling as the endpoints are not available yet.) Wire up
+                the search to use API. I setup the GitHub workflow to make it run frontend tests.
+# Issue:        The searhc API didn't return the market value.
+# Unfinished:   Wire up the UI to the endpoints as the endpoints are not available.
+# Next:         Implement the search functionality and wire up some of the endpoint.
+
+I implemented the drag/drop and the temporary sort functionality of the portfolio page.
+We did the retrospective this week.
+
+I set up the test script to make GitHub run tests for frontend part and Khai set up the script
+for backend part.
+
+Jeehyun was working on the Stock page. She finished layouting the page (no data shown yet).
+
+K 1
+J 1
+G 1
+
+
+============================================
+Week 7
+
+# Planned:      Implement the refresh functionality. Mock up the challenge page.
+# Finished:     Fix a bug in the top performer widget. Implement the refresh functionality to
+                some of the components. I implement the portfolio summary widget and wire it
+                up with the refresh functionality.
+# Issue:        (I have my second dose of vaccination on Monday so I felt sick from Monday till
+                Wednesday.) The ML part of the project doesn't work as intended or as developed as
+                it should be.
+# Unfinished:   Wire up the UI to the endpoints as the endpoints are not available.
+# Next:         -
+
+
+Jeehyun was working on the stock page and finished the chart. She has encountered a url collision bug
+where the frontend url is the same as backend url.
+
+I implemented the refresh functionality and also the portfolio summary widget too. All the widget needs
+update is wired but was not fetching the data from backend as there is none endpoint available yet.
+
+
+Badri has shown me the progress of the ML and it's not satifactory. The training data was using the 
+open, high, low prices to predict the close price. I told him that these three features might won't be
+availiable until the end of the day. The other model is a carbon copy of the project from AlphaVantage.
+
+Khai have implemented the endpoints for lots so I have wired the endpoint up for the lots.
+
+Gunjan and Kahi were worked together in implementing the yfinance data loader.
+
+K 1
+J 1
+G 1
+B 0.5
+
+
+============================================
+Week 8
+
+# Planned:      Implement the price alert functionality.
+# Finished:     Mock up the UI of the price alert.
+# Issue:        -
+# Unfinished:   Price alert functionality.
+# Next:         We will have a retrospective meeting this week.
+
+
+Gunjan has done implement the stock calculation. I will wire up the API route after the
+endpoints are merged.
+
+Jeehyun has implement chart for the stock page.
+
+Khai and Gunjan have implement a lot of the missing endpoints.
+
+I mostly wire up the endpoint calling. Give an advice to Jeehyun on how to split the search
+component. Find the URL collision bug.
+
+Badri said he had an update on ML but still no contribution.
+
+K 1
+J 1
+G 1
+
+
+============================================
+Week 9
+
+# Planned:      Implement the leaderboard functionality. Add documentation. Add the currency
+                symbol to money related data. Wire up the leaderboard UI.
+# Finished:     Price alert functionality. Fix the bug in the top performance widget.
+# Issue:        Badrivishal doesn't commit his part of code to GitHub dispite an encouragement to
+                do so
+# Unfinished:   -
+# Next:         -
+
+
+
+K 1
+J 1
+G 1
+
+
+============================================
+Week 10
+
+# Planned:      Implement the leaderboard UI. Add documentation. Work on the report. Prepare
+                for the presentation.
+# Finished:     The leaderboard UI.
+# Issue:        The versions don't match the selected one but the software do work when
+                downgraded them
+# Unfinished:   -
+# Next:         -
+
+
+
+K 1
+J 1
+G 1
+B 1
+
+-----------------------------------------------------------------------------------------
+You should also include in this diary the following information (if applicable) about the
+project progress:
+- what was planned for the period since the last work diary entry
+- what was finished
+- what were the main technical and non-technical obstacles and how they were
+overcome (or what was tried and did not work)
+- what was not finished, why this happened, how this affects the overall project
+progress and what adjustments (if any) are needed so the success of the project is not
+endangered
+- what is planned for the next period (e.g., next week)
+We expect that other members of the team may access this file to know where others are
+up to, but you should not modify your peer’s work diary.
+------------------------------------------------------------------------------------------
+
+*****************
+Update diary - RK
