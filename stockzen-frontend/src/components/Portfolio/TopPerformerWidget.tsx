@@ -5,7 +5,7 @@ import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import moment from 'moment';
 import React, { FC, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { percFormatter, usdFormatter } from 'utils/Utilities';
+import { percentFormatter, usdFormatter } from 'utils/Utilities';
 import styles from './TopPerformerWidget.module.css';
 
 // Function to get the arrow for gain/loss
@@ -61,18 +61,18 @@ const TopPerformerWidget: FC = (props) => {
             {gainLossArrow(portfolioSummary?.todayChangePercent ?? 0)}
             {portfolioSummary == null
               ? '-'
-              : percFormatter.format(
-                  portfolioSummary?.todayChangePercent ?? 0
-                )}
+              : percentFormatter.format(
+                portfolioSummary?.todayChangePercent ?? 0
+              )}
           </div>
           <div className={styles.summaryTitle}>Overall</div>
           <div className={`${styles.summaryValue} outerStroke`}>
             {gainLossArrow(portfolioSummary?.overallChangePercent ?? 0)}
             {portfolioSummary == null
               ? '-'
-              : percFormatter.format(
-                  portfolioSummary?.overallChangePercent ?? 0
-                )}
+              : percentFormatter.format(
+                portfolioSummary?.overallChangePercent ?? 0
+              )}
           </div>
           <hr className={styles.separatorLine} />
         </>

@@ -16,8 +16,8 @@ export const intFormatter = new Intl.NumberFormat('en-US', {
   minimumFractionDigits: 0,
 });
 
-export const percFormatter = new Intl.NumberFormat('en-US', {
-  style: 'decimal',
+export const percentFormatter = new Intl.NumberFormat('en-US', {
+  style: 'percent',
   maximumFractionDigits: 2,
   minimumFractionDigits: 2,
 });

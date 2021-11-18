@@ -13,7 +13,7 @@ import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import moment, { Moment } from 'moment';
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, CloseButton, Modal } from 'react-bootstrap';
-import { percFormatter } from 'utils/Utilities';
+import { percentFormatter } from 'utils/Utilities';
 import styles from './Leaderboard.module.css';
 import SubmissionModal from './SubmissionModal';
 
@@ -235,7 +235,7 @@ const Leaderboard = () => {
             </div>
 
             {leaderboard.leaderboard.length === 0 &&
-            leaderboard.userRow.userId == null ? (
+              leaderboard.userRow.userId == null ? (
               <div className='text-center'>
                 There were no submissions for the previous Portfolio Challenge
               </div>
@@ -276,7 +276,7 @@ const Leaderboard = () => {
                       </div>
                       <div className={styles.rowUser}>{x.userName}</div>
                       <div className={styles.rowGain}>
-                        {percFormatter.format(x.percChange / 100)}
+                        {percentFormatter.format(x.percChange / 100)}
                       </div>
                       <div className={styles.rowTopStock}>{x.stocks[0]}</div>
                     </div>
@@ -306,7 +306,7 @@ const Leaderboard = () => {
                           </div>
                           <div className={styles.rowGain}>
                             {leaderboard != null &&
-                              percFormatter.format(
+                              percentFormatter.format(
                                 leaderboard.userRow.percChange / 100
                               )}
                           </div>

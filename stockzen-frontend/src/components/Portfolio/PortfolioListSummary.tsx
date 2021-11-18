@@ -2,7 +2,7 @@ import lossArrow from 'assets/icon-outlines/outline-arrow-down-circle-red.svg';
 import gainArrow from 'assets/icon-outlines/outline-arrow-up-circle-green.svg';
 import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import React, { useContext } from 'react';
-import { percFormatter, usdFormatter } from 'utils/Utilities';
+import { percentFormatter, usdFormatter } from 'utils/Utilities';
 import styles from './PortfolioListSummary.module.css';
 
 // Function to get the arrow for gain/loss
@@ -33,7 +33,7 @@ const PortfolioListSummary = () => {
             <span>
               {portfolioSummary == null
                 ? '-'
-                : percFormatter.format(portfolioSummary?.todayChangePercent)}
+                : percentFormatter.format(portfolioSummary?.todayChangePercent)}
             </span>
           </div>
         </div>
@@ -58,7 +58,7 @@ const PortfolioListSummary = () => {
             <span>
               {portfolioSummary == null
                 ? '-'
-                : percFormatter.format(
+                : percentFormatter.format(
                   portfolioSummary?.overallChangePercent
                 )}
             </span>
