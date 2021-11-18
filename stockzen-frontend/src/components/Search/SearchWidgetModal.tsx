@@ -47,11 +47,14 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
   // Init
   useEffect(() => {
     // Call to get the list of current stocks in portfolio
-    axios
-      .get(`/stock/list/${portfolioId}`)
-      .then((response: AxiosResponse<IStockResponse[]>) => {
-        setAddedStockIds(response.data.map((stock) => stock.stockPageId));
-      });
+    if (portfolioId != null) {
+      axios.get(`/stock/list/${portfolioId}`).then(
+        (response: AxiosResponse<IStockResponse[]>) => {
+          setAddedStockIds(response.data.map((stock) => stock.stockPageId));
+        },
+        () => {}
+      );
+    }
   }, [portfolioId, setAddedStockIds]);
 
   const _addStock = (option: TypeaheadOption) => {
