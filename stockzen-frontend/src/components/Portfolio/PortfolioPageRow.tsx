@@ -23,7 +23,7 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
   const { stock } = props;
 
   // Get the container ref
-  const conatinerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // content height of the continaer
   const [contentHeight, setContentHeight] = useState<number>();
@@ -31,7 +31,7 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
   // Setup to listen to the resize to get the contentHeight
   useEffect(() => {
     const listener = () => {
-      setContentHeight(conatinerRef.current?.scrollHeight ?? 0);
+      setContentHeight(containerRef.current?.scrollHeight ?? 0);
     };
 
     window.addEventListener('resize', listener);
@@ -74,16 +74,15 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
       {(provided, snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps}>
           <div
-            className={`${styles.stockWrapper} ${
-              showPanel ? styles.panelVisible : styles.panelHidden
-            }`}
+            className={`${styles.stockWrapper} ${showPanel ? styles.panelVisible : styles.panelHidden
+              }`}
           >
             <div className={styles.tableRow}>
               <div
                 className={styles.rowStockInfo}
                 onClick={() => {
                   setContentHeight(
-                    (height) => conatinerRef.current?.scrollHeight ?? height
+                    (height) => containerRef.current?.scrollHeight ?? height
                   );
                   setShowPanel(!showPanel);
                 }}
@@ -217,10 +216,10 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
               {/* Content of the portfolio */}
               <div
                 className={styles.panelContainer}
-                ref={conatinerRef}
+                ref={containerRef}
                 style={{
                   maxHeight: showPanel
-                    ? contentHeight ?? conatinerRef.current?.scrollHeight ?? 0
+                    ? contentHeight ?? containerRef.current?.scrollHeight ?? 0
                     : 0,
                 }}
               >
@@ -239,7 +238,7 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                     currentPrice={stock.price}
                     priceChange={stock.change}
                     onSizeChanged={() => {
-                      setContentHeight(conatinerRef.current?.scrollHeight ?? 0);
+                      setContentHeight(containerRef.current?.scrollHeight ?? 0);
                     }}
                   ></PortfolioPageLots>
                 </div>
