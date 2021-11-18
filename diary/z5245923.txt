@@ -156,6 +156,17 @@ Week 10
   documentation
 - Wrote architecture and implementation challenge part in final report.
   For implementation challenge, team members wrote respective issue that they encountered.
+- Wrote script for final demo and prepared for it
 
 ========================================================================================
 
+* Notes *
+
+- For team meetings we had over the project, i.e. regular standups / weekly big meeting / 
+  demo prep / retro / etc., I attended them all except for one standup in 29/10 that I 
+  replaced with text update
+- As I took part in frontend developement although I was beginner in that area, had to
+  put much time and efforts in learning whole languages from the scratch, which sadly led 
+  to way less code contribution. However, thanks to supportive team members, I could have
+  great opportunity to learn new things and keep it up. 
+  Nice team, valuable project experience! 
