@@ -12,7 +12,7 @@ import {
   DragDropContext,
   Droppable,
   DropResult,
-  ResponderProvided,
+  ResponderProvided
 } from 'react-beautiful-dnd';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -80,7 +80,7 @@ const PortfolioPage = () => {
   const { setShowPortfolioSummary } = useContext(TopPerformerContext);
 
   // Get functions for refresh
-  const { subscribe, unsubscribe } = useContext(RefreshContext);
+  const { subscribe, unsubscribe, refresh } = useContext(RefreshContext);
 
   // Tab indicator in portfolioi page (0: MyHoldings, 1: Fundamentals)
   const [activeTab, setActiveTab] = useState(0);
@@ -473,13 +473,13 @@ const PortfolioPage = () => {
       </Modal>
 
 
-{/* Portfolio summary */}
+      {/* Portfolio summary */}
       <div>
         <PortfolioPageSummary portfolioId={portfolioId}></PortfolioPageSummary>
       </div>
       <hr />
 
-{/* Tabs */}
+      {/* Tabs */}
       <Tabs selectedIndex={activeTab} onSelect={(idx) => setActiveTab(idx)}>
         <TabList className={styles.tableBar}>
           <Tab
@@ -503,6 +503,7 @@ const PortfolioPage = () => {
           <Button
             variant='light'
             className='ms-1 text-muted d-flex align-items-center'
+            onClick={() => refresh()}
           >
             <img src={refreshIcon} alt='refresh' style={{ opacity: 0.5 }} />
             Refresh
@@ -629,9 +630,8 @@ const PortfolioPage = () => {
           </div>
           {/* Wrapper to enable/disable hightlight when dragging */}
           <div
-            className={`${isDragging ? styles.dragging : styles.notDragging} ${
-              holdingsTableOrdering.column !== '' ? styles.tempSort : ''
-            }`}
+            className={`${isDragging ? styles.dragging : styles.notDragging} ${holdingsTableOrdering.column !== '' ? styles.tempSort : ''
+              }`}
           >
             <DragDropContext
               onDragEnd={handleDragEnd}
