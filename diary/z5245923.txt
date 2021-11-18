@@ -137,18 +137,25 @@ Week 9
                     (2)overall bug fix and documentation of codes
                     (3)modal in leaderboard
              by Friday night
-• Achieved : (1) Done (2)-(3) In progress
+• Achieved : (1) Done (2) Bug fix done (documentation yet) (3) Mostly done
 
 - Had meeting with Rittisak to get some advice on fixing Promise issue 
-- Wrote codes for:
+- Wrote codes and PR for:
   · remaining fundamental tab contents 
-  · bug fix in fundamental tab / stock page / (... to be added further)
-  · 
-
+  · bug fix in fundamental tab, stock page, logout logic
 
 ========================================================================================
 
 Week 10
+• Planned  : Finish (1)modal in leaderboard (2)documentations
+• Achieved : All done
+
+- Wrote code and PR for leaderboard submission modal
+- Had meeting with Rittisak to get advice and feedback on some bugs and resolved together
+- Add documentation to codes, especially for stock page and leaderboard modal which lacked
+  documentation
+- Wrote architecture and implementation challenge part in final report.
+  For implementation challenge, team members wrote respective issue that they encountered.
 
 ========================================================================================
 
