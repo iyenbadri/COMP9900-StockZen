@@ -1,15 +1,21 @@
 # StockZen
 
+_A stock portfolio management webapp_
+
 [![Backend Test](https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent/actions/workflows/backend-test.yml/badge.svg)](https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent/actions/workflows/backend-test.yml)
 [![Frontend Test](https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent/actions/workflows/frontend-test.yml/badge.svg)](https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent/actions/workflows/frontend-test.yml)
 
-_A stock portfolio management webapp_
+This README is divided into setup instructions for users and relevant instructions for project devs:
 
-This README is divided into setup instructions for users and relevant instructions for project devs.
+🐶 [User Manual](#user-installation-manual)
+🐣 [Developer Manual](#developer-manual)
 
 # User Installation Manual
 
 ## Installation (Lubuntu)
+
+These instructions are intended for **Lubuntu 20.4.1 LTS**.
+_Please use an upgraded Chrome browser for the best UI experience._
 
 To install this project, get the `.zip` file containing the codebase either from the submission channel or via https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent
 (Click **Code** > **Download ZIP** to obtain the `.zip` file)
