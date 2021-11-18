@@ -12,7 +12,7 @@ import {
   DragDropContext,
   Droppable,
   DropResult,
-  ResponderProvided
+  ResponderProvided,
 } from 'react-beautiful-dnd';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -692,9 +692,7 @@ const PortfolioPage = () => {
                           ></OrderingIndicator>
                         </Button>
                       </span>
-                      <span
-                        className={`${styles.infoRowName} d-none d-xxl-block`}
-                      >
+                      <span className={`${styles.infoRowName} d-none d-xxl-block`}>
                         <Button
                           variant='transparent'
                           size={'sm'}
