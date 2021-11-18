@@ -240,6 +240,35 @@ PR for ML Prediction arrow and indicator
 Planned work: Get all remaining tickets to Code Review stage so that we can focus on Documentation and Report
 Achieved: Great progress, all tickets either in progress or code review, should be done by Friday Standup and can focus on report
 
+Merged portfolio challenge PRs
+Implement additional stockName in /top route
+Add rank attribute to challenge response 
+Create and Merge PRs
+Meeting: divide workload for presentation and report
+Create report template and structure
+Challenge user status endpoint branch
+
 ===========================================================================
 Week 10
 ===========================================================================
+Begin work on mapping functionalities to objectives 
+Bugfixes for leaderboard script
+PR review and changes for ML feature
+PR review for front-end Leaderboard feature
+Submit PR for leaderboard styling and bugfixes for Challenge feature
+Address some issues on github master todo list
+Write script for Challenge feature
+Continue work on mapping functionalities for the final report
+Complete functionality mapping
+Bugfixes for some typos and styling
+Complete third party library tables
+Complete licensing discussion
+Updates for implementation challenges section, write Flask CLI and Concurrency sections
+Rewrite ML challenges section
+Rewrite some of Overview section
+Changes to Architecture section
+Reformat references and table of contents
+Final PR reviews and merges
+
+Planned work: Finish all tickets by the weekend and complete report
+Achieved: Progress was slow and contributed quality of work for some areas was lacking. Still able to finish on time.
