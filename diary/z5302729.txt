@@ -1,35 +1,109 @@
 IT Capstone Diary
 
 Week 1:
-•	Finalizing Project: Exploring feasibility, scope of projects.
-•	Exploring stock related websites: Yahoo Finance portfolio, Google Finance etc.
+
+    Plan: 
+        planning the project
+        
+    Work Done:
+    •	Finalizing Project: Exploring feasibility, scope of projects.
+    •	Exploring stock related websites: Yahoo Finance portfolio, Google Finance etc.
+
 Week 2:
-•	Brainstorming Novel/Normal feature research
-•	Backend Technology discussion python, sqlite, RESTX
-•	Stock prediction articles for ML 
-•	Setting up communication channels, Git, Atlassian 
+
+    Plan: 
+        setting/planning project environments
+
+    Work done:
+    •	Brainstorming Novel/Normal feature research
+    •	Backend Technology discussion python, sqlite, RESTX
+    •	Stock prediction articles for ML 
+    •	Frontend Design meeting 
+    •	Setting up communication channels, Git, Jira 
+
 Week 3:
-•	Briefing Alphavantage API capabilities 
-•	Proposal Background
+
+    Plan: 
+        Finalise API, finish proposal
+
+    Work done
+    •	Briefed Alphavantage API capabilities to decide which calls can be used.
+    •	Worked on the proposal background.
+    •	resolved resolved issues and setting up environment 
+    •	Backend meeting with Khai to understand the backend architecture
 
 Week 4:
-•	Defined and executed logout API route 
-•	Created Alpha Vantage local Database
+
+    Plan: 
+        Pipeline API calls to store daata in database 
+    Issue: 
+        API limitations over number of calls.
+
+    Work done:
+    •	Defined and executed logout API route 
+    •	Created Alpha Vantage local Database
+    •	Research on API, to finalise yfinance
 
 Week 5:
-•	populating database with existing Tickers
+
+    Plan: 
+        set up y finance functions
+        start calculation functions using API data
+
+    Work done:
+    •	populating database with existing Tickers
+    •	Discuss yfinance/ticker capabilities with khai to download API data
 
 Week 6:
-•	StockPage update function
-•	yfinance api utils functions
-•	database utils for ML to gather data
+    Plan: 
+        Complete Crud_utils functions
+        Lot calculations
+
+    Work Done:
+    •	Wrote the StockPage update function and the respective calculations after fetching data from yfinance
+    •	Wrote yfinance api utils functions to store data 
+    •	script to store data in database used for Machine learning
 
 Week 7:
-•	StockPage backend calculations 
-•	ML feature discussion
-•	Code review for Stockpage endpoint, stock history
+    Plan:
+        Complete util functions
+        
+    Work Done:
+    •	StockPage backend calculations update discussion
+    •	ML feature discussion
+    •	Code review for Stockpage endpoint, stock history
 
 Week 8:
-•	Backend calculations
-•	Discussion on Top widgets
-•	Research on Valid Tickers for yfinance
+    Plan:
+        Finish top widgets
+    Issue:
+        existing tickers had no data on yfinance
+
+    Work done:
+    •	Backend calculations
+    •	Discussion on Top widgets, 
+    •	Research on Valid Tickers for yfinance
+
+Week 9:
+    Plan: 
+        Complete Portfolio Challenge
+
+    Work Done:
+    •	Backend Meeting on Porfolio Challenge logic
+    •	store valid Tickers for StockPage table
+    •	Completed crud function to add stocks to the portfolio Challenge
+    •	Wrote and tested the portfolio challenge script 
+
+Week 10:
+    Plan: 
+        finish Code
+        prepare for demo
+        Finish Report
+
+    Work Done:
+    •	Wrote the update logic for Machine learning
+    •	Wrote the script for training all machine learning models
+    •	wrote predict.py used for predicting price for the asked ticker, 
+        Arranged the ML code, to seprate out predict.py, model.py and utils.py to store all the functions 
+    •	Wrote Project Overview in the report
+    •	Demo preparation meeting

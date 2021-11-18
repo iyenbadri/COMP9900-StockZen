@@ -206,11 +206,39 @@ Implement Portfolio Performance Summary endpoint tests
 Provide feedback to Jeehyun on Stock Page
 Make CSS formatting changes for Demo2 branch
 Meeting: Demo runthrough
+Did Demo Presentation
+
+Implement Portfolio summary banner endpoint and logic
+Set up PR for Portfolio summary banner endpoint
+Implement Top performing stocks logic and endpoint
+Add testing mode for top performing stocks
+Add longer staleness flag for top performing stocks
+Set up PR for top performing stocks
+Bugfix for merge issues
+PR for Rittisak
+Update to do requests from within top performance fetch
+Meeting: Retro 2
+Meeting: Gunjan discuss Portfolio Challenge architecture
 
 
 ===========================================================================
 Week 9
 ===========================================================================
+Meeting: Badri discuss ML model accuracy
+Implement db schema and endpoints for portfolio challenge
+Implement leaderboard, status, submit
+Implement fixes for username response and user rank response
+Update portfolio challenge script, merge
+PR for Rittisak Price Alerts
+Bugfix PR review for Top Performer
+Meeting: Gunjan to discuss Challenge script
+Add flask.cli to challenge script
+Bugfixes for challenge script for wire up section and datetime issues
+Implement Portfolio row ML Prediction frontend: arrow and indicator
+PR for ML Prediction arrow and indicator
+
+Planned work: Get all remaining tickets to Code Review stage so that we can focus on Documentation and Report
+Achieved: Great progress, all tickets either in progress or code review, should be done by Friday Standup and can focus on report
 
 ===========================================================================
 Week 10
