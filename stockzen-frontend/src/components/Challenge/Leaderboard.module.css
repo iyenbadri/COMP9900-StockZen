@@ -111,7 +111,6 @@
 
 .leaderboardTableRow:hover .rowInfo {
   outline: 1px solid var(--zen-4);
-  /* background-color: var(--zen-5); */
 }
 
 .rowYou {

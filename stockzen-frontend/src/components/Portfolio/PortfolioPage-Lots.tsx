@@ -11,16 +11,10 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Modal from 'react-bootstrap/Modal';
 import { useForm } from 'react-hook-form';
-import { usdFormatter } from 'utils/Utilities';
+import { numberFormatter, usdFormatter } from 'utils/Utilities';
 import styles from './PortfolioPage-Panel.module.css';
 
-// Number formatter
-const numberFormatter = new Intl.NumberFormat('en-US', {
-  style: 'decimal',
-  maximumFractionDigits: 2,
-  minimumFractionDigits: 2,
-});
-
+// Functions to map the response to data
 const mapBoughtLotResponse = (lot: ILotBoughtResponse): ILotBought => ({
   lotId: lot.id,
   tradeDate: moment(lot.tradeDate, 'YYYY-MM-DD'),
@@ -35,6 +29,9 @@ const mapSoldLotResponse = (lot: ILotSoldResponse): ILotSold => ({
   unitPrice: lot.unitPrice,
 });
 
+// **************************************************************
+// Component to display the lots in portfolio page
+// **************************************************************
 const PortfolioPageLots: FC<IPortfolioPageLotProp> = (props) => {
   // Deconstruct the properties
   const { stockId, currentPrice, priceChange, onSizeChanged } = props;

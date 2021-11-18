@@ -13,9 +13,11 @@ import { TopPerformerContext } from 'contexts/TopPerformerContext';
 import moment, { Moment } from 'moment';
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, CloseButton, Modal } from 'react-bootstrap';
+import { percentFormatter } from 'utils/Utilities';
 import styles from './Leaderboard.module.css';
 import SubmissionModal from './SubmissionModal';
 
+/* Reponses from backend */
 interface LeaderboardResultResponse {
   userId: number;
   userName: string;
@@ -39,6 +41,7 @@ interface ChallengeResponse {
   endDate: Date;
 }
 
+/** Data used in this component */
 interface LeaderboardResult {
   userId: number;
   userName: string;
@@ -47,7 +50,7 @@ interface LeaderboardResult {
   stocks: string[];
 }
 
-interface Leaderboard {
+interface LeaderboardData {
   startDate: Moment;
   endDate: Moment;
   leaderboard: LeaderboardResult[];
@@ -64,12 +67,7 @@ interface Challenge {
   endDate: Moment;
 }
 
-const percentFormatter = new Intl.NumberFormat('en-US', {
-  style: 'percent',
-  maximumFractionDigits: 2,
-  minimumFractionDigits: 2,
-});
-
+// Helpers to get the icon/style for rank
 const getMedalIcon = (index: number) => {
   if (index === 1) return medal1;
   if (index === 2) return medal2;
@@ -82,23 +80,28 @@ const getLeaderboardStyle = (index: number) => {
   if (index === 3) return styles.rank3;
 };
 
+// **************************************************************
+// Component to display the leaderboard and next challenger info
+// **************************************************************
 const Leaderboard = () => {
   // Get the setShowPortfolioSummary from context
   const { setShowPortfolioSummary } = useContext(TopPerformerContext);
+
+  // Get functions for refresh functionalities
   const { refresh, subscribe, unsubscribe } = useContext(RefreshContext);
 
   // Get submission result from context
   const { submit, setSubmit, submissionSuccess, setSubmissionSuccess } =
     useContext(SubmissionContext);
 
-  const [leaderboard, setLeaderboard] = useState<Leaderboard | null>(null);
+  // States
+  const [leaderboard, setLeaderboard] = useState<LeaderboardData | null>(null);
   const [nextChallenge, setNextChallenge] = useState<Challenge | null>(null);
-
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
   const [isUserPortfolioSubmitted, setIsUserPortfolioSubmitted] =
     useState<boolean>(true);
 
+  // Function to load the leaderboard data
   const reloadLeaderboard = async () => {
     var leaderboard = await axios.get<LeaderboardResponse>(
       '/challenge/leaderboard'
@@ -116,6 +119,7 @@ const Leaderboard = () => {
     });
   };
 
+  // Function to load the next challenge data
   const reloadNextChallenge = async () => {
     var summary = await axios.get<ChallengeResponse>('/challenge/status');
 
@@ -126,6 +130,7 @@ const Leaderboard = () => {
     });
   };
 
+  // Function to load the user sumbission data
   const reloadUserSubmission = async () => {
     try {
       var summary = await axios.get<{ hasSubmission: boolean }>(
@@ -138,10 +143,13 @@ const Leaderboard = () => {
     }
   };
 
+  // Component setup
   useEffect(
     () => {
+      // Set to display the portfolio summary
       setShowPortfolioSummary(true);
 
+      // Load and set the refresh functionality
       const reload = () => {
         setIsLoading(true);
 
@@ -184,10 +192,15 @@ const Leaderboard = () => {
           Good Luck! <img src={smileIcon} alt='smile face' />
         </Modal.Body>
       </Modal>
+
+      {/* Header */}
       <h2 className={styles.pageHeader}>Portfolio Challenge</h2>
+
+      {/* Leaderboard */}
       <div className={styles.contentPadder}>
         <div className='mb-3'>
           <span className={styles.leaderboardTitle}>Leaderboard</span>{' '}
+          {/* Refresh button */}
           <Button
             variant='light'
             className='ms-1 text-muted d-flex-inline align-items-center'
@@ -200,6 +213,7 @@ const Leaderboard = () => {
           </Button>
         </div>
 
+        {/* Show the loading button when loading */}
         {isLoading && (
           <div className='text-center'>
             <img src={loadingIcon} alt='loading' />
@@ -208,6 +222,7 @@ const Leaderboard = () => {
 
         {!isLoading && leaderboard != null && (
           <>
+            {/* Current challenge data */}
             <div className={styles.challengeDateMessage}>
               Previous challenge: {leaderboard?.startDate.format('HH:mm')}{' '}
               <span className={styles.challengeDate}>
@@ -220,12 +235,13 @@ const Leaderboard = () => {
             </div>
 
             {leaderboard.leaderboard.length === 0 &&
-            leaderboard.userRow.userId == null ? (
+              leaderboard.userRow.userId == null ? (
               <div className='text-center'>
                 There were no submissions for the previous Portfolio Challenge
               </div>
             ) : (
               <>
+                {/* Table Header */}
                 <div className={styles.leaderboardTable}>
                   <div className={styles.leaderboardTableHeader}>
                     <div className={styles.rowYou}></div>
@@ -236,6 +252,7 @@ const Leaderboard = () => {
                   </div>
                 </div>
 
+                {/* User ranks */}
                 {leaderboard.leaderboard.map((x, index) => (
                   <div className={styles.leaderboardTableRow} key={x.userId}>
                     <div className={styles.rowYou}>
@@ -277,6 +294,7 @@ const Leaderboard = () => {
                         </div>
                       </div>
 
+                      {/* Current user rank */}
                       <div className={styles.leaderboardTableRow}>
                         <div className={styles.rowYou}>You</div>
                         <div className={`${styles.rowInfo}`}>
@@ -309,6 +327,7 @@ const Leaderboard = () => {
       </div>
       <hr />
 
+      {/* Next challenge */}
       <div className={styles.contentPadder}>
         {isLoading && (
           <div className='text-center'>
@@ -362,6 +381,7 @@ const Leaderboard = () => {
                     >
                       Submit Portfolio
                     </Button>
+                    {/* Submission modal */}
                     <Modal
                       centered
                       show={submit}

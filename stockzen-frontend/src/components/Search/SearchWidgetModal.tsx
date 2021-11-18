@@ -15,6 +15,9 @@ interface SearchResponse {
   exchange: string;
 }
 
+// **************************************************************
+// Component to display the search modal
+// **************************************************************
 const SearchWidgetModal: FC<Prop> = (prop) => {
   const { portfolioId, addStock } = prop;
   const { showSearchInput, searchAtHeader, endSearch, endAddStock } =
@@ -38,6 +41,7 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
     []
   );
 
+  // A list of stocks to hide the add button
   const [addedStockPageIds, setAddedStockIds] = useState<number[]>([]);
 
   // Init
@@ -58,6 +62,7 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
     setAddedStockIds([...addedStockPageIds, option.stockPageId]);
   };
 
+  // Render
   return (
     <Modal
       show={showSearchInput}
@@ -90,7 +95,7 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
               state: {
                 code: selected[0].code,
                 name: selected[0].description,
-              }
+              },
             });
           } else {
             _addStock(selected[0]);
@@ -149,18 +154,7 @@ const SearchWidgetModal: FC<Prop> = (prop) => {
                         </Button>
                       )}
                   </span>
-                  <span className={styles.optionSymbol}>
-                    {option.code}
-                    {/* <Link
-                      to={`/stock/${option.stockPageId}`}
-                      onClick={() => {
-                        endSearch();
-                      }}
-                      target={searchAtHeader ? '' : '_blank'}
-                    >
-                      
-                    </Link> */}
-                  </span>
+                  <span className={styles.optionSymbol}>{option.code}</span>
                   <span className={styles.optionDescription}>
                     <div>{option.description}</div>
                   </span>

@@ -7,7 +7,7 @@ import { AsyncTypeahead, Menu, MenuItem } from 'react-bootstrap-typeahead';
 import styles from './SubmissionModal.module.css';
 import SubmissionStockList from './SubmissionStockList';
 
-// Check if it can be declared globally (-- SearchWidgetModal.tsx)
+/* Response from backend of stock search */
 interface SearchResponse {
   id: number;
   code: string;
@@ -15,17 +15,26 @@ interface SearchResponse {
   exchange: string;
 }
 
+// **************************************************************
+// Component to display the leaderboard submission modal
+// which pops up only if user has not submitted one yet
+// **************************************************************
 const SubmissionModal = () => {
+  // Get states and functions for submission modal from context
   const { setSubmit, selectedStockPageIds, selectedStocks, addSelectedStock,
     submissionError, setSubmissionSuccess, setSubmissionError }
     = useContext(SubmissionContext);
+
+  // States
   const [selectionError, setSelectionError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [options, setOptions] = useState<TypeaheadOption[]>([]);
 
+  // Get Typeahead ref to reset and set focus on input field of search in modal
   const typeaheadRef = useRef<AsyncTypeahead<TypeaheadOption>>(null);
 
+  // Map backend search response to options in search 
   const mapOptions = useCallback(
     (x: SearchResponse): TypeaheadOption => ({
       stockPageId: x.id,
@@ -37,6 +46,7 @@ const SubmissionModal = () => {
     []
   );
 
+  // Try submission and get response from backend server
   const makeSubmission = async () => {
     try {
       let response = await axios.post('/challenge/submit', selectedStockPageIds);
@@ -46,11 +56,11 @@ const SubmissionModal = () => {
       }
     } catch (e: any) {
       setSubmissionError(true);
-      // Server error response
       setErrorMessage('An error occurred. Please try again later.')
     }
   }
 
+  // Add the stock that user selects as a result of search
   const handleClick = (ev: any, option: TypeaheadOption) => {
     const stock: ISelectedStock = {
       stockPageId: option.stockPageId,
@@ -60,15 +70,11 @@ const SubmissionModal = () => {
 
     ev.preventDefault();
     ev.stopPropagation();
-    if (selectedStockPageIds.length > 5) {
-      setSelectionError(true);
-    } else {
-      addSelectedStock(stock);
-    }
+    addSelectedStock(stock);
   }
 
+  // Check if selected stock list satifies length requirement(=5) when submitted
   const handleSubmit = () => {
-    // Error if selected stock list doesn't have 5 stocks
     if (selectedStockPageIds.length !== 5) {
       setSelectionError(true);
       setErrorMessage('Please select 5 stocks')
@@ -77,6 +83,7 @@ const SubmissionModal = () => {
     }
   }
 
+  // Render a modal
   return (
     <>
       <Form
@@ -85,6 +92,7 @@ const SubmissionModal = () => {
       >
         <div className={styles.container}>
           <div className={`mx-2 ${styles.search}`}>
+            {/* Search part where user can choose stock to add */}
             <AsyncTypeahead
               id='add-a-widget'
               isLoading={isLoading}
@@ -104,7 +112,7 @@ const SubmissionModal = () => {
                 // Query the search
                 axios.get('/search?query=' + encodeURIComponent(query)).then(
                   (response: AxiosResponse<SearchResponse[]>) => {
-                    // Map the object and then set it
+                    // Map the object and set it as option
                     let options = response.data.map(mapOptions);
                     setOptions(options);
                     setIsLoading(false);
@@ -165,8 +173,8 @@ const SubmissionModal = () => {
               )}
             >
             </AsyncTypeahead>
-
           </div>
+          {/* Stock list part where user can check selected stocks */}
           <div className={`mx-2 ${styles.stockList}`}>
             <div className={styles.listName}>Selected Stocks</div>
             <ol className={styles.selectedStockList}>
@@ -189,6 +197,7 @@ const SubmissionModal = () => {
             Submit
           </Button>
         </div>
+        {/* Display error message below the submit button */}
         {(selectionError || submissionError) && (
           <div className={styles.selectionErrorMsg}>
             {errorMessage}

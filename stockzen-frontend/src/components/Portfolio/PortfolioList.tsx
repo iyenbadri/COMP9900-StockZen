@@ -12,7 +12,7 @@ import {
   DragDropContext,
   Droppable,
   DropResult,
-  ResponderProvided
+  ResponderProvided,
 } from 'react-beautiful-dnd';
 import { Button, CloseButton } from 'react-bootstrap';
 import Col from 'react-bootstrap/Col';
@@ -48,13 +48,6 @@ const OrderingIndicator: FC<OrderingIndicatorProp> = (props) => {
           alt='order-indicator'
         />
       )}
-      {/* {target !== ordering.column && (
-        <span
-          style={{ display: 'inline-block', width: '24px', height: '24px' }}
-        >
-          &nbsp;
-        </span>
-      )} */}
     </>
   );
 };
@@ -80,7 +73,7 @@ const PortfolioList = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors }
+    formState: { errors },
   } = useForm();
 
   // State for sorting.
@@ -364,7 +357,7 @@ const PortfolioList = () => {
           <CloseButton
             className={styles.close}
             onClick={() => {
-              reset()
+              reset();
               setShowCreatePortfolioModal(false);
             }}
           />
@@ -515,8 +508,9 @@ const PortfolioList = () => {
 
       {/* A wrapper to enable/disable hightlight */}
       <div
-        className={`${isDragging ? styles.dragging : styles.notDragging} ${tableOrdering.column !== '' ? styles.tempSort : ''
-          }`}
+        className={`${isDragging ? styles.dragging : styles.notDragging} ${
+          tableOrdering.column !== '' ? styles.tempSort : ''
+        }`}
       >
         <DragDropContext
           onDragEnd={handleDragEnd}

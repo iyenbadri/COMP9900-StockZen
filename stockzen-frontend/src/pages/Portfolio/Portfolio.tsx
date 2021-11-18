@@ -8,6 +8,9 @@ import Row from 'react-bootstrap/Row';
 import { Switch, useRouteMatch } from 'react-router-dom';
 import ProtectedRoute from 'utils/ProtectedRoute';
 
+// **************************************************************
+// Page to display the portofolio section
+// **************************************************************
 const Portfolio: FC = () => {
   const { path } = useRouteMatch();
 

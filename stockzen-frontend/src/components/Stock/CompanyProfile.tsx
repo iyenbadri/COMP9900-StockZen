@@ -3,6 +3,9 @@ import React, { FC } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import styles from './CompanyProfile.module.css';
 
+// **************************************************************
+// Component to display Profile tab in stock page
+// **************************************************************
 const CompanyProfile: FC<IStockPageResponse> = (prop) => {
   return (
     <>

@@ -9,35 +9,45 @@ interface ISelectedStockRow {
   port: ISelectedStock;
 }
 
+// **************************************************************
+// Component to display selected stock as a row
+// **************************************************************
 const SubmissionStockList: FC<ISelectedStockRow> = (prop) => {
-  const { port } = prop;
+  // Get information of selected stock passed from search in SubmissionModal
+  const { port: stock } = prop;
 
-  const { deleteSelectedStock } = useContext(SubmissionContext)
+  // Get function from context to delete specified stock in the list 
+  const { deleteSelectedStock } = useContext(SubmissionContext);
+
+  // Render
   return (
     <li className={styles.selectedStockRow}>
       <div className={styles.selectedStockInfo}>
+        {/* Stock code with link to corresponding stock page */}
         <span className={styles.selectedStockCode}>
           <Link to={{
-            pathname: '/stock/' + port.stockPageId.toString(),
+            pathname: '/stock/' + stock.stockPageId.toString(),
             state: {
-              code: port.code,
-              name: port.stockName,
+              code: stock.code,
+              name: stock.stockName,
             }
           }}>
-            {port.code}
+            {stock.code}
           </Link>
         </span>
+        {/* Stock name */}
         <span className={`${styles.selectedStockName} d-none d-lg-block`}>
-          <div>{port.stockName}</div>
+          <div>{stock.stockName}</div>
         </span>
       </div>
+      {/* Delete button */}
       <span className={styles.stockRowDelete}>
         <Button
           variant='transparent'
           size='sm'
           className={styles.deleteButton}
           onClick={() => {
-            deleteSelectedStock(port.stockPageId);
+            deleteSelectedStock(stock.stockPageId);
           }}>
           <img src={crossIcon} alt='delete selected stock'></img>
         </Button>

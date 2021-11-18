@@ -4,7 +4,9 @@ import React, { FC, useContext, useEffect } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 
-
+// **************************************************************
+// Page to display the logout message
+// **************************************************************
 const Logout: FC = () => {
   const { isAuthenticated, logout } = useContext(UserContext);
 
@@ -18,9 +20,7 @@ const Logout: FC = () => {
 
   return (
     <>
-      <h3 className='mt-4 text-center'>
-        Logout Successful!
-      </h3>
+      <h3 className='mt-4 text-center'>Logout Successful!</h3>
       <Row className='mb-4 text-center'>
         <Col>
           See you next time <img src={smileIcon} alt='smile face' />
@@ -30,8 +30,10 @@ const Logout: FC = () => {
         <Col xs={12}>
           <Button
             onClick={() => {
-              history.push('/')
-            }}>OK
+              history.push('/');
+            }}
+          >
+            OK
           </Button>
         </Col>
       </Row>

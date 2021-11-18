@@ -17,9 +17,13 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import GuestRoute from 'utils/GuestRoute';
 import styles from './App.module.css';
 
+// **************************************************************
+// Component to display the app
+// **************************************************************
 function App() {
   const { isAuthenticated } = useContext(UserContext);
 
+  // Render
   return (
     <Router>
       <div className={styles.app}>
@@ -28,7 +32,7 @@ function App() {
           fluid
           className={`${styles.appContent} ${
             !isAuthenticated ? styles.hero : ''
-            }`}
+          }`}
         >
           <Switch>
             <GuestRoute exact path={'/'} component={Landing} />
@@ -44,6 +48,7 @@ function App() {
   );
 }
 
+// Wrap the app with context providers
 const WrappedApp = () => (
   <RefreshProvider>
     <UserProvider>

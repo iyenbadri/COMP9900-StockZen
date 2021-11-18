@@ -2,6 +2,7 @@ import { UserContext } from 'contexts/UserContext';
 import React, { useContext } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 
+// A helper to redirect user to /user/login if user is not authenticated
 const ProtectedRoute = ({
   component: Component,
   ...restOfProps

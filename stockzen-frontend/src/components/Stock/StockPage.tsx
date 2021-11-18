@@ -24,6 +24,7 @@ interface RouteParams {
   stockPageId: string;
 }
 
+// Display loading spinner while data is being fetched
 const ShowSpinner = () => {
   return (
     <div className='text-center'>
@@ -32,23 +33,27 @@ const ShowSpinner = () => {
   );
 };
 
+// **************************************************************
+// Component to display the stock page
+// **************************************************************
 const StockPage = (props: any) => {
   const { stockPageId } = useParams<RouteParams>();
+
+  // Stock code and name passed to be displayed before retrieval of stock info
   const { code, name } = props.location.state;
 
+  // States
   const [stockData, setStockData] = useState<IStockPageResponse>();
   const [chartData, setChartData] = useState<IStockHistoryResponse[]>([]);
   const [historyData, setHistoryData] = useState<IStockHistoryResponse[]>([]);
-
   const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
   const [isHistoryLoading, setIsHistoryLoading] = useState<boolean>(false);
   const [fetchError, setFetchError] = useState<boolean>(false);
-
   const [activeTab, setActiveTab] = useState(0);
 
   const history = useHistory();
 
-  // Retrieve backend response data
+  // Retrieve backend response data of stock summary and profile
   const getStockData = useCallback(async () => {
     setIsPageLoading(true);
     try {
@@ -60,8 +65,9 @@ const StockPage = (props: any) => {
     } catch (e: any) {
       return;
     }
-  }, [stockPageId, setStockData, setChartData]);
+  }, [stockPageId, setStockData]);
 
+  // Retrieve backend response data of history
   const getHistoryData = useCallback(async () => {
     setIsHistoryLoading(true);
     try {
@@ -77,11 +83,13 @@ const StockPage = (props: any) => {
     }
   }, [stockPageId, setChartData, setHistoryData]);
 
+  // Fetch stock related data again whenever stock or stock info changes
   useEffect(() => {
     getStockData();
     getHistoryData();
   }, [stockPageId, getStockData, getHistoryData]);
 
+  // Get the className of the gain/loss
   const gainLossClass = (change: number): string => {
     if (change >= 0) {
       return styles.moneyGain;
@@ -90,6 +98,7 @@ const StockPage = (props: any) => {
     }
   };
 
+  // Cutomise tooltip in stock chart
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active) {
       return (
@@ -141,17 +150,20 @@ const StockPage = (props: any) => {
     }
   };
 
+  // Render
   return (
     <>
       <div className={styles.stockHeader}>
         <h5 className={styles.stockName}>{name}</h5>
         <div className={styles.stockCode}>({code})</div>
       </div>
+      {/* Display spinner if data is being fetched */}
       {isPageLoading && (
         <div className={styles.stockWrapper}>
           <ShowSpinner />
         </div>
       )}
+      {/* Display stock data if it is fetched without error */}
       {!isPageLoading && !fetchError && (
         <>
           <div className={styles.stockWrapper}>
@@ -201,6 +213,7 @@ const StockPage = (props: any) => {
               </div>
             </div>
             <div>
+              {/* Stock Chart */}
               <ResponsiveContainer width='100%' height={240}>
                 <LineChart
                   data={chartData}
@@ -255,6 +268,7 @@ const StockPage = (props: any) => {
           </div>
         </>
       )}
+      {/* Tabs */}
       <Tabs selectedIndex={activeTab} onSelect={(idx) => setActiveTab(idx)}>
         <TabList className={styles.tableBar}>
           <Tab
@@ -273,6 +287,7 @@ const StockPage = (props: any) => {
             Profile
           </Tab>
         </TabList>
+        {/* Show spinner in each tab until the data be retrieved */}
         <TabPanel>
           {isPageLoading && <ShowSpinner />}
           {!isPageLoading && <StockSummary {...stockData!}></StockSummary>}
@@ -311,6 +326,7 @@ const StockPage = (props: any) => {
           {!isPageLoading && <CompanyProfile {...stockData!} />}
         </TabPanel>
       </Tabs>
+      {/* Display error message modal if data cannot be retrieved */}
       {fetchError && (
         <>
           <Modal

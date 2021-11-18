@@ -2,6 +2,7 @@ import { UserContext } from 'contexts/UserContext';
 import React, { useContext } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 
+// A helper to redirect user to /portfolio if user is authenticated
 const GuestRoute = ({
   component: Component,
   ...restOfProps

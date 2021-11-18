@@ -12,14 +12,17 @@ interface ISearchContext {
 const searchDefaultValues: ISearchContext = {
   showSearchInput: false,
   searchAtHeader: true,
-  addStock: () => { },
-  endAddStock: () => { },
-  search: () => { },
-  endSearch: () => { },
-}
+  addStock: () => {},
+  endAddStock: () => {},
+  search: () => {},
+  endSearch: () => {},
+};
 
 export const SearchContext = createContext<ISearchContext>(searchDefaultValues);
 
+// **************************************************************
+// Search context provider
+// **************************************************************
 const SearchProvider: FC = ({ children }): any => {
   const [showSearchInput, setShowSearchInput] = useState<boolean>(false);
   const [searchAtHeader, setSearchAtHeader] = useState<boolean>(true);
@@ -27,20 +30,20 @@ const SearchProvider: FC = ({ children }): any => {
   const addStock = () => {
     setSearchAtHeader(false);
     setShowSearchInput(true);
-  }
+  };
 
   const endAddStock = () => {
     setSearchAtHeader(true);
-  }
+  };
 
   const search = () => {
     setShowSearchInput(true);
-  }
+  };
 
   const endSearch = () => {
     setShowSearchInput(false);
     setSearchAtHeader(true);
-  }
+  };
 
   return (
     <SearchContext.Provider
@@ -56,6 +59,6 @@ const SearchProvider: FC = ({ children }): any => {
       {children}
     </SearchContext.Provider>
   );
-}
+};
 
 export default SearchProvider;

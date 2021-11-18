@@ -10,6 +10,9 @@ export interface Prop {
   addStock?: (code: string, stockPageId: number) => void;
 }
 
+// **************************************************************
+// Component to display the add stock button
+// **************************************************************
 const AddStock: FC<Prop> = (prop) => {
   const { showSearchInput, addStock } = useContext(SearchContext);
 

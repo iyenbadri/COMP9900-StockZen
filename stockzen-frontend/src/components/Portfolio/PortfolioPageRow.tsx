@@ -16,15 +16,22 @@ interface PortfolioPageRowProp {
   readonly showDeleteModal: (stockId: number, stock: string) => void;
 }
 
+// **************************************************************
+// Component to display the row in the portfolio page
+// **************************************************************
 const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
   const { stock } = props;
 
-  const ref = useRef<HTMLDivElement>(null);
+  // Get the container ref
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // content height of the continaer
   const [contentHeight, setContentHeight] = useState<number>();
 
+  // Setup to listen to the resize to get the contentHeight
   useEffect(() => {
     const listener = () => {
-      setContentHeight(ref.current?.scrollHeight ?? 0);
+      setContentHeight(containerRef.current?.scrollHeight ?? 0);
     };
 
     window.addEventListener('resize', listener);
@@ -37,6 +44,7 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
 
   const [showPanel, setShowPanel] = useState(false);
 
+  // Functon to get the className of the gain/loss
   const gainLossClass = (val: number | null): string => {
     if (val == null) {
       return '';
@@ -66,20 +74,20 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
       {(provided, snapshot) => (
         <div ref={provided.innerRef} {...provided.draggableProps}>
           <div
-            className={`${styles.stockWrapper} ${
-              showPanel ? styles.panelVisible : styles.panelHidden
-            }`}
+            className={`${styles.stockWrapper} ${showPanel ? styles.panelVisible : styles.panelHidden
+              }`}
           >
             <div className={styles.tableRow}>
               <div
                 className={styles.rowStockInfo}
                 onClick={() => {
                   setContentHeight(
-                    (height) => ref.current?.scrollHeight ?? height
+                    (height) => containerRef.current?.scrollHeight ?? height
                   );
                   setShowPanel(!showPanel);
                 }}
               >
+                {/* DnD handle */}
                 <span className={styles.rowHandle}>
                   <img
                     src={handleIcon}
@@ -87,6 +95,8 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                     {...provided.dragHandleProps}
                   />
                 </span>
+
+                {/* Code */}
                 <span className={styles.rowCode}>
                   <Link
                     to={{
@@ -101,6 +111,8 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                     {stock.code}
                   </Link>
                 </span>
+
+                {/* Name */}
                 <div className={`${styles.rowName} d-none d-xxl-block`}>
                   <div
                     style={{ textOverflow: 'ellipsis', overflowX: 'hidden' }}
@@ -108,9 +120,13 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                     {stock.name}
                   </div>
                 </div>
+
+                {/* Price */}
                 <span className={styles.rowPrice}>
                   {usdFormatter.format(stock.price)}
                 </span>
+
+                {/* Change */}
                 <span
                   className={`${styles.rowChange} ${gainLossClass(
                     stock.change
@@ -127,6 +143,8 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                     </>
                   )}
                 </span>
+
+                {/* Average price */}
                 <span
                   className={`${styles.rowAveragePrice} d-block d-lg-none d-xl-block`}
                 >
@@ -134,6 +152,8 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                     ? '-'
                     : usdFormatter.format(stock.averagePrice)}
                 </span>
+
+                {/* Gain/loss */}
                 <span
                   className={`${styles.rowProfit} ${gainLossClass(
                     stock.profit
@@ -150,9 +170,13 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                     </>
                   )}
                 </span>
+
+                {/* Value */}
                 <span className={styles.rowValue}>
                   {stock.value == null ? '-' : usdFormatter.format(stock.value)}
                 </span>
+
+                {/* Prediction */}
                 <span className={styles.rowPredict}>
                   {stock.prediction === 1 ? (
                     <img
@@ -189,32 +213,39 @@ const PortfolioPageRow: FC<PortfolioPageRowProp> = (props) => {
                 </span>
               </div>
 
+              {/* Content of the portfolio */}
               <div
                 className={styles.panelContainer}
-                ref={ref}
+                ref={containerRef}
                 style={{
                   maxHeight: showPanel
-                    ? contentHeight ?? ref.current?.scrollHeight ?? 0
+                    ? contentHeight ?? containerRef.current?.scrollHeight ?? 0
                     : 0,
                 }}
               >
                 <hr className={styles.panelSeparator} />
                 <div className={styles.panelContent}>
+                  {/* Price alert */}
                   <PortfolioPageAlert
                     stockId={stock.stockId}
                   ></PortfolioPageAlert>
+
                   <hr className={styles.panelSeparator} />
+
+                  {/* Lots */}
                   <PortfolioPageLots
                     stockId={stock.stockId}
                     currentPrice={stock.price}
                     priceChange={stock.change}
                     onSizeChanged={() => {
-                      setContentHeight(ref.current?.scrollHeight ?? 0);
+                      setContentHeight(containerRef.current?.scrollHeight ?? 0);
                     }}
                   ></PortfolioPageLots>
                 </div>
               </div>
             </div>
+
+            {/* Delete button */}
             <span className={styles.rowDelete}>
               <button
                 className={`p-0 ${styles.deleteButton}`}

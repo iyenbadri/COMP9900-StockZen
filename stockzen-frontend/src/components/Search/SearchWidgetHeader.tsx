@@ -6,7 +6,9 @@ import { Form } from 'react-bootstrap';
 import styles from './SearchWidgetHeader.module.css';
 import SearchWidgetModal from './SearchWidgetModal';
 
-
+// **************************************************************
+// Component to display the search widget in header
+// **************************************************************
 const SearchWidgetHeader: FC<Prop> = (prop) => {
   const { showSearchInput, search } = useContext(SearchContext);
 

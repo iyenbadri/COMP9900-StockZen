@@ -12,7 +12,7 @@ import {
   DragDropContext,
   Droppable,
   DropResult,
-  ResponderProvided
+  ResponderProvided,
 } from 'react-beautiful-dnd';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -70,6 +70,9 @@ const OrderingIndicator: FC<OrderingIndicatorProp> = (props) => {
   );
 };
 
+// **************************************************************
+// Component to display the portfolio page
+// **************************************************************
 const PortfolioPage = () => {
   const { portfolioId } = useParams<RouteRarams>();
 
@@ -87,7 +90,7 @@ const PortfolioPage = () => {
   const [deletingStockId, setDeletingStockId] = useState(0);
   const [deletingStockName, setDeletingStockName] = useState('');
 
-  // States for loading 
+  // States for loading
   const [isLoading, setIsLoading] = useState(false);
 
   /* Retrieving data from backend 
@@ -102,6 +105,7 @@ const PortfolioPage = () => {
   const [stocks, _setStocks] = useState<IStock[]>([]);
   const [stockInfos, _setStockInfos] = useState<IStockFundamental[]>([]);
 
+  // Function to map response to data
   const mapStockList = useCallback(
     (data: IStockResponse[]): IStock[] => {
       return data.map((stock) => {
@@ -128,6 +132,7 @@ const PortfolioPage = () => {
     []
   );
 
+  // Function to map response to data
   const mapStockInfoList = useCallback((data: IStockResponse[]): any => {
     return data.map(async (stock) => {
       try {
@@ -172,6 +177,7 @@ const PortfolioPage = () => {
     });
   }, []);
 
+  // Function to set the stocks list
   const setStocks = useCallback(
     (
       stocks: IStock[],
@@ -203,6 +209,7 @@ const PortfolioPage = () => {
     [_setStocks]
   );
 
+  // Function to set the stock infos
   const setStockInfos = useCallback(
     async (
       stockInfos: Promise<IStockFundamental>[],
@@ -233,7 +240,6 @@ const PortfolioPage = () => {
 
       _setStockInfos(infos);
       setIsLoading(false);
-
     },
     [_setStockInfos]
   );
@@ -398,23 +404,26 @@ const PortfolioPage = () => {
 
       // Load the stock list from backend.
       reloadStockList(false);
-
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
-  useEffect(() => {
-    const refresh = () => {
-      reloadStockList(true);
-    };
+  useEffect(
+    () => {
+      const refresh = () => {
+        reloadStockList(true);
+      };
 
-    subscribe(refresh);
+      subscribe(refresh);
 
-    return () => {
-      unsubscribe(refresh);
-    };
-  }, []);
+      return () => {
+        unsubscribe(refresh);
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   // Handler of add stock
   const handleAddStock = (code: string, stockPageId: number) => {
@@ -436,8 +445,10 @@ const PortfolioPage = () => {
     });
   };
 
+  // Render
   return (
     <>
+      {/* Delete portfolio modal */}
       <Modal
         show={showDeleteStockModal}
         onHide={() => setShowDeleteStockModal(false)}
@@ -461,11 +472,14 @@ const PortfolioPage = () => {
         </Modal.Footer>
       </Modal>
 
+
+      {/* Portfolio summary */}
       <div>
         <PortfolioPageSummary portfolioId={portfolioId}></PortfolioPageSummary>
       </div>
       <hr />
 
+      {/* Tabs */}
       <Tabs selectedIndex={activeTab} onSelect={(idx) => setActiveTab(idx)}>
         <TabList className={styles.tableBar}>
           <Tab
@@ -479,6 +493,8 @@ const PortfolioPage = () => {
             Fundamentals
           </Tab>
         </TabList>
+
+        {/* Toolbar */}
         <div className={styles.tableToolbar}>
           <AddStock
             portfolioId={portfolioId}
@@ -487,6 +503,7 @@ const PortfolioPage = () => {
           <Button
             variant='light'
             className='ms-1 text-muted d-flex align-items-center'
+            onClick={() => refresh()}
           >
             <img src={refreshIcon} alt='refresh' style={{ opacity: 0.5 }} />
             Refresh

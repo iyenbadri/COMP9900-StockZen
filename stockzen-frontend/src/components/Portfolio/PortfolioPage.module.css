@@ -121,7 +121,6 @@
   flex-grow: 1;
   flex-basis: auto;
   display: flex;
-  /* border: 2px solid transparent; */
 
   border-radius: 10px 10px 0px 0px;
   padding: 5px 10px 5px 5px;
@@ -137,8 +136,6 @@
 }
 
 .tableRow .rowStockInfo {
-  /* border-color: var(--zen-5); */
-
   min-height: 50px;
 }
 
@@ -178,23 +175,6 @@
   font-weight: 700;
   font-size: 0.9em;
 }
-
-/* .editButton {
-  padding: 0;
-  background-color: transparent;
-  border-color: transparent;
-  margin-left: 5px;
-}
-
-.deleteButton {
-  background-color: transparent;
-  border-color: transparent;
-}
-
-.rowEditButton {
-  flex-basis: 25px;
-  flex-shrink: 0;
-} */
 
 .panelContainer {
   transition: 0.2s;
@@ -396,7 +376,6 @@
   font-size: 0.8em;
 }
 
-/* .tableRow .rowPortfolio, */
 .tableRow .rowName,
 .tableRow .infoRowName,
 .tableRow .rowPrice,

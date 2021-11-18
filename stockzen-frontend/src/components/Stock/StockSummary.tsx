@@ -3,6 +3,9 @@ import React, { FC } from 'react';
 import { bigNumberFormatter, intFormatter, numberFormatter } from 'utils/Utilities';
 import styles from './StockSummary.module.css';
 
+// **************************************************************
+// Component to display the Summary tab in stock page
+// **************************************************************
 const StockSummary: FC<IStockPageResponse> = (prop) => {
   return (
     <>
