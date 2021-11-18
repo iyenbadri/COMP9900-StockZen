@@ -170,9 +170,9 @@ AGLE,Aeglea BioTherapeutics Inc.,NGM,USA
 AGM,Federal Agricultural Mortgage Corporation,NYQ,USA
 AGNC,AGNC Investment Corp.,NMS,USA
 AGNCM,AGNC Investment Corp. Depositary Shares rep 6.875% Series D Fixed-to-Floating Cumulative Redeemable Preferred Stock,NMS,USA
-AGNCN,AGNC Investment Corp. Depositary Shares Each Representing a 1/1000th Interest in a Share of 7.00% Series C Fixed-To-Floating Rate Cumulative Redeemable Preferred Stock,NMS,USA
-AGNCO,AGNC Investment Corp. Depositary Shares each representing a 1/1000th interest in a share of 6.50% Series E Fixed-to-Floating Cumulative Redeemable Preferred Stock,NMS,USA
-AGNCP,AGNC Investment Corp. Depositary Shares Each Representing a 1/1000th Interest in a Share of 6.125% Series F Fixed-to-Floating Rate Cumulative Redeemable Preferred Stock,NMS,USA
+AGNCN,AGNC Investment Corp. Depositary Shares Each Representing a 1-1000th Interest in a Share of 7.00% Series C Fixed-To-Floating Rate Cumulative Redeemable Preferred Stock,NMS,USA
+AGNCO,AGNC Investment Corp. Depositary Shares each representing a 1-1000th interest in a share of 6.50% Series E Fixed-to-Floating Cumulative Redeemable Preferred Stock,NMS,USA
+AGNCP,AGNC Investment Corp. Depositary Shares Each Representing a 1-1000th Interest in a Share of 6.125% Series F Fixed-to-Floating Rate Cumulative Redeemable Preferred Stock,NMS,USA
 AGR,Avangrid Inc.,NYQ,USA
 AGRX,Agile Therapeutics Inc.,NCM,USA
 AGS,PlayAGS Inc.,NYQ,USA
@@ -488,7 +488,7 @@ ATVI,Activision Blizzard Inc.,NMS,USA
 ATXI,Avenue Therapeutics Inc.,NCM,USA
 ATXS,Astria Therapeutics Inc.,NGM,USA
 AUB,Atlantic Union Bankshares Corporation,NMS,USA
-AUBAP,Atlantic Union Bankshares Corporation Depositary Shares each representing a 1/400th ownership interest in a share of 6.875% Perpetual Non-Cumulative Preferred Stock Series A,NMS,USA
+AUBAP,Atlantic Union Bankshares Corporation Depositary Shares each representing a 1-400th ownership interest in a share of 6.875% Perpetual Non-Cumulative Preferred Stock Series A,NMS,USA
 AUBN,Auburn National Bancorporation Inc.,NGM,USA
 AUD,Audacy,NYQ,USA
 AUGX,Augmedix Inc.,NCM,USA
@@ -507,7 +507,7 @@ AVAV,AeroVironment Inc.,NMS,USA
 AVB,AvalonBay Communities Inc.,NYQ,USA
 AVCO,Avalon GloboCare Corp.,NCM,USA
 AVCT,American Virtual Cloud Technologies Inc. ,NCM,USA
-AVCTW,American Virtual Cloud Technologies Inc. Warrant expiring 4/7/2025,NCM,USA
+AVCTW,American Virtual Cloud Technologies Inc. Warrant expiring 4-7-2025,NCM,USA
 AVD,American Vanguard Corporation ($0.10 Par Value),NYQ,USA
 AVDX,AvidXchange Holdings Inc.,NMS,USA
 AVEO,AVEO Pharmaceuticals Inc.,NCM,USA
@@ -620,7 +620,7 @@ BDSI,BioDelivery Sciences International Inc.,NMS,USA
 BDSX,Biodesix Inc.,NGM,USA
 BDTX,Black Diamond Therapeutics Inc.,NMS,USA
 BDX,Becton Dickinson and Company,NYQ,USA
-BDXB,Becton Dickinson and Company Depositary Shares each Representing a 1/20th Interest in a Share of 6.00% Mandatory Convertible Preferred Stock Series B,NYQ,USA
+BDXB,Becton Dickinson and Company Depositary Shares each Representing a 1-20th Interest in a Share of 6.00% Mandatory Convertible Preferred Stock Series B,NYQ,USA
 BEAM,Beam Therapeutics Inc.,NMS,USA
 BECN,Beacon Roofing Supply Inc.,NMS,USA
 BEEM,Beam Global,NCM,USA
@@ -633,8 +633,8 @@ BENER,Benessere Capital Acquisition Corp. Right,NCM,USA
 BENEU,Benessere Capital Acquisition Corp. Unit,NCM,USA
 BENEW,Benessere Capital Acquisition Corp. Warrant,NCM,USA
 BERY,Berry Global Group Inc.,NYQ,USA
-BF/A,Brown Forman Corporation,YHD,USA
-BF/B,Brown Forman Corporation,YHD,USA
+BF-A,Brown Forman Corporation,YHD,USA
+BF-B,Brown Forman Corporation,YHD,USA
 BFAM,Bright Horizons Family Solutions Inc.,NYQ,USA
 BFC,Bank First Corporation,NCM,USA
 BFIN,BankFinancial Corporation,NMS,USA
@@ -662,7 +662,7 @@ BHB,Bar Harbor Bankshares Inc.,ASE,USA
 BHE,Benchmark Electronics Inc.,NYQ,USA
 BHF,Brighthouse Financial Inc.,NMS,USA
 BHFAL,Brighthouse Financial Inc. 6.25% Junior Subordinated Debentures due 2058,NMS,USA
-BHFAN,Brighthouse Financial Inc. Depositary shares each representing a 1/1000th interest in a share of 5.375% Non-Cumulative Preferred Stock Series C,NMS,USA
+BHFAN,Brighthouse Financial Inc. Depositary shares each representing a 1-1000th interest in a share of 5.375% Non-Cumulative Preferred Stock Series C,NMS,USA
 BHFAO,Brighthouse Financial Inc. Depositary Shares 6.75% Non-Cumulative Preferred Stock Series B,NMS,USA
 BHFAP,Brighthouse Financial Inc. Depositary Shares 6.6% Non-Cumulative Preferred Stock Series A,NMS,USA
 BHK,Blackrock Core Bond Trust Blackrock Core Bond Trust,NYQ,USA
@@ -678,7 +678,7 @@ BIG,Big Lots Inc.,NYQ,USA
 BIGC,BigCommerce Holdings Inc. Series 1,NGM,USA
 BIIB,Biogen Inc.,NMS,USA
 BIO,Bio-Rad Laboratories Inc. Class A,NYQ,USA
-BIO/B,Bio-Rad Laboratories Inc.,NYQ,USA
+BIO-B,Bio-Rad Laboratories Inc.,NYQ,USA
 BIOC,Biocept Inc.,NCM,USA
 BIOL,Biolase Inc.,NCM,USA
 BIOT,Biotech Acquisition Company Class A Ordinary Shares,NCM,USA
@@ -779,8 +779,8 @@ BRID,Bridgford Foods Corporation,NGM,USA
 BRIV,B. Riley Principal 250 Merger Corp. Class A,NCM,USA
 BRIVU,B. Riley Principal 250 Merger Corp. Units,NCM,USA
 BRIVW,B. Riley Principal 250 Merger Corp. Warrant,NCM,USA
-BRK/A,Berkshire Hathaway Inc.,YHD,USA
-BRK/B,Berkshire Hathaway Inc.,YHD,USA
+BRK-A,Berkshire Hathaway Inc.,YHD,USA
+BRK-B,Berkshire Hathaway Inc.,YHD,USA
 BRKL,Brookline Bancorp Inc.,NMS,USA
 BRKR,Bruker Corporation,NMS,USA
 BRKS,Brooks Automation Inc.,NMS,USA
@@ -835,7 +835,7 @@ BWAC,Better World Acquisition Corp.,NCM,USA
 BWACU,Better World Acquisition Corp. Unit,NCM,USA
 BWACW,Better World Acquisition Corp. Warrants,NCM,USA
 BWB,Bridgewater Bancshares Inc.,NCM,USA
-BWBBP,Bridgewater Bancshares Inc. Depositary Shares Each Representing a 1/100th Interest in a Share of 5.875% Non-Cumulative Perpetual Preferred Stock Series A,NCM,USA
+BWBBP,Bridgewater Bancshares Inc. Depositary Shares Each Representing a 1-100th Interest in a Share of 5.875% Non-Cumulative Perpetual Preferred Stock Series A,NCM,USA
 BWEN,Broadwind Inc.,NCM,USA
 BWFG,Bankwell Financial Group Inc.,NGM,USA
 BWG,BrandywineGLOBAL Global Income Opportunities Fund Inc.,NYQ,USA
@@ -926,7 +926,7 @@ CCL,Carnival Corporation,NYQ,USA
 CCLP,CSI Compressco LP Common Units,NMS,USA
 CCMP,CMC Materials Inc.,NMS,USA
 CCNE,CNB Financial Corporation,NMS,USA
-CCNEP,CNB Financial Corporation Depositary Shares each representing a 1/40th ownership interest in a share of 7.125% Series A Fixed-Rate Non-Cumulative Perpetual Preferred Stock,NMS,USA
+CCNEP,CNB Financial Corporation Depositary Shares each representing a 1-40th ownership interest in a share of 7.125% Series A Fixed-Rate Non-Cumulative Perpetual Preferred Stock,NMS,USA
 CCO,Clear Channel Outdoor Holdings Inc.,NYQ,USA
 CCOI,Cogent Communications Holdings Inc.,NMS,USA
 CCRN,Cross Country Healthcare Inc. $0.0001 Par Value,NMS,USA
@@ -996,7 +996,7 @@ CFIVU,CF Acquisition Corp. IV Unit,NCM,USA
 CFIVW,CF Acquisition Corp. IV Warrant,NCM,USA
 CFLT,Confluent Inc. Class A,NMS,USA
 CFMS,Conformis Inc.,NCM,USA
-CFR,Cullen/Frost Bankers Inc.,NYQ,USA
+CFR,Cullen-Frost Bankers Inc.,NYQ,USA
 CFRX,ContraFect Corporation,NCM,USA
 CFV,CF Acquisition Corp. V Class A,NCM,USA
 CFVI,CF Acquisition Corp. VI Class A,NCM,USA
@@ -1150,7 +1150,7 @@ CNMD,CONMED Corporation,NYQ,USA
 CNNB,Cincinnati Bancorp Inc.,NCM,USA
 CNO,CNO Financial Group Inc.,NYQ,USA
 CNOB,ConnectOne Bancorp Inc.,NMS,USA
-CNOBP,ConnectOne Bancorp Inc. Depositary Shares each representing a 1/40th interest in a share of 5.25% Fixed-Rate Reset Non-Cumulative Perpetual Preferred Stock Series A,NMS,USA
+CNOBP,ConnectOne Bancorp Inc. Depositary Shares each representing a 1-40th interest in a share of 5.25% Fixed-Rate Reset Non-Cumulative Perpetual Preferred Stock Series A,NMS,USA
 CNP,CenterPoint Energy Inc (Holding Co),NYQ,USA
 CNR,Cornerstone Building Brands Inc.,NYQ,USA
 CNS,Cohen & Steers Inc,NYQ,USA
@@ -1167,7 +1167,7 @@ CNXN,PC Connection Inc.,NMS,USA
 COCO,The Vita Coco Company Inc.,NMS,USA
 COCP,Cocrystal Pharma Inc.,NCM,USA
 CODA,Coda Octopus Group Inc.,NCM,USA
-CODI,D/B/A Compass Diversified Holdings Shares of Beneficial Interest,NYQ,USA
+CODI,D-B-A Compass Diversified Holdings Shares of Beneficial Interest,NYQ,USA
 CODX,Co-Diagnostics Inc.,NCM,USA
 COF,Capital One Financial Corporation,NYQ,USA
 COFS,ChoiceOne Financial Services Inc.,NCM,USA
@@ -1231,7 +1231,7 @@ CPSS,Consumer Portfolio Services Inc.,NGM,USA
 CPT,Camden Property Trust,NYQ,USA
 CPTAG,Capitala Finance Corp. 5.75% Convertible Notes Due 2022,NCM,USA
 CPTAL,Capitala Finance Corp. 6% Notes Due 2022,NMS,USA
-CPZ,Calamos Long/Short Equity & Dynamic Income Trust,NMS,USA
+CPZ,Calamos Long-Short Equity & Dynamic Income Trust,NMS,USA
 CQP,Cheniere Energy Partners LP Cheniere Energy Partners LP Common Units,ASE,USA
 CR,Crane Co.,NYQ,USA
 CRAI,CRA International Inc.,NMS,USA
@@ -1280,7 +1280,7 @@ CSII,Cardiovascular Systems Inc.,NMS,USA
 CSL,Carlisle Companies Incorporated,NYQ,USA
 CSPI,CSP Inc.,NGM,USA
 CSQ,Calamos Strategic Total Return,NGM,USA
-CSR,D/B/A Centerspace,NYQ,USA
+CSR,D-B-A Centerspace,NYQ,USA
 CSSE,Chicken Soup for the Soul Entertainment Inc. Class A,NGM,USA
 CSSEN,Chicken Soup for the Soul Entertainment Inc. 9.50% Notes due 2025,NGM,USA
 CSSEP,Chicken Soup for the Soul Entertainment Inc. 9.75% Series A Cumulative Redeemable Perpetual Preferred Stock,NGM,USA
@@ -1382,7 +1382,7 @@ CZNC,Citizens & Northern Corp,NCM,USA
 CZR,Caesars Entertainment Inc.,NMS,USA
 CZWI,Citizens Community Bancorp Inc.,NGM,USA
 D,Dominion Energy Inc.,NYQ,USA
-DAIO,Data I/O Corporation,NCM,USA
+DAIO,Data I-O Corporation,NCM,USA
 DAKT,Daktronics Inc.,NMS,USA
 DAL,Delta Air Lines Inc.,NYQ,USA
 DALN,DallasNews Corporation Series A,NCM,USA
@@ -1756,7 +1756,7 @@ ERESU,East Resources Acquisition Company Unit,NCM,USA
 ERESW,East Resources Acquisition Company Warrant,NCM,USA
 ERIE,Erie Indemnity Company Class A,NMS,USA
 ERII,Energy Recovery Inc.,NMS,USA
-ES,Eversource Energy (D/B/A),NYQ,USA
+ES,Eversource Energy (D-B-A),NYQ,USA
 ESACU,ESGEN Acquisition Corporation Unit,NGM,USA
 ESBK,Elmira Savings Bank Elmira NY,NCM,USA
 ESCA,Escalade Incorporated,NGM,USA
@@ -1847,14 +1847,14 @@ EYE,National Vision Holdings Inc.,NMS,USA
 EYEG,Eyegate Pharmaceuticals Inc.,NCM,USA
 EYEN,Eyenovia Inc.,NCM,USA
 EYES,Second Sight Medical Products Inc.,NCM,USA
-EYESW,Second Sight Medical Products Inc. Warrants expiring 03/14/2024,NCM,USA
+EYESW,Second Sight Medical Products Inc. Warrants expiring 03-14-2024,NCM,USA
 EYPT,EyePoint Pharmaceuticals Inc.,NGM,USA
 EZFL,EzFill Holdings Inc.,NCM,USA
 EZPW,EZCORP Inc. Class A Non Voting,NMS,USA
 F,Ford Motor Company,NYQ,USA
 FA,First Advantage Corporation,NMS,USA
 FAF,First American Corporation (New),NYQ,USA
-FAM,First Trust/Aberdeen Global Opportunity Income Fund First Trust/Aberdeen Global Opportunity Income Fund Common Shares of Beneficial Interest,NYQ,USA
+FAM,First Trust-Aberdeen Global Opportunity Income Fund First Trust-Aberdeen Global Opportunity Income Fund Common Shares of Beneficial Interest,NYQ,USA
 FANG,Diamondback Energy Inc. Commmon Stock,NMS,USA
 FARM,Farmer Brothers Company,NMS,USA
 FARO,FARO Technologies Inc.,NMS,USA
@@ -1904,7 +1904,7 @@ FELE,Franklin Electric Co. Inc.,NMS,USA
 FEMY,Femasys Inc.,NCM,USA
 FEN,First Trust Energy Income and Growth Fund,NYQ,USA
 FENC,Fennec Pharmaceuticals Inc.,NCM,USA
-FEO,First Trust/Aberdeen Emerging Opportunity Fund Common Shares of Beneficial Interest,NYQ,USA
+FEO,First Trust-Aberdeen Emerging Opportunity Fund Common Shares of Beneficial Interest,NYQ,USA
 FET,Forum Energy Technologies Inc.,NYQ,USA
 FEXDU,Fintech Ecosystem Development Corp. Units,NGM,USA
 FF,FutureFuel Corp.  Common shares,NYQ,USA
@@ -1945,8 +1945,8 @@ FISI,Financial Institutions Inc.,NMS,USA
 FISV,Fiserv Inc.,NMS,USA
 FITB,Fifth Third Bancorp,NMS,USA
 FITBI,Fifth Third Bancorp Depositary Shares,NMS,USA
-FITBO,Fifth Third Bancorp Depositary Shares each representing a 1/1000th ownership interest in a share of Non-Cumulative Perpetual Preferred Stock Series K,NMS,USA
-FITBP,Fifth Third Bancorp Depositary Shares each representing 1/40th share of Fifth Third 6.00% Non-Cumulative Perpetual Class B Preferred Stock Series A,NMS,USA
+FITBO,Fifth Third Bancorp Depositary Shares each representing a 1-1000th ownership interest in a share of Non-Cumulative Perpetual Preferred Stock Series K,NMS,USA
+FITBP,Fifth Third Bancorp Depositary Shares each representing 1-40th share of Fifth Third 6.00% Non-Cumulative Perpetual Class B Preferred Stock Series A,NMS,USA
 FIV,First Trust Senior Floating Rate 2022 Target Term Fund Common Shares of Beneficial Interest,NYQ,USA
 FIVE,Five Below Inc.,NMS,USA
 FIVN,Five9 Inc.,NGM,USA
@@ -1981,14 +1981,14 @@ FMAC,FirstMark Horizon Acquisition Corp. Class A,NYQ,USA
 FMAO,Farmers & Merchants Bancorp Inc.,NCM,USA
 FMBH,First Mid Bancshares Inc.,NGM,USA
 FMBI,First Midwest Bancorp Inc.,NMS,USA
-FMBIO,First Midwest Bancorp Inc. Depositary Shares Each Representing a 1/40th Interest in a Share of Fixed Rate Non-Cumulative Perpetual Preferred Stock Series C,NMS,USA
-FMBIP,First Midwest Bancorp Inc. Depositary Shares Each Representing a 1/40th Interest in a Share of Fixed Rate Non-Cumulative Perpetual Preferred Stock Series A,NMS,USA
+FMBIO,First Midwest Bancorp Inc. Depositary Shares Each Representing a 1-40th Interest in a Share of Fixed Rate Non-Cumulative Perpetual Preferred Stock Series C,NMS,USA
+FMBIP,First Midwest Bancorp Inc. Depositary Shares Each Representing a 1-40th Interest in a Share of Fixed Rate Non-Cumulative Perpetual Preferred Stock Series A,NMS,USA
 FMC,FMC Corporation,NYQ,USA
 FMIV,Forum Merger IV Corporation Class A,NCM,USA
 FMIVW,Forum Merger IV Corporation Warrant,NCM,USA
 FMN,Federated Hermes Premier Municipal Income Fund,NYQ,USA
 FMNB,Farmers National Banc Corp.,NCM,USA
-FMO,Fiduciary/Claymore Energy Infrastructure Fund Common Shares of Beneficial Interest,NYQ,USA
+FMO,Fiduciary-Claymore Energy Infrastructure Fund Common Shares of Beneficial Interest,NYQ,USA
 FMTX,Forma Therapeutics Holdings Inc.,NGM,USA
 FMY,First Trust Motgage Income Fund Common Shares of Beneficial Interest,NYQ,USA
 FNB,F.N.B. Corporation,NYQ,USA
@@ -2097,7 +2097,7 @@ FTVIW,FinTech Acquisition Corp. VI Warrants,NCM,USA
 FUL,H. B. Fuller Company,NYQ,USA
 FULC,Fulcrum Therapeutics Inc.,NGM,USA
 FULT,Fulton Financial Corporation,NMS,USA
-FULTP,Fulton Financial Corporation Depositary Shares Each Representing a 1/40th Interest in a Share of Fixed Rate Non-Cumulative Perpetual Preferred Stock Series A,NMS,USA
+FULTP,Fulton Financial Corporation Depositary Shares Each Representing a 1-40th Interest in a Share of Fixed Rate Non-Cumulative Perpetual Preferred Stock Series A,NMS,USA
 FUN,Cedar Fair L.P.,NYQ,USA
 FUNC,First United Corporation,NMS,USA
 FUND,Sprott Focus Trust Inc.,NGM,USA
@@ -2392,7 +2392,7 @@ HAS,Hasbro Inc.,NMS,USA
 HASI,Hannon Armstrong Sustainable Infrastructure Capital Inc.,NYQ,USA
 HAYN,Haynes International Inc.,NMS,USA
 HBAN,Huntington Bancshares Incorporated,NMS,USA
-HBANM,Huntington Bancshares Incorporated Depositary Shares each representing a 1/1000th interest in a share of Huntington Series I Preferred Stock,NMS,USA
+HBANM,Huntington Bancshares Incorporated Depositary Shares each representing a 1-1000th interest in a share of Huntington Series I Preferred Stock,NMS,USA
 HBANP,Huntington Bancshares Incorporated Depositary Shares 4.500% Series H Non-Cumulative Perpetual Preferred Stock,NMS,USA
 HBCP,Home Bancorp Inc.,NMS,USA
 HBI,Hanesbrands Inc.,NYQ,USA
@@ -2437,7 +2437,7 @@ HE,Hawaiian Electric Industries Inc.,NYQ,USA
 HEAR,Turtle Beach Corporation,NGM,USA
 HEES,H&E Equipment Services Inc.,NMS,USA
 HEI,Heico Corporation,NYQ,USA
-HEI/A,Heico Corporation,NYQ,USA
+HEI-A,Heico Corporation,NYQ,USA
 HEP,Holly Energy Partners L.P.,NYQ,USA
 HEPA,Hepion Pharmaceuticals Inc.,NCM,USA
 HEQ,John Hancock Hedged Equity & Income Fund Common Shares of Beneficial Interest,NYQ,USA
@@ -2456,7 +2456,7 @@ HGH,Hartford Financial Services Group Inc. (The) 7.875% Fixed to Floating Rate J
 HHC,Howard Hughes Corporation (The),NYQ,USA
 HI,Hillenbrand Inc,NYQ,USA
 HIBB,Hibbett Inc.,NMS,USA
-HIE,Miller/Howard High Income Equity Fund Common Shares of Beneficial Interest,NYQ,USA
+HIE,Miller-Howard High Income Equity Fund Common Shares of Beneficial Interest,NYQ,USA
 HIFS,Hingham Institution for Savings,NGM,USA
 HIG,Hartford Financial Services Group Inc. (The),NYQ,USA
 HIGA,H.I.G. Acquisition Corp. Class A Ordinary Shares,NYQ,USA
@@ -2488,7 +2488,7 @@ HLXA,Helix Acquisition Corp. Class A Ordinary Shares,NCM,USA
 HMCO,HumanCo Acquisition Corp. Class A,NCM,USA
 HMCOU,HumanCo Acquisition Corp. Unit,NCM,USA
 HMCOW,HumanCo Acquisition Corp. Warrant,NCM,USA
-HMG,HMG/Courtland Properties Inc.,ASE,USA
+HMG,HMG-Courtland Properties Inc.,ASE,USA
 HMHC,Houghton Mifflin Harcourt Company,NMS,USA
 HMN,Horace Mann Educators Corporation,NYQ,USA
 HMNF,HMN Financial Inc.,NGM,USA
@@ -2566,7 +2566,7 @@ HTIA,Healthcare Trust Inc. 7.375% Series A Cumulative Redeemable Perpetual Prefe
 HTIBP,Healthcare Trust Inc. 7.125% Series B Cumulative Redeemable Perpetual Preferred Stock,NGM,USA
 HTLD,Heartland Express Inc.,NMS,USA
 HTLF,Heartland Financial USA Inc.,NMS,USA
-HTLFP,Heartland Financial USA Inc. Depositary Shares each representing a 1/400th ownership interest in a share of 7.00% Fixed-Rate Reset Non-Cumulative Perpetual Preferred Stock Series E,NMS,USA
+HTLFP,Heartland Financial USA Inc. Depositary Shares each representing a 1-400th ownership interest in a share of 7.00% Fixed-Rate Reset Non-Cumulative Perpetual Preferred Stock Series E,NMS,USA
 HTY,John Hancock Tax-Advantaged Global Shareholder Yield Fund Common Shares of Beneficial Interest,NYQ,USA
 HUBB,Hubbell Inc,NYQ,USA
 HUBG,Hub Group Inc. Class A,NMS,USA
@@ -2581,7 +2581,7 @@ HUSA,Houston American Energy Corporation,ASE,USA
 HUYA,HUYA Inc. American depositary shares each  representing one Class A ordinary share,NYQ,USA
 HVBC,HV Bancorp Inc.,NCM,USA
 HVT,Haverty Furniture Companies Inc.,NYQ,USA
-HVT/A,Haverty Furniture Companies Inc.,NYQ,USA
+HVT-A,Haverty Furniture Companies Inc.,NYQ,USA
 HWBK,Hawthorn Bancshares Inc.,NMS,USA
 HWC,Hancock Whitney Corporation,NMS,USA
 HWCPZ,Hancock Whitney Corporation 6.25% Subordinated Notes due 2060,NMS,USA
@@ -2609,7 +2609,7 @@ HYZNW,Hyzon Motors Inc. Warrants,NMS,USA
 HZN,Horizon Global Corporation Common Shares,NYQ,USA
 HZO,MarineMax Inc.  (FL),NYQ,USA
 HZON,Horizon Acquisition Corporation II Class A Ordinary Shares,NYQ,USA
-IAC,IAC/InterActiveCorp,NMS,USA
+IAC,IAC-InterActiveCorp,NMS,USA
 IAE,Voya Asia Pacific High Dividend Equity Income Fund ING Asia Pacific High Dividend Equity Income Fund Common Shares of Beneficial Interest,NYQ,USA
 IAF,Aberdeen Australia Equity Fund Inc,NYQ,USA
 IART,Integra LifeSciences Holdings Corporation,NMS,USA
@@ -2895,8 +2895,8 @@ JUGGW,Jaws Juggernaut Acquisition Corporation Warrant,NCM,USA
 JUPW,Jupiter Wellness Inc.,NCM,USA
 JUPWW,Jupiter Wellness Inc. Warrant,NCM,USA
 JVA,Coffee Holding Co. Inc.,NCM,USA
-JW/A,John Wiley & Sons Inc.,YHD,USA
-JW/B,John Wiley & Sons Inc.,YHD,USA
+JW-A,John Wiley & Sons Inc.,YHD,USA
+JW-B,John Wiley & Sons Inc.,YHD,USA
 JWN,Nordstrom Inc.,NYQ,USA
 JYAC,Jiya Acquisition Corp. Class A,NCM,USA
 JYNT,The Joint Corp.,NCM,USA
@@ -3080,7 +3080,7 @@ LESL,Leslie's Inc.,NMS,USA
 LEU,Centrus Energy Corp. Class A,ASE,USA
 LEVI,Levi Strauss & Co Class A,NYQ,USA
 LEVL,Level One Bancorp Inc.,NMS,USA
-LEVLP,Level One Bancorp Inc. Depositary Shares Each Representing a 1/100th Interest in a Share of 7.50% Non-Cumulative Perpetual Preferred Stock Series B,NMS,USA
+LEVLP,Level One Bancorp Inc. Depositary Shares Each Representing a 1-100th Interest in a Share of 7.50% Non-Cumulative Perpetual Preferred Stock Series B,NMS,USA
 LFG,Archaea Energy Inc. Class A,NYQ,USA
 LFMD,LifeMD Inc.,NGM,USA
 LFMDP,LifeMD Inc. 8.875% Series A Cumulative Perpetual Preferred Stock,NCM,USA
@@ -3140,7 +3140,7 @@ LMND,Lemonade Inc.,NYQ,USA
 LMNR,Limoneira Co,NMS,USA
 LMPX,LMP Automotive Holdings Inc.,NCM,USA
 LMRK,Landmark Infrastructure Partners LP Common Units,NGM,USA
-LMRKN,Landmark Infrastructure Partners LP 7% Series C Fltg/Fxd Perpetual Conv Preferred Stock,NGM,USA
+LMRKN,Landmark Infrastructure Partners LP 7% Series C Fltg-Fxd Perpetual Conv Preferred Stock,NGM,USA
 LMRKO,Landmark Infrastructure Partners LP Perpetual Preferred Units Series B 7.90%,NGM,USA
 LMRKP,Landmark Infrastructure Partners LP 8.00% Series A Cumulative Redeemable Perpetual Preferred Units,NGM,USA
 LMST,Limestone Bancorp Inc.,NCM,USA
@@ -3192,7 +3192,7 @@ LSXMK,Liberty Media Corporation Series C Liberty SiriusXM,NMS,USA
 LTBR,Lightbridge Corporation,NCM,USA
 LTC,LTC Properties Inc.,NYQ,USA
 LTCH,Latch Inc.,NMS,USA
-LTCHW,Latch Inc. Warrant expiring 6/4/2026,NMS,USA
+LTCHW,Latch Inc. Warrant expiring 6-4-2026,NMS,USA
 LTHM,Livent Corporation,NYQ,USA
 LTRN,Lantern Pharma Inc.,NCM,USA
 LTRPA,Liberty TripAdvisor Holdings Inc. Series A,NMS,USA
@@ -3269,7 +3269,7 @@ MBI,MBIA Inc.,NYQ,USA
 MBII,Marrone Bio Innovations Inc.,NCM,USA
 MBIN,Merchants Bancorp,NCM,USA
 MBINN,Merchants Bancorp Depositary Shares Preferred Series C,NCM,USA
-MBINO,Merchants Bancorp Depositary Shares Each Representing a 1/40th Interest in a Share of Series B  Fixed-to-Floating Rate,NCM,USA
+MBINO,Merchants Bancorp Depositary Shares Each Representing a 1-40th Interest in a Share of Series B  Fixed-to-Floating Rate,NCM,USA
 MBINP,Merchants Bancorp 7.00% Fixed-to-Floating Rate Series A Non-Cumulative Perpetual Preferred Stock,NCM,USA
 MBIO,Mustang Bio Inc.,NGM,USA
 MBNKP,Medallion Bank Fixed-to-Floating Rate Non-Cumulative Perpetual Preferred Stock Series F,NCM,USA
@@ -3370,7 +3370,7 @@ MHH,Mastech Digital Inc,ASE,USA
 MHI,Pioneer Municipal High Income Fund Inc.,NYQ,USA
 MHK,Mohawk Industries Inc.,NYQ,USA
 MHN,Blackrock MuniHoldings New York Quality Fund Inc.,NYQ,USA
-MHO,M/I Homes Inc.,NYQ,USA
+MHO,M-I Homes Inc.,NYQ,USA
 MIC,Macquarie Infrastructure Holdings LLC Common Unit,NYQ,USA
 MICT,MICT Inc.,NCM,USA
 MIDD,Middleby Corporation (The),NMS,USA
@@ -3754,7 +3754,7 @@ NTRA,Natera Inc.,NMS,USA
 NTRB,Nutriband Inc.,NCM,USA
 NTRBW,Nutriband Inc. Warrant,NGM,USA
 NTRS,Northern Trust Corporation,NMS,USA
-NTRSO,Northern Trust Corporation Depositary Shares Each Representing a 1/1000th Interest in a Share of Series E Non-Cumulative Perpetual Preferred Stock,NMS,USA
+NTRSO,Northern Trust Corporation Depositary Shares Each Representing a 1-1000th Interest in a Share of Series E Non-Cumulative Perpetual Preferred Stock,NMS,USA
 NTST,NetSTREIT Corp.,NYQ,USA
 NTUS,Natus Medical Incorporated,NMS,USA
 NTWK,NetSol Technologies Inc. Common  Stock,NCM,USA
@@ -3911,7 +3911,7 @@ OPINL,Office Properties Income Trust 6.375% Senior Notes due 2050,NGM,USA
 OPK,OPKO Health Inc.,NMS,USA
 OPNT,Opiant Pharmaceuticals Inc.,NCM,USA
 OPOF,Old Point Financial Corporation,NCM,USA
-OPP,RiverNorth/DoubleLine Strategic Opportunity Fund Inc.,NYQ,USA
+OPP,RiverNorth-DoubleLine Strategic Opportunity Fund Inc.,NYQ,USA
 OPRT,Oportun Financial Corporation,NMS,USA
 OPRX,OptimizeRx Corporation,NCM,USA
 OPTN,OptiNose Inc.,NMS,USA
@@ -3951,7 +3951,7 @@ OTECU,OceanTech Acquisitions I Corp. Units,NCM,USA
 OTECW,OceanTech Acquisitions I Corp. Warrant,NCM,USA
 OTIC,Otonomy Inc.,NMS,USA
 OTLK,Outlook Therapeutics Inc.,NCM,USA
-OTLKW,Outlook Therapeutics Inc. Series A Warrant Expiring 02/18/2022,NCM,USA
+OTLKW,Outlook Therapeutics Inc. Series A Warrant Expiring 02-18-2022,NCM,USA
 OTRA,OTR Acquisition Corp. Class A,NCM,USA
 OTRAW,OTR Acquisition Corp. Warrant,NCM,USA
 OTRK,Ontrak Inc.,NGM,USA
@@ -4123,7 +4123,7 @@ PHIC,Population Health Investment Co. Inc. Class A Ordinary Share,NCM,USA
 PHICU,Population Health Investment Co. Inc. Unit,NCM,USA
 PHICW,Population Health Investment Co. Inc. Warrant,NCM,USA
 PHIO,Phio Pharmaceuticals Corp.,NCM,USA
-PHIOW,Phio Pharmaceuticals Corp. Warrants expiring 12/21/2021,NCM,USA
+PHIOW,Phio Pharmaceuticals Corp. Warrants expiring 12-21-2021,NCM,USA
 PHK,Pimco High Income Fund Pimco High Income Fund,NYQ,USA
 PHM,PulteGroup Inc.,NYQ,USA
 PHR,Phreesia Inc.,NYQ,USA
@@ -4187,7 +4187,7 @@ PNBK,Patriot National Bancorp Inc.,NGM,USA
 PNC,PNC Financial Services Group Inc. (The),NYQ,USA
 PNF,PIMCO New York Municipal Income Fund,NYQ,USA
 PNFP,Pinnacle Financial Partners Inc.,NMS,USA
-PNFPP,Pinnacle Financial Partners Inc. Depositary shares of Pinnacle Financial Partners Inc. each representing a 1/40th Interest in a share of its 6.75% Fixed-Rate Non-Cumulative Perpetual Preferred Stock Series B,NMS,USA
+PNFPP,Pinnacle Financial Partners Inc. Depositary shares of Pinnacle Financial Partners Inc. each representing a 1-40th Interest in a share of its 6.75% Fixed-Rate Non-Cumulative Perpetual Preferred Stock Series B,NMS,USA
 PNI,Pimco New York Municipal Income Fund II Common Shares of Beneficial Interest,NYQ,USA
 PNM,PNM Resources Inc. (Holding Co.),NYQ,USA
 PNNT,PennantPark Investment Corporation,NMS,USA
@@ -4377,7 +4377,7 @@ RCHGW,Recharge Acquisition Corp. Warrant,NCM,USA
 RCII,Rent-A-Center Inc.,NMS,USA
 RCKT,Rocket Pharmaceuticals Inc.,NGM,USA
 RCKY,Rocky Brands Inc.,NMS,USA
-RCL,D/B/A Royal Caribbean Cruises Ltd.,NYQ,USA
+RCL,D-B-A Royal Caribbean Cruises Ltd.,NYQ,USA
 RCLF,Rosecliff Acquisition Corp I Class A,NCM,USA
 RCLFU,Rosecliff Acquisition Corp I Unit,NCM,USA
 RCLFW,Rosecliff Acquisition Corp I Warrants,NCM,USA
@@ -4448,11 +4448,11 @@ RIDE,Lordstown Motors Corp. Class A,NMS,USA
 RIGL,Rigel Pharmaceuticals Inc.,NMS,USA
 RILY,B. Riley Financial Inc.,NGM,USA
 RILYK,B. Riley Financial Inc. 5.50% Senior Notes Due 2026,NGM,USA
-RILYL,B. Riley Financial Inc. Depositary Shares each representing 1/1000th in a share of 7.375% Series B Cumulative Perpetual Preferred Stock par value $0.0001,NGM,USA
+RILYL,B. Riley Financial Inc. Depositary Shares each representing 1-1000th in a share of 7.375% Series B Cumulative Perpetual Preferred Stock par value $0.0001,NGM,USA
 RILYM,B. Riley Financial Inc. 6.375% Senior Notes due 2025,NGM,USA
 RILYN,B. Riley Financial Inc. 6.50% Senior Notes Due 2026,NGM,USA
 RILYO,B. Riley Financial Inc. 6.75% Senior Notes due 2024,NGM,USA
-RILYP,B. Riley Financial Inc. Depositary Shares each representing a 1/1000th fractional interest in a share of Series A Cumulative Perpetual Preferred Stock,NGM,USA
+RILYP,B. Riley Financial Inc. Depositary Shares each representing a 1-1000th fractional interest in a share of Series A Cumulative Perpetual Preferred Stock,NGM,USA
 RILYT,B. Riley Financial Inc. 6.00% Senior Notes Due 2028,NGM,USA
 RILYZ,B. Riley Financial Inc. 5.25% Senior Notes due 2028,NGM,USA
 RIOT,Riot Blockchain Inc.  ,NCM,USA
@@ -4607,7 +4607,7 @@ SBGI,Sinclair Broadcast Group Inc. Class A,NMS,USA
 SBH,Sally Beauty Holdings Inc. (Name to be changed from Sally Holdings Inc.),NYQ,USA
 SBI,Western Asset Intermediate Muni Fund Inc,NYQ,USA
 SBNY,Signature Bank,NMS,USA
-SBNYP,Signature Bank Depositary shares each representing a 1/40th ownership interest in a share of 5.000% Noncumulative Perpetual Series A Preferred Stock,NMS,USA
+SBNYP,Signature Bank Depositary shares each representing a 1-40th ownership interest in a share of 5.000% Noncumulative Perpetual Series A Preferred Stock,NMS,USA
 SBR,Sabine Royalty Trust,NYQ,USA
 SBRA,Sabra Health Care REIT Inc.,NMS,USA
 SBSI,Southside Bancshares Inc.,NMS,USA
@@ -4720,7 +4720,7 @@ SIERU,Sierra Lake Acquisition Corp. Unit,NCM,USA
 SIF,SIFCO Industries Inc.,ASE,USA
 SIGA,SIGA Technologies Inc.,NGM,USA
 SIGI,Selective Insurance Group Inc.,NMS,USA
-SIGIP,Selective Insurance Group Inc. Depositary Shares each representing a 1/1000th interest in a share of 4.60% Non-Cumulative Preferred Stock Series B,NMS,USA
+SIGIP,Selective Insurance Group Inc. Depositary Shares each representing a 1-1000th interest in a share of 4.60% Non-Cumulative Preferred Stock Series B,NMS,USA
 SILK,Silk Road Medical Inc.,NMS,USA
 SINO,Sino-Global Shipping America Ltd.,NCM,USA
 SINT,SiNtx Technologies Inc.,NCM,USA
@@ -4729,7 +4729,7 @@ SITC,SITE Centers Corp.,NYQ,USA
 SITE,SiteOne Landscape Supply Inc.,NYQ,USA
 SITM,SiTime Corporation,NGM,USA
 SIVB,SVB Financial Group,NMS,USA
-SIVBP,SVB Financial Group Depositary Shs each representing a 1/40th interest in a share of 5.25% Fixed-Rate Non-Cumulative Perpetual Preferred Stock Series A,NMS,USA
+SIVBP,SVB Financial Group Depositary Shs each representing a 1-40th interest in a share of 5.25% Fixed-Rate Non-Cumulative Perpetual Preferred Stock Series A,NMS,USA
 SIX,Six Flags Entertainment Corporation New,NYQ,USA
 SJI,South Jersey Industries Inc.,NYQ,USA
 SJIJ,South Jersey Industries Inc. 5.625% Junior Subordinated Notes due 2079,NYQ,USA
@@ -4738,7 +4738,7 @@ SJM,J.M. Smucker Company (The) New,NYQ,USA
 SJT,San Juan Basin Royalty Trust,NYQ,USA
 SJW,SJW Group (DE),NYQ,USA
 SKIN,The Beauty Health Company Class A,NCM,USA
-SKINW,The Beauty Health Company Warrant expiring 5/4/2026,NCM,USA
+SKINW,The Beauty Health Company Warrant expiring 5-4-2026,NCM,USA
 SKT,Tanger Factory Outlet Centers Inc.,NYQ,USA
 SKX,Skechers U.S.A. Inc.,NYQ,USA
 SKY,Skyline Champion Corporation,NYQ,USA
@@ -4948,7 +4948,7 @@ STWD,STARWOOD PROPERTY TRUST INC. Starwood Property Trust Inc.,NYQ,USA
 STXB,Spirit of Texas Bancshares Inc.,NMS,USA
 STXS,Stereotaxis Inc.,ASE,USA
 STZ,Constellation Brands Inc.,NYQ,USA
-STZ/B,Constellation Brands Inc,NYQ,USA
+STZ-B,Constellation Brands Inc,NYQ,USA
 SUI,Sun Communities Inc.,NYQ,USA
 SUM,Summit Materials Inc. Class A,NYQ,USA
 SUMO,Sumo Logic Inc.,NMS,USA
@@ -5038,7 +5038,7 @@ TBCPU,Thunder Bridge Capital Partners III Inc. Units,NCM,USA
 TBCPW,Thunder Bridge Capital Partners III Inc. Warrant,NCM,USA
 TBI,TrueBlue Inc.,NYQ,USA
 TBK,Triumph Bancorp Inc.,NMS,USA
-TBKCP,Triumph Bancorp Inc. Depositary Shares Each Representing a 1/40th Interest in a Share of 7.125% Series C Fixed-Rate Non-Cumulative Perpetual Preferred Stock,NMS,USA
+TBKCP,Triumph Bancorp Inc. Depositary Shares Each Representing a 1-40th Interest in a Share of 7.125% Series C Fixed-Rate Non-Cumulative Perpetual Preferred Stock,NMS,USA
 TBLD,Thornburg Income Builder Opportunities Trust,NMS,USA
 TBLT,ToughBuilt Industries Inc.,NCM,USA
 TBLTW,ToughBuilt Industries Inc. Warrant,NCM,USA
@@ -5117,7 +5117,7 @@ THRX,Theseus Pharmaceuticals Inc.,NMS,USA
 THRY,Thryv Holdings Inc.,NCM,USA
 THS,Treehouse Foods Inc.,NYQ,USA
 THW,Tekla World Healthcare Fund Shares of Beneficial Interest,NYQ,USA
-THWWW,Target Hospitality Corp. Warrant expiring 3/15/2024,NCM,USA
+THWWW,Target Hospitality Corp. Warrant expiring 3-15-2024,NCM,USA
 TIG,Trean Insurance Group Inc.,NMS,USA
 TIL,Instil Bio Inc.,NMS,USA
 TILE,Interface Inc.,NMS,USA
@@ -5205,8 +5205,8 @@ TRVI,Trevi Therapeutics Inc.,NGM,USA
 TRVN,Trevena Inc.,NCM,USA
 TSBK,Timberland Bancorp Inc.,NGM,USA
 TSC,TriState Capital Holdings Inc.,NMS,USA
-TSCAP,TriState Capital Holdings Inc. Dep Shs Rep 1/40th Int 6.75% Srs A Non-Cum Pfd Stock,NMS,USA
-TSCBP,TriState Capital Holdings Inc. Depositary Share representing a 1/40th Interest in a Share of 6.375% Fixed-to-Floating Rate Series B Non-Cumulative Perpetual Preferred Stock,NMS,USA
+TSCAP,TriState Capital Holdings Inc. Dep Shs Rep 1-40th Int 6.75% Srs A Non-Cum Pfd Stock,NMS,USA
+TSCBP,TriState Capital Holdings Inc. Depositary Share representing a 1-40th Interest in a Share of 6.375% Fixed-to-Floating Rate Series B Non-Cumulative Perpetual Preferred Stock,NMS,USA
 TSCO,Tractor Supply Company,NMS,USA
 TSHA,Taysha Gene Therapies Inc.,NMS,USA
 TSI,TCW Strategic Income Fund Inc.,NYQ,USA
@@ -5289,7 +5289,7 @@ UBP,Urstadt Biddle Properties Inc.,NYQ,USA
 UBSI,United Bankshares Inc.,NMS,USA
 UBX,Unity Biotechnology Inc.,NMS,USA
 UCBI,United Community Banks Inc.,NMS,USA
-UCBIO,United Community Banks Inc. Depositary Shares each representing 1/1000th interest in a share of Series I Non-CumulativePreferred Stock,NMS,USA
+UCBIO,United Community Banks Inc. Depositary Shares each representing 1-1000th interest in a share of Series I Non-CumulativePreferred Stock,NMS,USA
 UCTT,Ultra Clean Holdings Inc.,NMS,USA
 UDMY,Udemy Inc.,NMS,USA
 UDR,UDR Inc.,NYQ,USA
@@ -5311,7 +5311,7 @@ UI,Ubiquiti Inc.,NYQ,USA
 UIHC,United Insurance Holdings Corp.,NCM,USA
 UIS,Unisys Corporation New,NYQ,USA
 UK,Ucommune International Ltd Ordinary Shares,NCM,USA
-UKOMW,Ucommune International Ltd Warrant expiring 11/17/2025,NCM,USA
+UKOMW,Ucommune International Ltd Warrant expiring 11-17-2025,NCM,USA
 ULBI,Ultralife Corporation,NGM,USA
 ULCC,Frontier Group Holdings Inc.,NMS,USA
 ULH,Universal Logistics Holdings Inc.,NMS,USA
@@ -5622,13 +5622,13 @@ WRB,W.R. Berkley Corporation,NYQ,USA
 WRE,Washington Real Estate Investment Trust,NYQ,USA
 WRLD,World Acceptance Corporation,NMS,USA
 WSBC,WesBanco Inc.,NMS,USA
-WSBCP,WesBanco Inc. Depositary Shares Each Representing a 1/40th Interest in a Share of 6.75% Fixed-Rate Reset Non-Cumulative Perpetual Preferred Stock Series A,NMS,USA
+WSBCP,WesBanco Inc. Depositary Shares Each Representing a 1-40th Interest in a Share of 6.75% Fixed-Rate Reset Non-Cumulative Perpetual Preferred Stock Series A,NMS,USA
 WSBF,Waterstone Financial Inc. (MD),NMS,USA
 WSC,WillScot Mobile Mini Holdings Corp. Class A,NCM,USA
 WSFS,WSFS Financial Corporation,NMS,USA
 WSM,Williams-Sonoma Inc. (DE),NYQ,USA
 WSO,Watsco Inc.,NYQ,USA
-WSO/B,Watsco Inc.,NYQ,USA
+WSO-B,Watsco Inc.,NYQ,USA
 WSR,Whitestone REIT Common Shares,NYQ,USA
 WST,West Pharmaceutical Services Inc.,NYQ,USA
 WSTG,Wayside Technology Group Inc.,NGM,USA
@@ -5636,7 +5636,7 @@ WTBA,West Bancorporation,NMS,USA
 WTER,The Alkaline Water Company Inc.,NCM,USA
 WTFC,Wintrust Financial Corporation,NMS,USA
 WTFCM,Wintrust Financial Corporation Fixed-to-Floating Rate Non-Cumulative Perpetual Preferred Stock Series D,NMS,USA
-WTFCP,Wintrust Financial Corporation Depositary Shares Each Representing a 1/1000th Interest in a Share of 6.875% Fixed-Rate Reset Non-Cumulative Perpetual Preferred Stock Series E,NMS,USA
+WTFCP,Wintrust Financial Corporation Depositary Shares Each Representing a 1-1000th Interest in a Share of 6.875% Fixed-Rate Reset Non-Cumulative Perpetual Preferred Stock Series E,NMS,USA
 WTI,W&T Offshore Inc.,NYQ,USA
 WTM,White Mountains Insurance Group Ltd.,NYQ,USA
 WTRG,Essential Utilities Inc.,NYQ,USA
@@ -5729,8 +5729,8 @@ ZGNX,Zogenix Inc.,NGM,USA
 ZI,ZoomInfo Technologies Inc Class A,NMS,USA
 ZION,Zions Bancorporation N.A.,NMS,USA
 ZIONL,Zions Bancorporation 6.95% Fixed-to-Floating Rate Subordinated Notes,NGM,USA
-ZIONO,Zions Bancorporation N.A. Dep Shs Repstg 1/40th Perp Pfd Ser G,NGM,USA
-ZIONP,Zions Bancorporation N.A. Depositary Shares (Each representing 1/40th Interest in a Share of Series A Floating-Rate Non-Cumulative Perpetual Preferred Stock),NGM,USA
+ZIONO,Zions Bancorporation N.A. Dep Shs Repstg 1-40th Perp Pfd Ser G,NGM,USA
+ZIONP,Zions Bancorporation N.A. Depositary Shares (Each representing 1-40th Interest in a Share of Series A Floating-Rate Non-Cumulative Perpetual Preferred Stock),NGM,USA
 ZIOP,ZIOPHARM Oncology Inc,NMS,USA
 ZIVO,Zivo Bioscience Inc.,NCM,USA
 ZIVOW,Zivo Bioscience Inc. Warrants,NCM,USA
