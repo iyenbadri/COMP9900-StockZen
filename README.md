@@ -5,13 +5,141 @@
 
 _A stock portfolio management webapp_
 
-This README is divided into setup instructions for users and project devs.
+This README is divided into setup instructions for users and relevant instructions for project devs.
 
-# User Manual
+# User Installation Manual
 
-## Installation
+## Installation (Lubuntu)
 
-## User Guide
+To install this project, get the `.zip` file containing the codebase either from the submission channel or via https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-h18c-codependent
+(Click **Code** > **Download ZIP** to obtain the `.zip` file)
+
+After that, extract the `.zip` file contents to the desired location.
+
+## Option A (Install using scripts)
+
+The fastest way to set up the project is through the provided shell scripts. Please run the following scripts in order from project root:
+
+Please prefix all these scripts with the `bash` command to avoid permission issues.
+
+1. `./install.sh` : Install the required packages and setup the environment
+2. `./start-backend.sh` : Start the backend server
+3. `./start-frontend.sh` : Start the frontend server
+   Optional feature scripts:
+4. `./start-price-alert.sh` : Start the price alert script
+5. `./start-challenge.sh` : Start the Portfolio Challenge
+
+## Option B (Install manually)
+
+## Backend
+
+1. Open the terminal
+2. Run commands to install the required packages
+   ```
+   sudo apt-get update
+   sudo apt-get install python3 python3-venv
+   ```
+3. Navigate to `stockzen-backend` folder
+4. Create a virtual environment by running the command:
+   ```
+   python3 -m venv .venv
+   ```
+5. Activate the virtualenv:
+   ```
+   source .venv/bin/activate
+   ```
+6. Install the package wheel (special requirement for Lubuntu):
+   ```
+   pip3 install wheel
+   ```
+7. Install packages for backend
+   ```
+   pip3 install -r requirements.txt
+   ```
+8. Create the environment file `.flaskenv` from `.flaskenv.default` (copy the default file):
+   ```
+   cp .flaskenv.default .flaskenv
+   ```
+9. Edit the variables in the `flaskenv` file
+
+   - `FLASK_ENV` : The mode of the backend. It should be set to `production` in live setup
+   - `SESSION_KEY` : The key of the session. It should be init to some random string
+   - `MAIL_USERNAME` : The username of a MailTrap account. See Price Alert section below.
+   - `MAIL_PASSWORD` : The username of a MailTrap account. See Price Alert section below. only
+
+     _Note_:
+     _You may use our API credentials, but you will not be able to inspect the email response:_
+
+     ```
+     MAIL_USERNAME=a15b07c5c03683
+     MAIL_PASSWORD=69cce18ae605e1
+     ```
+
+10. Start the backend server by running:
+    ```
+    flask run
+    ```
+11. Open a browser and navigate to http://localhost:5000/ to access the **Swagger** documentation.
+
+## Frontend
+
+1. Open a new terminal
+2. Run commands to install the required packages
+   ```
+   sudo apt-get update
+   sudo apt-get install nodejs npm
+   ```
+3. Navigate to `stockzen-frontend` folder
+4. Install the required packed by running:
+   ```
+   npm install
+   ```
+5. Start the frontend server by running:
+   ```
+   npm run start
+   ```
+6. Open a browser and navigate to http://localhost:3000/ to access the website.
+
+## Price Alert (Optional)
+
+To activate the price alert functionality, the variables **`MAIL_USERNAME`** and **`MAIL_PASSWORD`** must be set, and backend must be setup and working.
+
+      *Note:*
+      - *If you would like to inspect the Price Alert responses in detail, please create a https://mailtrap.io/
+      account – account login cannot be provided here for security and privacy reasons.*
+      - *Otherwise, you may use our API credentials, but you will not be able to inspect the email response:*
+      ```
+     MAIL_USERNAME=a15b07c5c03683
+     MAIL_PASSWORD=69cce18ae605e1
+     ```
+
+1. Navigate to `stockzen-backend` folder
+2. Activate the virtualenv by run
+   ```
+   source .venv/bin/activate
+   ```
+3. Start the script by run
+   ```
+   flask price-alert run
+   ```
+4. To stop the script, press **Ctrl+C** when it shows 'Sleeping' in the terminal
+
+## Challenge (Optional)
+
+1. Navigate to `stockzen-backend` folder
+2. Activate the virtualenv by running:
+
+   ```
+   source .venv/bin/activate
+   ```
+
+3. Start the script by running:
+
+   ```
+   flask challenge run prod
+   ```
+
+4. To end the challenge, press Ctrl+C two times to force-step through the challenge phases (Normally this would take 2 weeks to naturally progress – this can be altered in the `config.py` file if so desired).
 
 # Developer Manual
 
