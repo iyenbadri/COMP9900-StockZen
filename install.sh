@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
 sudo apt-get update
-sudo apt-get install python3 python3-venv nodejs npm
+sudo apt-get install -y python3 python3-venv nodejs npm
 
 cd stockzen-backend
 python3 -m venv .venv
@@ -12,6 +12,7 @@ pip3 install -r requirements.txt
 
 cp .flaskenv.default .flaskenv
 
+sed -i "6s/FLASK_ENV=development/FLASK_ENV=production/1" .flaskenv
 sed -i "8s/SESSION_KEY=/SESSION_KEY=fiowejjasdiufsidou/1" .flaskenv
 sed -i "11s/MAIL_USERNAME=/MAIL_USERNAME=a15b07c5c03683/1" .flaskenv
 sed -i "12s/MAIL_PASSWORD=/MAIL_PASSWORD=69cce18ae605e1/1" .flaskenv
