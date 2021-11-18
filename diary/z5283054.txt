@@ -180,7 +180,6 @@ Jeehyun was working on the Stock page. She finished layouting the page (no data 
 K 1
 J 1
 G 1
-B (TODO)
 
 
 ============================================
@@ -251,7 +250,8 @@ Week 9
 # Planned:      Implement the leaderboard functionality. Add documentation. Add the currency
                 symbol to money related data. Wire up the leaderboard UI.
 # Finished:     Price alert functionality. Fix the bug in the top performance widget.
-# Issue:        -
+# Issue:        Badrivishal doesn't commit his part of code to GitHub dispite an encouragement to
+                do so
 # Unfinished:   -
 # Next:         -
 
@@ -260,15 +260,16 @@ Week 9
 K 1
 J 1
 G 1
-B (TODO)
 
 
 ============================================
 Week 10
 
-# Planned:      Implement the leaderboard UI. Add documentation.
+# Planned:      Implement the leaderboard UI. Add documentation. Work on the report. Prepare
+                for the presentation.
 # Finished:     The leaderboard UI.
-# Issue:        -
+# Issue:        The versions don't match the selected one but the software do work when
+                downgraded them
 # Unfinished:   -
 # Next:         -
 
@@ -277,7 +278,7 @@ Week 10
 K 1
 J 1
 G 1
-B (TODO)
+B 1
 
 -----------------------------------------------------------------------------------------
 You should also include in this diary the following information (if applicable) about the
@@ -293,11 +294,6 @@ endangered
 We expect that other members of the team may access this file to know where others are
 up to, but you should not modify your peer’s work diary.
 ------------------------------------------------------------------------------------------
-
-========= Meeting =========
-What have you done?
-What will you do?
-What's blocking you?
 
 *****************
 Update diary - RK
