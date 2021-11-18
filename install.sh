@@ -1,7 +1,7 @@
 #!/bin/sh
 
 sudo apt-get update
-sudo apt-get install python3 python3-venv nodejs npm
+sudo apt-get install -y python3 python3-venv nodejs npm
 
 cd stockzen-backend
 python3 -m venv .venv
