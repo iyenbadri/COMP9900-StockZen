@@ -139,3 +139,31 @@ Pending Tasks:
 - Addition: Saving of files into JSON to get single file contain gin all the predicted prices and the accuracies.
 
     -11/11/21
+
+Week 10:
+
+Achievements:
+
+Model changed from Jupyter Noteboooks to a .py file along with installations of all dependencies for set up in the backend.
+Saved all trained models on the backend using a pickle library.
+Upon training the model, a .json file is returned based on the prediction given by the models for all the trained models.
+Worked on the report and presentations necessary to be conducting during the final demo for a successful submission.- Sections: Machine Learning (report and Presentation)
+Closed all Machine Learning user stories on Jira with complete integration with the project.
+
+Issues:
+
+Further trouble shooting of the model on the stockmen-backend was quite difficult due to local environment issues which prevented me to do testing and debugging any further (Encounter an issue where I was unable to import numpy and torch libraries while testing on local machine)
+Hence, I ensured to do a proper Knowledge transfer to Gunjan and he could take over the debugging and testing.
+
+Downside:
+
+Unable to show progress on Github by creating a PR based on the said machine learning sections, but Jira Board could attest to the progress.
+
+Overall takeaway:
+
+Extremely supportive and nurturing group; highly informative project with a huge learning curve. 
+Acknowledgement:
+
+less experience as compared to peers put me at a disadvantage of getting a head start and keeping up with the pace of the project progress.
+
+- 18/11/21

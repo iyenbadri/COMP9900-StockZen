@@ -262,6 +262,23 @@ J 1
 G 1
 B (TODO)
 
+
+============================================
+Week 10
+
+# Planned:      Implement the leaderboard UI. Add documentation.
+# Finished:     The leaderboard UI.
+# Issue:        -
+# Unfinished:   -
+# Next:         -
+
+
+
+K 1
+J 1
+G 1
+B (TODO)
+
 -----------------------------------------------------------------------------------------
 You should also include in this diary the following information (if applicable) about the
 project progress:
